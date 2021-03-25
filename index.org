@@ -5,6 +5,7 @@
 #+email: minasmazar@gmail.com
 
 * [[./assets/index.org][Resources]]
+* [[./emacs.org][Dotemacs]]
 * Publishing
 #+name: site-publish
 #+begin_src emacs-lisp :tangle no
