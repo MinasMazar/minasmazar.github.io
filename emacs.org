@@ -1000,7 +1000,7 @@ If you want a light mode, choose [[elisp:(call-interactively 'load-theme)][one o
 You can customize default font face [[elisp:(customize-face 'default)][at runtime]].
 
 If you save the configuration, you will find an entry like the next in
-your [[Custom file][custom file]] and can be runtime evaluated.
+your configuration file and can be runtime evaluated.
 
 #+begin_example emacs-lisp
   (custom-set-faces

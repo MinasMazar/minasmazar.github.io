@@ -3,32 +3,36 @@
 #+date: <2021-03-19>
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
+#+options: toc:nil
 
 * [[./assets/index.org][Resources]]
 * [[./emacs.org][Dotemacs]]
 * Publishing
 #+name: site-publish
-#+begin_src emacs-lisp :tangle no
-  (let ((org-publish-project-alist
-         '(
-           ("site"
-            :base-directory "./"
-            :base-extension "org"
-            :publishing-directory "./.build/"
-            :recursive t
-            :publishing-function org-html-publish-to-html
-            :headline-levels 4
-            :auto-preamble t)
-           ("assets"
-            :base-directory "./assets/"
-            :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-            :publishing-directory "./.build/assets/"
-            :recursive t
-            :publishing-function org-publish-attachment)
-           ("org" :components ("site" "assets"))
-           )))
+#+begin_src emacs-lisp :results output none
+  (let (
+	(org-export-babel-evaluate nil)
+	(org-export-use-babel nil)
+	(org-publish-project-alist
+	 '(
+	   ("site"
+	    :base-directory "./"
+	    :base-extension "org"
+	    :publishing-directory "./.build/"
+	    :recursive t
+	    :publishing-function org-html-publish-to-html
+	    :headline-levels 4
+	    :auto-preamble t)
+	   ("assets"
+	    :base-directory "./assets/"
+	    :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+	    :publishing-directory "./.build/assets/"
+	    :recursive t
+	    :publishing-function org-publish-attachment)
+	   ("org" :components ("site" "assets"))
+	   )))
     (org-publish-all))
-#+end_src
+    #+end_src
 
 #+begin_src shell :var t=(current-time-string) :tangle no :results output none
 cd .build
