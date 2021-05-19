@@ -4,9 +4,12 @@
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
 
+@@html:<nav>@@
 * [[./assets/index.org][Resources]]
 * [[./emacs.org][Dotemacs]]
 * Publishing
+@@html:</nav>@@
+
 #+name: site-publish
 #+begin_src emacs-lisp :results output none
       (let (

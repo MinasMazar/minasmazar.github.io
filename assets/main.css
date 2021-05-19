@@ -1,3 +1,17 @@
 body {
-    background-color: grey;
+    background-color: #393f50;
+    color: #AFBAC4;
+}
+
+body div.org-src-container, body nav {
+    padding-left: 4rem;
+    padding-right: 3rem;
+}
+
+nav {
+    background-color: #212127;
+}
+
+nav div {
+    display: block;
 }
