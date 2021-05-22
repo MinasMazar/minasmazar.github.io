@@ -4,37 +4,47 @@
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
 
-** Generate site
+** COMMENT Generate site
 
 Generate your static blog using [[https://orgmode.org/manual/Publishing.html][Org-mode publishing]].
 
 #+name: site-publish
 #+begin_src emacs-lisp :results output none
-  (defun mm/blog-setup ()
-    "Setup for my blog"
-    (org-publish-project-alist
-     '(
-       ("site"
-	:base-directory "./"
-	:base-extension "org"
-	:publishing-directory "~/site"
-	:recursive t
-	:publishing-function org-html-publish-to-html
-	:export-babel-evaluate nil
-	:headline-levels 4
-	:with-toc nil)
-       ("assets"
-	:base-directory "./assets/"
-	:base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-	:publishing-directory "~/site/assets/"
-	:recursive t
-	:publishing-function org-publish-attachment)
-       ("org" :components ("site" "assets"))
-       )))
+  (defun mm/site-setup-publish ()
+    "Setup org-mode publish data"
+    (add-to-list
+     'org-publish-project-alist
+     '("org-files"
+       :base-directory "./"
+       :base-extension "org"
+       :publishing-directory "~/site"
+       :recursive t
+       :publishing-function org-html-publish-to-html
+       :export-babel-evaluate nil
+       :headline-levels 4
+       :with-toc nil))
+    (add-to-list
+     'org-publish-project-alist
+     '("assets"
+       :base-directory "./assets/"
+       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+       :publishing-directory "~/site/assets/"
+       :recursive t
+       :publishing-function org-publish-attachment))
+    (add-to-list
+     'org-publish-project-alist
+     '("site" :components ("org-files" "assets"))))
     #+end_src
 
-    Then you can invoke ~mm/blog-setup~.
-    
+    Then you can invoke ~mm/blog-setup~ to setup org publish with data of your site. To generate the site invoke ~org-publish
+
+    #+begin_src emacs-lisp :results output none
+      (defun mm/site-compile ()
+	"Compile site (without evaluating org babel blocks)"
+	(interactive)
+	(let ((org-export-use-babel nil))
+	  (org-publish "site")))
+    #+end_src
 ** Autopublishing script.
 
 

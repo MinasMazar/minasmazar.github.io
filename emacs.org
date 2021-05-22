@@ -5,7 +5,7 @@
 #+date: <2020-10-31>
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
-#+property: header-args :comments yes :repo "~/blorg"
+#+property: header-args :comments yes :repo "~/blorg" :eval never-exoprt
 
 * Introduction
 ** Purposes
