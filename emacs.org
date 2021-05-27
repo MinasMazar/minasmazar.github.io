@@ -5,7 +5,7 @@
 #+date: <2020-10-31>
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
-#+property: header-args :comments yes :repo "~/blorg" :eval never-exoprt
+#+property: header-args :comments yes :repo "~/blorg"
 
 * Introduction
 ** Purposes
@@ -23,7 +23,7 @@ keychords. This means no Evil mode, but God mode ([[http://tobytripp.github.io/e
 ** TODO Literate configuration
 
 Basically, what you're reading now is the Emacs configuration: it is
-an [[org-mode]] file which will be tangled via [[https://orgmode.org/features.html#babel][Org babel]]
+an [[org-mode]] file which will be tangled via [[https://orgmode.org/features.html#babel][Org Babel]]
 (~org-babel-load-file~). You only have to copy/paste [[Init.el][init.el]].
 
 ... also take a look to ~#+PROPERTY: header-args :comments yes~ in the headers of this file!
@@ -98,6 +98,18 @@ These are some really basic customizations.
   (scroll-bar-mode -1)
 #+end_src
 
+** Additional (disabled) configuration
+
+This is an example of other common variables you could wish having in place.
+
+#+begin_example emacs-lisp
+(custom-set-variables
+  '(tab-always-indent 'complete)
+  '(web-mode-code-indent-offset 2)
+  '(web-mode-css-indent-offset 2)
+  '(web-mode-markup-indent-offset 2))
+#+end_example
+
 ** Buffer predicates
 
 #+begin_src emacs-lisp
@@ -109,49 +121,126 @@ These are some really basic customizations.
 (setq buffer-predicate 'no-helm-buffer-predicate)
 #+end_src
 
+** Main packages
+*** COMMENT Projectile
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :bind
+    ("C-x p f" . projectile-find-file)
+    ("C-x p b" . projectile-switch-to-buffer)
+    ("C-x p s" . projectile-ripgrep)
+    ("s-P" . projectile-find-file)
+    ("s-{" . projectile-previous-project-buffer)
+    ("s-}" . projectile-next-project-buffer))
+#+end_src
+
+** Eshell
+   #+begin_src emacs-lisp
+     (use-package eshell
+       :custom
+       (eshell-scroll-to-bottom-on-input 'all)
+       (eshell-destroy-buffer-when-process-dies t))
+   #+end_src
+
+   Eshell aliases goes under ~~/.emacs.d/eshell/aliases~ as default. You can customize it with sometihg like that:
+
+   #+begin_example emacs-lisp
+   alias ff "find-file $*"
+   alias rr "ripgrep-regexp . $1"
+   #+end_example
+
+** Exwm
+   Emacs window manager sample configuration to put somewhere into your ~init.el~. 
+   #+begin_example emacs-lisp
+     (use-package exwm
+       :config
+       (menu-bar-mode -1)
+       (tool-bar-mode -1)
+       (scroll-bar-mode -1)
+       ;; Also shrink fringes to 1 pixel.
+       (fringe-mode 1)
+       ;; Turn on `display-time-mode' if you don't use an external bar.
+       (display-time-default-load-average nil)
+       (display-time-mode t)
+       (server-start)
+       ;; Set the initial number of workspaces (they can also be created later).
+       (setq exwm-workspace-number 4)
+       ;; Fix problems with Ido (if you use it).
+       ;;(require 'exwm-config)
+       ;;(exwm-config-ido)
+       )
+   #+end_example
+
+This is an example configuration to add into you ~~/.xinitrc~
+
+#+begin_example
+# You may need to comment out the next line to disable access control.
+#xhost +SI:localuser:$USER
+
+# Set themes, etc.
+gnome-settings-daemon &
+
+# Set fallback cursor.
+xsetroot -cursor_name left_ptr
+
+# Set keyboard repeat rate.
+xset r rate 200 60
+
+# If Emacs is started in server mode, `emacsclient` is a convenient way to
+# edit files in place (used by e.g. `git commit`).
+export VISUAL=emacsclient
+export EDITOR="$VISUAL"
+
+# Finally launch emacs.
+exec dbus-launch --exit-with-session emacs
+#+end_example
 * Keybindings
 
 These are my preferred keybindings
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-x p p") 'projectile-switch-open-project)
-  (global-set-key (kbd "C-x p f") 'projectile-find-file)
-  (global-set-key (kbd "C-x p b") 'projectile-switch-to-buffer)
-  (global-set-key (kbd "C-x p k") 'projectile-kill-buffers)
-  (global-set-key (kbd "C-x p s") 'projectile-ripgrep)
+    (global-set-key (kbd "C-x C-F") 'find-file-at-point)
+    (global-set-key (kbd "C-x p p") 'project-switch-open-project)
+    (global-set-key (kbd "C-x p f") 'project-find-file)
+    (global-set-key (kbd "C-x p b") 'project-switch-to-buffer)
+    (global-set-key (kbd "C-x p k") 'project-kill-buffers)
 
-  (global-set-key (kbd "C-h 1") '(lambda () (interactive)
-				   (find-file "~/.emacs.d/emacs.org")))
-  (global-set-key (kbd "C-h C-2 e") 'eshell)
-  (global-set-key (kbd "C-h C-2 f") 'find-file-at-point)
-  (global-set-key (kbd "C-h C-2 o a") 'org-agenda)
-  (global-set-key (kbd "C-h C-2 o c") 'org-capture)
-  (global-set-key (kbd "C-h C-2 s") 'shell-command)
-  (global-set-key (kbd "C-h C-2 w") 'eww)
+    (defcustom mm/meta-prefix "C-." "mm/meta prefix")
+    (global-set-key (kbd mm/meta-prefix) nil)
+    (defun mm/meta-set-key (keystroke)
+      "Set keystroke mm prefixed"
+      (kbd (concat mm/meta-prefix " " keystroke)))
+
+    (global-set-key (mm/meta-set-key "b") 'ibuffer)
+    (global-set-key (mm/meta-set-key "h") '(lambda () (interactive)
+                                             (find-file "~/.emacs.d/emacs.org")))
+    (global-set-key (mm/meta-set-key "i m") 'imenu)
+    (global-set-key (mm/meta-set-key "i b") 'ibuffer)
+    (global-set-key (mm/meta-set-key "o a") 'org-agenda)
+    (global-set-key (mm/meta-set-key "o c") 'org-capture)
+    (global-set-key (mm/meta-set-key "e s") 'sh-send-line-or-region-and-step)
+    (global-set-key (mm/meta-set-key "e e") 'eshell)
+    (global-set-key (mm/meta-set-key "w") 'eww)
 #+end_src
 
 ** Meta-key
 Wants to take advantage of the meta key (i.e. ~CMD~ on MacOS, or
-~Meta~ on Linux like) to set some useful shortcuts, [[KISS][trying to preserve the vanilla emacs muscle memory]]. So ~s-0~ for ~C-x 0~, ~s-3~ for ~C-x 3~ and so on..
+~Win~ on Windows) to set some useful shortcuts, [[KISS][trying to preserve the vanilla emacs muscle memory]]. So ~s-0~ for ~C-x 0~, ~s-3~ for ~C-x 3~ and so on..
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "s-c") 'kill-ring-save)
   (global-set-key (kbd "s-1") 'delete-other-windows)
-  (global-set-key (kbd "s-2") 'split-window-horizontally)
-  (global-set-key (kbd "s-3") 'split-window-vertically)
+  (global-set-key (kbd "s-3") 'split-window-horizontally)
+  (global-set-key (kbd "s-2") 'split-window-vertically)
   (global-set-key (kbd "s-0") 'delete-window)
-#+end_src
-
-I want to highlight the use of ~s-w~ is for cycle through window, ~s-k~ for command palette (i.e. M-x), ~s-j~ for switch buffer and ~s-h~ for the [[Homepage][/Homepage/]], ~s-N~ to quickly jump to [[Dired][dired]] and some related to the useful /bookmarks/.
-
-#+begin_src emacs-lisp
   (global-set-key (kbd "s-w") 'other-window)
   (global-set-key (kbd "s-W") '(lambda () (interactive)
-				 (other-window 1) (maximize-window)))
+                                 (other-window 1) (maximize-window)))
   (global-set-key (kbd "s-r") 'repeat)
   (global-set-key (kbd "s-K") 'switch-to-buffer)
-  (global-set-key (kbd "s-p") 'projectile-switch-to-buffer)
-  (global-set-key (kbd "s-P") 'projectile-find-file)
+  (global-set-key (kbd "s-p") 'project-switch-to-buffer)
+  (global-set-key (kbd "s-P") 'project-find-file)
   (global-set-key (kbd "s-t") 'eshell)
   (global-set-key (kbd "s-[") 'previous-buffer)
   (global-set-key (kbd "s-]") 'next-buffer)
@@ -169,6 +258,15 @@ Override ~isearch-mode-map~
 #+begin_src emacs-lisp
   (define-key isearch-mode-map (kbd "C-p") 'isearch-repeat-backward)
   (define-key isearch-mode-map (kbd "C-n") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-forward)
+#+end_src
+
+Override ~dired-mode-map~
+
+#+begin_src emacs-lisp
+(require 'dired)
+(define-key dired-mode-map (kbd "C-j") 'dired-single-up-directory)
 #+end_src
 
 Add shortcut in translation map which basically are fast access to ~C-x~ and ~C-c~.
@@ -177,14 +275,24 @@ Add shortcut in translation map which basically are fast access to ~C-x~ and ~C-
   (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
   (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
   (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
-  (define-key key-translation-map (kbd "<s-return>") (kbd "C-h C-2"))
+  (define-key key-translation-map (kbd "s-o") (kbd mm/meta-prefix))
 #+end_src
 
+* No meta (alt)?
+
+   For some reason you can't use the ~alt~ key on your keyboard? (It happens to me with Iterm + ssh + emacsclient session) and for some reason you don't want to solve this issue configuring Iterm or else? In this case you use this workaround, remapping some core keybinding like ~C-k~ and ~C-l~.
+
+#+begin_example emacs-lisp
+  (global-set-key (kbd "C-k") 'execute-extended-command)
+  (global-set-key (kbd "C-K") 'kill-visual-line)
+  (global-set-key (kbd "C-l") 'god-local-mode)
+  (global-set-key (kbd "C-L") 'recenter-top-bottom)
+#+end_example
 ** Editing
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-;") 'zap-up-to-char)
-  (global-set-key (kbd "C-:") 'dabbrev-expand)
+  (global-set-key (kbd "C-; C-k") 'zap-up-to-char)
+  (global-set-key (kbd "C-; C-;") 'dabbrev-expand)
 #+end_src
 
 ** Autocompletion
@@ -232,141 +340,67 @@ Used in tandem with
 
 Here we define main packages and customizations concerning the interaction of the user with Emacs, basically the way inputs are prompted and selected. Here we offers also links for unused setup, but is here if you just want to experiment. Ido is the buil-in method, Ivy and Helm are valid alternatives.
 
-** Ido
-#+begin_src emacs-lisp
-      (use-package ido
-        :custom
-        (ido-everywhere t)
-        (ido-enable-flex-matching t)
-        (ido-mode 'both)
-        :bind
-        (:map ido-common-completion-map (
-                                         ("C-p" . ido-prev-match)
-                                         ("C-n" . ido-next-match)
-                                         ("C-a" . beginning-of-visual-line)
-                                         ("<C-return>" . ido-select-text))))
-      (use-package ido-vertical-mode
-        :requires ido
-        :config
-        (ido-vertical-mode t))
+** Completion styles
+   #+begin_src emacs-lisp
+(setq completion-styles '(substring initials flex partial-completion orderless))
+(setq completion-category-overrides
+            '((buffer (styles . (substring)))
+              (file (styles . (initials orderless)))
+              (project-file (styles . (initials orderless)))))
+     ;; ;; (setq completion-flex-nospace t)
+     ;; ;; (setq read-buffer-completion-ignore-case t)
+     ;; (setq read-file-name-completion-ignore-case t)
+     ;; (setq completion-show-help t)
+     ;; (setq completion-auto-help t)
 #+end_src
+** Minibuffer
+   #+begin_src emacs-lisp
+     (define-key minibuffer-local-completion-map (kbd "<C-return>") 'minibuffer-force-complete-and-exit)
+     (define-key minibuffer-local-completion-map (kbd "C-j") 'minibuffer-force-complete-and-exit)
+     ;(define-key minibuffer-local-completion-map (kbd "<tab>") 'minibuffer-force-complete)
+     (define-key minibuffer-local-completion-map (kbd "C-c") 'switch-to-completions)
+     (define-key minibuffer-local-completion-map (kbd "C-o") 'switch-to-completions)
+     #+end_src
 
-** Smex
+** Icomplete
 #+begin_src emacs-lisp
-  (use-package smex
-    :bind
-    ("M-x" . smex))
-#+end_src
-** COMMENT AMX-MODE
-
-#+begin_src emacs-lisp
-  (use-package amx
-    :requires ido
+  (use-package icomplete
     :config
-    (amx-mode))
+    (icomplete-mode nil)
+    :bind
+    (:map minibuffer-local-completion-map
+          ("C-p" . icomplete-backward-completions)
+          ("C-N" . icomplete-forward-completions)
+          ("C-j" . icomplete-force-complete-and-exit)
+          ("<C-return>" . icomplete-force-complete-and-exit)))
 #+end_src
 
-** COMMENT Ivy
-
-[[https://github.com/abo-abo/swiper][ivy]] is a flexible, simple tools for minibuffer completion in Emacs.
+*** Vertical mode (should be built-in in Emacs >= 28)
 
 #+begin_src emacs-lisp
-    (use-package ivy
-      :config
-      (ivy-mode 1)
-      :custom
-      (ivy-re-builders-alist '(
-			       ;(t . ivy–regex-plus)
-			       (t . ivy--regex-ignore-order)
-			       ;(t . ivy--regex-fuzzy)
-			     ))
-      :bind
-      ("s-f" . swiper)
-      ("s-K" . ivy-switch-buffer)
-      (:map ivy-minibuffer-map ("C-S-i" . ivy-immediate-done)))
-
-    (use-package counsel
-      :bind
-      ("s--" . counsel-bookmark))
-
-    (use-package counsel-web :disabled)
-    (use-package swiper )
-    (use-package ivy-rich :disabled
-      :ensure t
-      :config
-      (ivy-rich-mode 1))
-
-  (use-package ivy-hydra
-    :after '(ivy hydra))
-#+end_src
-
-[[https://github.com/tumashu/ivy-posframe][Ivy posframe]] has some issues using with multiple frames on Emacs, and
-on MacOS is not working as expected.  Since it needs more investigation to
-solve that, so I leave the configuration, but disabled. If you want to
-continue experimenting, just comment out the next code block (more
-info at [[Conventions]]).
-
-#+begin_src emacs-lisp :tangle no
-(use-package ivy-posframe
-  :custom
-  (ivy-posframe-display-functions-alist
-   '((swiper . nil)
-     (swiper-isearch . nil)
-     (amx . nil)
-     (t . ivy-posframe-display-at-frame-center)))
-  :config
-  (ivy-psoframe-mode 1))
-#+end_src
-
-** COMMENT Helm
-
-[[https://github.com/emacs-helm/helm][Helm]] is an Emacs framework for incremental completions and narrowing selections. Here I install and setup binding its main functions.
-
-#+begin_src emacs-lisp
-  (use-package helm
+  (use-package icomplete-vertical
     :config
-    (require 'helm-config)
-    (helm-mode t)
-    :custom
-    ((helm-buffers-fuzzy-matching  t)
-     (helm-recentf-fuzzy-match    t)
-     (helm-swoop-pre-input-function (lambda () ))
-     )
-    :bind
-    ("M-x" . helm-M-x)
-    ("C-x C-f" . helm-find-files)
-    ("C-x b" . helm-buffers-list)
-    ("s-k" . helm-M-x)
-    ("s-K" . helm-mini)
-    ("s-b" . helm-mini)
-    ("s--" . helm-filtered-bookmarks))
+    (icomplete-vertical-mode 1))
 #+end_src
 
-#+RESULTS:
-: helm-filtered-bookmarks
-
-Projectile interface via Helm.
-
-#+begin_src emacs-lisp
-    (use-package helm-projectile
-      :bind
-      ("s-p" . helm-projectile))
-#+end_src
-
-Helm has a lot of additional functions that can be enabled by installing other packages. Here I mention just a couple of them.
-
-#+begin_src emacs-lisp
-  (use-package helm-eww)
-  (use-package helm-fuzzy)
-  (use-package helm-google
-    :bind
-    ("C-x C-a C-o" . helm-google))
-  (use-package helm-icons)
-  (use-package helm-swoop
-    :bind
-    ("s-f" . helm-swoop))
-#+end_src
-
+** Save history
+   #+begin_src emacs-lisp
+     (use-package savehist
+       :init
+       (savehist-mode))
+   #+end_src
+** Embark
+   #+begin_src emacs-lisp
+     (use-package embark
+       :bind*
+       ("C-," . embark-act))
+   #+end_src
+** Marginalia
+   #+begin_src emacs-lisp
+     (use-package marginalia
+       :init
+       (marginalia-mode 1))
+   #+end_src
 ** Which key
 
 #+begin_src emacs-lisp
@@ -416,149 +450,17 @@ All existing key bindings will work in God mode. It's only there to reduce your 
     (add-hook 'god-mode-disabled-hook 'mm/god-mode-disabled))
 #+end_src
 
-** COMMENT Kraken (Hail Hydra!)
-
-[[https://github.com/abo-abo/hydra][Hydra]] is in my opinion one of the killer feature of Emacs.
-
-#+begin_quote
-			      .......
-			  ..............
-			  ...............
-			 ................
-			 ................
-			 ............. ..
-              .		  ....... ......
- 	       .	       .........    ..........
-	         ..	         ........ ...	      .
-       	        .      	       	     ....      	       .
-	   	 ..	        . ....	  ...	       ..
-		  ..	      ..     .	    ..		..	   ..
-		      .	       .     .	      ..	 .
-		       .. ... .	     ..	       .	 .	   .
-				     ..	       .	 ..
-				     .	       .	  ..	  ..
-				    .	      ..	   ... ....
-			       .....	     ..		      .
-	    ...	.	. . .. .	     .
-       ...... .. . . ...		    .
-       .				   .
-      .					...
-      .                  featured by [[elisp:(describe-package 'artist)][artist-mode]]
-      .
-#+end_quote
-
-Kraken serves an entry point for often used commands used for editing, OS stuff, interactions with shell or git, projects management, org and blogging purposes.
-
-Some experiments to cycle across hydras.
-#+begin_src emacs-lisp :tangle no
-    (defvar hydra-kraken:core:cycle-list '(
-					   hydra-kraken:main/body
-					   hydra-kraken:edit:mov/body
-					   ))
-    (setq-default hydra-kraken:core:cycle--list hydra-kraken:core:cycle-list)
-    (defun hydra-kraken:core:cycle--init ()
-      (setq hydra-kraken:core:cycle--list hydra-kraken:core:cycle-list))
-
-    (defun hydra-kraken:core:cycle (current)
-      "Cycle through hydra-kraken:core:cycle"
-      (interactive)
-      (let ((h (pop hydra-kraken:core:cycle--list)))
-	(add-to-list 'hydra-kraken:core:cycle--list h t)
-	(when h (call-interactively h))))
-#+end_src
-
-Some experimental hydras.
-
-#+begin_src emacs-lisp :tangle no
-  (defhydra hydra-kraken:main (:color blue)
-    "kraken:main"
-    ("s-k" hydra-kraken:edit/body "kraken:edit" :color blue)
-    ("k" nil :color blue)
-    ("d" dired-jump "dired")
-    ("f" find-file-at-point "ffap")
-    ("m" hydra-kraken:major-mode/body "major")
-    ("h" (dired "~") "home")
-    ("i" ibuffer "ibuffer")
-    ("a e" eshell "eshell")
-    ("s" (switch-to-buffer "*scratch*") "scratch")
-    ("w" eww "eww")
-    ("e c" insert-char "ฑ")
-    ("v s" magit-status "" :color blue)
-    ("v b" magit-blame "" :color blue)
-    ("k" nil))
-
-  (defhydra hydra-kraken:edit (:color pink)
-    "kraken:edit"
-    ("s-k" hydra-kraken:main/body "kraken:main" :color blue)
-    ("f" isearch-forward "C-s")
-    ("." repeat "C-x z")
-    ("," dabbrev-expand "dabbrev-expand")
-    ("k" nil :color blue)
-    ("j" set-mark-command "C-SPC")
-    ("J" zap-up-to-char "M-z")
-    ("I" imenu "imenu")
-    ("u" undo "undo")
-    ("U" (kbd "C-g C-_") "redo")
-    ("[" backward-word)
-    ("]" forward-word)
-    ("{" backward-sexp)
-    ("}" forward-sexp)
-    (">" end-of-buffer)
-    ("<" beginning-of-buffer)
-    ("i" god-mode "insert" :color blue))
-
-  (defhydra hydra-kraken:major-mode (:color pink)
-    ("k" nil)
-    ("e" eval-print-last-sexp "e+p")
-    ("E" eval-expression))
-#+end_src
-
-Hydras actually used
-
-#+begin_src emacs-lisp
-  (use-package hydra
-    :config
-    (defhydra hydra-kraken:utils:zoom ()
-      "zoom"
-      ("g" text-scale-increase "in")
-      ("l" text-scale-decrease "out")
-      ("0" text-scale-adjust "reset"))
-
-    (defhydra hydra-kraken:entrypoint (:color pink)
-      "kraken:entrypoint"
-      ("s-<return>" nil)
-      ("TAB" hydra-kraken:main/body "kraken:main" :color blue)
-      ("o" org-agenda :color blue)
-      ("c" org-capture :color blue)
-      ("s" eshell :color blue)
-      ("e" hydra-kraken:edit/body "kraken:edit" :color blue)
-      ("m" hydra-kraken:major-mode/body "kraken:major-mode" :color: blue)
-      ("k" nil "quit")
-      ("z" hydra-kraken:utils:zoom/body "zoom" :color blue)
-      ("q" nil "quit")))
-#+end_src
-
-Here I activate an entrypoint hydra with ~Cmd + return~ keybinding.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "<s-return>") 'hydra-kraken:entrypoint/body)
-#+end_src
-
 * Versioning
 ** Magit
 
 #+begin_src emacs-lisp
-(use-package magit
-  :ensure t
-  :config
-  (global-set-key (kbd "C-x g") 'magit-status))
-#+end_src
-
-** Github integration
-
-#+begin_src emacs-lisp :tangle no
- (use-package magithub
-  :after magit)
+  (use-package magit
+    :ensure t
+    :config
+    (transient-append-suffix 'magit-rebase "-d" '("-D" "Ingore date" "--ignore-date"))
+    (transient-append-suffix 'magit-cherry-pick "-e" '("-n" "No commit" "--no-commit"))
+    (global-set-key (kbd "C-x g") 'magit-status
+                    ))
 #+end_src
 
 * Major modes
@@ -605,25 +507,12 @@ Main customizations for programming in ~elisp~.
 #+begin_src emacs-lisp
 (use-package yaml-mode)
 #+end_src
-** Terminal emulators
-
-Vterm imo is something you want if you need the most OS/temrinal like experience within emacs. It relies on vetrm libraries on your host system, which means to install this if you have MacOS/homeberw just
-
-#+begin_src shell :tangle no :results output none
-brew install libvterm
-#+end_src
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :bind
-    ("s-T" . vterm))
-#+end_src
 ** COMMENT LSP mode
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
+;;  (setq lsp-keymap-prefix "C-c l")
   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
          (XXX-mode . lsp)
          ;; if you want which-key integration
@@ -649,22 +538,11 @@ brew install libvterm
   (use-package org
     :bind
     (:map org-mode-map
-	  ("C-x C-x" . exchange-point-and-mark)
 	  ("M-p" . org-move-subtree-up)
 	  ("M-n" . org-move-subtree-down))
     :config
     (add-to-list 'org-file-apps '(directory . emacs)))
 #+end_src
-
-Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-templates.html][org capture templates]] (taken from [[http://www.howardism.org/Technical/Emacs/capturing-intro.html][www.howardism.org]]).
-
-#+begin_example emacs-lisp
- (add-to-list 'org-capture-templates
-                 '("w" "Work-related Task"  entry
-                   (file "~/Dropbox/notes/work.org")
-                   "* TODO %?" :empty-lines 1))
-#+end_example
-
 *** Org-babel
 **** Org src executions
 
@@ -675,8 +553,7 @@ Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-temp
 								)
 				    )
      #+end_src
-
-**** Org src templates
+** Org src templates
 
 [[https://emacs.stackexchange.com/questions/46988/why-do-easy-templates-e-g-s-tab-in-org-9-2-not-work][Here]] is where I found a good answer for my issue about the ~<s~ template expansion of ~org-mode~.
 
@@ -684,7 +561,7 @@ Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-temp
   (setq-default add-to-list org-modules org-tempo)
 #+end_src
 
-*** Beautify Org-mode
+** Beautify Org-mode
 
 Beautify ~org-mode~ with bullets..
 
@@ -712,7 +589,26 @@ Beautify ~org-mode~ with bullets..
     (org-default-notes-file "~/Dropbox/org/notes.org"))
 #+end_src
 
-** <<Blogging>>
+Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-templates.html][org capture templates]] (taken from [[http://www.howardism.org/Technical/Emacs/capturing-intro.html][www.howardism.org]]).
+
+#+begin_example emacs-lisp
+ (add-to-list 'org-capture-templates
+                 '("w" "Work-related Task"  entry
+                   (file "~/Dropbox/notes/work.org")
+                   "* TODO %?" :empty-lines 1))
+#+end_example
+
+*** Org capture
+
+   Here's [[https://www.youtube.com/watch?v=qCdScs4YO8k&t=15s][Prot video]] about Org capture templates.
+   
+
+*** Alert
+
+#+begin_src emacs-lisp
+(use-package org-alert)
+#+end_src
+** COMMENT <<Blogging>>
 
 [[org-mode]] has a built-in blogging feature under the ~ox-publish~
 module. If you want to know more about Org-mode publishers,
@@ -762,26 +658,123 @@ git log
 ** Eww ~ web browser
 
 #+begin_src emacs-lisp
-  (use-package eww
-    :config
-    (defun mm/eww-copy-link-at-point ()
-      "Copy link under cursor"
-      (with-current-buffer "*eww*"
-	(kill-new "link under cursor *wip*"))))
+  (use-package eww)
+
 #+end_src
 
-** Elfeed ~ RSS news reader
+** Terminal emulators
+
+Vterm imo is something you want if you need the most OS/temrinal like experience within emacs. It relies on vetrm libraries on your host system, which means to install this if you have MacOS/homeberw just
+
+#+begin_src shell :tangle no :results output none
+brew install libvterm
+#+end_src
 
 #+begin_src emacs-lisp
-  (use-package elfeed
-    :config
-    (add-to-list 'elfeed-db-entries '("https://static.fsf.org/fsforg/rss/news.xml" . "open-source")))
+  (use-package vterm
+    :init
+    (defun vterm-or-create (&optional last-cmd)
+      "Open *vterm* buffer if present, create a new one if none"
+      (interactive "p")
+      (vterm)
+      (when (eq last-cmd 0)
+        (progn
+          (vterm-send-up)
+          (vterm-send-return))))
+    (defun vterm-send-last-cmd ()
+      (interactive)
+      (vterm-send-up)
+      (vterm-send-return))
+    :bind
+    ("s-T" . vterm-or-create))
+#+end_src
+
+You can use vterm to spawn different processes
+
+#+begin_example emacs-lisp
+  #+begin_src emacs-lisp
+    (with-current-buffer (vterm "*web-server*")
+      (vterm-send-string "PORT=5000 bin/rails\n"))
+    (with-current-buffer (vterm "*webpack-server*")
+      (vterm-send-string "bin/webpack-dev-server \n"))
+#+end_example
+
 #+end_src
 ** Bongo
 #+begin_src emacs-lisp
 (use-package bongo)
 #+end_src
-* COMMENT Mail
+** Try!
+
+[[https://github.com/larstvei/Try][Try]] permits to one-shot try for some packages.
+
+#+begin_src emacs-lisp
+(use-package try)
+#+end_src
+
+**Here goes a list of packages that will be installed in a try version...**
+** Networking
+*** RESTClient
+Restclient is a really useful tool, basically an emacs interface to ~curl~.
+
+#+begin_src emacs-lisp
+(use-package restclient)
+(use-package ob-restclient
+  :after org-mode)
+#+end_src
+
+Here an example of usage:
+
+#+begin_example
+# Set variables form elisp code using :=
+:token := reaper-api-key
+:account-id := reaper-account-id
+:auth-headers = <<
+User-Agent: curl
+Authorization: Bearer :token
+Harvest-Account-ID: :account-id
+Content-Type: application/json
+#
+
+# Make API request to Harvest app
+GET https://api.harvestapp.com/v2/users/me
+:auth-headers
+#+end_example
+
+If you want your Emacs to interact to Harvest, you can use Reaper package!
+** COMMENT News and RSS
+*** Elfeed
+
+#+begin_src emacs-lisp
+  (use-package elfeed
+    :config
+    (add-to-list 'elfeed-feeds '(
+				 "https://www.reddit.com/r/slackware/.rss"
+				 "https://static.fsf.org/fsforg/rss/news.xml" . "open-source")))
+#+end_src
+
+    #+end_src
+
+If you want to schedule RSS updates you can do something like:
+
+#+begin_example emacs-lisp
+  (run-at-time 10 (* 60 5) 'elfeed-update)
+#+end_example
+
+**** TODO Retrieve all Youtube feeds from your "channels" page
+
+If you have a channel with this url ~https://www.youtube.com/channel/ID-OF-THE-CHANNEL~ the RSS feed for this channel will be ~https://www.youtube.com/feeds/videos.xml?channel_id=ID-OF-THE-CHANNEL~.
+Here's a function to easy cast those urls.
+
+#+begin_src emacs-lisp
+  (defun mm/yt/channel-url-to-rss-url (&optional url)
+    "Cast a Youtube channel URL to a RSS feed one"
+    (interactive "sChannel URL: ")
+    ;https://www.youtube.com/feeds/videos.xml?channel_id={ID}
+    (message url))
+#+end_src
+
+* Mail
 ** [[http://www.offlineimap.org/][offlineimap]]
 
 You can use Emacs as your mail client. In order to configure ~mu4e~ I'm following [[https://gist.github.com/areina/3879626][this useful gist]].
@@ -831,7 +824,7 @@ localfolders = ~/Maildir
 
 [Repository Remote]
 type = Gmail
-remoteuser = areina0@gmail.com
+remoteuser = your-email@gmail.com
 remotepasseval = get_password_emacs("imap.gmail.com", "your-email@gmail.com", "993")
 realdelete = no
 
@@ -850,6 +843,8 @@ sudo mkcert -cert-file /etc/ssl/certs/ca-certificates.crt localhost
 
 ** [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]]
 
+   Useful resources could be found [[https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html][here]].
+
 Here we can't simply ~(use-package mu4e)~. On MacOS I've just soft-linked the ~/usr/local/Cellar/mu/1.4.15/share/emacs/site-lisp/mu/mu4e~
 to ~~/.emacs.d/mu4e~.
 
@@ -861,71 +856,29 @@ is required because otherwise it will stay active in background.
   (add-to-list 'load-path "~/.emacs.d/mu4e/")
   (require 'mu4e)
   (setq mu4e-update-interval (* 60 10)
-        mu4e-mu-binary "/usr/local/bin/mu"
-        mu4e-get-mail-command "/usr/local/bin/offlineimap -o")
+	mu4e-mu-binary "/usr/local/bin/mu"
+	mu4e-get-mail-command "/usr/local/bin/offlineimap -o"
+	message-kill-buffer-on-exit t)
+
 #+END_SRC
+
+Sample setup of mu4e
+
+#+begin_example emacs-lisp
+(setq
+   user-mail-address "USERNAME@gmail.com"
+   user-full-name  "YOUR FULL NAME")
+#+end_example
 
 Here a sample configuration for SMTP
 
-#+begin_src emacs-lisp
-(setq smtpmail-smtp-server "smtp.example.com"
-      smtpmail-smtp-service 465
-      smtpmail-stream-type 'ssl)
-#+end_src
-
-* Additional packages
-
-This are intended to be really useful packages but not to be automatically installed. To let them to be installed and configured, you can set the ~mm/extended-layer~ to ~t~.
-
-There are also other packages I want mention, and they are all in a list you can use in combinations with the wonderful package ~try~.
-
-** Try!
-
-[[https://github.com/larstvei/Try][Try]] permits to one-shot try for some packages.
-
-#+begin_src emacs-lisp
-(use-package try)
-#+end_src
-
-**Here goes a list of packages that will be installed in a try version...**
-
-** COMMENT mm/extended-layer (Experimental)
-
-This basically is a variable for
-#+begin_src emacs-lisp
-(setq mm/extended-layer nil)
-#+end_src
-
-** Networking
-*** RESTClient
-Restclient is a really useful tool, basically an emacs interface to ~curl~.
-
-#+begin_src emacs-lisp
-(use-package restclient)
-(use-package ob-restclient
-  :after org-mode)
-#+end_src
-
-** COMMENT News and RSS
-*** Elfeed
-
-#+begin_src emacs-lisp
-  (use-package elfeed
-    :config
-    (add-to-list 'elfeed-feeds '("https://www.reddit.com/r/slackware/.rss")))
-#+end_src
-**** TODO Retrieve all Youtube feeds from your "channels" page
-
-If you have a channel with this url ~https://www.youtube.com/channel/ID-OF-THE-CHANNEL~ the RSS feed for this channel will be ~https://www.youtube.com/feeds/videos.xml?channel_id=ID-OF-THE-CHANNEL~.
-Here's a function to easy cast those urls.
-
-#+begin_src emacs-lisp
-  (defun mm/yt/channel-url-to-rss-url (&optional url)
-    "Cast a Youtube channel URL to a RSS feed one"
-    (interactive "sChannel URL: ")
-    ;https://www.youtube.com/feeds/videos.xml?channel_id={ID}
-    (message url))
-#+end_src
+#+begin_example emacs-lisp
+  (setq message-send-mail-function 'smtpmail-send-it
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-server "smtp.example.com"
+	smtpmail-smtp-service 465
+	smtpmail-stream-type 'ssl)
+#+end_example
 
 * Custom functions
 
@@ -966,7 +919,7 @@ Append ~usr/local/bin~ to the ~PATH~
 (push "/Users/minello/.rvm/bin" exec-path)
 #+end_src
 
-** EPG/GPG
+* EPG/GPG
 
 This setting enables Emacs to ask pinentry via minibuffer.
 
@@ -974,16 +927,15 @@ This setting enables Emacs to ask pinentry via minibuffer.
 (setq epa-pinentry-mode 'loopback)
 #+end_src
 
-** Appearance and theme
-
-*** COMMENT Tango dark
+* Appearance and theme
+** COMMENT Tango dark
 I load Tango dark by default
 
 #+begin_src emacs-lisp
 (load-theme 'tango-dark)
 #+end_src
 
-*** COMMENT Modus vivendi (optional)
+** COMMENT Modus vivendi (optional)
 
 If you want the mighty [[https://protesilaos.com/modus-themes/][Modus Vivendi theme]] installed by default, uncomment this entry.
 
@@ -995,12 +947,12 @@ If you want the mighty [[https://protesilaos.com/modus-themes/][Modus Vivendi th
 
 If you want a light mode, choose [[elisp:(call-interactively 'load-theme)][one of the list]] ;)
 
-*** Font size and zoom
+** Font size and zoom
 
 You can customize default font face [[elisp:(customize-face 'default)][at runtime]].
 
 If you save the configuration, you will find an entry like the next in
-your configuration file and can be runtime evaluated.
+your [[Custom file][custom file]] and can be runtime evaluated.
 
 #+begin_example emacs-lisp
   (custom-set-faces
@@ -1011,7 +963,7 @@ your configuration file and can be runtime evaluated.
     '(default ((t (:height 220)))))
 #+end_example
 
-*** Modeline
+** Modeline
 
 Add an indicator of whether the God mode is active or not. First of all we should define a function that return a G if god-mode is active or an empy string if not.
 
@@ -1030,7 +982,7 @@ Now add an entry to ~mode-line-format~ with something like
 #+end_src
 
 ** Window rules
-#+begin_src emacs-lisp :tangle no
+#+begin_example emacs-lisp
   (add-to-list 'display-buffer-alist '("\\*Help\\*"
 					(display-buffer-in-side-window)
 					(window-height . 0.25)
@@ -1039,10 +991,14 @@ Now add an entry to ~mode-line-format~ with something like
   (add-to-list 'display-buffer-alist '("\\*Buffer List\\*"
 					(display-buffer-in-side-window)
 					(window-width . 0.25)
-					(side . left)
+					(side . right)
 					(sloq . -1)))
-
-#+end_src
+  (add-to-list 'display-buffer-alist '("dev.org"
+					(display-buffer-in-side-window)
+					(window-width . 0.35)
+					(side . right)
+					(sloq . -1)))
+#+end_example
 ** Initial buffer (<<Homepage>>)
 
 Emacs startup. You can easily customize ~initial-buffer-choice~
@@ -1051,19 +1007,20 @@ index/entry point or place where you usually start to think about my
 daily work activities. It could be your *org-agenda* index, like [[file:emacs-home-page.org][this
 example org-homepage]]. Consider it mapped on the pretty handy ~s-h~ shortcut.
 
-#+begin_example emacs-lisp
-  (setq initial-buffer-choice "~/.emacs.d/home-page.org")
+#+begin_src emacs-lisp
   (global-set-key (kbd "s-h") '(lambda () (interactive)
 				 (find-file initial-buffer-choice)))
-#+end_example
+#+end_src
 
 ** Dired
+
+Easy copy to another dired buffer.. one of the killer feature of dired!
 
 #+begin_src emacs-lisp
 (setq dired-dwim-target t)
 #+end_src
 
-Avoid opening many dired buffers (untangled because *wip*)
+Avoid opening many dired buffers.
 
 #+begin_src emacs-lisp
   (use-package dired-single
@@ -1087,6 +1044,13 @@ Define some customs for binary and arguments, like done for other browsers.
   (setq browse-url-opera-arguments ())
 #+end_src
 
+Experimental.
+
+#+begin_example emacs-lisp
+(defun browse-url-ask (&optional browser url)
+  (interactive "CBrowser: \n")
+  (call-interactively browser url))
+#+end_example
 ** [[https://www.opera.com/][Opera]] support
 
 Define ~browse-url-opera~.
