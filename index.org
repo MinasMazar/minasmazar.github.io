@@ -6,5 +6,4 @@
 
 @@html:<nav>@@
 * [[./emacs.org][Dotemacs]]
-* [[./publish.org][Publish]]
 @@html:</nav>@@
