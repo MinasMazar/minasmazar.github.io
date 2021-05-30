@@ -10,30 +10,29 @@ Generate your static blog using [[https://orgmode.org/manual/Publishing.html][Or
 
 #+name: site-publish
 #+begin_src emacs-lisp :results output none
-  (defun mm/site-setup-publish ()
-    "Setup org-mode publish data"
-    (add-to-list
-     'org-publish-project-alist
-     '("org-files"
-       :base-directory "./"
-       :base-extension "org"
-       :publishing-directory "~/site"
-       :recursive t
-       :publishing-function org-html-publish-to-html
-       :export-babel-evaluate nil
-       :headline-levels 4
-       :with-toc nil))
-    (add-to-list
-     'org-publish-project-alist
-     '("assets"
-       :base-directory "./assets/"
-       :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-       :publishing-directory "~/site/assets/"
-       :recursive t
-       :publishing-function org-publish-attachment))
-    (add-to-list
-     'org-publish-project-alist
-     '("site" :components ("org-files" "assets"))))
+(let ((list org-publish-project-alist))
+  (add-to-list
+   'list
+   '("org-files"
+     :base-directory "./"
+     :base-extension "org"
+     :publishing-directory "~/site"
+     :recursive t
+     :publishing-function org-html-publish-to-html
+     :export-babel-evaluate nil
+     :headline-levels 4
+     :with-toc nil))
+  (add-to-list
+   'list
+   '("assets"
+     :base-directory "./assets/"
+     :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+     :publishing-directory "~/site/assets/"
+     :recursive t
+     :publishing-function org-publish-attachment))
+  (add-to-list
+   'list
+   '("site" :components ("org-files" "assets"))))
     #+end_src
 
     Then you can invoke ~mm/blog-setup~ to setup org publish with data of your site. To generate the site invoke ~org-publish
@@ -57,11 +56,11 @@ git log
 #+end_src
 
 #+begin_src emacs-lisp :results output none
-  (let* ((remote "git@github:MinasMazar/minasmazar.github.io.git")
+  (let* ((remote "git@github.com:MinasMazar/minasmazar.github.io.git")
 	(commit-msg (concat "'Autopublish [" (current-time-string) "]'"))
-	(cd "~/site")
 	(out (shell-command-to-string "git remote"))
 	(repo-p (string-match "fatal" out)))
+    (cd "~/site")
     (unless repo-p (progn 
 		     (shell-command "git init")
 		     (shell-command (concat "git remote add origin " remote))))
