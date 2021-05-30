@@ -1,6 +1,0 @@
-#+setupfile: ./site.template
-#+title: MinasMazar's blog
-#+date: <2021-03-19>
-#+author: MinasMazar
-#+email: minasmazar@gmail.com
-

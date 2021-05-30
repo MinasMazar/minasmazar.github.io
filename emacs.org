@@ -1,11 +1,9 @@
--*- mode: org-mode -*-
-
 #+setupfile: ./site.template
 #+title: My Emacs configuration
 #+date: <2020-10-31>
 #+author: MinasMazar
 #+email: minasmazar@gmail.com
-#+property: header-args :comments yes :repo "~/blorg"
+#+property: header-args :comments yes
 
 * Introduction
 ** Purposes
@@ -23,7 +21,7 @@ keychords. This means no Evil mode, but God mode ([[http://tobytripp.github.io/e
 ** TODO Literate configuration
 
 Basically, what you're reading now is the Emacs configuration: it is
-an [[org-mode]] file which will be tangled via [[https://orgmode.org/features.html#babel][Org Babel]]
+an [[org-mode]] file which will be tangled via [[https://orgmode.org/features.html#babel][Org abel]]
 (~org-babel-load-file~). You only have to copy/paste [[Init.el][init.el]].
 
 ... also take a look to ~#+PROPERTY: header-args :comments yes~ in the headers of this file!
@@ -67,7 +65,7 @@ This file is intended to be in the root of a ~dotfiles~ like repo. For this reas
 It should contain all the informations, snippets and out-of-the-box
   shell code blocks in order to have an usable, self-documented,
   Emacs-centric blog. ;) We will take advantage of the [[https://orgmode.org/manual/Publishing.html][publishing
-  feature]] of [[org-mode][org-mode]]. (see [[Blogging]])
+  feature]] of [[org-mode][org-mode]].
 
 ** Conventions
 
@@ -96,6 +94,16 @@ These are some really basic customizations.
   (setq use-package-always-ensure t)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+#+end_src
+
+** exec-path and PATH env
+   
+Append ~usr/local/bin~ to the ~PATH~
+
+#+begin_src emacs-lisp
+(push "/usr/local/bin" exec-path)
+(push "~/.asdf/shims" exec-path)
+(setenv "PATH" (string-join exec-path ":"))
 #+end_src
 
 ** Additional (disabled) configuration
@@ -140,7 +148,8 @@ This is an example of other common variables you could wish having in place.
      (use-package eshell
        :custom
        (eshell-scroll-to-bottom-on-input 'all)
-       (eshell-destroy-buffer-when-process-dies t))
+       (eshell-destroy-buffer-when-process-dies t)
+       (eshell-env-path (getenv "PATH")))
    #+end_src
 
    Eshell aliases goes under ~~/.emacs.d/eshell/aliases~ as default. You can customize it with sometihg like that:
@@ -149,6 +158,17 @@ This is an example of other common variables you could wish having in place.
    alias ff "find-file $*"
    alias rr "ripgrep-regexp . $1"
    #+end_example
+** Shell commands
+
+   Has mentioned [[https://emacs.stackexchange.com/questions/10570/executing-commands-through-shell-command-what-is-the-path-used][in this stackexchange thread]]..
+
+#+begin_quote
+when running M-x shell but not when running M-! / (shell-command), as there is no prompt. You can adjust the option flags that are sent to (shell-command) by adjusting shell-command-switch to instruct it to act interactively and load your shell dotfile with:
+#+end_quote
+
+#+begin_src emacs-lisp
+(setq shell-command-switch "-ic")
+#+end_src
 
 ** Exwm
    Emacs window manager sample configuration to put somewhere into your ~init.el~. 
@@ -260,13 +280,6 @@ Override ~isearch-mode-map~
   (define-key isearch-mode-map (kbd "C-n") 'isearch-repeat-forward)
   (define-key isearch-mode-map (kbd "<tab>") 'isearch-repeat-backward)
   (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-forward)
-#+end_src
-
-Override ~dired-mode-map~
-
-#+begin_src emacs-lisp
-(require 'dired)
-(define-key dired-mode-map (kbd "C-j") 'dired-single-up-directory)
 #+end_src
 
 Add shortcut in translation map which basically are fast access to ~C-x~ and ~C-c~.
@@ -502,6 +515,17 @@ Main customizations for programming in ~elisp~.
       (web-mode-enable-auto-indentation . nil))
 #+end_src
 
+Fast HTML typing with [[https://github.com/smihica/emmet-mode][Emmet-mode]].
+
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :config
+    (add-hook 'sgml-mode-hook 'emmet-mode)
+    (add-hook 'html-mode-hook 'emmet-mode)
+    (add-hook 'web-mode-hook 'emmet-mode)
+    (add-hook 'css-mode-hook  'emmet-mode))
+
+#+end_src
 ** Markup
 *** YAML
 #+begin_src emacs-lisp
@@ -553,13 +577,6 @@ Main customizations for programming in ~elisp~.
 								)
 				    )
      #+end_src
-** Org src templates
-
-[[https://emacs.stackexchange.com/questions/46988/why-do-easy-templates-e-g-s-tab-in-org-9-2-not-work][Here]] is where I found a good answer for my issue about the ~<s~ template expansion of ~org-mode~.
-
-#+begin_src emacs-lisp
-  (setq-default add-to-list org-modules org-tempo)
-#+end_src
 
 ** Beautify Org-mode
 
@@ -589,13 +606,17 @@ Beautify ~org-mode~ with bullets..
     (org-default-notes-file "~/Dropbox/org/notes.org"))
 #+end_src
 
-Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-templates.html][org capture templates]] (taken from [[http://www.howardism.org/Technical/Emacs/capturing-intro.html][www.howardism.org]]).
+Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-templates.html][org capture templates]] (taken from [[http://www.howardism.org/Technical/Emacs/capturing-intro.html][www.howardism.org]]) and [[https://www.reddit.com/r/emacs/comments/7zqc7b/share_your_org_capture_templates/][here a reddit thread of shared org capture templates]].
 
 #+begin_example emacs-lisp
- (add-to-list 'org-capture-templates
-                 '("w" "Work-related Task"  entry
-                   (file "~/Dropbox/notes/work.org")
-                   "* TODO %?" :empty-lines 1))
+ (add-to-list '(org-capture-templates
+   '(("p" "Personal stuff")
+     ("pt" "Scheduled task" entry
+      (file+headline "~/Dropbox/org/notes.org" "Tasks")
+      "** TODO %?\n%^t\n%i" :empty-lines 1)
+     ("pn" "Note" entry
+      (file "~/Dropbox/org/notes.org")
+      "* %?\n%i"))))
 #+end_example
 
 *** Org capture
@@ -614,44 +635,43 @@ Here a quick snippet to customize your [[https://orgmode.org/manual/Capture-temp
 module. If you want to know more about Org-mode publishers,
 [[https://orgmode.org/worg/exporters/ox-overview.html][check here]]. And here the fantastic blog of [[https://ag91.github.io/][ag91]] which use [[https://github.com/kelvinh/org-page][org-page]].
 
-The source directory of the site will be [[file:][~/blorg]] and inside it there
-will be the [[file:.build][build directory]] ([[file:.gitignore][it is not versioned]]).
-
-#+begin_src emacs-lisp
-(require 'ox-publish)
-(setq org-publish-project-alist
-      '(
-        ("org-notes"
-         :base-directory "~/blorg/"
-         :base-extension "org"
-         :publishing-directory "~/blorg/.build/"
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4
-         :auto-preamble t)
-        ("org-static"
-        :base-directory "~/blorg/"
-        :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-        :publishing-directory "~/blorg/.build/"
-        :recursive t
-        :publishing-function org-publish-attachment)
-        ("org" :components ("org-notes" "org-static"))
-        ))
+#+begin_src emacs-lisp :results output none :tangle no
+  (require 'ox-publish)
+  (let ((org-export-babel-evaluate nil)
+	(org-publish-project-alist
+	 '(("org-files"
+	    :base-directory "./"
+	    :base-extension "org"
+	    :publishing-directory "~/site"
+	    :recursive t
+	    :publishing-function org-html-publish-to-html
+	    :export-babel-evaluate nil
+	    :headline-levels 4
+	    :with-toc nil)
+	   ("assets"
+	    :base-directory "./assets/"
+	    :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+	    :publishing-directory "~/site/assets/"
+	    :recursive t
+	    :publishing-function org-publish-attachment)
+	   ("site" :components ("org-files" "assets")))))
+    (org-publish "site"))
 #+end_src
 
-*** Publishing
-#+name: mm/blog-init
-#+begin_src emacs-lisp :tangle no
-;(org-publish-all)
-(current-time-string)
-#+end_src
+*** Autopublishing script.
 
-#+begin_src shell :var t=mm/blog-init :tangle no :results output none
-cd .build
-git add .
-git commit -m "Autopublish [$t]"
-git push -f origin master
-git log
+#+begin_src emacs-lisp :results output none :tangle no
+  (let* ((remote "git@github.com:MinasMazar/minasmazar.github.io.git")
+	(commit-msg (concat "'Autopublish [" (current-time-string) "]'"))
+	(out (shell-command-to-string "git remote"))
+	(repo-p (string-match "fatal" out)))
+    (cd "~/site")
+    (unless repo-p (progn 
+		     (shell-command "git init")
+		     (shell-command (concat "git remote add origin " remote))))
+    (shell-command "git add .")
+    (shell-command (concat "git commit -m " commit-msg))
+    (shell-command "git push origin master"))
 #+end_src
 
 * Applications
@@ -911,14 +931,6 @@ private, not versioned file.
     (shell-command (format "touch %s" mm/custom-file)))
 #+end_src
 
-Append ~usr/local/bin~ to the ~PATH~
-
-#+begin_src emacs-lisp
-(setenv "PATH" (concat "/usr/local/bin:/bin:" (getenv "PATH")))
-(push "/usr/local/bin" exec-path)
-(push "/Users/minello/.rvm/bin" exec-path)
-#+end_src
-
 * EPG/GPG
 
 This setting enables Emacs to ask pinentry via minibuffer.
@@ -952,7 +964,7 @@ If you want a light mode, choose [[elisp:(call-interactively 'load-theme)][one o
 You can customize default font face [[elisp:(customize-face 'default)][at runtime]].
 
 If you save the configuration, you will find an entry like the next in
-your [[Custom file][custom file]] and can be runtime evaluated.
+your ~init.el~ and can be runtime evaluated.
 
 #+begin_example emacs-lisp
   (custom-set-faces
@@ -1017,7 +1029,8 @@ example org-homepage]]. Consider it mapped on the pretty handy ~s-h~ shortcut.
 Easy copy to another dired buffer.. one of the killer feature of dired!
 
 #+begin_src emacs-lisp
-(setq dired-dwim-target t)
+  (setq dired-dwim-target t)
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 #+end_src
 
 Avoid opening many dired buffers.
@@ -1027,11 +1040,20 @@ Avoid opening many dired buffers.
     :after dired
     :bind
     (:map dired-mode-map (
-			   ("RET" . 'dired-single-buffer)
-			   ("s-N" . 'dired-single-up-directory)
-			   )))
+                           ("RET" . 'dired-single-buffer)
+                           ("s-N" . 'dired-single-up-directory)
+                           )))
 #+end_src
 
+Dired subtree
+
+#+begin_src emacs-lisp
+  (use-package dired-subtree
+    :after dired
+    :bind
+    (:map dired-mode-map ("<tab>" . dired-subtree-toggle)))
+
+#+end_src
 ** Browser
 
 Configure which broswer opens urls according to a match list. This is just an example (comment out to enable).
