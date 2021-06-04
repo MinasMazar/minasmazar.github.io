@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-05-30 Sun 11:59 -->
+<!-- 2021-06-04 Fri 22:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Emacs configuration</title>
@@ -243,12 +243,12 @@
 <div id="content">
 <h1 class="title">My Emacs configuration</h1>
 
-<div id="outline-container-org86c485f" class="outline-2">
-<h2 id="org86c485f"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-orgcaedf52" class="outline-2">
+<h2 id="orgcaedf52"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 </div>
-<div id="outline-container-org1edec73" class="outline-3">
-<h3 id="org1edec73"><span class="section-number-3">1.1</span> Purposes</h3>
+<div id="outline-container-org2e6c363" class="outline-3">
+<h3 id="org2e6c363"><span class="section-number-3">1.1</span> Purposes</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 This is intended to be a really basic Emacs configuration. The main
@@ -257,8 +257,8 @@ features of this configuration are:
 </div>
 </div>
 
-<div id="outline-container-org847cebb" class="outline-3">
-<h3 id="org847cebb"><span class="section-number-3">1.2</span> KISS</h3>
+<div id="outline-container-orgbf78212" class="outline-3">
+<h3 id="orgbf78212"><span class="section-number-3">1.2</span> KISS</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 Do not include all the super fancy featured packages for IDE or
@@ -270,13 +270,13 @@ keychords. This means no Evil mode, but God mode (<a href="http://tobytripp.gith
 </div>
 </div>
 
-<div id="outline-container-orgfb22643" class="outline-3">
-<h3 id="orgfb22643"><span class="section-number-3">1.3</span> <span class="todo TODO">TODO</span> Literate configuration</h3>
+<div id="outline-container-org76f683f" class="outline-3">
+<h3 id="org76f683f"><span class="section-number-3">1.3</span> <span class="todo TODO">TODO</span> Literate configuration</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Basically, what you're reading now is the Emacs configuration: it is
-an <a href="#org039393c">6</a> file which will be tangled via <a href="https://orgmode.org/features.html#babel">Org abel</a>
-(<code>org-babel-load-file</code>). You only have to copy/paste <a href="#org60b21d6">init.el</a>.
+an <a href="#org9797417">6</a> file which will be tangled via <a href="https://orgmode.org/features.html#babel">Org abel</a>
+(<code>org-babel-load-file</code>). You only have to copy/paste <a href="#org091236a">init.el</a>.
 </p>
 
 <p>
@@ -285,20 +285,20 @@ an <a href="#org039393c">6</a> file which will be tangled via <a href="https://o
 </div>
 </div>
 
-<div id="outline-container-org1b37b62" class="outline-3">
-<h3 id="org1b37b62"><span class="section-number-3">1.4</span> Out-of-the-box</h3>
+<div id="outline-container-org34e720c" class="outline-3">
+<h3 id="org34e720c"><span class="section-number-3">1.4</span> Out-of-the-box</h3>
 <div class="outline-text-3" id="text-1-4">
 <p>
 It should be downloaded with CLI tools (like wget, curl), and the only additional operation required in order to let it work is the
 extraction of the literate part into a dedicated `init.el`. This also
 means, in some way, that it will be lightweight as possible. If you
 want to add a particular set of configuration and packages, in order
-to transform your Emacs into a wonderful IDE on just the unbeatable OS you've ever seen, you can <a href="#orgbfeb7ef">uncomment</a> some blocks you will find along the way.
+to transform your Emacs into a wonderful IDE on just the unbeatable OS you've ever seen, you can <a href="#org529d43d">uncomment</a> some blocks you will find along the way.
 </p>
 </div>
 
-<div id="outline-container-org60b21d6" class="outline-4">
-<h4 id="org60b21d6"><span class="section-number-4">1.4.1</span> Init.el</h4>
+<div id="outline-container-org091236a" class="outline-4">
+<h4 id="org091236a"><span class="section-number-4">1.4.1</span> Init.el</h4>
 <div class="outline-text-4" id="text-1-4-1">
 <p>
 In order to load this literate configuration file, your <code>init.el</code> should be something like the next code block. The code is can be <a href="https://orgmode.org/manual/Exporting-Code-Blocks.html">exported</a> into the standard <a href="file:///Users/invisigoth/.emacs.d/init.el">init.el</a> by simply evaluating the code itself with <code>(org-ctrl-c-ctrl-c)</code> or by pressing.. - guess what? ;)
@@ -326,8 +326,8 @@ In order to load this literate configuration file, your <code>init.el</code> sho
 </div>
 </div>
 
-<div id="outline-container-org7c4bc81" class="outline-3">
-<h3 id="org7c4bc81"><span class="section-number-3">1.5</span> Versionable</h3>
+<div id="outline-container-orgc6df9a5" class="outline-3">
+<h3 id="orgc6df9a5"><span class="section-number-3">1.5</span> Versionable</h3>
 <div class="outline-text-3" id="text-1-5">
 <p>
 This file is intended to be in the root of a <code>dotfiles</code> like repo. For this reason some files are <a href=".gitignore">ignored</a>.
@@ -335,20 +335,20 @@ This file is intended to be in the root of a <code>dotfiles</code> like repo. Fo
 </div>
 </div>
 
-<div id="outline-container-org199421d" class="outline-3">
-<h3 id="org199421d"><span class="section-number-3">1.6</span> Bloggable</h3>
+<div id="outline-container-org6a43260" class="outline-3">
+<h3 id="org6a43260"><span class="section-number-3">1.6</span> Bloggable</h3>
 <div class="outline-text-3" id="text-1-6">
 <p>
 It should contain all the informations, snippets and out-of-the-box
   shell code blocks in order to have an usable, self-documented,
   Emacs-centric blog. ;) We will take advantage of the <a href="https://orgmode.org/manual/Publishing.html">publishing
-  feature</a> of <a href="#org039393c">org-mode</a>.
+  feature</a> of <a href="#org9797417">org-mode</a>.
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgbfeb7ef" class="outline-3">
-<h3 id="orgbfeb7ef"><span class="section-number-3">1.7</span> Conventions</h3>
+<div id="outline-container-org529d43d" class="outline-3">
+<h3 id="org529d43d"><span class="section-number-3">1.7</span> Conventions</h3>
 <div class="outline-text-3" id="text-1-7">
 <p>
 Somewhere in this configuration file you can find "uncomment the code
@@ -374,8 +374,8 @@ damages arising from evaluating untrusted lisp code on your machine.</b>
 </div>
 </div>
 
-<div id="outline-container-orge867f78" class="outline-2">
-<h2 id="orge867f78"><span class="section-number-2">2</span> Main configurations</h2>
+<div id="outline-container-org31b2c63" class="outline-2">
+<h2 id="org31b2c63"><span class="section-number-2">2</span> Main configurations</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 These are some really basic customizations.
@@ -391,8 +391,8 @@ These are some really basic customizations.
 </div>
 </div>
 
-<div id="outline-container-org81b8a31" class="outline-3">
-<h3 id="org81b8a31"><span class="section-number-3">2.1</span> exec-path and PATH env</h3>
+<div id="outline-container-org170467f" class="outline-3">
+<h3 id="org170467f"><span class="section-number-3">2.1</span> exec-path and PATH env</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Append <code>usr/local/bin</code> to the <code>PATH</code>
@@ -407,14 +407,14 @@ Append <code>usr/local/bin</code> to the <code>PATH</code>
 </div>
 </div>
 
-<div id="outline-container-orgcce2d54" class="outline-3">
-<h3 id="orgcce2d54"><span class="section-number-3">2.2</span> Additional (disabled) configuration</h3>
+<div id="outline-container-orgf98d439" class="outline-3">
+<h3 id="orgf98d439"><span class="section-number-3">2.2</span> Additional (disabled) configuration</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 This is an example of other common variables you could wish having in place.
 </p>
 
-<pre class="example" id="org336dae2">
+<pre class="example" id="org35f5544">
 (custom-set-variables
   '(tab-always-indent 'complete)
   '(web-mode-code-indent-offset 2)
@@ -424,8 +424,8 @@ This is an example of other common variables you could wish having in place.
 </div>
 </div>
 
-<div id="outline-container-orgf16ca3f" class="outline-3">
-<h3 id="orgf16ca3f"><span class="section-number-3">2.3</span> Buffer predicates</h3>
+<div id="outline-container-org31f8006" class="outline-3">
+<h3 id="org31f8006"><span class="section-number-3">2.3</span> Buffer predicates</h3>
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(defun no-helm-buffer-predicate (buffer)
@@ -439,11 +439,11 @@ This is an example of other common variables you could wish having in place.
 </div>
 </div>
 
-<div id="outline-container-orga19e0a9" class="outline-3">
-<h3 id="orga19e0a9"><span class="section-number-3">2.4</span> Main packages</h3>
+<div id="outline-container-org8d40205" class="outline-3">
+<h3 id="org8d40205"><span class="section-number-3">2.4</span> Main packages</h3>
 </div>
-<div id="outline-container-org6af579b" class="outline-3">
-<h3 id="org6af579b"><span class="section-number-3">2.5</span> Eshell</h3>
+<div id="outline-container-orgf1fd25e" class="outline-3">
+<h3 id="orgf1fd25e"><span class="section-number-3">2.5</span> Eshell</h3>
 <div class="outline-text-3" id="text-2-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package eshell
@@ -458,14 +458,14 @@ This is an example of other common variables you could wish having in place.
 Eshell aliases goes under <code>~/.emacs.d/eshell/aliases</code> as default. You can customize it with sometihg like that:
 </p>
 
-<pre class="example" id="orgfefdc4c">
+<pre class="example" id="org71090a1">
 alias ff "find-file $*"
 alias rr "ripgrep-regexp . $1"
 </pre>
 </div>
 </div>
-<div id="outline-container-org615ec55" class="outline-3">
-<h3 id="org615ec55"><span class="section-number-3">2.6</span> Shell commands</h3>
+<div id="outline-container-org886d43e" class="outline-3">
+<h3 id="org886d43e"><span class="section-number-3">2.6</span> Shell commands</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Has mentioned <a href="https://emacs.stackexchange.com/questions/10570/executing-commands-through-shell-command-what-is-the-path-used">in this stackexchange thread</a>..
@@ -484,13 +484,13 @@ when running M-x shell but not when running M-! / (shell-command), as there is n
 </div>
 </div>
 
-<div id="outline-container-org59594ff" class="outline-3">
-<h3 id="org59594ff"><span class="section-number-3">2.7</span> Exwm</h3>
+<div id="outline-container-org1c3265d" class="outline-3">
+<h3 id="org1c3265d"><span class="section-number-3">2.7</span> Exwm</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Emacs window manager sample configuration to put somewhere into your <code>init.el</code>. 
 </p>
-<pre class="example" id="orgdbf797e">
+<pre class="example" id="org91d76be">
 (use-package exwm
   :config
   (menu-bar-mode -1)
@@ -514,7 +514,7 @@ Emacs window manager sample configuration to put somewhere into your <code>init.
 This is an example configuration to add into you <code>~/.xinitrc</code>
 </p>
 
-<pre class="example" id="org7404f95">
+<pre class="example" id="org1828922">
 # You may need to comment out the next line to disable access control.
 #xhost +SI:localuser:$USER
 
@@ -538,8 +538,8 @@ exec dbus-launch --exit-with-session emacs
 </div>
 </div>
 </div>
-<div id="outline-container-org4f56df8" class="outline-2">
-<h2 id="org4f56df8"><span class="section-number-2">3</span> Keybindings</h2>
+<div id="outline-container-org9d45183" class="outline-2">
+<h2 id="org9d45183"><span class="section-number-2">3</span> Keybindings</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 These are my preferred keybindings
@@ -572,12 +572,12 @@ These are my preferred keybindings
 </div>
 </div>
 
-<div id="outline-container-org662be9b" class="outline-3">
-<h3 id="org662be9b"><span class="section-number-3">3.1</span> Meta-key</h3>
+<div id="outline-container-org8eac3ad" class="outline-3">
+<h3 id="org8eac3ad"><span class="section-number-3">3.1</span> Meta-key</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Wants to take advantage of the meta key (i.e. <code>CMD</code> on MacOS, or
-<code>Win</code> on Windows) to set some useful shortcuts, <a href="#org847cebb">trying to preserve the vanilla emacs muscle memory</a>. So <code>s-0</code> for <code>C-x 0</code>, <code>s-3</code> for <code>C-x 3</code> and so on..
+<code>Win</code> on Windows) to set some useful shortcuts, <a href="#orgbf78212">trying to preserve the vanilla emacs muscle memory</a>. So <code>s-0</code> for <code>C-x 0</code>, <code>s-3</code> for <code>C-x 3</code> and so on..
 </p>
 
 <div class="org-src-container">
@@ -633,22 +633,22 @@ Add shortcut in translation map which basically are fast access to <code>C-x</co
 </div>
 </div>
 
-<div id="outline-container-orgeb652a8" class="outline-2">
-<h2 id="orgeb652a8"><span class="section-number-2">4</span> No meta (alt)?</h2>
+<div id="outline-container-org08623be" class="outline-2">
+<h2 id="org08623be"><span class="section-number-2">4</span> No meta (alt)?</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 For some reason you can't use the <code>alt</code> key on your keyboard? (It happens to me with Iterm + ssh + emacsclient session) and for some reason you don't want to solve this issue configuring Iterm or else? In this case you use this workaround, remapping some core keybinding like <code>C-k</code> and <code>C-l</code>.
 </p>
 
-<pre class="example" id="orgc88eca9">
+<pre class="example" id="org30a7579">
 (global-set-key (kbd "C-k") 'execute-extended-command)
 (global-set-key (kbd "C-K") 'kill-visual-line)
 (global-set-key (kbd "C-l") 'god-local-mode)
 (global-set-key (kbd "C-L") 'recenter-top-bottom)
 </pre>
 </div>
-<div id="outline-container-org8341853" class="outline-3">
-<h3 id="org8341853"><span class="section-number-3">4.1</span> Editing</h3>
+<div id="outline-container-orgcf3e751" class="outline-3">
+<h3 id="orgcf3e751"><span class="section-number-3">4.1</span> Editing</h3>
 <div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(global-set-key (kbd "C-; C-k") 'zap-up-to-char)
@@ -658,12 +658,12 @@ For some reason you can't use the <code>alt</code> key on your keyboard? (It hap
 </div>
 </div>
 
-<div id="outline-container-org02879df" class="outline-3">
-<h3 id="org02879df"><span class="section-number-3">4.2</span> Autocompletion</h3>
+<div id="outline-container-org7bb9241" class="outline-3">
+<h3 id="org7bb9241"><span class="section-number-3">4.2</span> Autocompletion</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-org99f2683" class="outline-4">
-<h4 id="org99f2683"><span class="section-number-4">4.2.1</span> Company</h4>
+<div id="outline-container-org3361bf3" class="outline-4">
+<h4 id="org3361bf3"><span class="section-number-4">4.2.1</span> Company</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 A basic auto-completion package.
@@ -679,8 +679,8 @@ A basic auto-completion package.
 </div>
 </div>
 
-<div id="outline-container-orgea6d5a8" class="outline-3">
-<h3 id="orgea6d5a8"><span class="section-number-3">4.3</span> Highlight and markers</h3>
+<div id="outline-container-orgb941f4f" class="outline-3">
+<h3 id="orgb941f4f"><span class="section-number-3">4.3</span> Highlight and markers</h3>
 <div class="outline-text-3" id="text-4-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(show-paren-mode t)
@@ -689,8 +689,8 @@ A basic auto-completion package.
 </div>
 </div>
 
-<div id="outline-container-orgb82548f" class="outline-3">
-<h3 id="orgb82548f"><span class="section-number-3">4.4</span> Parenthesis</h3>
+<div id="outline-container-org64cd9b9" class="outline-3">
+<h3 id="org64cd9b9"><span class="section-number-3">4.4</span> Parenthesis</h3>
 <div class="outline-text-3" id="text-4-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package rainbow-mode)
@@ -698,8 +698,8 @@ A basic auto-completion package.
 </div>
 </div>
 </div>
-<div id="outline-container-org321529d" class="outline-3">
-<h3 id="org321529d"><span class="section-number-3">4.5</span> Expand region</h3>
+<div id="outline-container-orgeac90c0" class="outline-3">
+<h3 id="orgeac90c0"><span class="section-number-3">4.5</span> Expand region</h3>
 <div class="outline-text-3" id="text-4-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package expand-region
@@ -718,12 +718,12 @@ Used in tandem with
 </div>
 </div>
 </div>
-<div id="outline-container-orgb343691" class="outline-3">
-<h3 id="orgb343691"><span class="section-number-3">4.6</span> Navigation</h3>
+<div id="outline-container-orgdc31fbb" class="outline-3">
+<h3 id="orgdc31fbb"><span class="section-number-3">4.6</span> Navigation</h3>
 <div class="outline-text-3" id="text-4-6">
 </div>
-<div id="outline-container-orga6c763e" class="outline-4">
-<h4 id="orga6c763e"><span class="section-number-4">4.6.1</span> Jumping around</h4>
+<div id="outline-container-orge573420" class="outline-4">
+<h4 id="orge573420"><span class="section-number-4">4.6.1</span> Jumping around</h4>
 <div class="outline-text-4" id="text-4-6-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package ace-jump-mode
@@ -735,16 +735,16 @@ Used in tandem with
 </div>
 </div>
 </div>
-<div id="outline-container-orgbc48b59" class="outline-2">
-<h2 id="orgbc48b59"><span class="section-number-2">5</span> Interactive</h2>
+<div id="outline-container-org62a79af" class="outline-2">
+<h2 id="org62a79af"><span class="section-number-2">5</span> Interactive</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Here we define main packages and customizations concerning the interaction of the user with Emacs, basically the way inputs are prompted and selected. Here we offers also links for unused setup, but is here if you just want to experiment. Ido is the buil-in method, Ivy and Helm are valid alternatives.
 </p>
 </div>
 
-<div id="outline-container-org8c67242" class="outline-3">
-<h3 id="org8c67242"><span class="section-number-3">5.1</span> Completion styles</h3>
+<div id="outline-container-orgd4d250b" class="outline-3">
+<h3 id="orgd4d250b"><span class="section-number-3">5.1</span> Completion styles</h3>
 <div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(setq completion-styles '(substring initials flex partial-completion orderless))
@@ -761,8 +761,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 </div>
-<div id="outline-container-orgf11627e" class="outline-3">
-<h3 id="orgf11627e"><span class="section-number-3">5.2</span> Minibuffer</h3>
+<div id="outline-container-org7c7057c" class="outline-3">
+<h3 id="org7c7057c"><span class="section-number-3">5.2</span> Minibuffer</h3>
 <div class="outline-text-3" id="text-5-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(define-key minibuffer-local-completion-map (kbd "&lt;C-return&gt;") 'minibuffer-force-complete-and-exit)
@@ -775,8 +775,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 
-<div id="outline-container-org0efd007" class="outline-3">
-<h3 id="org0efd007"><span class="section-number-3">5.3</span> Icomplete</h3>
+<div id="outline-container-org3b5359a" class="outline-3">
+<h3 id="org3b5359a"><span class="section-number-3">5.3</span> Icomplete</h3>
 <div class="outline-text-3" id="text-5-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package icomplete
@@ -792,8 +792,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 
-<div id="outline-container-orgb3945db" class="outline-4">
-<h4 id="orgb3945db"><span class="section-number-4">5.3.1</span> Vertical mode (should be built-in in Emacs &gt;= 28)</h4>
+<div id="outline-container-orga60eac4" class="outline-4">
+<h4 id="orga60eac4"><span class="section-number-4">5.3.1</span> Vertical mode (should be built-in in Emacs &gt;= 28)</h4>
 <div class="outline-text-4" id="text-5-3-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package icomplete-vertical
@@ -805,8 +805,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 
-<div id="outline-container-org6595738" class="outline-3">
-<h3 id="org6595738"><span class="section-number-3">5.4</span> Save history</h3>
+<div id="outline-container-org1894214" class="outline-3">
+<h3 id="org1894214"><span class="section-number-3">5.4</span> Save history</h3>
 <div class="outline-text-3" id="text-5-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package savehist
@@ -816,8 +816,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 </div>
-<div id="outline-container-orgccda575" class="outline-3">
-<h3 id="orgccda575"><span class="section-number-3">5.5</span> Embark</h3>
+<div id="outline-container-org6081fff" class="outline-3">
+<h3 id="org6081fff"><span class="section-number-3">5.5</span> Embark</h3>
 <div class="outline-text-3" id="text-5-5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package embark
@@ -827,8 +827,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 </div>
-<div id="outline-container-org168a30f" class="outline-3">
-<h3 id="org168a30f"><span class="section-number-3">5.6</span> Marginalia</h3>
+<div id="outline-container-orgca5ca98" class="outline-3">
+<h3 id="orgca5ca98"><span class="section-number-3">5.6</span> Marginalia</h3>
 <div class="outline-text-3" id="text-5-6">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package marginalia
@@ -838,8 +838,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 </div>
-<div id="outline-container-orgd57d8aa" class="outline-3">
-<h3 id="orgd57d8aa"><span class="section-number-3">5.7</span> Which key</h3>
+<div id="outline-container-org34def5e" class="outline-3">
+<h3 id="org34def5e"><span class="section-number-3">5.7</span> Which key</h3>
 <div class="outline-text-3" id="text-5-7">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package which-key :config (which-key-mode t))
@@ -848,8 +848,8 @@ Here we define main packages and customizations concerning the interaction of th
 </div>
 </div>
 
-<div id="outline-container-orgc664cb3" class="outline-3">
-<h3 id="orgc664cb3"><span class="section-number-3">5.8</span> God mode</h3>
+<div id="outline-container-org0aa0407" class="outline-3">
+<h3 id="org0aa0407"><span class="section-number-3">5.8</span> God mode</h3>
 <div class="outline-text-3" id="text-5-8">
 <blockquote>
 <p>
@@ -904,12 +904,12 @@ All existing key bindings will work in God mode. It's only there to reduce your 
 </div>
 </div>
 
-<div id="outline-container-org66a988d" class="outline-2">
-<h2 id="org66a988d"><span class="section-number-2">6</span> Versioning</h2>
+<div id="outline-container-org8aa348e" class="outline-2">
+<h2 id="org8aa348e"><span class="section-number-2">6</span> Versioning</h2>
 <div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-org815b526" class="outline-3">
-<h3 id="org815b526"><span class="section-number-3">6.1</span> Magit</h3>
+<div id="outline-container-orgf2408cf" class="outline-3">
+<h3 id="orgf2408cf"><span class="section-number-3">6.1</span> Magit</h3>
 <div class="outline-text-3" id="text-6-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package magit
@@ -925,12 +925,12 @@ All existing key bindings will work in God mode. It's only there to reduce your 
 </div>
 </div>
 
-<div id="outline-container-org425512a" class="outline-2">
-<h2 id="org425512a"><span class="section-number-2">7</span> Major modes</h2>
+<div id="outline-container-orgf681ce4" class="outline-2">
+<h2 id="orgf681ce4"><span class="section-number-2">7</span> Major modes</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-orgc92a80e" class="outline-3">
-<h3 id="orgc92a80e"><span class="section-number-3">7.1</span> Elisp</h3>
+<div id="outline-container-orgfa1dade" class="outline-3">
+<h3 id="orgfa1dade"><span class="section-number-3">7.1</span> Elisp</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 Main customizations for programming in <code>elisp</code>.
@@ -943,8 +943,8 @@ Main customizations for programming in <code>elisp</code>.
 </div>
 </div>
 
-<div id="outline-container-orgc67c7bc" class="outline-3">
-<h3 id="orgc67c7bc"><span class="section-number-3">7.2</span> Ruby</h3>
+<div id="outline-container-orgb983e1a" class="outline-3">
+<h3 id="orgb983e1a"><span class="section-number-3">7.2</span> Ruby</h3>
 <div class="outline-text-3" id="text-7-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package enh-ruby-mode)
@@ -957,8 +957,8 @@ Main customizations for programming in <code>elisp</code>.
 </div>
 </div>
 
-<div id="outline-container-org8073039" class="outline-3">
-<h3 id="org8073039"><span class="section-number-3">7.3</span> Elixir</h3>
+<div id="outline-container-orgc8299ee" class="outline-3">
+<h3 id="orgc8299ee"><span class="section-number-3">7.3</span> Elixir</h3>
 <div class="outline-text-3" id="text-7-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package alchemist)
@@ -966,8 +966,8 @@ Main customizations for programming in <code>elisp</code>.
 </div>
 </div>
 </div>
-<div id="outline-container-orgc401e0b" class="outline-3">
-<h3 id="orgc401e0b"><span class="section-number-3">7.4</span> Web</h3>
+<div id="outline-container-org2ff1b5a" class="outline-3">
+<h3 id="org2ff1b5a"><span class="section-number-3">7.4</span> Web</h3>
 <div class="outline-text-3" id="text-7-4">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package web-mode
@@ -1000,12 +1000,12 @@ Fast HTML typing with <a href="https://github.com/smihica/emmet-mode">Emmet-mode
 </div>
 </div>
 </div>
-<div id="outline-container-org73eb8c9" class="outline-3">
-<h3 id="org73eb8c9"><span class="section-number-3">7.5</span> Markup</h3>
+<div id="outline-container-orgb662f98" class="outline-3">
+<h3 id="orgb662f98"><span class="section-number-3">7.5</span> Markup</h3>
 <div class="outline-text-3" id="text-7-5">
 </div>
-<div id="outline-container-org7d3fca1" class="outline-4">
-<h4 id="org7d3fca1"><span class="section-number-4">7.5.1</span> YAML</h4>
+<div id="outline-container-orga3de4e3" class="outline-4">
+<h4 id="orga3de4e3"><span class="section-number-4">7.5.1</span> YAML</h4>
 <div class="outline-text-4" id="text-7-5-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package yaml-mode)
@@ -1015,8 +1015,8 @@ Fast HTML typing with <a href="https://github.com/smihica/emmet-mode">Emmet-mode
 </div>
 </div>
 </div>
-<div id="outline-container-org7756a4d" class="outline-2">
-<h2 id="org7756a4d"><span class="section-number-2">8</span> Org-mode</h2>
+<div id="outline-container-orgf78e986" class="outline-2">
+<h2 id="orgf78e986"><span class="section-number-2">8</span> Org-mode</h2>
 <div class="outline-text-2" id="text-8">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package org
@@ -1029,12 +1029,12 @@ Fast HTML typing with <a href="https://github.com/smihica/emmet-mode">Emmet-mode
 </pre>
 </div>
 </div>
-<div id="outline-container-org096cdd3" class="outline-4">
-<h4 id="org096cdd3"><span class="section-number-4">8.0.1</span> Org-babel</h4>
+<div id="outline-container-org1fcc92d" class="outline-4">
+<h4 id="org1fcc92d"><span class="section-number-4">8.0.1</span> Org-babel</h4>
 <div class="outline-text-4" id="text-8-0-1">
 </div>
-<div id="outline-container-org883d0ad" class="outline-5">
-<h5 id="org883d0ad"><span class="section-number-5">8.0.1.1</span> Org src executions</h5>
+<div id="outline-container-org3c0f2c4" class="outline-5">
+<h5 id="org3c0f2c4"><span class="section-number-5">8.0.1.1</span> Org src executions</h5>
 <div class="outline-text-5" id="text-8-0-1-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">       (org-babel-do-load-languages 'org-babel-load-languages '(
@@ -1048,8 +1048,8 @@ Fast HTML typing with <a href="https://github.com/smihica/emmet-mode">Emmet-mode
 </div>
 </div>
 
-<div id="outline-container-orgf151591" class="outline-3">
-<h3 id="orgf151591"><span class="section-number-3">8.1</span> Beautify Org-mode</h3>
+<div id="outline-container-orgec0f3b5" class="outline-3">
+<h3 id="orgec0f3b5"><span class="section-number-3">8.1</span> Beautify Org-mode</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 Beautify <code>org-mode</code> with bullets..
@@ -1075,8 +1075,8 @@ Beautify <code>org-mode</code> with bullets..
 </div>
 </div>
 
-<div id="outline-container-org3332c78" class="outline-3">
-<h3 id="org3332c78"><span class="section-number-3">8.2</span> Agenda</h3>
+<div id="outline-container-org026e20d" class="outline-3">
+<h3 id="org026e20d"><span class="section-number-3">8.2</span> Agenda</h3>
 <div class="outline-text-3" id="text-8-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package org
@@ -1091,7 +1091,7 @@ Beautify <code>org-mode</code> with bullets..
 Here a quick snippet to customize your <a href="https://orgmode.org/manual/Capture-templates.html">org capture templates</a> (taken from <a href="http://www.howardism.org/Technical/Emacs/capturing-intro.html">www.howardism.org</a>) and <a href="https://www.reddit.com/r/emacs/comments/7zqc7b/share_your_org_capture_templates/">here a reddit thread of shared org capture templates</a>.
 </p>
 
-<pre class="example" id="orgf26223b">
+<pre class="example" id="org822454a">
 (add-to-list '(org-capture-templates
   '(("p" "Personal stuff")
     ("pt" "Scheduled task" entry
@@ -1103,8 +1103,8 @@ Here a quick snippet to customize your <a href="https://orgmode.org/manual/Captu
 </pre>
 </div>
 
-<div id="outline-container-orgbce7858" class="outline-4">
-<h4 id="orgbce7858"><span class="section-number-4">8.2.1</span> Org capture</h4>
+<div id="outline-container-orgb28d075" class="outline-4">
+<h4 id="orgb28d075"><span class="section-number-4">8.2.1</span> Org capture</h4>
 <div class="outline-text-4" id="text-8-2-1">
 <p>
 Here's <a href="https://www.youtube.com/watch?v=qCdScs4YO8k&amp;t=15s">Prot video</a> about Org capture templates.
@@ -1113,8 +1113,8 @@ Here's <a href="https://www.youtube.com/watch?v=qCdScs4YO8k&amp;t=15s">Prot vide
 </div>
 
 
-<div id="outline-container-org4e864b1" class="outline-4">
-<h4 id="org4e864b1"><span class="section-number-4">8.2.2</span> Alert</h4>
+<div id="outline-container-org1c6d6bb" class="outline-4">
+<h4 id="org1c6d6bb"><span class="section-number-4">8.2.2</span> Alert</h4>
 <div class="outline-text-4" id="text-8-2-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package org-alert)
@@ -1124,12 +1124,12 @@ Here's <a href="https://www.youtube.com/watch?v=qCdScs4YO8k&amp;t=15s">Prot vide
 </div>
 </div>
 </div>
-<div id="outline-container-org26671f6" class="outline-2">
-<h2 id="org26671f6"><span class="section-number-2">9</span> Applications</h2>
+<div id="outline-container-org9adf136" class="outline-2">
+<h2 id="org9adf136"><span class="section-number-2">9</span> Applications</h2>
 <div class="outline-text-2" id="text-9">
 </div>
-<div id="outline-container-org593d000" class="outline-3">
-<h3 id="org593d000"><span class="section-number-3">9.1</span> Eww ~ web browser</h3>
+<div id="outline-container-orgbb62f48" class="outline-3">
+<h3 id="orgbb62f48"><span class="section-number-3">9.1</span> Eww ~ web browser</h3>
 <div class="outline-text-3" id="text-9-1">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package eww)
@@ -1139,8 +1139,8 @@ Here's <a href="https://www.youtube.com/watch?v=qCdScs4YO8k&amp;t=15s">Prot vide
 </div>
 </div>
 
-<div id="outline-container-org17a5d73" class="outline-3">
-<h3 id="org17a5d73"><span class="section-number-3">9.2</span> Terminal emulators</h3>
+<div id="outline-container-orgdfb8385" class="outline-3">
+<h3 id="orgdfb8385"><span class="section-number-3">9.2</span> Terminal emulators</h3>
 <div class="outline-text-3" id="text-9-2">
 <p>
 Vterm imo is something you want if you need the most OS/temrinal like experience within emacs. It relies on vetrm libraries on your host system, which means to install this if you have MacOS/homeberw just
@@ -1175,7 +1175,7 @@ Vterm imo is something you want if you need the most OS/temrinal like experience
 You can use vterm to spawn different processes
 </p>
 
-<pre class="example" id="org5a24ede">
+<pre class="example" id="orge8b1b49">
 #+begin_src emacs-lisp
   (with-current-buffer (vterm "*web-server*")
     (vterm-send-string "PORT=5000 bin/rails\n"))
@@ -1188,8 +1188,8 @@ You can use vterm to spawn different processes
 </p>
 </div>
 </div>
-<div id="outline-container-org7ba0de0" class="outline-3">
-<h3 id="org7ba0de0"><span class="section-number-3">9.3</span> Bongo</h3>
+<div id="outline-container-orge6f8269" class="outline-3">
+<h3 id="orge6f8269"><span class="section-number-3">9.3</span> Bongo</h3>
 <div class="outline-text-3" id="text-9-3">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package bongo)
@@ -1197,8 +1197,8 @@ You can use vterm to spawn different processes
 </div>
 </div>
 </div>
-<div id="outline-container-orgb3a71ee" class="outline-3">
-<h3 id="orgb3a71ee"><span class="section-number-3">9.4</span> Try!</h3>
+<div id="outline-container-org1b7fbbd" class="outline-3">
+<h3 id="org1b7fbbd"><span class="section-number-3">9.4</span> Try!</h3>
 <div class="outline-text-3" id="text-9-4">
 <p>
 <a href="https://github.com/larstvei/Try">Try</a> permits to one-shot try for some packages.
@@ -1214,12 +1214,12 @@ You can use vterm to spawn different processes
 </p>
 </div>
 </div>
-<div id="outline-container-orgdb79136" class="outline-3">
-<h3 id="orgdb79136"><span class="section-number-3">9.5</span> Networking</h3>
+<div id="outline-container-org1ac11e7" class="outline-3">
+<h3 id="org1ac11e7"><span class="section-number-3">9.5</span> Networking</h3>
 <div class="outline-text-3" id="text-9-5">
 </div>
-<div id="outline-container-org3d63039" class="outline-4">
-<h4 id="org3d63039"><span class="section-number-4">9.5.1</span> RESTClient</h4>
+<div id="outline-container-org4129ca2" class="outline-4">
+<h4 id="org4129ca2"><span class="section-number-4">9.5.1</span> RESTClient</h4>
 <div class="outline-text-4" id="text-9-5-1">
 <p>
 Restclient is a really useful tool, basically an emacs interface to <code>curl</code>.
@@ -1236,7 +1236,7 @@ Restclient is a really useful tool, basically an emacs interface to <code>curl</
 Here an example of usage:
 </p>
 
-<pre class="example" id="org1698340">
+<pre class="example" id="orgfc4a824">
 # Set variables form elisp code using :=
 :token := reaper-api-key
 :account-id := reaper-account-id
@@ -1259,19 +1259,19 @@ If you want your Emacs to interact to Harvest, you can use Reaper package!
 </div>
 </div>
 </div>
-<div id="outline-container-org9d2a5c5" class="outline-2">
-<h2 id="org9d2a5c5"><span class="section-number-2">10</span> Mail</h2>
+<div id="outline-container-org88c2286" class="outline-2">
+<h2 id="org88c2286"><span class="section-number-2">10</span> Mail</h2>
 <div class="outline-text-2" id="text-10">
 </div>
-<div id="outline-container-org9091ea3" class="outline-3">
-<h3 id="org9091ea3"><span class="section-number-3">10.1</span> <a href="http://www.offlineimap.org/">offlineimap</a></h3>
+<div id="outline-container-orgeb7918f" class="outline-3">
+<h3 id="orgeb7918f"><span class="section-number-3">10.1</span> <a href="http://www.offlineimap.org/">offlineimap</a></h3>
 <div class="outline-text-3" id="text-10-1">
 <p>
 You can use Emacs as your mail client. In order to configure <code>mu4e</code> I'm following <a href="https://gist.github.com/areina/3879626">this useful gist</a>.
 In order to let <code>offlineimap</code> to read your authfile, you must save this snippet into your <code>~/.offlineimap.py</code>
 </p>
 
-<pre class="example" id="orgb1c3695">
+<pre class="example" id="org489f885">
 #!/usr/bin/python
 
 import re, os
@@ -1287,7 +1287,7 @@ def get_password_emacs(machine, login, port):
 and take care to add this entry to your <code>~/.offlineimaprc</code>
 </p>
 
-<pre class="example" id="orgd52a8cf">
+<pre class="example" id="orgee148f2">
 pythonfile = ~/.offlineimap.py
 </pre>
 
@@ -1295,7 +1295,7 @@ pythonfile = ~/.offlineimap.py
 A normal <code>~/.authfile.gpg</code> with some entries for IMAP/SMTP account should be like this.
 </p>
 
-<pre class="example" id="orgf174527">
+<pre class="example" id="org7b9f953">
 machine imap.gmail.com login your-email@example.com password your-strong-password port imaps
 machine imap.gmail.com login your-email@example.com password your-strong-password port 587
 machine smtp.gmail.com login your-email@example.com password your-strong-password port 465
@@ -1305,7 +1305,7 @@ machine smtp.gmail.com login your-email@example.com password your-strong-passwor
 This is an example of an <code>~/.offlineimaprc</code> config file for a Gmail email account with the inclusion of <code>offlineimap.py</code> defined above.
 </p>
 
-<pre class="example" id="org93a0de7">
+<pre class="example" id="org565df39">
 [general]
 accounts = Gmail
 maxsyncaccounts = 1
@@ -1343,8 +1343,8 @@ If you don't have a certificate you can generate via
 </div>
 </div>
 
-<div id="outline-container-orgb2131cf" class="outline-3">
-<h3 id="orgb2131cf"><span class="section-number-3">10.2</span> <a href="https://www.djcbsoftware.nl/code/mu/mu4e.html">Mu4e</a></h3>
+<div id="outline-container-orgc878eff" class="outline-3">
+<h3 id="orgc878eff"><span class="section-number-3">10.2</span> <a href="https://www.djcbsoftware.nl/code/mu/mu4e.html">Mu4e</a></h3>
 <div class="outline-text-3" id="text-10-2">
 <p>
 Useful resources could be found <a href="https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html">here</a>.
@@ -1376,7 +1376,7 @@ is required because otherwise it will stay active in background.
 Sample setup of mu4e
 </p>
 
-<pre class="example" id="orgbd29960">
+<pre class="example" id="orgc10fb01">
 (setq
    user-mail-address "USERNAME@gmail.com"
    user-full-name  "YOUR FULL NAME")
@@ -1386,7 +1386,7 @@ Sample setup of mu4e
 Here a sample configuration for SMTP
 </p>
 
-<pre class="example" id="org936cd9d">
+<pre class="example" id="orgd825dac">
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-stream-type 'starttls
       smtpmail-smtp-server "smtp.example.com"
@@ -1397,8 +1397,8 @@ Here a sample configuration for SMTP
 </div>
 </div>
 
-<div id="outline-container-orgca3cdc6" class="outline-2">
-<h2 id="orgca3cdc6"><span class="section-number-2">11</span> Custom functions</h2>
+<div id="outline-container-orgd71ecdf" class="outline-2">
+<h2 id="orgd71ecdf"><span class="section-number-2">11</span> Custom functions</h2>
 <div class="outline-text-2" id="text-11">
 <p>
 Here I define some useful functions for daily use.
@@ -1422,8 +1422,8 @@ Now you can invoke the function and a URL will be asked.
 </p>
 </div>
 </div>
-<div id="outline-container-org8176223" class="outline-2">
-<h2 id="org8176223"><span class="section-number-2">12</span> Private settings</h2>
+<div id="outline-container-org66ef9da" class="outline-2">
+<h2 id="org66ef9da"><span class="section-number-2">12</span> Private settings</h2>
 <div class="outline-text-2" id="text-12">
 <p>
 I want to save my personal/private configuration into a separate,
@@ -1442,8 +1442,8 @@ private, not versioned file.
 </div>
 </div>
 
-<div id="outline-container-orgd7558e5" class="outline-2">
-<h2 id="orgd7558e5"><span class="section-number-2">13</span> EPG/GPG</h2>
+<div id="outline-container-orge1001bf" class="outline-2">
+<h2 id="orge1001bf"><span class="section-number-2">13</span> EPG/GPG</h2>
 <div class="outline-text-2" id="text-13">
 <p>
 This setting enables Emacs to ask pinentry via minibuffer.
@@ -1456,12 +1456,12 @@ This setting enables Emacs to ask pinentry via minibuffer.
 </div>
 </div>
 
-<div id="outline-container-org1095c4a" class="outline-2">
-<h2 id="org1095c4a"><span class="section-number-2">14</span> Appearance and theme</h2>
+<div id="outline-container-org6f8599e" class="outline-2">
+<h2 id="org6f8599e"><span class="section-number-2">14</span> Appearance and theme</h2>
 <div class="outline-text-2" id="text-14">
 </div>
-<div id="outline-container-orge8d1d8a" class="outline-3">
-<h3 id="orge8d1d8a"><span class="section-number-3">14.1</span> Font size and zoom</h3>
+<div id="outline-container-org6064410" class="outline-3">
+<h3 id="org6064410"><span class="section-number-3">14.1</span> Font size and zoom</h3>
 <div class="outline-text-3" id="text-14-1">
 <p>
 You can customize default font face <a href="(customize-face 'default)">at runtime</a>.
@@ -1472,7 +1472,7 @@ If you save the configuration, you will find an entry like the next in
 your <code>init.el</code> and can be runtime evaluated.
 </p>
 
-<pre class="example" id="org107a347">
+<pre class="example" id="org577e302">
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1483,8 +1483,8 @@ your <code>init.el</code> and can be runtime evaluated.
 </div>
 </div>
 
-<div id="outline-container-orgb90df2b" class="outline-3">
-<h3 id="orgb90df2b"><span class="section-number-3">14.2</span> Modeline</h3>
+<div id="outline-container-orgf553da0" class="outline-3">
+<h3 id="orgf553da0"><span class="section-number-3">14.2</span> Modeline</h3>
 <div class="outline-text-3" id="text-14-2">
 <p>
 Add an indicator of whether the God mode is active or not. First of all we should define a function that return a G if god-mode is active or an empy string if not.
@@ -1510,10 +1510,10 @@ Now add an entry to <code>mode-line-format</code> with something like
 </div>
 </div>
 
-<div id="outline-container-org5f4ffc2" class="outline-3">
-<h3 id="org5f4ffc2"><span class="section-number-3">14.3</span> Window rules</h3>
+<div id="outline-container-orga780833" class="outline-3">
+<h3 id="orga780833"><span class="section-number-3">14.3</span> Window rules</h3>
 <div class="outline-text-3" id="text-14-3">
-<pre class="example" id="org9af4cd5">
+<pre class="example" id="org7818af9">
 (add-to-list 'display-buffer-alist '("\\*Help\\*"
 				      (display-buffer-in-side-window)
 				      (window-height . 0.25)
@@ -1532,8 +1532,8 @@ Now add an entry to <code>mode-line-format</code> with something like
 </pre>
 </div>
 </div>
-<div id="outline-container-org81aa518" class="outline-3">
-<h3 id="org81aa518"><span class="section-number-3">14.4</span> Initial buffer (<a id="org88d8e5b"></a>)</h3>
+<div id="outline-container-org5664918" class="outline-3">
+<h3 id="org5664918"><span class="section-number-3">14.4</span> Initial buffer (<a id="org619e0b4"></a>)</h3>
 <div class="outline-text-3" id="text-14-4">
 <p>
 Emacs startup. You can easily customize <code>initial-buffer-choice</code>
@@ -1551,8 +1551,8 @@ example org-homepage</a>. Consider it mapped on the pretty handy <code>s-h</code
 </div>
 </div>
 
-<div id="outline-container-org4324439" class="outline-3">
-<h3 id="org4324439"><span class="section-number-3">14.5</span> Dired</h3>
+<div id="outline-container-orgcd98c45" class="outline-3">
+<h3 id="orgcd98c45"><span class="section-number-3">14.5</span> Dired</h3>
 <div class="outline-text-3" id="text-14-5">
 <p>
 Easy copy to another dired buffer.. one of the killer feature of dired!
@@ -1593,8 +1593,8 @@ Dired subtree
 </div>
 </div>
 </div>
-<div id="outline-container-org98d6206" class="outline-3">
-<h3 id="org98d6206"><span class="section-number-3">14.6</span> Browser</h3>
+<div id="outline-container-orgb972cce" class="outline-3">
+<h3 id="orgb972cce"><span class="section-number-3">14.6</span> Browser</h3>
 <div class="outline-text-3" id="text-14-6">
 <p>
 Configure which broswer opens urls according to a match list. This is just an example (comment out to enable).
@@ -1603,34 +1603,22 @@ Configure which broswer opens urls according to a match list. This is just an ex
 <p>
 Define some customs for binary and arguments, like done for other browsers.
 </p>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(defcustom browse-url-opera-program "" "Opera executable")
-(defcustom browse-url-opera-arguments "opera" "Opera executable arguments")
-(setq browse-url-opera-arguments ())
-</pre>
-</div>
-
-<p>
-Experimental.
-</p>
-
-<pre class="example" id="orgc3a85ee">
-(defun browse-url-ask (&amp;optional browser url)
-  (interactive "CBrowser: \n")
-  (call-interactively browser url))
-</pre>
 </div>
 </div>
-<div id="outline-container-orgd763a2e" class="outline-3">
-<h3 id="orgd763a2e"><span class="section-number-3">14.7</span> <a href="https://www.opera.com/">Opera</a> support</h3>
+
+<div id="outline-container-orgc5b0093" class="outline-3">
+<h3 id="orgc5b0093"><span class="section-number-3">14.7</span> <a href="https://www.opera.com/">Opera</a> support</h3>
 <div class="outline-text-3" id="text-14-7">
 <p>
 Define <code>browse-url-opera</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(defun browse-url-opera (url &amp;optional _new-window)
+<pre class="src src-emacs-lisp">(defcustom browse-url-opera-program "" "Opera executable")
+(defcustom browse-url-opera-arguments "opera" "Opera executable arguments")
+(setq browse-url-opera-arguments ())
+
+(defun browse-url-opera (url &amp;optional _new-window)
   "Ask the Opera WWW browser to load URL.
 Default to the URL around or before point.  The strings in
 variable `browse-url-opera-arguments' are also passed to
@@ -1647,28 +1635,16 @@ The optional argument NEW-WINDOW is not used."
 	    (list url)))))
 </pre>
 </div>
-
-<p>
-This is an example mappging from <code>url</code> =&gt; <code>browser</code>.
-</p>
-
-<pre class="example" id="org61c0779">
-(setq browse-url-browser-function '(
-				    ("twitter.com" . browse-url-opera)
-				    ("github.com" . browse-url-chrome)
-				    ("reddit.com" . eww-browse-url)
-				    ("." . eww-browse-url)))
-
-</pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org503b9ca" class="outline-2">
-<h2 id="org503b9ca"><span class="section-number-2">15</span> Learning Emacs</h2>
+
+<div id="outline-container-org595c700" class="outline-2">
+<h2 id="org595c700"><span class="section-number-2">15</span> Learning Emacs</h2>
 <div class="outline-text-2" id="text-15">
 </div>
-<div id="outline-container-orgc0f568e" class="outline-3">
-<h3 id="orgc0f568e"><span class="section-number-3">15.1</span> Regular Expression Syntax</h3>
+<div id="outline-container-orge0de6fe" class="outline-3">
+<h3 id="orge0de6fe"><span class="section-number-3">15.1</span> Regular Expression Syntax</h3>
 <div class="outline-text-3" id="text-15-1">
 <p>
 Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
@@ -1755,8 +1731,8 @@ Syntax classes:
 </div>
 </div>
 
-<div id="outline-container-orgb87104c" class="outline-3">
-<h3 id="orgb87104c"><span class="section-number-3">15.2</span> Vectors</h3>
+<div id="outline-container-org069a977" class="outline-3">
+<h3 id="org069a977"><span class="section-number-3">15.2</span> Vectors</h3>
 <div class="outline-text-3" id="text-15-2">
 <p>
 Get an element from a vector
@@ -1775,8 +1751,8 @@ it's vector, you should use <code>aref</code>, because it's precise and faster.
 </p>
 </div>
 </div>
-<div id="outline-container-org64d354b" class="outline-3">
-<h3 id="org64d354b"><span class="section-number-3">15.3</span> Timers</h3>
+<div id="outline-container-org8e51899" class="outline-3">
+<h3 id="org8e51899"><span class="section-number-3">15.3</span> Timers</h3>
 <div class="outline-text-3" id="text-15-3">
 <p>
 You can run specified function at specified time and with a specific timeout! Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
@@ -1793,8 +1769,8 @@ point.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd7fa4f5" class="outline-2">
-<h2 id="orgd7fa4f5"><span class="section-number-2">16</span> Credits</h2>
+<div id="outline-container-org157a028" class="outline-2">
+<h2 id="org157a028"><span class="section-number-2">16</span> Credits</h2>
 <div class="outline-text-2" id="text-16">
 <p>
 I would like to thanks:
@@ -1805,7 +1781,7 @@ I would like to thanks:
 <li><a href="https://github.com/aaronbieber">Aaron Bieber</a> for his dotfiles and for the wonderful speech <a href="https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc">Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs</a> that makes me <b>fall in love</b> with Emacs. ;-)</li>
 <li><a href="https://protesilaos.com/">Protesilaos Stavrou</a> for his <a href="https://protesilaos.com/dotemacs/">comprehensive "dotemacs" (.emacs) for GNU/Linux</a> and <a href="https://protesilaos.com/codelog/">the huge amount of posts and videos about Emacs</a>.</li>
 <li><a href="https://github.com/sponsors/daviwil">David Wilson</a> for his fantastic <a href="https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ">System Crafters screencasts</a>!</li>
-<li><a href="http://staff.science.uva.nl/~dominik/">Carsten Dominik</a>, creator of the mighty <a href="http://orgmode.org">org-mode</a>. <a id="org039393c"></a></li>
+<li><a href="http://staff.science.uva.nl/~dominik/">Carsten Dominik</a>, creator of the mighty <a href="http://orgmode.org">org-mode</a>. <a id="org9797417"></a></li>
 <li><a href="http://ehneilsen.net">Eric H. Neilsen, Jr.</a> for his wonderful  <a href="http://ehneilsen.net/notebook/orgExamples/org-examples.html">org-mode examples and cookbook</a>.</li>
 <li><a href="https://www.gnu.org/software/emacs/">The Emacs editor</a> and his <b>guru</b> <a href="https://stallman.org/">Richard Stallman</a>.</li>
 <li><a href="https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf">The Elisp documentation</a></li>
@@ -1816,7 +1792,7 @@ I would like to thanks:
 <div id="postamble" class="status">
 <p class="date">Date: 2020-10-31 Sat 00:00</p>
 <p class="author">Author: MinasMazar</p>
-<p class="date">Created: 2021-05-30 Sun 11:59</p>
+<p class="date">Created: 2021-06-04 Fri 22:01</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
