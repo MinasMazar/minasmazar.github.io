@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2021-06-04 Fri 22:01 -->
+<!-- 2021-06-05 Sat 00:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Emacs configuration</title>
@@ -414,7 +414,7 @@ Append <code>usr/local/bin</code> to the <code>PATH</code>
 This is an example of other common variables you could wish having in place.
 </p>
 
-<pre class="example" id="org35f5544">
+<pre class="example" id="org13ce58d">
 (custom-set-variables
   '(tab-always-indent 'complete)
   '(web-mode-code-indent-offset 2)
@@ -458,7 +458,7 @@ This is an example of other common variables you could wish having in place.
 Eshell aliases goes under <code>~/.emacs.d/eshell/aliases</code> as default. You can customize it with sometihg like that:
 </p>
 
-<pre class="example" id="org71090a1">
+<pre class="example" id="orgaf97346">
 alias ff "find-file $*"
 alias rr "ripgrep-regexp . $1"
 </pre>
@@ -490,7 +490,7 @@ when running M-x shell but not when running M-! / (shell-command), as there is n
 <p>
 Emacs window manager sample configuration to put somewhere into your <code>init.el</code>. 
 </p>
-<pre class="example" id="org91d76be">
+<pre class="example" id="orga3836fb">
 (use-package exwm
   :config
   (menu-bar-mode -1)
@@ -514,7 +514,7 @@ Emacs window manager sample configuration to put somewhere into your <code>init.
 This is an example configuration to add into you <code>~/.xinitrc</code>
 </p>
 
-<pre class="example" id="org1828922">
+<pre class="example" id="org2317a71">
 # You may need to comment out the next line to disable access control.
 #xhost +SI:localuser:$USER
 
@@ -640,7 +640,7 @@ Add shortcut in translation map which basically are fast access to <code>C-x</co
 For some reason you can't use the <code>alt</code> key on your keyboard? (It happens to me with Iterm + ssh + emacsclient session) and for some reason you don't want to solve this issue configuring Iterm or else? In this case you use this workaround, remapping some core keybinding like <code>C-k</code> and <code>C-l</code>.
 </p>
 
-<pre class="example" id="org30a7579">
+<pre class="example" id="org3ebbaf6">
 (global-set-key (kbd "C-k") 'execute-extended-command)
 (global-set-key (kbd "C-K") 'kill-visual-line)
 (global-set-key (kbd "C-l") 'god-local-mode)
@@ -1091,7 +1091,7 @@ Beautify <code>org-mode</code> with bullets..
 Here a quick snippet to customize your <a href="https://orgmode.org/manual/Capture-templates.html">org capture templates</a> (taken from <a href="http://www.howardism.org/Technical/Emacs/capturing-intro.html">www.howardism.org</a>) and <a href="https://www.reddit.com/r/emacs/comments/7zqc7b/share_your_org_capture_templates/">here a reddit thread of shared org capture templates</a>.
 </p>
 
-<pre class="example" id="org822454a">
+<pre class="example" id="org2c03bef">
 (add-to-list '(org-capture-templates
   '(("p" "Personal stuff")
     ("pt" "Scheduled task" entry
@@ -1175,7 +1175,7 @@ Vterm imo is something you want if you need the most OS/temrinal like experience
 You can use vterm to spawn different processes
 </p>
 
-<pre class="example" id="orge8b1b49">
+<pre class="example" id="orga27a073">
 #+begin_src emacs-lisp
   (with-current-buffer (vterm "*web-server*")
     (vterm-send-string "PORT=5000 bin/rails\n"))
@@ -1236,7 +1236,7 @@ Restclient is a really useful tool, basically an emacs interface to <code>curl</
 Here an example of usage:
 </p>
 
-<pre class="example" id="orgfc4a824">
+<pre class="example" id="org92d7261">
 # Set variables form elisp code using :=
 :token := reaper-api-key
 :account-id := reaper-account-id
@@ -1271,7 +1271,7 @@ You can use Emacs as your mail client. In order to configure <code>mu4e</code> I
 In order to let <code>offlineimap</code> to read your authfile, you must save this snippet into your <code>~/.offlineimap.py</code>
 </p>
 
-<pre class="example" id="org489f885">
+<pre class="example" id="orgbdf93c2">
 #!/usr/bin/python
 
 import re, os
@@ -1287,7 +1287,7 @@ def get_password_emacs(machine, login, port):
 and take care to add this entry to your <code>~/.offlineimaprc</code>
 </p>
 
-<pre class="example" id="orgee148f2">
+<pre class="example" id="org4fe68a4">
 pythonfile = ~/.offlineimap.py
 </pre>
 
@@ -1295,7 +1295,7 @@ pythonfile = ~/.offlineimap.py
 A normal <code>~/.authfile.gpg</code> with some entries for IMAP/SMTP account should be like this.
 </p>
 
-<pre class="example" id="org7b9f953">
+<pre class="example" id="org3d7a1d9">
 machine imap.gmail.com login your-email@example.com password your-strong-password port imaps
 machine imap.gmail.com login your-email@example.com password your-strong-password port 587
 machine smtp.gmail.com login your-email@example.com password your-strong-password port 465
@@ -1305,7 +1305,7 @@ machine smtp.gmail.com login your-email@example.com password your-strong-passwor
 This is an example of an <code>~/.offlineimaprc</code> config file for a Gmail email account with the inclusion of <code>offlineimap.py</code> defined above.
 </p>
 
-<pre class="example" id="org565df39">
+<pre class="example" id="org9b7c9ee">
 [general]
 accounts = Gmail
 maxsyncaccounts = 1
@@ -1376,7 +1376,7 @@ is required because otherwise it will stay active in background.
 Sample setup of mu4e
 </p>
 
-<pre class="example" id="orgc10fb01">
+<pre class="example" id="orgaff6e0b">
 (setq
    user-mail-address "USERNAME@gmail.com"
    user-full-name  "YOUR FULL NAME")
@@ -1386,7 +1386,7 @@ Sample setup of mu4e
 Here a sample configuration for SMTP
 </p>
 
-<pre class="example" id="orgd825dac">
+<pre class="example" id="orgd427908">
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-stream-type 'starttls
       smtpmail-smtp-server "smtp.example.com"
@@ -1472,7 +1472,7 @@ If you save the configuration, you will find an entry like the next in
 your <code>init.el</code> and can be runtime evaluated.
 </p>
 
-<pre class="example" id="org577e302">
+<pre class="example" id="orgf048d04">
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1513,7 +1513,7 @@ Now add an entry to <code>mode-line-format</code> with something like
 <div id="outline-container-orga780833" class="outline-3">
 <h3 id="orga780833"><span class="section-number-3">14.3</span> Window rules</h3>
 <div class="outline-text-3" id="text-14-3">
-<pre class="example" id="org7818af9">
+<pre class="example" id="orgfca0e85">
 (add-to-list 'display-buffer-alist '("\\*Help\\*"
 				      (display-buffer-in-side-window)
 				      (window-height . 0.25)
@@ -1603,9 +1603,25 @@ Configure which broswer opens urls according to a match list. This is just an ex
 <p>
 Define some customs for binary and arguments, like done for other browsers.
 </p>
-</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defcustom browse-url-opera-program "" "Opera executable")
+(defcustom browse-url-opera-arguments "opera" "Opera executable arguments")
+(setq browse-url-opera-arguments ())
+</pre>
 </div>
 
+<p>
+Experimental.
+</p>
+
+<pre class="example" id="orgd00ded2">
+(defun browse-url-ask (&amp;optional browser url)
+  (interactive "CBrowser: \n")
+  (call-interactively browser url))
+</pre>
+</div>
+</div>
 <div id="outline-container-orgc5b0093" class="outline-3">
 <h3 id="orgc5b0093"><span class="section-number-3">14.7</span> <a href="https://www.opera.com/">Opera</a> support</h3>
 <div class="outline-text-3" id="text-14-7">
@@ -1614,11 +1630,7 @@ Define <code>browse-url-opera</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(defcustom browse-url-opera-program "" "Opera executable")
-(defcustom browse-url-opera-arguments "opera" "Opera executable arguments")
-(setq browse-url-opera-arguments ())
-
-(defun browse-url-opera (url &amp;optional _new-window)
+<pre class="src src-emacs-lisp">(defun browse-url-opera (url &amp;optional _new-window)
   "Ask the Opera WWW browser to load URL.
 Default to the URL around or before point.  The strings in
 variable `browse-url-opera-arguments' are also passed to
@@ -1635,10 +1647,22 @@ The optional argument NEW-WINDOW is not used."
 	    (list url)))))
 </pre>
 </div>
-</div>
-</div>
-</div>
 
+<p>
+This is an example mappging from <code>url</code> =&gt; <code>browser</code>.
+</p>
+
+<pre class="example" id="org8e29d47">
+(setq browse-url-browser-function '(
+				    ("twitter.com" . browse-url-opera)
+				    ("github.com" . browse-url-chrome)
+				    ("reddit.com" . eww-browse-url)
+				    ("." . eww-browse-url)))
+
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org595c700" class="outline-2">
 <h2 id="org595c700"><span class="section-number-2">15</span> Learning Emacs</h2>
 <div class="outline-text-2" id="text-15">
@@ -1792,7 +1816,7 @@ I would like to thanks:
 <div id="postamble" class="status">
 <p class="date">Date: 2020-10-31 Sat 00:00</p>
 <p class="author">Author: MinasMazar</p>
-<p class="date">Created: 2021-06-04 Fri 22:01</p>
+<p class="date">Created: 2021-06-05 Sat 00:52</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
