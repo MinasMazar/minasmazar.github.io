@@ -1,0 +1,121 @@
+<!-- livebook:{"autosave_interval_s":600,"persist_outputs":true} -->
+
+# Semi-dynamic blog with Prex
+
+## Prex
+
+```elixir
+defmodule Prex do
+  def bookmarks_file, do: Path.expand("../bookmarks.exs", __ENV__.file)
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Prex, <<70, 79, 82, 49, 0, 0, 6, ...>>, {:bookmarks_file, 0}}
+```
+
+## Bookmarks
+
+```elixir
+defmodule Prex.Bookmarks.Sync do
+  require Logger
+
+  def load_bookmarks do
+    with {bookmarks, _} <- Code.eval_file(Prex.bookmarks_file()) do
+      Logger.debug("Loaded bookmarks #{inspect(bookmarks)}")
+      bookmarks
+    end
+  end
+
+  def write_bookmarks(bookmarks) do
+    Prex.bookmarks_file()
+    |> File.write!(bookmarks)
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+{:module, Prex.Bookmarks.Sync, <<70, 79, 82, 49, 0, 0, 10, ...>>, {:write_bookmarks, 1}}
+```
+
+Export bookmarks to the org-page _bookmarks.org_
+
+```elixir
+defmodule Prex.Bookmarks.Exports.Org do
+  require Logger
+  import Prex.Bookmarks.Sync
+
+  @template """
+  #+TITLE: MinasMazar's blog
+  #+AUTHOR: MinasMazar
+  #+EMAIL: minasmazar@gmail.com
+  #+DATE: <2024-01-17 Wed>
+  #+SETUPFILE: ../templates/_header.org
+
+  <%= @body %>
+  """
+  def export!(bookmarks \\ load_bookmarks()) do
+    outfile = Path.expand("../bookmarks.org", __ENV__.file)
+    File.write!(outfile, org_content(bookmarks))
+  end
+
+  def org_content(bookmarks) do
+    EEx.eval_string(@template, assigns: %{body: bookmarks_to_org(bookmarks)})
+  end
+
+  def bookmarks_to_org(bookmarks) when is_list(bookmarks) do
+    bookmarks
+    |> Enum.map(&bookmarks_to_org/1)
+    |> Enum.join("\n")
+  end
+
+  def bookmarks_to_org(bookmark = %{url: url}) do
+    Logger.debug("Exporting bookmark: #{bookmark.url}")
+    title = Map.get(bookmark, :title, url)
+    tags = Map.get(bookmark, :tags, [])
+    tagline = Enum.join(tags, ":")
+    "*** [[#{url}][#{title}]] :#{tagline}:"
+  end
+end
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+
+21:24:06.324 [debug] Loaded bookmarks [%{tags: ["cool", "website"], url: "https://saptaks.website/"}, %{tags: ["webring", "nerd", "technology"], url: "https://a11y-webring.club/"}]
+
+21:24:06.337 [debug] Exporting bookmark: https://saptaks.website/
+
+21:24:06.337 [debug] Exporting bookmark: https://a11y-webring.club/
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:ok
+```
+
+## Usage
+
+```elixir
+Prex.Bookmarks.Exports.Org.export!()
+```
+
+## [dev] Debug
+
+```elixir
+"../bookmarks.exs"
+|> Path.expand(__ENV__.file)
+|> File.read!()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+"[\n  %{url: \"https://saptaks.website/\",\n    tags: ~w[cool website]},\n  %{url: \"https://a11y-webring.club/\",\n    tags: ~w[webring nerd technology]},\n  %{url: \"https://www.youtube.com/watch?v=JDQ_xnqjfv4\",\n    tags: ~w[atlantis youtube]}\n]\n"
+```

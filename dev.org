@@ -1,0 +1,12 @@
+#+TITLE: MinasMazar's blog ~ dev stuff
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-01-31 Wed>
+#+SETUPFILE: ../templates/_header.org
+
+* Icons
+- https://remixicon.com/
+
+# Local Variables:
+# browse-url-default-browser: #'browse-url-firefox
+# End:

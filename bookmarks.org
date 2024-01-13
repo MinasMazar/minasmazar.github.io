@@ -1,0 +1,20 @@
+#+TITLE: MinasMazar's blog
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-01-17 Wed>
+#+SETUPFILE: ../templates/_header.org
+#
+* [[https://it.wikipedia.org/wiki/Benedetto_Brin][Benedetto Brin]]
+
+* How to set environment variables from .env file :dev:
+
+#+begin_src sh
+  set -a # automatically export all variables
+  source .env
+  set +a
+#+end_src
+
+* [[https://dev.to/hlappa/development-environment-for-elixir-phoenix-with-docker-and-docker-compose-2g17][Development environment for Elixir + Phoenix with Docker and Docker-compose]]
+* [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita's bookmarks]]                                :blog:emacs:bookmarks:
+* [[https://saptaks.website/][https://saptaks.website/]]                                     :cool:website:
+* [[https://a11y-webring.club/][https://a11y-webring.club/]]                        :webring:nerd:technology:
