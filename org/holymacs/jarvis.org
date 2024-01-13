@@ -1,0 +1,190 @@
+#+TITLE: Holymacs ~ Jarvis module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+* Tabspaces
+
+#+begin_src elisp :tangle no
+  (use-package tabspaces
+    :hook (after-init . tabspaces-mode)
+    :commands (tabspaces-switch-or-create-workspace
+	       tabspaces-open-or-create-project-and-workspace)
+    :bind
+    (("s-{" . tab-previous)
+     ("s-}" . tab-next))
+    :custom
+    (tabspaces-keymap-prefix "M-o w")
+    (tabspaces-use-filtered-buffers-as-default t)
+    (tabspaces-default-tab "Default")
+    (tabspaces-remove-to-default t)
+    (tabspaces-initialize-project-with-todo t)
+    (tabspaces-todo-file-name "project-todo.org")
+    ;; sessions
+    (tabspaces-session t)
+    (tabspaces-session-auto-restore t))
+#+end_src
+
+* COMMENT Pop terminal ⚠️ wip ⚠️
+
+#+begin_src elisp
+  (use-package popper
+    :bind (("s-p"   . popper-toggle)
+	   ("s-`"   . popper-cycle)
+	   ("C-M-`" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers
+	  '(shell-mode
+	    eshell-mode
+	    "Output\\*$"
+	    "\\*Async Shell Command\\*"
+	    help-mode
+	    compilation-mode))
+    (popper-mode +1)
+    (popper-echo-mode +1))
+#+end_src
+* Second Brain ([[https://www.orgroam.com/][Org-roam]])
+
+#+begin_src elisp
+(use-package org-roam
+  :bind
+  (("M-o r f" . #'org-roam-node-find)))
+#+end_src
+
+* COMMENT Autoinsert and templates ⚠️ wip ⚠️
+
+Emacs has some built-in functionalities to /auto insert/ text (expand text or via templates)
+- =auto-insert=
+- =abbrev=
+- =skeleton=
+
+Also there are some external packages
+- =yasnippet=
+- =tempo=
+  
+* COMMENT From elfeed to gemlog - ⚠️ wip ⚠️
+
+#+begin_src elisp
+  (defun jarvis-elfeed-entry-to-gmi ()
+    "Export the current elfeed article content to a gemlog entry (a blog, but in Gemini protocol")
+    (interactive)
+    (let* ((content (buffer-string))
+	   (org-capture-templates '(("E" "Gemlog entry" plain (file+regexp "~/minasmazar-capsule/log.gmi" "^# ") "\n\n# %U\n\n%i\n\n" :prepend t))))
+      (set-mark (point-min))
+      (goto-char (point-max))
+      (activate-mark)
+      (org-capture)))
+#+end_src
+
+* Alarm!
+
+#+begin_src elisp
+  (use-package alarm-clock
+    :config
+    (defun holymacs/jarvis/set-alarm-10min-fire! ()
+      (interactive)
+      (alarm-clock-set "10min" "FIRE!"))
+    :bind
+    ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
+#+end_src
+
+* News
+** RSS Reader (elfeed)
+
+#+begin_src elisp
+  (use-package elfeed
+    :bind
+    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (set-timer "10min" t #'elfeed-update))))
+    :config
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+#+end_src
+
+* Media
+
+#+begin_src elisp
+  (use-package bongo)
+#+end_src
+
+* Search on the web: engine-mode
+#+begin_src elisp
+  (use-package engine-mode
+    :init
+    (setq engine/browser-function #'browse-url-firefox)
+    :config
+    (defun engine/execute-search (search-engine-url browser-function search-term)
+      "Display the results of the query."
+      (interactive)
+      (let ((browse-url-handlers nil)
+	    (browse-url-browser-function browser-function))
+	(browse-url
+	 (format-spec search-engine-url
+		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :browser 'eww-browse-url
+      :keybinding "d")
+
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "h")
+
+    (defengine google
+      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :browser 'browse-url-firefox
+      :keybinding "g")
+
+    (defengine google-images
+      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      :keybinding "i")
+
+    (defengine google-maps
+      "https://maps.google.com/maps?q=%s"
+      :docstring "Google Maps"
+      :keybinding "m")
+
+    (defengine google-maps
+      "https://www.openstreetmap.org/search?query=%s"
+      :docstring "OpenStreetMap"
+      :keybinding "M")
+
+    (defengine google-translate-to-it
+      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      :docstring "Translate to IT"
+      :keybinding "t")
+
+    (defengine google-translate-to-en
+      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      :docstring "Translate from IT to English"
+      :browser 'browse-url-firefox
+      :keybinding "T")
+
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+
+    (defengine wikipedia
+      "https://www.wikipedia.org/search-redirect.php?language=it&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."
+      :browser 'eww-browse-url)
+
+    (defengine youtube
+      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y")
+
+    (defengine amazon
+      "https://www.amazon.it/s/ref=nb_sb_noss?&field-keywords=%s"
+      :browser 'browse-url-firefox
+      :keybinding "a")
+
+    (defengine cap
+      "https://www.nonsolocap.it/cap?k=%s&c=pescara"
+      :browser 'browse-url-firefox
+      :keybinding "C")
+
+    (engine-mode t))
+#+end_src
