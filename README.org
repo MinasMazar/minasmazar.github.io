@@ -1,0 +1,18 @@
+#+TITLE: MinasMazar's blog
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+
+
+* Emacs and Org
+
+This is the source code of my personal website. It is written in =org-mode= and is hosted on [[https://pages.github.com/][Github pages]]. It uses the =org-publish= function to generate the static site you're reading right now.
+
+For more information about =Emacs=, =org-mode= and its publishing feature:
+
+- https://emacsdocs.org/
+- https://orgmode.org/
+- https://orgmode.org/worg/
+- https://orgmode.org/manual/Publishing.html
+
+If you're interested in the Emacs configuration needed to generate my website pages and the deployment workflow, refers to the [[file:minemacs.org::#blorg-section][/Blorg section/]].
