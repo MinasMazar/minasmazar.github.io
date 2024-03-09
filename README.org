@@ -16,3 +16,111 @@ For more information about =Emacs=, =org-mode= and its publishing feature:
 - https://orgmode.org/manual/Publishing.html
 
 If you're interested in the Emacs configuration needed to generate my website pages and the deployment workflow, refers to the [[file:minemacs.org::#blorg-section][/Blorg section/]].
+
+The package =ox-rss= is needed if you want to generate a RSS (it exports the ~org-rss-publish-to-rss~ function). Include the [[https://git.sr.ht/~abrahms/ox-gemini][=ox-gemini=]] package if you want to export your org files also in the =.gmi= format in order to deploy your blog as a [[https://gemini.circumlunar.space/][gemini capsule]]. It provides the =org-gemini-publish-to-gemini=. Useful resources:
+
+- [[https://orgmode.org/][org-mode]]
+- [[https://github.com/fniessen/org-html-themes]]
+- https://pavpanchekha.com/blog/org-mode-publish.html
+- https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/modules/blorg.el
+  (use-package ox-rss)
+  (use-package ox-gemini)
+  (require 'org)
+  (mapcar (lambda (project)
+	    (add-to-list 'org-publish-project-alist project))
+	  '(
+	    ("blorg:static"
+	     :base-directory "~/minasmazar.github.io/assets/"
+	     :base-extension ".*"
+	     :publishing-directory "~/minasmazar.github.io/"
+	     :recursive t
+	     :publishing-function org-publish-attachment)
+	    ("blorg:pages"
+	     :recursive t
+	     :base-directory "~/minasmazar.github.io/pages"
+	     :base-extension "org"
+	     :publishing-function org-html-publish-to-html
+	     :publishing-directory "~/minasmazar.github.io/"
+	     :with-author nil
+	     :with-creator t
+	     :with-toc t
+	     :html-link-up "/"
+	     :html-link-home "/"
+	     ;; :html-preamble blorg-html-preamble
+	     :section-numbers nil
+	     :time-stamp-file nil)
+	    ("blorg:gmi"
+	     :recursive t
+	     :base-directory "~/minasmazar.github.io/pages/"
+	     :base-extension "org"
+	     :publishing-function org-gemini-publish-to-gemini
+	     :publishing-directory "~/minasmazar.github.io/"
+	     :with-author nil
+	     :with-creator t
+	     :with-toc t
+	     :html-link-up "/"
+	     :html-link-home "/"
+	     ;; :html-preamble blorg-html-preamble
+	     :section-numbers nil
+	     :time-stamp-file nil)
+	    ("blorg:publish"
+	     :base-directory "~/minasmazar.github.io/"
+	     :publishing-directory "~/minasmazar.github.io/"
+	     :base-extension "any"
+	     :publishing-function org-publish-attachment
+	     :exclude ".*"
+	     :completion-function blorg-autopublish)
+	    ("blorg"
+	     :components ("blorg:pages" "blorg:publish"))))
+#+end_src
+
+Every link in =org-mode= has a prefix that define a /type/ (=img:logo.png= =file:about.org=). Every type should provide two functions for /follow/ and /export/ actions. This snippet comes from [[https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html][this SO thread]].
+
+#+begin_src elisp
+  (defun org-custom-link-raw-relative-follow (path)
+    (org-open-file-with-emacs
+     (format "./%s" path)))
+
+  (defun org-custom-link-raw-relative-export (path desc format)
+    (cond
+     ((eq format 'html)
+      (format "<a href=\"/%s\" alt=\"%s\"/>%s</a>" path desc desc))))
+
+  (org-add-link-type "raw-relative" 'org-custom-link-img-follow 'org-custom-link-img-export)
+#+end_src
+
+Now define some handy =org-capture= templates!
+
+#+begin_src elisp
+  (mapcar (lambda (entry) (add-to-list 'org-capture-templates entry))
+	  '(("B" "Blorg: bookmark" entry (file "~/minasmazar.github.io/pages/bookmarks.org")
+	     "* %?\n\n %a" :prepend t)
+	    ("J" "Blorg: journal" entry (file+datetree "~/minasmazar.github.io/pages/journal.org")
+	     "* %?\nEntered on %U\n %i\n %a" :jump-to-captured t)))
+#+end_src
+
+Here we define the function that uses ~git~ to publish my static site to my personal Github pages. The pre-requisite is that the destitnation directory exists and has a git repo already initialized and the remote already set up.
+
+#+begin_src emacs-lisp
+  (defcustom blorg-autopublish nil
+    "Define if autopublish feature is enabled. Used in the function =blorg-autopublish=")
+
+  (defun blorg-html-preamble ()
+    "<div><ul><li><a href=\"/\">Home</a></li></ul></div>")
+
+  (defun blorg-autopublish (options)
+    (let* ((default-directory (plist-get options :publishing-directory)))
+      (if blorg-autopublish
+    (blorg-add-commit-and-push default-directory)
+  (message "[blorg] autopublish simulation"))))
+
+  (defun blorg-add-commit-and-push (directory)
+    "Add all files, commit and push"
+    (cd directory)
+    (let* ((commit-msg (format "Autopublish [%s]" (current-time-string)))
+     (command (format "git add . ; git commit -m '%s' ; git push origin master --force" commit-msg)))
+      (shell-command command)))
+#+end_src
+

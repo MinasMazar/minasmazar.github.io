@@ -1,0 +1,375 @@
+#+TITLE: Holymacs
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/init.el :mkdirp yes
+#+STARTUP: show2levels
+#+OPTIONS: toc:t
+
+* Package Manager
+
+#+begin_src elisp
+  (add-to-list 'load-path "~/.emacs.d/manual-packages/")
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")
+			   ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+  (require 'use-package)
+  (require 'use-package-ensure)
+  (setq use-package-always-ensure t
+	package-enable-at-startup t)
+  (package-initialize)
+#+end_src
+
+* Main configuration
+
+Remember to set your name and email address! Place here your real data, or use the standard Emacs customization =(customize-variable 'user-full-name)=.
+
+#+begin_example emacs-lisp
+  (setq user-full-name "Your username"
+        user-mail-address "username@domain.net")
+#+end_example
+
+
+#+begin_src elisp
+  (ffap-bindings)
+  (savehist-mode 1)
+#+end_src
+
+* Dired
+
+#+begin_src elisp
+  (require 'dired)
+  (setq make-backup-files nil
+	tab-always-indent 'complete
+	dired-dwim-target t
+	dired-listing-switches "-alth"
+	dired-omit-files "\\`[.]?#\\|\\`[.][.]?")
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+  (add-hook 'dired-mode-hook #'dired-omit-mode)
+#+end_src
+
+* Appearance
+
+#+begin_src elisp
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+#+end_src
+
+* Orderless
+#+begin_src elisp
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless partial-completion)))
+#+end_src
+
+* Vertico
+
+#+begin_src elisp
+  (use-package vertico
+    :init
+    (vertico-mode t)
+    (setq vertico-count 20
+	  vertico-resize t
+	  vertico-cycle t))
+#+end_src
+
+* Company
+
+#+begin_src elisp
+  (use-package company
+    :config
+    (global-company-mode))
+#+end_src
+
+* Embark
+
+#+begin_src elisp
+  (use-package embark
+    :config
+    (add-to-list 'god-exempt-major-modes 'embark-mode)
+    :bind*
+    ("C-," . embark-act)
+    (:map embark-general-map
+	  ("C-w" . browse-url))
+    (:map embark-identifier-map
+	  ("R" . query-replace)
+	  ("O" . multi-occur-in-matching-buffers)
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
+    (:map embark-url-map
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
+    (:map  embark-file-map
+	   ("p" . project-find-file)
+	   ("b" . project-switch-to-buffer)
+	   ("," . append-to-previous-buffer)))
+#+end_src
+
+* Keybindings
+** Custom keybindings
+
+I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for commands I often use, as for =org= commands.
+
+#+begin_src elisp
+  (global-set-key (kbd "M-o a") #'org-agenda)
+  (global-set-key (kbd "M-o c") #'org-agenda-capture)
+#+end_src
+
+** Translations keys
+
+#+begin_src elisp
+  (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
+  (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
+  (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
+#+end_src
+
+** Super-key
+
+#+begin_src elisp
+  (global-set-key (kbd "s-0") (kbd "C-x 0"))
+  (global-set-key (kbd "s-1") (kbd "C-x 1"))
+  (global-set-key (kbd "s-2") (kbd "C-x 2"))
+  (global-set-key (kbd "s-3") (kbd "C-x 3"))
+  (global-set-key (kbd "s-w") (kbd "C-x o"))
+  (global-set-key (kbd "s-r") (kbd "C-x z"))
+  (global-set-key (kbd "s-i") (kbd "C-M-i"))
+  (global-set-key (kbd "s-N") (kbd "C-x C-j"))
+  (global-set-key (kbd "s-[") (kbd "C-x <left>"))
+  (global-set-key (kbd "s-]") (kbd "C-x <right>"))
+  (global-set-key (kbd "s-,") #'switch-to-completions)
+  (global-set-key (kbd "s-b") #'switch-to-buffer)
+  (global-set-key (kbd "s-B") #'ibuffer)
+  (global-set-key (kbd "s-)") #'kill-this-buffer)
+  (global-set-key (kbd "s--") #'bookmark-jump)
+  (define-key dired-mode-map (kbd "s-t") #'find-name-dired)
+#+end_src
+
+** god-mode
+
+#+begin_src elisp
+  (use-package god-mode
+    :init
+    (defun minemacs-god-mode-enabled ()
+      (setq cursor-type 'box))
+    (defun minemacs-god-mode-disabled ()
+      (setq cursor-type 'bar))
+    :config
+    (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
+    (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
+    (global-set-key (kbd "s-n") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "i") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "u") #'undo)
+    (define-key god-local-mode-map (kbd "U") #'undo-redo)
+    (define-key god-local-mode-map (kbd ">") #'end-of-buffer)
+    (define-key god-local-mode-map (kbd "<") #'beginning-of-buffer)
+    (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+    (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+    (define-key god-local-mode-map (kbd "{") #'backward-sexp)
+    (define-key god-local-mode-map (kbd "}") #'forward-sexp)
+    (add-to-list 'god-exempt-major-modes 'compilation-mode)
+    (add-to-list 'god-exempt-major-modes 'org-capture-mode)
+    (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
+    (add-to-list 'god-exempt-major-modes 'elfeed-show-mode)
+    (god-mode))
+#+end_src
+
+** Which-key
+
+#+begin_src elisp
+  (use-package which-key
+    :config
+    (which-key-mode))
+#+end_src
+
+* Shared configurations
+
+#+begin_src elisp
+  (if (file-exists-p "~/Dropbox/emacs/")
+      (setq bookmark-file "~/Dropbox/emacs/bookmarks"
+	    eshell-aliases-file "~/Dropbox/emacs/eshell-aliases"
+	    custom-file "~/Dropbox/emacs/custom.el"
+	    org-agenda-files '("~/Dropbox/org/")
+	    org-roam-directory "~/Dropbox/org-roam/"))
+  (load custom-file 'noerror)
+#+end_src
+
+* Modules
+
+Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
+
+#+begin_src emacs-lisp
+  (let* ((modules-dir (concat user-emacs-directory "modules/"))
+	 (modules (if (file-exists-p modules-dir)
+		      (directory-files modules-dir))))
+    (if modules (mapcar (lambda (module) (load module 'noerror)) modules)))
+#+end_src
+
+Here's a list of modules:
+- the *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
+
+* Docs
+** Regular Expression Syntax
+
+Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
+
+The following characters are special : . * + ? ^ $ \ [
+
+Between brackets [], the following are special : ] - ^
+
+Many characters are special when they follow a backslash – see below.
+
+  .        any character (but newline)
+  *        previous character or group, repeated 0 or more time
+  +        previous character or group, repeated 1 or more time
+  ?        previous character or group, repeated 0 or 1 time
+  ^        start of line
+  $        end of line
+  [...]    any character between brackets
+  [^..]    any character not in the brackets
+  [a-z]    any character between a and z
+  \        prevents interpretation of following special char
+  \|       or
+  \w       word constituent
+  \b       word boundary
+  \sc      character with c syntax (e.g. \s- for whitespace char)
+  \( \)    start\end of group
+  \< \>    start\end of word
+  \_< \_>  start\end of symbol
+  \` \'    start\end of buffer\string
+  \1       string matched by the first group
+  \n       string matched by the nth group
+  \{3\}    previous character or group, repeated 3 times
+  \{3,\}   previous character or group, repeated 3 or more times
+  \{3,6\}  previous character or group, repeated 3 to 6 times
+  \=       match succeeds if it is located at point
+*?, +?, and ?? are non-greedy versions of *, +, and ? – see NonGreedyRegexp. Also, \W, \B, and \Sc match any character that does not match \w, \b, and \sc.
+
+Characters are organized by category. Use C-u C-x = to display the category of the character under the cursor.
+
+  \ca      ascii character
+  \Ca      non-ascii character (newline included)
+  \cl      latin character
+  \cg      greek character
+Here are some syntax classes that can be used between brackets, e.g. [[:upper:]\|[:digit:]\.].
+
+  [:digit:]  a digit, same as [0-9]
+  [:alpha:]  a letter (an alphabetic character)
+  [:alnum:]  a letter or adigit (an alphanumeric character ()
+  [:upper:]  a letter in uppercase
+  [:space:]  a whitespace character, as defined by the syntax table
+  [:xdigit:] an hexadecimal digit
+  [:cntrl:]  a control character
+  [:ascii:]  an ascii character
+Syntax classes:
+
+  \s-   whitespace character        \s/   character quote character
+  \sw   word constituent            \s$   paired delimiter
+  \s_   symbol constituent          \s'   expression prefix
+  \s.   punctuation character       \s<   comment starter
+  \s(   open delimiter character    \s>   comment ender
+  \s)   close delimiter character   \s!   generic comment delimiter
+  \s"   string quote character      \s|   generic string delimiter
+  \s\   escape character
+
+** Vectors
+
+Get an element from a vector
+
+#+begin_example emacs-lisp
+;; get a element from vector
+(aref ["a" "b" "c"] 0) ; ⇒ "a"
+;; get a element from vector
+(elt ["a" "b" "c"] 0) ; ⇒ "a"
+#+end_example
+
+What's the difference between =aref= and =elt=?
+=elt= is more general. It works on vector and list. But if you know
+it's vector, you should use =aref=, because it's precise and faster.
+
+** Timers
+
+You can run specified function at specified time and with a specific timeout! Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
+
+#+BEGIN_QUOTE
+The list-timers command lists all the currently active timers. There’s
+only one command available in the buffer displayed: c
+(timer-list-cancel) that will cancel the timer on the line under
+point.
+#+END_QUOTE
+
+** (interactive) functions
+
+Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
+
+#+begin_example emacs-lisp
+  (defun minemacs/demo-function (url &optional handler)
+    "Example function."
+    (interactive (list
+		  (read-from-minibuffer "URL: ")
+		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+     (message (format "url: %s, handler: %s" url handler )))
+#+end_example
+** Buffer management
+
+Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer][stackoverflow]].
+
+#+begin_src emacs-lisp :tangle no
+(defun minemacs-clear-buffer ()
+  "clear whole buffer add contents to the kill ring"
+  (interactive)
+  (kill-region (point-min) (point-max)))
+
+(defun minemacs-clear-buffer-permenantly ()
+  "clear whole buffer, contents is not added to the kill ring"
+  (interactive)
+  (delete-region (point-min) (point-max)))
+#+end_src
+
+** Commands, functions and variables
+
+Just press ~C-h o~ to get help on those symbols.
+
+- =align-regexp=
+- =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
+- =browse-url-of-buffer=
+- =completions-max-height=
+- =find-name-dired=
+- =json-pretty-print-buffer=
+- =org-archive-subtree-default=
+- =org-babel-load-file=
+- =pp-eval-expression=
+- =proced=
+- =shr-inhibit-images=
+
+** Libaries
+
+- [[https://tkf.github.io/emacs-request/][request.el]]
+
+** Useful topics
+
+- [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
+
+* Credits
+
+  I would like to thanks:
+- [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
+- [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+- [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
+- [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
+- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
+- [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
+- [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
+- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄 also thanks to [[https://orgmode.org/worg/][worg]] 🌈
+- [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
+- [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
+- [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
+
+
+# Local Variables:
+# olivetti-minimum-body-width: 40
+# End:
