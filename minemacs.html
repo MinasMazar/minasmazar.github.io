@@ -240,7 +240,7 @@
 <li><a href="#org0a35530">Package Manager</a></li>
 <li><a href="#orga09f5f1">Minemacs layer</a></li>
 <li><a href="#orgd580b5e">Main settings</a></li>
-<li><a href="#orgcacc3b3">Appearance</a>
+<li><a href="#org9daf86a">Appearance</a>
 <ul>
 <li><a href="#orgef62857">Window settings</a></li>
 <li><a href="#orge5a8ce5">Transparency</a></li>
@@ -325,11 +325,11 @@
 <li><a href="#orgcb8d45f">autoinsert.el</a></li>
 <li><a href="#orga3adb2e">Terminal emulator</a></li>
 <li><a href="#orgdfb0a84">Yasnippet</a></li>
-<li><a href="#org16e91d2">Docker</a></li>
+<li><a href="#org4b841da">Docker</a></li>
 <li><a href="#org3f4d0d0">Treemacs</a></li>
 </ul>
 </li>
-<li><a href="#org9daf86a">Appearance</a>
+<li><a href="#org8e29399">Appearance</a>
 <ul>
 <li><a href="#org1075ac3">Doom modeline</a></li>
 </ul>
@@ -380,7 +380,7 @@ It also consists in a literate configuration file.
 Remember to set my name and email address! You can use the standard Emacs customization.
 </p>
 
-<pre class="example" id="org0ee426f">
+<pre class="example" id="org8098b6c">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -469,9 +469,9 @@ Performance tweaking for modern machines
 </div>
 </div>
 
-<div id="outline-container-orgcacc3b3" class="outline-2">
-<h2 id="orgcacc3b3">Appearance</h2>
-<div class="outline-text-2" id="text-orgcacc3b3">
+<div id="outline-container-org9daf86a" class="outline-2">
+<h2 id="org9daf86a">Appearance</h2>
+<div class="outline-text-2" id="text-org9daf86a">
 </div>
 <div id="outline-container-orgef62857" class="outline-3">
 <h3 id="orgef62857">Window settings</h3>
@@ -540,7 +540,7 @@ A good starting point to deal with Emacs faces and theme:
 <a href="https://www.youtube.com/watch?v=1jCNrpp_STM">https://www.youtube.com/watch?v=1jCNrpp_STM</a>
 </p>
 
-<pre class="example" id="org4e9304e">
+<pre class="example" id="orgaaa791e">
 (set-face-attribute 'vertico-current nil :height 1.4)
 </pre></li>
 </ul>
@@ -720,6 +720,20 @@ You can write your own blog using <code>org</code> pages and exports it using <c
            ;; :html-preamble minemacs-blorg-html-preamble
            :section-numbers nil
            :time-stamp-file nil)
+          ("blorg:gmi"
+           :recursive t
+           :base-directory "~/minasmazar.github.io/"
+           :base-extension "org"
+           :publishing-function org-gemini-publish-to-gemini
+           :publishing-directory "~/minasmazar.github.io/"
+           :with-author nil
+           :with-creator t
+           :with-toc t
+           :html-link-up "/"
+           :html-link-home "/"
+           ;; :html-preamble minemacs-blorg-html-preamble
+           :section-numbers nil
+           :time-stamp-file nil)
           ("blorg:publish"
            :base-directory "~/minasmazar.github.io/"
            :publishing-directory "~/minasmazar.github.io/"
@@ -728,7 +742,7 @@ You can write your own blog using <code>org</code> pages and exports it using <c
            :exclude ".*"
            :completion-function minemacs-blorg-autopublish)
           ("blorg"
-           :components ("blorg:static" "blorg:org" "blorg:publish"))))
+           :components ("blorg:static" "blorg:org" "blorg:gmi" "blorg:publish"))))
 </pre>
 </div>
 
@@ -1041,7 +1055,7 @@ Set eshell aliases from my Dropbox.
 This is an example of an aliases file.
 </p>
 
-<pre class="example" id="orge6e7df3">
+<pre class="example" id="org92d7b14">
 # a quick list of useful/useless aliases, just for demo purposes xD
 alias aliases find-file $eshell-aliases-file
 alias j (call-interactively #'bookmark-jump)
@@ -1423,7 +1437,7 @@ Hydra package let you to easily bind custom keymaps.
 The main purpose of the empty hydra <code>hydra-minemacs-local-project</code> is to be defined per-project usings <code>add-dir-local-variable</code> like that can be user like this:
 </p>
 
-<pre class="example" id="orgca52ffa">
+<pre class="example" id="org6cb6043">
 ;;; Directory Local Variables            -*- no-byte-compile: t -*-
 ;;; For more information see (info "(emacs) Directory Variables")
 
@@ -1594,7 +1608,7 @@ Interact with <a href="https://espeak.sourceforge.net/">eSpeak</a>.
 <div id="outline-container-org7c5f3a6" class="outline-4">
 <h4 id="org7c5f3a6">Gnus</h4>
 <div class="outline-text-4" id="text-org7c5f3a6">
-<pre class="example" id="org00cde99">
+<pre class="example" id="org4cac390">
 (setq user-mail-address "&lt;EMAIL_ADDRESS&gt;"
       user-full-name "&lt;FULL NAME&gt;"
       user-login-name "&lt;LOGIN_NAME_USUALLY_THE_SAME_AS_EMAIL_ADDRESS&gt;"
@@ -1656,7 +1670,7 @@ Useful links at:
 <li><a href="https://isync.sourceforge.io/mbsync.html">https://isync.sourceforge.io/mbsync.html</a></li>
 </ul>
 
-<pre class="example" id="org8295689">
+<pre class="example" id="orgee6f2b5">
 IMAPAccount email-service-imaps
 #Host export.imap.mail.email-service.com
 Host imap.mail.email-service.com
@@ -1699,7 +1713,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org1c3adb2">
+<pre class="example" id="org9e6191e">
 (setq mu4e-contexts
       (list
        ;; Work account
@@ -1875,8 +1889,8 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
 </li>
 
 <li><a id="org240e0a9"></a>Elixir<br /></li>
-<li><a id="org40f5897"></a>Docker<br />
-<div class="outline-text-5" id="text-org40f5897">
+<li><a id="org16e91d2"></a>Docker<br />
+<div class="outline-text-5" id="text-org16e91d2">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package docker)
 </pre>
@@ -2007,9 +2021,9 @@ Studying <code>autoinsert</code> since is Emacs built-in libray, it could replac
 </div>
 </div>
 
-<div id="outline-container-org16e91d2" class="outline-4">
-<h4 id="org16e91d2">Docker</h4>
-<div class="outline-text-4" id="text-org16e91d2">
+<div id="outline-container-org4b841da" class="outline-4">
+<h4 id="org4b841da">Docker</h4>
+<div class="outline-text-4" id="text-org4b841da">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package docker)
 </pre>
@@ -2030,9 +2044,9 @@ Studying <code>autoinsert</code> since is Emacs built-in libray, it could replac
 </div>
 </div>
 
-<div id="outline-container-org9daf86a" class="outline-3">
-<h3 id="org9daf86a">Appearance</h3>
-<div class="outline-text-3" id="text-org9daf86a">
+<div id="outline-container-org8e29399" class="outline-3">
+<h3 id="org8e29399">Appearance</h3>
+<div class="outline-text-3" id="text-org8e29399">
 </div>
 <div id="outline-container-org1075ac3" class="outline-4">
 <h4 id="org1075ac3">Doom modeline</h4>
@@ -2317,7 +2331,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="orgca41041">
+<pre class="example" id="org1c607fd">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -2357,7 +2371,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgee3f440">
+<pre class="example" id="org40422d0">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list

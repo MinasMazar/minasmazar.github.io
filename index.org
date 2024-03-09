@@ -1,6 +1,3 @@
-:PROPERTIES:
-:DIR:      ~/minasmazar.github.io/data/
-:END:
 #+TITLE: MinasMazar's blog
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
@@ -14,6 +11,5 @@ Hello dudes, welcome to my cave 👋
 
 - [[file:minemacs.org][minemacs]] ~ my Emacs configuration [[raw-relative:minemacs.org][[raw org]​]]
 - [[file:dev.org][dev stuff]] 🤓
-- 🇮🇹 [[file:recipes.org][recipes 🥗]]
 - [[file:bookmarks.org][bookmarks]]
 - [[file:about.org][about me]]

@@ -257,6 +257,20 @@ You can write your own blog using ~org~ pages and exports it using ~org-publish~
 	     ;; :html-preamble minemacs-blorg-html-preamble
 	     :section-numbers nil
 	     :time-stamp-file nil)
+	    ("blorg:gmi"
+	     :recursive t
+	     :base-directory "~/minasmazar.github.io/"
+	     :base-extension "org"
+	     :publishing-function org-gemini-publish-to-gemini
+	     :publishing-directory "~/minasmazar.github.io/"
+	     :with-author nil
+	     :with-creator t
+	     :with-toc t
+	     :html-link-up "/"
+	     :html-link-home "/"
+	     ;; :html-preamble minemacs-blorg-html-preamble
+	     :section-numbers nil
+	     :time-stamp-file nil)
 	    ("blorg:publish"
 	     :base-directory "~/minasmazar.github.io/"
 	     :publishing-directory "~/minasmazar.github.io/"
@@ -265,7 +279,7 @@ You can write your own blog using ~org~ pages and exports it using ~org-publish~
 	     :exclude ".*"
 	     :completion-function minemacs-blorg-autopublish)
 	    ("blorg"
-	     :components ("blorg:static" "blorg:org" "blorg:publish"))))
+	     :components ("blorg:static" "blorg:org" "blorg:gmi" "blorg:publish"))))
 #+end_src
 
 Now define some handy =org-capture= templates!

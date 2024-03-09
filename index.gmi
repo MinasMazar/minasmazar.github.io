@@ -1,0 +1,17 @@
+# MinasMazar's blog
+
+:ID:       F4E724E0-DBF5-46A5-A27D-64A1E376C51A 
+
+Hello dudes, welcome to my cave 👋 
+
+* [minemacs] ~ my Emacs configuration [[raw org]​] 
+* [dev stuff] 🤓 
+* [bookmarks] 
+* [about me] 
+
+
+=> minemacs.gmi minemacs
+=> raw-relative:minemacs.org [raw org]​
+=> dev.gmi dev stuff
+=> bookmarks.gmi bookmarks
+=> about.gmi about me

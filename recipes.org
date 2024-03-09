@@ -1,9 +1,0 @@
-#+TITLE: MinasMazar's blog ~ recipes
-#+AUTHOR: MinasMazar
-#+EMAIL: minasmazar@gmail.com
-#+DATE: <2024-01-17 Wed>
-#+SETUPFILE: ../templates/_header.org
-
-Ogni blog che si rispetti *deve* avere una sezione riguardante ricette culinarie. Non mi esimo. Di seguito una breve lista di ricette che sicuramente non ho avuto modo di provare:
-
-- [[https://www.cucchiaio.it/ricetta/ricetta-funghi-trifolati/][idea basica sui funghi trifolati]] (tempo cottura 15 min)
