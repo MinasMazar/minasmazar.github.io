@@ -3,9 +3,6 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2023-07-15 Sat>
 #+SETUPFILE: ../templates/_header.org
-:PROPERTIES:
-:ID:       F4E724E0-DBF5-46A5-A27D-64A1E376C51A
-:END:
 
 Hello dudes, welcome to my cave 👋
 
