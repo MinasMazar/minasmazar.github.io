@@ -299,7 +299,7 @@
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org60044e0">
+<pre class="example" id="org0009b0b">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -651,7 +651,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="orgcfbee94">
+<pre class="example" id="org12338b4">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -691,7 +691,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org38dc194">
+<pre class="example" id="orgcb71531">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list

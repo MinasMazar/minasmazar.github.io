@@ -6,7 +6,7 @@
 
 * Emacs and Org
 
-This is the source code of my personal website. It is written in =org-mode= and is hosted on [[https://pages.github.com/][Github pages]]. It uses the =org-publish= function to generate the static site you're reading right now.
+This is the source code of [[https://minasmazar.github.io][my personal website]]. It is written in =org-mode= and is hosted on [[https://pages.github.com/][Github pages]]. It uses the =org-publish= function to generate the static site you're reading right now.
 
 For more information about =Emacs=, =org-mode= and its publishing feature:
 
