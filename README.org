@@ -10,9 +10,9 @@ This is the source code of [[https://minasmazar.github.io][my personal website]]
 
 For more information about =Emacs=, =org-mode= and its publishing feature:
 
-- https://emacsdocs.org/
 - https://orgmode.org/
 - https://orgmode.org/worg/
+- https://emacsdocs.org/ by Thomas F. K. Jorna ([[https://github.com/tefkah][tefkah]])
 - https://orgmode.org/manual/Publishing.html
 
 If you're interested in the Emacs configuration needed to generate my website pages and the deployment workflow, refers to the [[file:minemacs.org::#blorg-section][/Blorg section/]].

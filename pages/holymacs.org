@@ -6,6 +6,10 @@
 #+STARTUP: show2levels
 #+OPTIONS: toc:t
 
+* Specs
+
+When adding a set feature, try to add some fast keybindings to access them (the /super/ key is often a good choice).
+
 * Package Manager
 
 #+begin_src elisp
@@ -32,10 +36,26 @@ Remember to set your name and email address! Place here your real data, or use t
         user-mail-address "username@domain.net")
 #+end_example
 
+#+begin_src elisp
+  (setq tab-always-indent 'complete
+	make-backup-files nil)
+#+end_src
+
 
 #+begin_src elisp
   (ffap-bindings)
   (savehist-mode 1)
+#+end_src
+* Bookmarks
+** eww-bookmark-jump
+
+Here we override the standard =eww-bookmark-jump= action, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
+
+#+begin_src emacs-lisp
+  (defun eww-bookmark-jump (bookmark)
+    "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
+    Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
+    (browse-url (bookmark-prop-get bookmark 'location)))
 #+end_src
 
 * Dired
@@ -57,6 +77,8 @@ Remember to set your name and email address! Place here your real data, or use t
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+  (setq ring-bell-function 'ignore
+	visible-bell t)
 #+end_src
 
 * Orderless
@@ -145,6 +167,8 @@ I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for command
   (global-set-key (kbd "s-B") #'ibuffer)
   (global-set-key (kbd "s-)") #'kill-this-buffer)
   (global-set-key (kbd "s--") #'bookmark-jump)
+  (global-set-key (kbd "s-_") #'bookmark-set)
+  (global-set-key (kbd "s-q") #'tab-next)
   (define-key dired-mode-map (kbd "s-t") #'find-name-dired)
 #+end_src
 
@@ -178,7 +202,7 @@ I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for command
     (god-mode))
 #+end_src
 
-** Which-key
+** which-key
 
 #+begin_src elisp
   (use-package which-key
@@ -187,6 +211,8 @@ I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for command
 #+end_src
 
 * Shared configurations
+
+Here's I share my most used configuration files across systems by simply usiung a shared directory.
 
 #+begin_src elisp
   (if (file-exists-p "~/Dropbox/emacs/")
@@ -206,7 +232,9 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
   (let* ((modules-dir (concat user-emacs-directory "modules/"))
 	 (modules (if (file-exists-p modules-dir)
 		      (directory-files modules-dir))))
-    (if modules (mapcar (lambda (module) (load module 'noerror)) modules)))
+    (if modules (mapcar (lambda (module)
+			  (load (concat modules-dir module) 'noerror))
+			modules)))
 #+end_src
 
 Here's a list of modules:
@@ -342,6 +370,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =json-pretty-print-buffer=
 - =org-archive-subtree-default=
 - =org-babel-load-file=
+- =org-agenda-include-diary=
 - =pp-eval-expression=
 - =proced=
 - =shr-inhibit-images=
