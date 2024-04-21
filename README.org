@@ -1,8 +1,8 @@
-#+TITLE: MinasMazar's blog
+#+TITLE: Holymacs ~ Blorg
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
-#+DATE: <2023-07-15 Sat>
-
+#+DATE: <2024-04-21 Sun>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/blorg.el :mkdirp yes
 
 * Emacs and Org
 
@@ -24,7 +24,7 @@ The package =ox-rss= is needed if you want to generate a RSS (it exports the ~or
 - https://pavpanchekha.com/blog/org-mode-publish.html
 - https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/modules/blorg.el
+#+begin_src elisp
   (use-package ox-rss)
   (use-package ox-gemini)
   (require 'org)
@@ -103,7 +103,7 @@ Now define some handy =org-capture= templates!
 
 Here we define the function that uses ~git~ to publish my static site to my personal Github pages. The pre-requisite is that the destitnation directory exists and has a git repo already initialized and the remote already set up.
 
-#+begin_src emacs-lisp
+#+begin_src elisp
   (defcustom blorg-autopublish nil
     "Define if autopublish feature is enabled. Used in the function =blorg-autopublish=")
 

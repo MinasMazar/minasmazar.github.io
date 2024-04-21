@@ -235,8 +235,14 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
+<li><a href="#orgec38a15">Specs</a></li>
 <li><a href="#orge932450">Package Manager</a></li>
 <li><a href="#orgc90b644">Main configuration</a></li>
+<li><a href="#org7ead0e9">Bookmarks</a>
+<ul>
+<li><a href="#orgc773a90">eww-bookmark-jump</a></li>
+</ul>
+</li>
 <li><a href="#org3057b2b">Dired</a></li>
 <li><a href="#org7b44865">Appearance</a></li>
 <li><a href="#org78a2757">Orderless</a></li>
@@ -249,11 +255,18 @@
 <li><a href="#org61d3343">Translations keys</a></li>
 <li><a href="#org47062bd">Super-key</a></li>
 <li><a href="#org8025c30">god-mode</a></li>
-<li><a href="#orgf70d0c0">Which-key</a></li>
+<li><a href="#org130c527">which-key</a></li>
 </ul>
 </li>
 <li><a href="#org3b213d4">Shared configurations</a></li>
-<li><a href="#org758d179">Modules</a></li>
+<li><a href="#org758d179">Modules</a>
+<ul>
+<li><a href="#org1aec850">Autoload</a></li>
+<li><a href="#org3ec89b8">Blorg</a></li>
+<li><a href="#org412f5b6">jarvis.el</a></li>
+<li><a href="#org0d77165"><span class="todo TODO">TODO</span> Hail Hydra</a></li>
+</ul>
+</li>
 <li><a href="#org66fdb1a">Docs</a>
 <ul>
 <li><a href="#orgd53030d">Regular Expression Syntax</a></li>
@@ -268,6 +281,15 @@
 </li>
 <li><a href="#org5dcef40">Credits</a></li>
 </ul>
+</div>
+</div>
+
+<div id="outline-container-orgec38a15" class="outline-2">
+<h2 id="orgec38a15">Specs</h2>
+<div class="outline-text-2" id="text-orgec38a15">
+<p>
+When adding a set feature, try to add some fast keybindings to access them (the <i>super</i> key is often a good choice).
+</p>
 </div>
 </div>
 
@@ -299,16 +321,43 @@
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org0009b0b">
+<pre class="example" id="org533b286">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(setq tab-always-indent 'complete
+      make-backup-files nil)
+</pre>
+</div>
 
 
 <div class="org-src-container">
 <pre class="src src-elisp">(ffap-bindings)
 (savehist-mode 1)
 </pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7ead0e9" class="outline-2">
+<h2 id="org7ead0e9">Bookmarks</h2>
+<div class="outline-text-2" id="text-org7ead0e9">
+</div>
+<div id="outline-container-orgc773a90" class="outline-3">
+<h3 id="orgc773a90">eww-bookmark-jump</h3>
+<div class="outline-text-3" id="text-orgc773a90">
+<p>
+Here we override the standard <code>eww-bookmark-jump</code> action, so even if we store a bookmark via <code>eww</code>, we're going to use the proper browser when opening it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun eww-bookmark-jump (bookmark)
+  "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
+  Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
+  (browse-url (bookmark-prop-get bookmark 'location)))
+</pre>
+</div>
 </div>
 </div>
 </div>
@@ -337,6 +386,8 @@ Remember to set your name and email address! Place here your real data, or use t
 <pre class="src src-elisp">(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(setq ring-bell-function 'ignore
+      visible-bell t)
 </pre>
 </div>
 </div>
@@ -417,7 +468,7 @@ Remember to set your name and email address! Place here your real data, or use t
 <h3 id="org513464a">Custom keybindings</h3>
 <div class="outline-text-3" id="text-org513464a">
 <p>
-I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint for commands I often use, as for <code>org</code> commands.
+In vanilla Emacs the <code>M-o</code> keybinding is free. I'll use it as sort of an entrypoint for commands I often use, as for <code>org</code> commands.
 </p>
 
 <div class="org-src-container">
@@ -435,6 +486,7 @@ I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint 
 <pre class="src src-elisp">(define-key key-translation-map (kbd "s-k") (kbd "M-x"))
 (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
 (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
+(define-key key-translation-map (kbd "s-o") (kbd "M-o"))
 </pre>
 </div>
 </div>
@@ -459,6 +511,8 @@ I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint 
 (global-set-key (kbd "s-B") #'ibuffer)
 (global-set-key (kbd "s-)") #'kill-this-buffer)
 (global-set-key (kbd "s--") #'bookmark-jump)
+(global-set-key (kbd "s-_") #'bookmark-set)
+(global-set-key (kbd "s-q") #'tab-next)
 (define-key dired-mode-map (kbd "s-t") #'find-name-dired)
 </pre>
 </div>
@@ -499,9 +553,9 @@ I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint 
 </div>
 </div>
 
-<div id="outline-container-orgf70d0c0" class="outline-3">
-<h3 id="orgf70d0c0">Which-key</h3>
-<div class="outline-text-3" id="text-orgf70d0c0">
+<div id="outline-container-org130c527" class="outline-3">
+<h3 id="org130c527">which-key</h3>
+<div class="outline-text-3" id="text-org130c527">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package which-key
   :config
@@ -515,6 +569,10 @@ I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint 
 <div id="outline-container-org3b213d4" class="outline-2">
 <h2 id="org3b213d4">Shared configurations</h2>
 <div class="outline-text-2" id="text-org3b213d4">
+<p>
+Here's I share my most used configuration files across systems by simply usiung a shared directory.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-elisp">(if (file-exists-p "~/Dropbox/emacs/")
     (setq bookmark-file "~/Dropbox/emacs/bookmarks"
@@ -531,6 +589,10 @@ I see the <code>M-o</code> prefix is free. I'll use it as sort of an entrypoint 
 <div id="outline-container-org758d179" class="outline-2">
 <h2 id="org758d179">Modules</h2>
 <div class="outline-text-2" id="text-org758d179">
+</div>
+<div id="outline-container-org1aec850" class="outline-3">
+<h3 id="org1aec850">Autoload</h3>
+<div class="outline-text-3" id="text-org1aec850">
 <p>
 Here we define a mechanism to easily extend your Emacs experience with some custom defined <i>modules</i>, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the <b>layers</b> in <b>Doom Emacs</b>), but I'm not creating a whole mechanism to handle this: just place an <code>.el</code> file in the <code>~/.emacs.d/modules/</code> directory, and it will be autoloaded.
 </p>
@@ -539,16 +601,32 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 <pre class="src src-emacs-lisp">(let* ((modules-dir (concat user-emacs-directory "modules/"))
        (modules (if (file-exists-p modules-dir)
                     (directory-files modules-dir))))
-  (if modules (mapcar (lambda (module) (load module 'noerror)) modules)))
+  (if modules (mapcar (lambda (module)
+                        (load (concat modules-dir module) 'noerror))
+                      modules)))
 </pre>
 </div>
 
 <p>
-Here's a list of modules:
+Here's the list of modules I'm using. They consists in <code>.org</code> files tangling to specific <code>.el</code> file in the <b>modules</b> directory (<code>~/.emacs.d/modules/</code>).
 </p>
-<ul class="org-ul">
-<li>the <b>Blorg</b> publishing functions described in <a href="https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org">README.org</a> will tangle its code in the <code>blorg.el</code> module.</li>
-</ul>
+</div>
+</div>
+
+<div id="outline-container-org3ec89b8" class="outline-3">
+<h3 id="org3ec89b8">Blorg</h3>
+<div class="outline-text-3" id="text-org3ec89b8">
+<p>
+The <b>Blorg</b> publishing functions described in <a href="https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org">README.org</a> will tangle its code in the <code>blorg.el</code> module.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org412f5b6" class="outline-3">
+<h3 id="org412f5b6"><a href="holymacs/jarvis.html">jarvis.el</a></h3>
+</div>
+<div id="outline-container-org0d77165" class="outline-3">
+<h3 id="org0d77165"><span class="todo TODO">TODO</span> <a href="modules/hydra.html">Hail Hydra</a></h3>
 </div>
 </div>
 
@@ -651,7 +729,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="org12338b4">
+<pre class="example" id="orgb6e6e73">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -691,7 +769,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgcb71531">
+<pre class="example" id="org75b0c44">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -739,6 +817,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>json-pretty-print-buffer</code></li>
 <li><code>org-archive-subtree-default</code></li>
 <li><code>org-babel-load-file</code></li>
+<li><code>org-agenda-include-diary</code></li>
 <li><code>pp-eval-expression</code></li>
 <li><code>proced</code></li>
 <li><code>shr-inhibit-images</code></li>
