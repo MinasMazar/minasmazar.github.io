@@ -1,0 +1,7 @@
+
+
+#+begin_src elisp
+  (use-package magit
+  :bind
+  (("C-x g" . #'magit-status)))
+#+end_src

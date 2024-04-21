@@ -134,7 +134,7 @@ Here we override the standard =eww-bookmark-jump= action, so even if we store a 
 * Keybindings
 ** Custom keybindings
 
-I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for commands I often use, as for =org= commands.
+In vanilla Emacs the ~M-o~ keybinding is free. I'll use it as sort of an entrypoint for commands I often use, as for =org= commands.
 
 #+begin_src elisp
   (global-set-key (kbd "M-o a") #'org-agenda)
@@ -147,6 +147,7 @@ I see the ~M-o~ prefix is free. I'll use it as sort of an entrypoint for command
   (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
   (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
   (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
+  (define-key key-translation-map (kbd "s-o") (kbd "M-o"))
 #+end_src
 
 ** Super-key
@@ -225,6 +226,7 @@ Here's I share my most used configuration files across systems by simply usiung 
 #+end_src
 
 * Modules
+** Autoload
 
 Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
 
@@ -237,8 +239,14 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 			modules)))
 #+end_src
 
-Here's a list of modules:
-- the *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
+Here's the list of modules I'm using. They consists in =.org= files tangling to specific =.el= file in the *modules* directory (=~/.emacs.d/modules/=).
+
+** Blorg
+
+The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
+
+** [[file:holymacs/jarvis.org][jarvis.el]]
+** TODO [[file:modules/hydra.org][Hail Hydra]]
 
 * Docs
 ** Regular Expression Syntax

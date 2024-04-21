@@ -1,0 +1,86 @@
+#+TITLE: Holymacs ~ Jarvis module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
+#+STARTUP: show2levels
+
+#+begin_src elisp
+  (use-package engine-mode
+    :init
+    (setq engine/browser-function #'browse-url-firefox)
+    :config
+    (defun engine/execute-search (search-engine-url browser-function search-term)
+      "Display the results of the query."
+      (interactive)
+      (let ((browse-url-handlers nil)
+	    (browse-url-browser-function browser-function))
+	(browse-url
+	 (format-spec search-engine-url
+		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :browser 'eww-browse-url
+      :keybinding "d")
+
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "h")
+
+    (defengine google
+      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :browser 'browse-url-firefox
+      :keybinding "g")
+
+    (defengine google-images
+      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      :keybinding "i")
+
+    (defengine google-maps
+      "https://maps.google.com/maps?q=%s"
+      :docstring "Google Maps"
+      :keybinding "m")
+
+    (defengine google-maps
+      "https://www.openstreetmap.org/search?query=%s"
+      :docstring "OpenStreetMap"
+      :keybinding "M")
+
+    (defengine google-translate-to-it
+      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      :docstring "Translate to IT"
+      :keybinding "t")
+
+    (defengine google-translate-to-en
+      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      :docstring "Translate from IT to English"
+      :browser 'browse-url-firefox
+      :keybinding "T")
+
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+
+    (defengine wikipedia
+      "https://www.wikipedia.org/search-redirect.php?language=it&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."
+      :browser 'eww-browse-url)
+
+    (defengine youtube
+      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y")
+
+    (defengine amazon
+      "https://www.amazon.it/s/ref=nb_sb_noss?&field-keywords=%s"
+      :browser 'browse-url-firefox
+      :keybinding "a")
+
+    (defengine cap
+      "https://www.nonsolocap.it/cap?k=%s&c=pescara"
+      :browser 'browse-url-firefox
+      :keybinding "C")
+
+    (engine-mode t))
+#+end_src

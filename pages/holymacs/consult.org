@@ -10,7 +10,7 @@ Consult is an awesome set of functions. More info on [[https://github.com/minad/
 
 It's a fancy set of features and gives Emacs a more cool and "modern" UX.
 
-Also, I found an issue when generating an Embark snapshot  from a standard Imenu completion: the results do not point to the location, but an error (/exit-minibuffer: No catch for tag: exit, nil/). I've tried =consult-imenu= and it seems working well with *embark* 🎉
+Also, I found an issue when generating an Embark snapshot from a standard Imenu completion: the results do not point to the location, but an error (/exit-minibuffer: No catch for tag: exit, nil/). I've tried =consult-imenu= and it seems working well with *embark* 🎉
 
 Let's install it!
 
