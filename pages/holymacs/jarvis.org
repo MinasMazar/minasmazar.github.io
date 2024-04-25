@@ -5,6 +5,32 @@
 #+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
 #+STARTUP: show2levels
 
+* COMMENT Autoinsert and templates ⚠️ wip ⚠️
+
+Emacs has some built-in functionalities to /auto insert/ text (expand text or via templates)
+- =auto-insert=
+- =abbrev=
+- =skeleton=
+
+Also there are some external packages
+- =yasnippet=
+- =tempo=
+  
+* COMMENT From elfeed to gemlog - ⚠️ wip ⚠️
+
+#+begin_src elisp
+  (defun jarvis-elfeed-entry-to-gmi ()
+    "Export the current elfeed article content to a gemlog entry (a blog, but in Gemini protocol")
+    (interactive)
+    (let* ((content (buffer-string))
+	   (org-capture-templates '(("E" "Gemlog entry" plain (file+regexp "~/minasmazar-capsule/log.gmi" "^# ") "\n\n# %U\n\n%i\n\n" :prepend t))))
+      (set-mark (point-min))
+      (goto-char (point-max))
+      (activate-mark)
+      (org-capture)))
+#+end_src
+
+* Search on the web: engine-mode
 #+begin_src elisp
   (use-package engine-mode
     :init

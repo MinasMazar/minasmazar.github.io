@@ -199,85 +199,99 @@
  <a accesskey="H" href="/"> HOME </a>
 </div><div id="content" class="content">
 <h1 class="title">Holymacs ~ Jarvis module</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1810397">Search on the web: engine-mode</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1810397" class="outline-2">
+<h2 id="org1810397">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org1810397">
 <div class="org-src-container">
-<pre class="src src-elisp">(use-package engine-mode
-  :init
-  (setq engine/browser-function #'browse-url-firefox)
-  :config
-  (defun engine/execute-search (search-engine-url browser-function search-term)
-    "Display the results of the query."
-    (interactive)
-    (let ((browse-url-handlers nil)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">engine-mode</span>
+  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+  (<span style="color: #00c089; font-weight: bold;">setq</span> engine/browser-function #'browse-url-firefox)
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">engine/execute-search</span> (search-engine-url browser-function search-term)
+    <span style="color: #7fc07f; font-style: italic;">"Display the results of the query."</span>
+    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+    (<span style="color: #00c089; font-weight: bold;">let</span> ((browse-url-handlers nil)
           (browse-url-browser-function browser-function))
       (browse-url
        (format-spec search-engine-url
                     (format-spec-make ?s (url-hexify-string search-term))))))
 
-  (defengine duckduckgo
-    "https://duckduckgo.com/?q=%s"
-    :browser 'eww-browse-url
-    :keybinding "d")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> duckduckgo
+    <span style="color: #af9fff;">"https://duckduckgo.com/?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"d"</span>)
 
-  (defengine github
-    "https://github.com/search?ref=simplesearch&amp;q=%s"
-    :keybinding "h")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> github
+    <span style="color: #af9fff;">"https://github.com/search?ref=simplesearch&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"h"</span>)
 
-  (defengine google
-    "https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"
-    :browser 'browse-url-firefox
-    :keybinding "g")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google
+    <span style="color: #af9fff;">"https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"g"</span>)
 
-  (defengine google-images
-    "https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"
-    :keybinding "i")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-images
+    <span style="color: #af9fff;">"https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"i"</span>)
 
-  (defengine google-maps
-    "https://maps.google.com/maps?q=%s"
-    :docstring "Google Maps"
-    :keybinding "m")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #af9fff;">"https://maps.google.com/maps?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Google Maps"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"m"</span>)
 
-  (defengine google-maps
-    "https://www.openstreetmap.org/search?query=%s"
-    :docstring "OpenStreetMap"
-    :keybinding "M")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #af9fff;">"https://www.openstreetmap.org/search?query=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"OpenStreetMap"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"M"</span>)
 
-  (defengine google-translate-to-it
-    "https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"
-    :docstring "Translate to IT"
-    :keybinding "t")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-it
+    <span style="color: #af9fff;">"https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate to IT"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"t"</span>)
 
-  (defengine google-translate-to-en
-    "https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"
-    :docstring "Translate from IT to English"
-    :browser 'browse-url-firefox
-    :keybinding "T")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-en
+    <span style="color: #af9fff;">"https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate from IT to English"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"T"</span>)
 
-  (defengine stack-overflow
-    "https://stackoverflow.com/search?q=%s"
-    :keybinding "s")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> stack-overflow
+    <span style="color: #af9fff;">"https://stackoverflow.com/search?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"s"</span>)
 
-  (defengine wikipedia
-    "https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"
-    :keybinding "w"
-    :docstring "Searchin' the wikis."
-    :browser 'eww-browse-url)
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> wikipedia
+    <span style="color: #af9fff;">"https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"w"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Searchin' the wikis."</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url)
 
-  (defengine youtube
-    "https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"
-    :keybinding "y")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> youtube
+    <span style="color: #af9fff;">"https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"y"</span>)
 
-  (defengine amazon
-    "https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"
-    :browser 'browse-url-firefox
-    :keybinding "a")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> amazon
+    <span style="color: #af9fff;">"https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"a"</span>)
 
-  (defengine cap
-    "https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"
-    :browser 'browse-url-firefox
-    :keybinding "C")
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> cap
+    <span style="color: #af9fff;">"https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"C"</span>)
 
   (engine-mode t))
 </pre>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">

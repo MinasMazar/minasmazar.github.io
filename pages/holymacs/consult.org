@@ -24,5 +24,5 @@ As mentioned in the [[file:~/minasmazar.github.io/pages/holymacs.org::*Specs][*H
      ("s-l" . consult-history)
      ("s-I" . consult-outline)
      ("s-f" . consult-line)
-     ("s-T" . consult-grep)))
+     ("s-t" . consult-grep)))
 #+end_src
