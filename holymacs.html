@@ -321,7 +321,7 @@ When adding a set feature, try to add some fast keybindings to access them (the 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="orgba4fcbf">
+<pre class="example" id="org3aa7ad7">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -526,6 +526,7 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 (global-set-key (kbd <span style="color: #af9fff;">"s-_"</span>) #'bookmark-set)
 (global-set-key (kbd <span style="color: #af9fff;">"s-q"</span>) #'tab-next)
 (global-set-key (kbd <span style="color: #af9fff;">"s-t"</span>) #'find-name-dired)
+(global-set-key (kbd <span style="color: #af9fff;">"s-r"</span>) #'repeat)
 </pre>
 </div>
 </div>
@@ -741,7 +742,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="org96bfb8a">
+<pre class="example" id="org0979e04">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -781,7 +782,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org2cfe468">
+<pre class="example" id="org1aa5c8c">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -855,7 +856,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org7efa8e0">
+<pre class="example" id="orga75c198">
 (let ((start (point-min))
       (end (point-max)))
   (buffer-substring start end))

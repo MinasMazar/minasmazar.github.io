@@ -183,6 +183,7 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "s-_") #'bookmark-set)
   (global-set-key (kbd "s-q") #'tab-next)
   (global-set-key (kbd "s-t") #'find-name-dired)
+  (global-set-key (kbd "s-r") #'repeat)
 #+end_src
 
 ** god-mode

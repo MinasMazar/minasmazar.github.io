@@ -5,6 +5,26 @@
 #+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
 #+STARTUP: show2levels
 
+* Tabspaces
+
+#+begin_src elisp
+  (use-package tabspaces
+    :hook (after-init . tabspaces-mode)
+    :commands (tabspaces-switch-or-create-workspace
+	       tabspaces-open-or-create-project-and-workspace)
+    :custom
+    (tabspaces-keymap-prefix "M-o w")
+    (tabspaces-use-filtered-buffers-as-default t)
+    (tabspaces-default-tab "Default")
+    (tabspaces-remove-to-default t)
+    (tabspaces-include-buffers '("*scratch*"))
+    (tabspaces-initialize-project-with-todo t)
+    (tabspaces-todo-file-name "project-todo.org")
+    ;; sessions
+    (tabspaces-session t)
+    (tabspaces-session-auto-restore t))
+#+end_src
+
 * COMMENT Autoinsert and templates ⚠️ wip ⚠️
 
 Emacs has some built-in functionalities to /auto insert/ text (expand text or via templates)
