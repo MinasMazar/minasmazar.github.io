@@ -3,8 +3,8 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-17 Wed>
 #+SETUPFILE: ../templates/_header.org
+#+OPTIONS: toc:no
 #
-* [[https://it.wikipedia.org/wiki/Benedetto_Brin][Benedetto Brin]]
 
 * How to set environment variables from .env file :dev:
 

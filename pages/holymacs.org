@@ -47,6 +47,7 @@ Remember to set your name and email address! Place here your real data, or use t
 #+begin_src elisp
   (ffap-bindings)
   (savehist-mode 1)
+  (recentf-mode 1)
 #+end_src
 * Bookmarks
 ** eww-bookmark-jump
@@ -184,6 +185,8 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "s-q") #'tab-next)
   (global-set-key (kbd "s-t") #'find-name-dired)
   (global-set-key (kbd "s-r") #'repeat)
+  (global-set-key (kbd "s-p") #'project-switch-to-buffer)
+  (global-set-key (kbd "s-P") #'project-find-file)
 #+end_src
 
 ** god-mode
@@ -262,8 +265,11 @@ The *Blorg* publishing functions described in [[https://github.com/MinasMazar/mi
 ** TODO [[file:modules/hydra.org][Hail Hydra]]
 
 * Docs
-** Regular Expression Syntax
+** Regular Expression Syntax (regexp)
 
+You can use the wonderful tool =regexp-builder=.
+
+#+begin_quote
 Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
 
 The following characters are special : . * + ? ^ $ \ [
@@ -324,6 +330,7 @@ Syntax classes:
   \s)   close delimiter character   \s!   generic comment delimiter
   \s"   string quote character      \s|   generic string delimiter
   \s\   escape character
+#+end_quote
 
 ** Vectors
 

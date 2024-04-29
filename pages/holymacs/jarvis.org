@@ -17,12 +17,19 @@
     (tabspaces-use-filtered-buffers-as-default t)
     (tabspaces-default-tab "Default")
     (tabspaces-remove-to-default t)
-    (tabspaces-include-buffers '("*scratch*"))
     (tabspaces-initialize-project-with-todo t)
     (tabspaces-todo-file-name "project-todo.org")
     ;; sessions
     (tabspaces-session t)
     (tabspaces-session-auto-restore t))
+#+end_src
+
+* Second Brain (Org-roam)
+
+#+begin_src elisp
+(use-package org-roam
+  :bind
+  (("M-o r f" . #'org-roam-node-find)))
 #+end_src
 
 * COMMENT Autoinsert and templates ⚠️ wip ⚠️
