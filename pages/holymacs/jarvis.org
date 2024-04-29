@@ -24,7 +24,7 @@
     (tabspaces-session-auto-restore t))
 #+end_src
 
-* Second Brain (Org-roam)
+* Second Brain ([[https://www.orgroam.com/][Org-roam]])
 
 #+begin_src elisp
 (use-package org-roam

@@ -267,9 +267,9 @@
 <li><a href="#org0d77165"><span class="todo TODO">TODO</span> Hail Hydra</a></li>
 </ul>
 </li>
-<li><a href="#org66fdb1a">Docs</a>
+<li><a href="#orgff19bbe">On hand documentation</a>
 <ul>
-<li><a href="#orgd53030d">Regular Expression Syntax</a></li>
+<li><a href="#org341d7ff">Regular Expression Syntax (regexp)</a></li>
 <li><a href="#org028a60d">Vectors</a></li>
 <li><a href="#org6516959">Timers</a></li>
 <li><a href="#org54e9799">(interactive) functions</a></li>
@@ -321,7 +321,7 @@ When adding a set feature, try to add some fast keybindings to access them (the 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org3aa7ad7">
+<pre class="example" id="org68392f6">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -337,6 +337,7 @@ Remember to set your name and email address! Place here your real data, or use t
 <div class="org-src-container">
 <pre class="src src-elisp">(ffap-bindings)
 (savehist-mode 1)
+(recentf-mode 1)
 </pre>
 </div>
 </div>
@@ -527,6 +528,8 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 (global-set-key (kbd <span style="color: #af9fff;">"s-q"</span>) #'tab-next)
 (global-set-key (kbd <span style="color: #af9fff;">"s-t"</span>) #'find-name-dired)
 (global-set-key (kbd <span style="color: #af9fff;">"s-r"</span>) #'repeat)
+(global-set-key (kbd <span style="color: #af9fff;">"s-p"</span>) #'project-switch-to-buffer)
+(global-set-key (kbd <span style="color: #af9fff;">"s-P"</span>) #'project-find-file)
 </pre>
 </div>
 </div>
@@ -643,13 +646,18 @@ The <b>Blorg</b> publishing functions described in <a href="https://github.com/M
 </div>
 </div>
 
-<div id="outline-container-org66fdb1a" class="outline-2">
-<h2 id="org66fdb1a">Docs</h2>
-<div class="outline-text-2" id="text-org66fdb1a">
+<div id="outline-container-orgff19bbe" class="outline-2">
+<h2 id="orgff19bbe">On hand documentation</h2>
+<div class="outline-text-2" id="text-orgff19bbe">
 </div>
-<div id="outline-container-orgd53030d" class="outline-3">
-<h3 id="orgd53030d">Regular Expression Syntax</h3>
-<div class="outline-text-3" id="text-orgd53030d">
+<div id="outline-container-org341d7ff" class="outline-3">
+<h3 id="org341d7ff">Regular Expression Syntax (regexp)</h3>
+<div class="outline-text-3" id="text-org341d7ff">
+<p>
+You can use the wonderful tool <code>regexp-builder</code>.
+</p>
+
+<blockquote>
 <p>
 Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
 </p>
@@ -732,6 +740,7 @@ Syntax classes:
 \s"   string quote character      \s|   generic string delimiter
 \s\   escape character
 </p>
+</blockquote>
 </div>
 </div>
 
@@ -742,7 +751,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="org0979e04">
+<pre class="example" id="org1b6e9f1">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -782,7 +791,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org1aa5c8c">
+<pre class="example" id="orgdb61528">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -856,7 +865,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="orga75c198">
+<pre class="example" id="org50e13b1">
 (let ((start (point-min))
       (end (point-max)))
   (buffer-substring start end))

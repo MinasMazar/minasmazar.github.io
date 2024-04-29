@@ -203,7 +203,6 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgc816bff">Benedetto Brin</a></li>
 <li><a href="#org172c46b">How to set environment variables from .env file&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dev">dev</span></span></a></li>
 <li><a href="#orgd31f7f4">Development environment for Elixir + Phoenix with Docker and Docker-compose</a></li>
 <li><a href="#orgd609817">Adolfo Villafiorita's bookmarks&#xa0;&#xa0;&#xa0;<span class="tag"><span class="blog">blog</span>&#xa0;<span class="emacs">emacs</span>&#xa0;<span class="bookmarks">bookmarks</span></span></a></li>
@@ -212,17 +211,14 @@
 </ul>
 </div>
 </div>
-<div id="outline-container-orgc816bff" class="outline-2">
-<h2 id="orgc816bff"><a href="https://it.wikipedia.org/wiki/Benedetto_Brin">Benedetto Brin</a></h2>
-</div>
 
 <div id="outline-container-org172c46b" class="outline-2">
 <h2 id="org172c46b">How to set environment variables from .env file&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dev">dev</span></span></h2>
 <div class="outline-text-2" id="text-org172c46b">
 <div class="org-src-container">
-<pre class="src src-sh">set -a # automatically export all variables
-source .env
-set +a
+<pre class="src src-sh"><span style="color: #3fb83f; font-weight: bold;">set</span> -a <span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">automatically export all variables</span>
+<span style="color: #3fb83f; font-weight: bold;">source</span> .env
+<span style="color: #3fb83f; font-weight: bold;">set</span> +a
 </pre>
 </div>
 </div>

@@ -204,6 +204,7 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org141eeca">Tabspaces</a></li>
+<li><a href="#orgaea2556">Second Brain (Org-roam)</a></li>
 <li><a href="#org1810397">Search on the web: engine-mode</a></li>
 </ul>
 </div>
@@ -222,12 +223,23 @@
   (tabspaces-use-filtered-buffers-as-default t)
   (tabspaces-default-tab <span style="color: #af9fff;">"Default"</span>)
   (tabspaces-remove-to-default t)
-  (tabspaces-include-buffers '(<span style="color: #af9fff;">"*scratch*"</span>))
   (tabspaces-initialize-project-with-todo t)
   (tabspaces-todo-file-name <span style="color: #af9fff;">"project-todo.org"</span>)
   <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">sessions</span>
   (tabspaces-session t)
   (tabspaces-session-auto-restore t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaea2556" class="outline-2">
+<h2 id="orgaea2556">Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
+<div class="outline-text-2" id="text-orgaea2556">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org-roam</span>
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  ((<span style="color: #af9fff;">"M-o r f"</span> . #'org-roam-node-find)))
 </pre>
 </div>
 </div>

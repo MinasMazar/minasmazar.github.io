@@ -264,7 +264,7 @@ The *Blorg* publishing functions described in [[https://github.com/MinasMazar/mi
 ** [[file:holymacs/jarvis.org][jarvis.el]]
 ** TODO [[file:modules/hydra.org][Hail Hydra]]
 
-* Docs
+* On hand documentation
 ** Regular Expression Syntax (regexp)
 
 You can use the wonderful tool =regexp-builder=.
