@@ -214,18 +214,21 @@
 <h2 id="org141eeca">Tabspaces</h2>
 <div class="outline-text-2" id="text-org141eeca">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">tabspaces</span>
-  <span style="color: #3fb83f; font-weight: bold;">:hook</span> (after-init . tabspaces-mode)
-  <span style="color: #3fb83f; font-weight: bold;">:commands</span> (tabspaces-switch-or-create-workspace
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">tabspaces</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:hook</span> (after-init . tabspaces-mode)
+  <span style="color: #d0b9f0; font-weight: bold;">:commands</span> (tabspaces-switch-or-create-workspace
              tabspaces-open-or-create-project-and-workspace)
-  <span style="color: #3fb83f; font-weight: bold;">:custom</span>
-  (tabspaces-keymap-prefix <span style="color: #af9fff;">"M-o w"</span>)
+  <span style="color: #d0b9f0; font-weight: bold;">:bind</span>
+  ((<span style="color: #50cf89;">"s-{"</span> . tab-previous)
+   (<span style="color: #50cf89;">"s-}"</span> . tab-next))
+  <span style="color: #d0b9f0; font-weight: bold;">:custom</span>
+  (tabspaces-keymap-prefix <span style="color: #50cf89;">"M-o w"</span>)
   (tabspaces-use-filtered-buffers-as-default t)
-  (tabspaces-default-tab <span style="color: #af9fff;">"Default"</span>)
+  (tabspaces-default-tab <span style="color: #50cf89;">"Default"</span>)
   (tabspaces-remove-to-default t)
   (tabspaces-initialize-project-with-todo t)
-  (tabspaces-todo-file-name <span style="color: #af9fff;">"project-todo.org"</span>)
-  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">sessions</span>
+  (tabspaces-todo-file-name <span style="color: #50cf89;">"project-todo.org"</span>)
+  <span style="color: #cac89f; font-style: italic;">;; </span><span style="color: #cac89f; font-style: italic;">sessions</span>
   (tabspaces-session t)
   (tabspaces-session-auto-restore t))
 </pre>
@@ -237,9 +240,9 @@
 <h2 id="orgaea2556">Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
 <div class="outline-text-2" id="text-orgaea2556">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org-roam</span>
-  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
-  ((<span style="color: #af9fff;">"M-o r f"</span> . #'org-roam-node-find)))
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">org-roam</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:bind</span>
+  ((<span style="color: #50cf89;">"M-o r f"</span> . #'org-roam-node-find)))
 </pre>
 </div>
 </div>
@@ -249,81 +252,81 @@
 <h2 id="org1810397">Search on the web: engine-mode</h2>
 <div class="outline-text-2" id="text-org1810397">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">engine-mode</span>
-  <span style="color: #3fb83f; font-weight: bold;">:init</span>
-  (<span style="color: #00c089; font-weight: bold;">setq</span> engine/browser-function #'browse-url-firefox)
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
-  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">engine/execute-search</span> (search-engine-url browser-function search-term)
-    <span style="color: #7fc07f; font-style: italic;">"Display the results of the query."</span>
-    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
-    (<span style="color: #00c089; font-weight: bold;">let</span> ((browse-url-handlers nil)
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">engine-mode</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:init</span>
+  (<span style="color: #eba8a8; font-weight: bold;">setq</span> engine/browser-function #'browse-url-firefox)
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">engine/execute-search</span> (search-engine-url browser-function search-term)
+    <span style="color: #99bfcf; font-style: italic;">"Display the results of the query."</span>
+    (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
+    (<span style="color: #eba8a8; font-weight: bold;">let</span> ((browse-url-handlers nil)
           (browse-url-browser-function browser-function))
       (browse-url
        (format-spec search-engine-url
                     (format-spec-make ?s (url-hexify-string search-term))))))
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> duckduckgo
-    <span style="color: #af9fff;">"https://duckduckgo.com/?q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"d"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> duckduckgo
+    <span style="color: #50cf89;">"https://duckduckgo.com/?q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'eww-browse-url
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"d"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> github
-    <span style="color: #af9fff;">"https://github.com/search?ref=simplesearch&amp;q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"h"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> github
+    <span style="color: #50cf89;">"https://github.com/search?ref=simplesearch&amp;q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"h"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google
-    <span style="color: #af9fff;">"https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"g"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google
+    <span style="color: #50cf89;">"https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"g"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-images
-    <span style="color: #af9fff;">"https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"i"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google-images
+    <span style="color: #50cf89;">"https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"i"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
-    <span style="color: #af9fff;">"https://maps.google.com/maps?q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Google Maps"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"m"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #50cf89;">"https://maps.google.com/maps?q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:docstring</span> <span style="color: #50cf89;">"Google Maps"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"m"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
-    <span style="color: #af9fff;">"https://www.openstreetmap.org/search?query=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"OpenStreetMap"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"M"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #50cf89;">"https://www.openstreetmap.org/search?query=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:docstring</span> <span style="color: #50cf89;">"OpenStreetMap"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"M"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-it
-    <span style="color: #af9fff;">"https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate to IT"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"t"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google-translate-to-it
+    <span style="color: #50cf89;">"https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:docstring</span> <span style="color: #50cf89;">"Translate to IT"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"t"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-en
-    <span style="color: #af9fff;">"https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate from IT to English"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"T"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> google-translate-to-en
+    <span style="color: #50cf89;">"https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:docstring</span> <span style="color: #50cf89;">"Translate from IT to English"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"T"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> stack-overflow
-    <span style="color: #af9fff;">"https://stackoverflow.com/search?q=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"s"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> stack-overflow
+    <span style="color: #50cf89;">"https://stackoverflow.com/search?q=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"s"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> wikipedia
-    <span style="color: #af9fff;">"https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"w"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Searchin' the wikis."</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> wikipedia
+    <span style="color: #50cf89;">"https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"w"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:docstring</span> <span style="color: #50cf89;">"Searchin' the wikis."</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'eww-browse-url)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> youtube
-    <span style="color: #af9fff;">"https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"y"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> youtube
+    <span style="color: #50cf89;">"https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"y"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> amazon
-    <span style="color: #af9fff;">"https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"a"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> amazon
+    <span style="color: #50cf89;">"https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"a"</span>)
 
-  (<span style="color: #00c089; font-weight: bold;">defengine</span> cap
-    <span style="color: #af9fff;">"https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"</span>
-    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
-    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"C"</span>)
+  (<span style="color: #eba8a8; font-weight: bold;">defengine</span> cap
+    <span style="color: #50cf89;">"https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"</span>
+    <span style="color: #d0b9f0; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #d0b9f0; font-weight: bold;">:keybinding</span> <span style="color: #50cf89;">"C"</span>)
 
   (engine-mode t))
 </pre>

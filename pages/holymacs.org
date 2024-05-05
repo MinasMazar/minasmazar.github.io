@@ -9,7 +9,7 @@
 
 * Specs
 
-When adding a set feature, try to add some fast keybindings to access them (the /super/ key is often a good choice).
+When adding a feature, try to add some fast keybinding to access it (the /super/ key is often a good choice).
 
 * Package Manager
 
@@ -138,6 +138,10 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 	   ("," . append-to-previous-buffer)))
 #+end_src
 
+* Eshell
+#+begin_src elisp
+  (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
+#+end_src
 * Keybindings
 ** Custom keybindings
 
@@ -146,11 +150,34 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
 #+begin_src elisp
   (global-set-key (kbd "M-o a") #'org-agenda)
   (global-set-key (kbd "M-o k") #'org-agenda-capture)
-  (global-set-key (kbd "M-o e") #'emoji-search)
+  (global-set-key (kbd "M-o 8") #'emoji-search)
+  (global-set-key (kbd "M-o e") #'project-eshell)
 #+end_src
 
 #+begin_src elisp
   (define-key dired-mode-map (kbd "M-o M-o h") #'dired-omit-mode)
+#+end_src
+
+*** For not graphical client (i.e. emacs -nw)
+
+Usually when you run Emacs in terminal (no graphic), you don't have access to the =Super= key. For this reason I redefine important Emacs standard keybindings to ~M-x~ and the =god-mode= toggle.
+
+#+begin_src emacs-lisp :tangle no
+  (global-set-key (kbd "C-k") nil)
+  (global-set-key (kbd "C-k") #'execute-extended-command)
+  (global-set-key (kbd "C-l") nil)
+  (global-set-key (kbd "C-l") 'god-local-mode)
+#+end_src
+
+** Ease isearch UX
+
+Uses normal movements keys and =TAB= key to move through =isearch=.
+
+#+begin_src emacs-lisp
+  (define-key isearch-mode-map (kbd "C-p") 'isearch-repeat-backward)
+  (define-key isearch-mode-map (kbd "C-n") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "<tab>") 'isearch-repeat-forward)
+  (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward)
 #+end_src
 
 ** Translations keys
@@ -184,6 +211,7 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "s-_") #'bookmark-set)
   (global-set-key (kbd "s-q") #'tab-next)
   (global-set-key (kbd "s-t") #'find-name-dired)
+  (global-set-key (kbd "s-e") #'dabbrev-expand)
   (global-set-key (kbd "s-r") #'repeat)
   (global-set-key (kbd "s-p") #'project-switch-to-buffer)
   (global-set-key (kbd "s-P") #'project-find-file)

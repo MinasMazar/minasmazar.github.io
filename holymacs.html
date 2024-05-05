@@ -249,9 +249,15 @@
 <li><a href="#org31fed42">Vertico</a></li>
 <li><a href="#org8ed5f7c">Company</a></li>
 <li><a href="#org963f1b8">Embark</a></li>
+<li><a href="#orge898323">Eshell</a></li>
 <li><a href="#org3d30abd">Keybindings</a>
 <ul>
-<li><a href="#org513464a">Custom keybindings</a></li>
+<li><a href="#org513464a">Custom keybindings</a>
+<ul>
+<li><a href="#orgfc45cb8">For not graphical client (i.e. emacs -nw)</a></li>
+</ul>
+</li>
+<li><a href="#orgbd9ecf9">Ease isearch UX</a></li>
 <li><a href="#org61d3343">Translations keys</a></li>
 <li><a href="#org47062bd">Super-key</a></li>
 <li><a href="#org8025c30">god-mode</a></li>
@@ -288,7 +294,7 @@
 <h2 id="orgec38a15">Specs</h2>
 <div class="outline-text-2" id="text-orgec38a15">
 <p>
-When adding a set feature, try to add some fast keybindings to access them (the <i>super</i> key is often a good choice).
+When adding a feature, try to add some fast keybinding to access it (the <i>super</i> key is often a good choice).
 </p>
 </div>
 </div>
@@ -297,16 +303,16 @@ When adding a set feature, try to add some fast keybindings to access them (the 
 <h2 id="orge932450">Package Manager</h2>
 <div class="outline-text-2" id="text-orge932450">
 <div class="org-src-container">
-<pre class="src src-elisp">(add-to-list 'load-path <span style="color: #af9fff;">"~/.emacs.d/manual-packages/"</span>)
-(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">package</span>)
+<pre class="src src-elisp">(add-to-list 'load-path <span style="color: #50cf89;">"~/.emacs.d/manual-packages/"</span>)
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">package</span>)
 
-(<span style="color: #00c089; font-weight: bold;">setq</span> package-archives '((<span style="color: #af9fff;">"melpa"</span> . <span style="color: #af9fff;">"https://melpa.org/packages/"</span>)
-                         (<span style="color: #af9fff;">"elpa"</span> . <span style="color: #af9fff;">"https://elpa.gnu.org/packages/"</span>)
-                         (<span style="color: #af9fff;">"nongnu"</span> . <span style="color: #af9fff;">"https://elpa.nongnu.org/nongnu/"</span>)))
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> package-archives '((<span style="color: #50cf89;">"melpa"</span> . <span style="color: #50cf89;">"https://melpa.org/packages/"</span>)
+                         (<span style="color: #50cf89;">"elpa"</span> . <span style="color: #50cf89;">"https://elpa.gnu.org/packages/"</span>)
+                         (<span style="color: #50cf89;">"nongnu"</span> . <span style="color: #50cf89;">"https://elpa.nongnu.org/nongnu/"</span>)))
 
-(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package</span>)
-(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package-ensure</span>)
-(<span style="color: #00c089; font-weight: bold;">setq</span> use-package-always-ensure t
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">use-package</span>)
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">use-package-ensure</span>)
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> use-package-always-ensure t
       package-enable-at-startup t)
 (package-initialize)
 </pre>
@@ -321,13 +327,13 @@ When adding a set feature, try to add some fast keybindings to access them (the 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org68392f6">
+<pre class="example" id="org569b123">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">setq</span> tab-always-indent 'complete
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">setq</span> tab-always-indent 'complete
       enable-recursive-minibuffers t
       make-backup-files nil)
 </pre>
@@ -354,9 +360,9 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">browse-url-bookmark-jump</span> (bookmark)
-  <span style="color: #7fc07f; font-style: italic;">"Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.</span>
-<span style="color: #7fc07f; font-style: italic;">  Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"</span>
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">browse-url-bookmark-jump</span> (bookmark)
+  <span style="color: #99bfcf; font-style: italic;">"Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.</span>
+<span style="color: #99bfcf; font-style: italic;">  Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"</span>
   (browse-url (bookmark-prop-get bookmark 'location)))
 </pre>
 </div>
@@ -368,16 +374,16 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <h2 id="org3057b2b">Dired</h2>
 <div class="outline-text-2" id="text-org3057b2b">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">dired</span>)
-(<span style="color: #00c089; font-weight: bold;">setq</span> make-backup-files nil
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">dired</span>)
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> make-backup-files nil
       tab-always-indent 'complete
       dired-dwim-target t
-      dired-listing-switches <span style="color: #af9fff;">"-alth"</span>
-      dired-omit-files <span style="color: #af9fff;">"\\`[.]?#</span><span style="color: #cfc04f;">\\</span><span style="color: #3fb83f;">|</span><span style="color: #af9fff;">\\`[.][.]?"</span>)
-(define-key dired-mode-map (kbd <span style="color: #af9fff;">"W"</span>) #'wdired-change-to-wdired-mode)
-(define-key dired-mode-map (kbd <span style="color: #af9fff;">"H"</span>) #'dired-omit-mode)
-(define-key dired-mode-map (kbd <span style="color: #af9fff;">"M-p"</span>) (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (dired-previous-line 1) (dired-display-file)))
-(define-key dired-mode-map (kbd <span style="color: #af9fff;">"M-n"</span>) (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (dired-next-line 1) (dired-display-file)))
+      dired-listing-switches <span style="color: #50cf89;">"-alth"</span>
+      dired-omit-files <span style="color: #50cf89;">"\\`[.]?#</span><span style="color: #cfaaff;">\\</span><span style="color: #ff656a;">|</span><span style="color: #50cf89;">\\`[.][.]?"</span>)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"W"</span>) #'wdired-change-to-wdired-mode)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"H"</span>) #'dired-omit-mode)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-p"</span>) (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (<span style="color: #eba8a8; font-weight: bold;">interactive</span>) (dired-previous-line 1) (dired-display-file)))
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-n"</span>) (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (<span style="color: #eba8a8; font-weight: bold;">interactive</span>) (dired-next-line 1) (dired-display-file)))
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (add-hook 'dired-mode-hook #'dired-omit-mode)
 </pre>
@@ -392,7 +398,7 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <pre class="src src-elisp">(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-(<span style="color: #00c089; font-weight: bold;">setq</span> ring-bell-function 'ignore
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> ring-bell-function 'ignore
       visible-bell t)
 </pre>
 </div>
@@ -403,8 +409,8 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <h2 id="org78a2757">Orderless</h2>
 <div class="outline-text-2" id="text-org78a2757">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">orderless</span>
-  <span style="color: #3fb83f; font-weight: bold;">:custom</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">orderless</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:custom</span>
   (completion-styles '(orderless partial-completion)))
 </pre>
 </div>
@@ -415,10 +421,10 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <h2 id="org31fed42">Vertico</h2>
 <div class="outline-text-2" id="text-org31fed42">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">vertico</span>
-  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">vertico</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:init</span>
   (vertico-mode t)
-  (<span style="color: #00c089; font-weight: bold;">setq</span> vertico-count 20
+  (<span style="color: #eba8a8; font-weight: bold;">setq</span> vertico-count 20
         vertico-resize t
         vertico-cycle t))
 </pre>
@@ -430,8 +436,8 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <h2 id="org8ed5f7c">Company</h2>
 <div class="outline-text-2" id="text-org8ed5f7c">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">company</span>
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">company</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
   (global-company-mode))
 </pre>
 </div>
@@ -442,30 +448,39 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <h2 id="org963f1b8">Embark</h2>
 <div class="outline-text-2" id="text-org963f1b8">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">embark</span>
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">embark</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
   (add-to-list 'god-exempt-major-modes 'embark-mode)
-  <span style="color: #3fb83f; font-weight: bold;">:bind*</span>
-  (<span style="color: #af9fff;">"C-,"</span> . embark-act)
-  (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-general-map
-        (<span style="color: #af9fff;">"C-w"</span> . browse-url))
-  (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-identifier-map
-        (<span style="color: #af9fff;">"R"</span> . query-replace)
-        (<span style="color: #af9fff;">"O"</span> . multi-occur-in-matching-buffers)
-        (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
-        (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
-  (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-url-map
-        (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
-        (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
-  (<span style="color: #3fb83f; font-weight: bold;">:map</span>  embark-file-map
-         (<span style="color: #af9fff;">"p"</span> . project-find-file)
-         (<span style="color: #af9fff;">"b"</span> . project-switch-to-buffer)
-         (<span style="color: #af9fff;">","</span> . append-to-previous-buffer)))
+  <span style="color: #d0b9f0; font-weight: bold;">:bind*</span>
+  (<span style="color: #50cf89;">"C-,"</span> . embark-act)
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-general-map
+        (<span style="color: #50cf89;">"C-w"</span> . browse-url))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-identifier-map
+        (<span style="color: #50cf89;">"R"</span> . query-replace)
+        (<span style="color: #50cf89;">"O"</span> . multi-occur-in-matching-buffers)
+        (<span style="color: #50cf89;">"c"</span> . browse-url-chrome)
+        (<span style="color: #50cf89;">"f"</span> . browse-url-firefox))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-url-map
+        (<span style="color: #50cf89;">"c"</span> . browse-url-chrome)
+        (<span style="color: #50cf89;">"f"</span> . browse-url-firefox))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span>  embark-file-map
+         (<span style="color: #50cf89;">"p"</span> . project-find-file)
+         (<span style="color: #50cf89;">"b"</span> . project-switch-to-buffer)
+         (<span style="color: #50cf89;">","</span> . append-to-previous-buffer)))
 </pre>
 </div>
 </div>
 </div>
 
+<div id="outline-container-orge898323" class="outline-2">
+<h2 id="orge898323">Eshell</h2>
+<div class="outline-text-2" id="text-orge898323">
+<div class="org-src-container">
+<pre class="src src-elisp">(add-hook 'eshell-mode-hook (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (define-key eshell-mode-map (kbd <span style="color: #50cf89;">"C-o"</span>) #'kill-this-buffer)))
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org3d30abd" class="outline-2">
 <h2 id="org3d30abd">Keybindings</h2>
 <div class="outline-text-2" id="text-org3d30abd">
@@ -478,14 +493,49 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(global-set-key (kbd <span style="color: #af9fff;">"M-o a"</span>) #'org-agenda)
-(global-set-key (kbd <span style="color: #af9fff;">"M-o k"</span>) #'org-agenda-capture)
-(global-set-key (kbd <span style="color: #af9fff;">"M-o e"</span>) #'emoji-search)
+<pre class="src src-elisp">(global-set-key (kbd <span style="color: #50cf89;">"M-o a"</span>) #'org-agenda)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o k"</span>) #'org-agenda-capture)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o 8"</span>) #'emoji-search)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o e"</span>) #'project-eshell)
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(define-key dired-mode-map (kbd <span style="color: #af9fff;">"M-o M-o h"</span>) #'dired-omit-mode)
+<pre class="src src-elisp">(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-o M-o h"</span>) #'dired-omit-mode)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfc45cb8" class="outline-4">
+<h4 id="orgfc45cb8">For not graphical client (i.e. emacs -nw)</h4>
+<div class="outline-text-4" id="text-orgfc45cb8">
+<p>
+Usually when you run Emacs in terminal (no graphic), you don't have access to the <code>Super</code> key. For this reason I redefine important Emacs standard keybindings to <code>M-x</code> and the <code>god-mode</code> toggle.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #50cf89;">"C-k"</span>) nil)
+(global-set-key (kbd <span style="color: #50cf89;">"C-k"</span>) #'execute-extended-command)
+(global-set-key (kbd <span style="color: #50cf89;">"C-l"</span>) nil)
+(global-set-key (kbd <span style="color: #50cf89;">"C-l"</span>) 'god-local-mode)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbd9ecf9" class="outline-3">
+<h3 id="orgbd9ecf9">Ease isearch UX</h3>
+<div class="outline-text-3" id="text-orgbd9ecf9">
+<p>
+Uses normal movements keys and <code>TAB</code> key to move through <code>isearch</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"C-p"</span>) 'isearch-repeat-backward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"C-n"</span>) 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"&lt;tab&gt;"</span>) 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"&lt;S-tab&gt;"</span>) 'isearch-repeat-backward)
 </pre>
 </div>
 </div>
@@ -495,11 +545,11 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 <h3 id="org61d3343">Translations keys</h3>
 <div class="outline-text-3" id="text-org61d3343">
 <div class="org-src-container">
-<pre class="src src-elisp">(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-k"</span>) (kbd <span style="color: #af9fff;">"M-x"</span>))
-(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-m"</span>) (kbd <span style="color: #af9fff;">"C-x"</span>))
-(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-M"</span>) (kbd <span style="color: #af9fff;">"C-c"</span>))
-(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-o"</span>) (kbd <span style="color: #af9fff;">"M-o"</span>))
-(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-O"</span>) (kbd <span style="color: #af9fff;">"M-o M-o"</span>))
+<pre class="src src-elisp">(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-k"</span>) (kbd <span style="color: #50cf89;">"M-x"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-m"</span>) (kbd <span style="color: #50cf89;">"C-x"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-M"</span>) (kbd <span style="color: #50cf89;">"C-c"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-o"</span>) (kbd <span style="color: #50cf89;">"M-o"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-O"</span>) (kbd <span style="color: #50cf89;">"M-o M-o"</span>))
 </pre>
 </div>
 </div>
@@ -509,27 +559,28 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 <h3 id="org47062bd">Super-key</h3>
 <div class="outline-text-3" id="text-org47062bd">
 <div class="org-src-container">
-<pre class="src src-elisp">(global-set-key (kbd <span style="color: #af9fff;">"s-0"</span>) (kbd <span style="color: #af9fff;">"C-x 0"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-1"</span>) (kbd <span style="color: #af9fff;">"C-x 1"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-2"</span>) (kbd <span style="color: #af9fff;">"C-x 2"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-3"</span>) (kbd <span style="color: #af9fff;">"C-x 3"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-w"</span>) (kbd <span style="color: #af9fff;">"C-x o"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-r"</span>) (kbd <span style="color: #af9fff;">"C-x z"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-i"</span>) (kbd <span style="color: #af9fff;">"C-M-i"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-N"</span>) (kbd <span style="color: #af9fff;">"C-x C-j"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-["</span>) (kbd <span style="color: #af9fff;">"C-x &lt;left&gt;"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-]"</span>) (kbd <span style="color: #af9fff;">"C-x &lt;right&gt;"</span>))
-(global-set-key (kbd <span style="color: #af9fff;">"s-,"</span>) #'switch-to-completions)
-(global-set-key (kbd <span style="color: #af9fff;">"s-b"</span>) #'switch-to-buffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s-B"</span>) #'ibuffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s-)"</span>) #'kill-this-buffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s--"</span>) #'bookmark-jump)
-(global-set-key (kbd <span style="color: #af9fff;">"s-_"</span>) #'bookmark-set)
-(global-set-key (kbd <span style="color: #af9fff;">"s-q"</span>) #'tab-next)
-(global-set-key (kbd <span style="color: #af9fff;">"s-t"</span>) #'find-name-dired)
-(global-set-key (kbd <span style="color: #af9fff;">"s-r"</span>) #'repeat)
-(global-set-key (kbd <span style="color: #af9fff;">"s-p"</span>) #'project-switch-to-buffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s-P"</span>) #'project-find-file)
+<pre class="src src-elisp">(global-set-key (kbd <span style="color: #50cf89;">"s-0"</span>) (kbd <span style="color: #50cf89;">"C-x 0"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-1"</span>) (kbd <span style="color: #50cf89;">"C-x 1"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-2"</span>) (kbd <span style="color: #50cf89;">"C-x 2"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-3"</span>) (kbd <span style="color: #50cf89;">"C-x 3"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-w"</span>) (kbd <span style="color: #50cf89;">"C-x o"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-r"</span>) (kbd <span style="color: #50cf89;">"C-x z"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-i"</span>) (kbd <span style="color: #50cf89;">"C-M-i"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-N"</span>) (kbd <span style="color: #50cf89;">"C-x C-j"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-["</span>) (kbd <span style="color: #50cf89;">"C-x &lt;left&gt;"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-]"</span>) (kbd <span style="color: #50cf89;">"C-x &lt;right&gt;"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-,"</span>) #'switch-to-completions)
+(global-set-key (kbd <span style="color: #50cf89;">"s-b"</span>) #'switch-to-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-B"</span>) #'ibuffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-)"</span>) #'kill-this-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s--"</span>) #'bookmark-jump)
+(global-set-key (kbd <span style="color: #50cf89;">"s-_"</span>) #'bookmark-set)
+(global-set-key (kbd <span style="color: #50cf89;">"s-q"</span>) #'tab-next)
+(global-set-key (kbd <span style="color: #50cf89;">"s-t"</span>) #'find-name-dired)
+(global-set-key (kbd <span style="color: #50cf89;">"s-e"</span>) #'dabbrev-expand)
+(global-set-key (kbd <span style="color: #50cf89;">"s-r"</span>) #'repeat)
+(global-set-key (kbd <span style="color: #50cf89;">"s-p"</span>) #'project-switch-to-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-P"</span>) #'project-find-file)
 </pre>
 </div>
 </div>
@@ -539,25 +590,25 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 <h3 id="org8025c30">god-mode</h3>
 <div class="outline-text-3" id="text-org8025c30">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">god-mode</span>
-  <span style="color: #3fb83f; font-weight: bold;">:init</span>
-  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
-    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
-  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-disabled</span> ()
-    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'bar))
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">god-mode</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:init</span>
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-god-mode-enabled</span> ()
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> cursor-type 'box))
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-god-mode-disabled</span> ()
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> cursor-type 'bar))
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
   (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
   (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
-  (global-set-key (kbd <span style="color: #af9fff;">"s-n"</span>) #'god-local-mode)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"i"</span>) #'god-local-mode)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"u"</span>) #'undo)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"U"</span>) #'undo-redo)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"&gt;"</span>) #'end-of-buffer)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"&lt;"</span>) #'beginning-of-buffer)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"["</span>) #'backward-paragraph)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"]"</span>) #'forward-paragraph)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"{"</span>) #'backward-sexp)
-  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"}"</span>) #'forward-sexp)
+  (global-set-key (kbd <span style="color: #50cf89;">"s-n"</span>) #'god-local-mode)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"i"</span>) #'god-local-mode)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"u"</span>) #'undo)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"U"</span>) #'undo-redo)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"&gt;"</span>) #'end-of-buffer)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"&lt;"</span>) #'beginning-of-buffer)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"["</span>) #'backward-paragraph)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"]"</span>) #'forward-paragraph)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"{"</span>) #'backward-sexp)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"}"</span>) #'forward-sexp)
   (add-to-list 'god-exempt-major-modes 'compilation-mode)
   (add-to-list 'god-exempt-major-modes 'org-capture-mode)
   (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
@@ -573,8 +624,8 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 <h3 id="org130c527">which-key</h3>
 <div class="outline-text-3" id="text-org130c527">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">which-key</span>
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">which-key</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
   (which-key-mode))
 </pre>
 </div>
@@ -590,12 +641,12 @@ Here's I share my most used configuration files across systems by simply usiung 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">if</span> (file-exists-p <span style="color: #af9fff;">"~/Dropbox/emacs/"</span>)
-    (<span style="color: #00c089; font-weight: bold;">setq</span> bookmark-file <span style="color: #af9fff;">"~/Dropbox/emacs/bookmarks"</span>
-          eshell-aliases-file <span style="color: #af9fff;">"~/Dropbox/emacs/eshell-aliases"</span>
-          custom-file <span style="color: #af9fff;">"~/Dropbox/emacs/custom.el"</span>
-          org-agenda-files '(<span style="color: #af9fff;">"~/Dropbox/org/"</span>)
-          org-roam-directory <span style="color: #af9fff;">"~/Dropbox/org-roam/"</span>))
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">if</span> (file-exists-p <span style="color: #50cf89;">"~/Dropbox/emacs/"</span>)
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> bookmark-file <span style="color: #50cf89;">"~/Dropbox/emacs/bookmarks"</span>
+          eshell-aliases-file <span style="color: #50cf89;">"~/Dropbox/emacs/eshell-aliases"</span>
+          custom-file <span style="color: #50cf89;">"~/Dropbox/emacs/custom.el"</span>
+          org-agenda-files '(<span style="color: #50cf89;">"~/Dropbox/org/"</span>)
+          org-roam-directory <span style="color: #50cf89;">"~/Dropbox/org-roam/"</span>))
 (load custom-file 'noerror)
 </pre>
 </div>
@@ -614,10 +665,10 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #00c089; font-weight: bold;">let*</span> ((modules-dir (concat user-emacs-directory <span style="color: #af9fff;">"modules/"</span>))
-       (modules (<span style="color: #00c089; font-weight: bold;">if</span> (file-exists-p modules-dir)
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">let*</span> ((modules-dir (concat user-emacs-directory <span style="color: #50cf89;">"modules/"</span>))
+       (modules (<span style="color: #eba8a8; font-weight: bold;">if</span> (file-exists-p modules-dir)
                     (directory-files modules-dir))))
-  (<span style="color: #00c089; font-weight: bold;">if</span> modules (mapcar (<span style="color: #00c089; font-weight: bold;">lambda</span> (module)
+  (<span style="color: #eba8a8; font-weight: bold;">if</span> modules (mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (module)
                         (load (concat modules-dir module) 'noerror))
                       modules)))
 </pre>
@@ -751,7 +802,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="org1b6e9f1">
+<pre class="example" id="orgfd821b4">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -791,7 +842,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgdb61528">
+<pre class="example" id="org1712684">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -809,14 +860,14 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-clear-buffer</span> ()
-  <span style="color: #7fc07f; font-style: italic;">"clear whole buffer add contents to the kill ring"</span>
-  (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-clear-buffer</span> ()
+  <span style="color: #99bfcf; font-style: italic;">"clear whole buffer add contents to the kill ring"</span>
+  (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
   (kill-region (point-min) (point-max)))
 
-(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-clear-buffer-permenantly</span> ()
-  <span style="color: #7fc07f; font-style: italic;">"clear whole buffer, contents is not added to the kill ring"</span>
-  (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-clear-buffer-permenantly</span> ()
+  <span style="color: #99bfcf; font-style: italic;">"clear whole buffer, contents is not added to the kill ring"</span>
+  (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
   (delete-region (point-min) (point-max)))
 </pre>
 </div>
@@ -865,7 +916,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org50e13b1">
+<pre class="example" id="org1ad79cf">
 (let ((start (point-min))
       (end (point-max)))
   (buffer-substring start end))

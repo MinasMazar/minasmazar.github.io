@@ -12,6 +12,9 @@
     :hook (after-init . tabspaces-mode)
     :commands (tabspaces-switch-or-create-workspace
 	       tabspaces-open-or-create-project-and-workspace)
+    :bind
+    (("s-{" . tab-previous)
+     ("s-}" . tab-next))
     :custom
     (tabspaces-keymap-prefix "M-o w")
     (tabspaces-use-filtered-buffers-as-default t)
