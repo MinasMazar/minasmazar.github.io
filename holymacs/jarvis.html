@@ -205,6 +205,7 @@
 <ul>
 <li><a href="#org141eeca">Tabspaces</a></li>
 <li><a href="#orgaea2556">Second Brain (Org-roam)</a></li>
+<li><a href="#org1d7a400">Alarm!</a></li>
 <li><a href="#org1810397">Search on the web: engine-mode</a></li>
 </ul>
 </div>
@@ -243,6 +244,22 @@
 <pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">org-roam</span>
   <span style="color: #d0b9f0; font-weight: bold;">:bind</span>
   ((<span style="color: #50cf89;">"M-o r f"</span> . #'org-roam-node-find)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1d7a400" class="outline-2">
+<h2 id="org1d7a400">Alarm!</h2>
+<div class="outline-text-2" id="text-org1d7a400">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">alarm-clock</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">holymacs/jarvis/set-alarm-10min-fire!</span> ()
+    (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
+    (alarm-clock-set <span style="color: #50cf89;">"10min"</span> <span style="color: #50cf89;">"FIRE!"</span>))
+  <span style="color: #d0b9f0; font-weight: bold;">:bind</span>
+  (<span style="color: #50cf89;">"M-o ! 1"</span> . #'holymacs/jarvis/set-alarm-10min-fire!))
 </pre>
 </div>
 </div>
