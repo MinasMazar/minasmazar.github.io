@@ -60,6 +60,18 @@ Also there are some external packages
       (org-capture)))
 #+end_src
 
+* Alarm!
+
+#+begin_src elisp
+  (use-package alarm-clock
+    :config
+    (defun holymacs/jarvis/set-alarm-10min-fire! ()
+      (interactive)
+      (alarm-clock-set "10min" "FIRE!"))
+    :bind
+    ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
+#+end_src
+
 * Search on the web: engine-mode
 #+begin_src elisp
   (use-package engine-mode
