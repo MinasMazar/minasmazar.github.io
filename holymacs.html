@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="/"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgd4b6f50">Specs</a></li>
+<li><a href="#orgea13d9e">Package Manager</a></li>
+<li><a href="#org486c30f">Main configuration</a></li>
+<li><a href="#org11f72de">Bookmarks</a>
+<ul>
+<li><a href="#org5fdce25">eww-bookmark-jump</a></li>
+</ul>
+</li>
+<li><a href="#org5a25626">Dired</a></li>
+<li><a href="#org6a306cb">Appearance</a></li>
+<li><a href="#org2d33b25">Orderless</a></li>
+<li><a href="#orge3b5f34">Vertico</a></li>
+<li><a href="#orgb0b4d55">Company</a></li>
+<li><a href="#orga5588ba">Embark</a></li>
+<li><a href="#orgb54d047">Eshell</a></li>
+<li><a href="#org985fbe1">Keybindings</a>
+<ul>
+<li><a href="#org2375a90">Custom keybindings</a>
+<ul>
+<li><a href="#org73c149c">For not graphical client (i.e. emacs -nw)</a></li>
+</ul>
+</li>
+<li><a href="#org7a703ae">Ease isearch UX</a></li>
+<li><a href="#orgc8210a1">Translations keys</a></li>
+<li><a href="#orgd000462">Super-key</a></li>
+<li><a href="#org24898c3">god-mode</a></li>
+<li><a href="#orgd448633">which-key</a></li>
+</ul>
+</li>
+<li><a href="#org6f03394">Shared configurations</a></li>
+<li><a href="#org15e7d99">Modules</a>
+<ul>
+<li><a href="#orgff43054">Autoload</a></li>
+<li><a href="#orgccd1729">Blorg</a></li>
+<li><a href="#org35e0811">jarvis.el</a></li>
+<li><a href="#org101d3c4"><span class="todo TODO">TODO</span> Hail Hydra</a></li>
+</ul>
+</li>
+<li><a href="#orge411124">On hand documentation</a>
+<ul>
+<li><a href="#org0446d18">Regular Expression Syntax (regexp)</a></li>
+<li><a href="#org31351ed">Vectors</a></li>
+<li><a href="#orgbb67287">Timers</a></li>
+<li><a href="#orgd99f192">(interactive) functions</a></li>
+<li><a href="#org9298d61">Buffer management</a></li>
+<li><a href="#org291f723">Commands, functions and variables</a></li>
+<li><a href="#org59784c6">Libaries</a></li>
+<li><a href="#orgada6e24">Useful topics</a></li>
+</ul>
+</li>
+<li><a href="#org37bb73c">Credits</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd4b6f50" class="outline-2">
+<h2 id="orgd4b6f50">Specs</h2>
+<div class="outline-text-2" id="text-orgd4b6f50">
+<p>
+When adding a feature, try to add some fast keybinding to access it (the <i>super</i> key is often a good choice).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgea13d9e" class="outline-2">
+<h2 id="orgea13d9e">Package Manager</h2>
+<div class="outline-text-2" id="text-orgea13d9e">
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'load-path <span style="color: #50cf89;">"~/.emacs.d/manual-packages/"</span>)
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">package</span>)
+
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> package-archives '((<span style="color: #50cf89;">"melpa"</span> . <span style="color: #50cf89;">"https://melpa.org/packages/"</span>)
+                         (<span style="color: #50cf89;">"elpa"</span> . <span style="color: #50cf89;">"https://elpa.gnu.org/packages/"</span>)
+                         (<span style="color: #50cf89;">"nongnu"</span> . <span style="color: #50cf89;">"https://elpa.nongnu.org/nongnu/"</span>)))
+
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">use-package</span>)
+(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">use-package-ensure</span>)
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> use-package-always-ensure t
+      package-enable-at-startup t)
+(package-initialize)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org486c30f" class="outline-2">
+<h2 id="org486c30f">Main configuration</h2>
+<div class="outline-text-2" id="text-org486c30f">
+<p>
+Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
+</p>
+
+<pre class="example" id="orgfbd0069">
+(setq user-full-name "Your username"
+      user-mail-address "username@domain.net")
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">setq</span> tab-always-indent 'complete
+      enable-recursive-minibuffers t
+      make-backup-files nil)
+</pre>
+</div>
+
+
+<div class="org-src-container">
+<pre class="src src-elisp">(ffap-bindings)
+(savehist-mode 1)
+(recentf-mode 1)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org11f72de" class="outline-2">
+<h2 id="org11f72de">Bookmarks</h2>
+<div class="outline-text-2" id="text-org11f72de">
+</div>
+<div id="outline-container-org5fdce25" class="outline-3">
+<h3 id="org5fdce25">eww-bookmark-jump</h3>
+<div class="outline-text-3" id="text-org5fdce25">
+<p>
+Here add a custom bookmark handler relying on <code>browse-url</code> and <code>browse-url-handlers</code>, so even if we store a bookmark via <code>eww</code>, we're going to use the proper browser when opening it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">browse-url-bookmark-jump</span> (bookmark)
+  <span style="color: #99bfcf; font-style: italic;">"Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.</span>
+<span style="color: #99bfcf; font-style: italic;">  Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"</span>
+  (browse-url (bookmark-prop-get bookmark 'location)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a25626" class="outline-2">
+<h2 id="org5a25626">Dired</h2>
+<div class="outline-text-2" id="text-org5a25626">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">dired</span>)
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> make-backup-files nil
+      tab-always-indent 'complete
+      dired-dwim-target t
+      dired-listing-switches <span style="color: #50cf89;">"-alth"</span>
+      dired-omit-files <span style="color: #50cf89;">"\\`[.]?#</span><span style="color: #cfaaff;">\\</span><span style="color: #ff656a;">|</span><span style="color: #50cf89;">\\`[.][.]?"</span>)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"W"</span>) #'wdired-change-to-wdired-mode)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"H"</span>) #'dired-omit-mode)
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-p"</span>) (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (<span style="color: #eba8a8; font-weight: bold;">interactive</span>) (dired-previous-line 1) (dired-display-file)))
+(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-n"</span>) (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (<span style="color: #eba8a8; font-weight: bold;">interactive</span>) (dired-next-line 1) (dired-display-file)))
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(add-hook 'dired-mode-hook #'dired-omit-mode)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6a306cb" class="outline-2">
+<h2 id="org6a306cb">Appearance</h2>
+<div class="outline-text-2" id="text-org6a306cb">
+<div class="org-src-container">
+<pre class="src src-elisp">(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(<span style="color: #eba8a8; font-weight: bold;">setq</span> ring-bell-function 'ignore
+      visible-bell t)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2d33b25" class="outline-2">
+<h2 id="org2d33b25">Orderless</h2>
+<div class="outline-text-2" id="text-org2d33b25">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">orderless</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:custom</span>
+  (completion-styles '(orderless partial-completion)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge3b5f34" class="outline-2">
+<h2 id="orge3b5f34">Vertico</h2>
+<div class="outline-text-2" id="text-orge3b5f34">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">vertico</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:init</span>
+  (vertico-mode t)
+  (<span style="color: #eba8a8; font-weight: bold;">setq</span> vertico-count 20
+        vertico-resize t
+        vertico-cycle t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb0b4d55" class="outline-2">
+<h2 id="orgb0b4d55">Company</h2>
+<div class="outline-text-2" id="text-orgb0b4d55">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">company</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (global-company-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga5588ba" class="outline-2">
+<h2 id="orga5588ba">Embark</h2>
+<div class="outline-text-2" id="text-orga5588ba">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">embark</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (add-to-list 'god-exempt-major-modes 'embark-mode)
+  <span style="color: #d0b9f0; font-weight: bold;">:bind*</span>
+  (<span style="color: #50cf89;">"C-,"</span> . embark-act)
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-general-map
+        (<span style="color: #50cf89;">"C-w"</span> . browse-url))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-identifier-map
+        (<span style="color: #50cf89;">"R"</span> . query-replace)
+        (<span style="color: #50cf89;">"O"</span> . multi-occur-in-matching-buffers)
+        (<span style="color: #50cf89;">"c"</span> . browse-url-chrome)
+        (<span style="color: #50cf89;">"f"</span> . browse-url-firefox))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span> embark-url-map
+        (<span style="color: #50cf89;">"c"</span> . browse-url-chrome)
+        (<span style="color: #50cf89;">"f"</span> . browse-url-firefox))
+  (<span style="color: #d0b9f0; font-weight: bold;">:map</span>  embark-file-map
+         (<span style="color: #50cf89;">"p"</span> . project-find-file)
+         (<span style="color: #50cf89;">"b"</span> . project-switch-to-buffer)
+         (<span style="color: #50cf89;">","</span> . append-to-previous-buffer)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb54d047" class="outline-2">
+<h2 id="orgb54d047">Eshell</h2>
+<div class="outline-text-2" id="text-orgb54d047">
+<div class="org-src-container">
+<pre class="src src-elisp">(add-hook 'eshell-mode-hook (<span style="color: #eba8a8; font-weight: bold;">lambda</span> () (define-key eshell-mode-map (kbd <span style="color: #50cf89;">"C-o"</span>) #'kill-this-buffer)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org985fbe1" class="outline-2">
+<h2 id="org985fbe1">Keybindings</h2>
+<div class="outline-text-2" id="text-org985fbe1">
+</div>
+<div id="outline-container-org2375a90" class="outline-3">
+<h3 id="org2375a90">Custom keybindings</h3>
+<div class="outline-text-3" id="text-org2375a90">
+<p>
+In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of an entrypoint for commands I often use, as for <code>org</code> commands. I'll use <code>M-o M-o</code> to map major-mode related commands.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(global-set-key (kbd <span style="color: #50cf89;">"M-o a"</span>) #'org-agenda)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o k"</span>) #'org-agenda-capture)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o 8"</span>) #'emoji-search)
+(global-set-key (kbd <span style="color: #50cf89;">"M-o e"</span>) #'project-eshell)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(define-key dired-mode-map (kbd <span style="color: #50cf89;">"M-o M-o h"</span>) #'dired-omit-mode)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org73c149c" class="outline-4">
+<h4 id="org73c149c">For not graphical client (i.e. emacs -nw)</h4>
+<div class="outline-text-4" id="text-org73c149c">
+<p>
+Usually when you run Emacs in terminal (no graphic), you don't have access to the <code>Super</code> key. For this reason I redefine important Emacs standard keybindings to <code>M-x</code> and the <code>god-mode</code> toggle.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #50cf89;">"C-k"</span>) nil)
+(global-set-key (kbd <span style="color: #50cf89;">"C-k"</span>) #'execute-extended-command)
+(global-set-key (kbd <span style="color: #50cf89;">"C-l"</span>) nil)
+(global-set-key (kbd <span style="color: #50cf89;">"C-l"</span>) 'god-local-mode)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7a703ae" class="outline-3">
+<h3 id="org7a703ae">Ease isearch UX</h3>
+<div class="outline-text-3" id="text-org7a703ae">
+<p>
+Uses normal movements keys and <code>TAB</code> key to move through <code>isearch</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"C-p"</span>) 'isearch-repeat-backward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"C-n"</span>) 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"&lt;tab&gt;"</span>) 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd <span style="color: #50cf89;">"&lt;S-tab&gt;"</span>) 'isearch-repeat-backward)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc8210a1" class="outline-3">
+<h3 id="orgc8210a1">Translations keys</h3>
+<div class="outline-text-3" id="text-orgc8210a1">
+<div class="org-src-container">
+<pre class="src src-elisp">(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-k"</span>) (kbd <span style="color: #50cf89;">"M-x"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-m"</span>) (kbd <span style="color: #50cf89;">"C-x"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-M"</span>) (kbd <span style="color: #50cf89;">"C-c"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-o"</span>) (kbd <span style="color: #50cf89;">"M-o"</span>))
+(define-key key-translation-map (kbd <span style="color: #50cf89;">"s-O"</span>) (kbd <span style="color: #50cf89;">"M-o M-o"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd000462" class="outline-3">
+<h3 id="orgd000462">Super-key</h3>
+<div class="outline-text-3" id="text-orgd000462">
+<div class="org-src-container">
+<pre class="src src-elisp">(global-set-key (kbd <span style="color: #50cf89;">"s-0"</span>) (kbd <span style="color: #50cf89;">"C-x 0"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-1"</span>) (kbd <span style="color: #50cf89;">"C-x 1"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-2"</span>) (kbd <span style="color: #50cf89;">"C-x 2"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-3"</span>) (kbd <span style="color: #50cf89;">"C-x 3"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-w"</span>) (kbd <span style="color: #50cf89;">"C-x o"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-r"</span>) (kbd <span style="color: #50cf89;">"C-x z"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-i"</span>) (kbd <span style="color: #50cf89;">"C-M-i"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-N"</span>) (kbd <span style="color: #50cf89;">"C-x C-j"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-["</span>) (kbd <span style="color: #50cf89;">"C-x &lt;left&gt;"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-]"</span>) (kbd <span style="color: #50cf89;">"C-x &lt;right&gt;"</span>))
+(global-set-key (kbd <span style="color: #50cf89;">"s-,"</span>) #'switch-to-completions)
+(global-set-key (kbd <span style="color: #50cf89;">"s-b"</span>) #'switch-to-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-B"</span>) #'ibuffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-)"</span>) #'kill-this-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s--"</span>) #'bookmark-jump)
+(global-set-key (kbd <span style="color: #50cf89;">"s-_"</span>) #'bookmark-set)
+(global-set-key (kbd <span style="color: #50cf89;">"s-q"</span>) #'tab-next)
+(global-set-key (kbd <span style="color: #50cf89;">"s-t"</span>) #'find-name-dired)
+(global-set-key (kbd <span style="color: #50cf89;">"s-e"</span>) #'dabbrev-expand)
+(global-set-key (kbd <span style="color: #50cf89;">"s-r"</span>) #'repeat)
+(global-set-key (kbd <span style="color: #50cf89;">"s-p"</span>) #'project-switch-to-buffer)
+(global-set-key (kbd <span style="color: #50cf89;">"s-P"</span>) #'project-find-file)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org24898c3" class="outline-3">
+<h3 id="org24898c3">god-mode</h3>
+<div class="outline-text-3" id="text-org24898c3">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">god-mode</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:init</span>
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-god-mode-enabled</span> ()
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> cursor-type 'box))
+  (<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-god-mode-disabled</span> ()
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> cursor-type 'bar))
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
+  (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
+  (global-set-key (kbd <span style="color: #50cf89;">"s-n"</span>) #'god-local-mode)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"i"</span>) #'god-local-mode)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"u"</span>) #'undo)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"U"</span>) #'undo-redo)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"&gt;"</span>) #'end-of-buffer)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"&lt;"</span>) #'beginning-of-buffer)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"["</span>) #'backward-paragraph)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"]"</span>) #'forward-paragraph)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"{"</span>) #'backward-sexp)
+  (define-key god-local-mode-map (kbd <span style="color: #50cf89;">"}"</span>) #'forward-sexp)
+  (add-to-list 'god-exempt-major-modes 'compilation-mode)
+  (add-to-list 'god-exempt-major-modes 'org-capture-mode)
+  (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
+  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
+  (add-to-list 'god-exempt-major-modes 'elfeed-show-mode)
+  (god-mode))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd448633" class="outline-3">
+<h3 id="orgd448633">which-key</h3>
+<div class="outline-text-3" id="text-orgd448633">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">which-key</span>
+  <span style="color: #d0b9f0; font-weight: bold;">:config</span>
+  (which-key-mode))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6f03394" class="outline-2">
+<h2 id="org6f03394">Shared configurations</h2>
+<div class="outline-text-2" id="text-org6f03394">
+<p>
+Here's I share my most used configuration files across systems by simply usiung a shared directory.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">if</span> (file-exists-p <span style="color: #50cf89;">"~/Dropbox/emacs/"</span>)
+    (<span style="color: #eba8a8; font-weight: bold;">setq</span> bookmark-file <span style="color: #50cf89;">"~/Dropbox/emacs/bookmarks"</span>
+          eshell-aliases-file <span style="color: #50cf89;">"~/Dropbox/emacs/eshell-aliases"</span>
+          custom-file <span style="color: #50cf89;">"~/Dropbox/emacs/custom.el"</span>
+          org-agenda-files '(<span style="color: #50cf89;">"~/Dropbox/org/"</span>)
+          org-roam-directory <span style="color: #50cf89;">"~/Dropbox/org-roam/"</span>))
+(load custom-file 'noerror)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org15e7d99" class="outline-2">
+<h2 id="org15e7d99">Modules</h2>
+<div class="outline-text-2" id="text-org15e7d99">
+</div>
+<div id="outline-container-orgff43054" class="outline-3">
+<h3 id="orgff43054">Autoload</h3>
+<div class="outline-text-3" id="text-orgff43054">
+<p>
+Here we define a mechanism to easily extend your Emacs experience with some custom defined <i>modules</i>, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the <b>layers</b> in <b>Doom Emacs</b>), but I'm not creating a whole mechanism to handle this: just place an <code>.el</code> file in the <code>~/.emacs.d/modules/</code> directory, and it will be autoloaded.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">let*</span> ((modules-dir (concat user-emacs-directory <span style="color: #50cf89;">"modules/"</span>))
+       (modules (<span style="color: #eba8a8; font-weight: bold;">if</span> (file-exists-p modules-dir)
+                    (directory-files modules-dir))))
+  (<span style="color: #eba8a8; font-weight: bold;">if</span> modules (mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (module)
+                        (load (concat modules-dir module) 'noerror))
+                      modules)))
+</pre>
+</div>
+
+<p>
+Here's the list of modules I'm using. They consists in <code>.org</code> files tangling to specific <code>.el</code> file in the <b>modules</b> directory (<code>~/.emacs.d/modules/</code>).
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgccd1729" class="outline-3">
+<h3 id="orgccd1729">Blorg</h3>
+<div class="outline-text-3" id="text-orgccd1729">
+<p>
+The <b>Blorg</b> publishing functions described in <a href="https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org">README.org</a> will tangle its code in the <code>blorg.el</code> module.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org35e0811" class="outline-3">
+<h3 id="org35e0811"><a href="holymacs/jarvis.html">jarvis.el</a></h3>
+</div>
+<div id="outline-container-org101d3c4" class="outline-3">
+<h3 id="org101d3c4"><span class="todo TODO">TODO</span> <a href="modules/hydra.html">Hail Hydra</a></h3>
+</div>
+</div>
+
+<div id="outline-container-orge411124" class="outline-2">
+<h2 id="orge411124">On hand documentation</h2>
+<div class="outline-text-2" id="text-orge411124">
+</div>
+<div id="outline-container-org0446d18" class="outline-3">
+<h3 id="org0446d18">Regular Expression Syntax (regexp)</h3>
+<div class="outline-text-3" id="text-org0446d18">
+<p>
+You can use the wonderful tool <code>regexp-builder</code>.
+</p>
+
+<blockquote>
+<p>
+Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
+</p>
+
+<p>
+The following characters are special : . * + ? ^ $ \ [
+</p>
+
+<p>
+Between brackets [], the following are special : ] - ^
+</p>
+
+<p>
+Many characters are special when they follow a backslash – see below.
+</p>
+
+<p>
+.        any character (but newline)
+</p>
+<ul class="org-ul">
+<li>previous character or group, repeated 0 or more time</li>
+<li>previous character or group, repeated 1 or more time</li>
+</ul>
+<p>
+  ?        previous character or group, repeated 0 or 1 time
+  ^        start of line
+  $        end of line
+  [&#x2026;]    any character between brackets
+  [^..]    any character not in the brackets
+  [a-z]    any character between a and z
+  \        prevents interpretation of following special char
+  \|       or
+  \w       word constituent
+  \b       word boundary
+  \sc      character with c syntax (e.g. \s- for whitespace char)
+  \( \)    start\end of group
+  \&lt; \&gt;    start\end of word
+  \_&lt; \_&gt;  start\end of symbol
+  \` \'    start\end of buffer\string
+  \1       string matched by the first group
+  \n       string matched by the nth group
+  \{3\}    previous character or group, repeated 3 times
+  \{3,\}   previous character or group, repeated 3 or more times
+  \{3,6\}  previous character or group, repeated 3 to 6 times
+  \=       match succeeds if it is located at point
+*?, +?, and ?? are non-greedy versions of *, +, and ? – see NonGreedyRegexp. Also, \W, \B, and \Sc match any character that does not match \w, \b, and \sc.
+</p>
+
+<p>
+Characters are organized by category. Use C-u C-x = to display the category of the character under the cursor.
+</p>
+
+<p>
+  \ca      ascii character
+  \Ca      non-ascii character (newline included)
+  \cl      latin character
+  \cg      greek character
+Here are some syntax classes that can be used between brackets, e.g. [[:upper:]\|[:digit:]\.].
+</p>
+
+<p>
+  [:digit:]  a digit, same as [0-9]
+  [:alpha:]  a letter (an alphabetic character)
+  [:alnum:]  a letter or adigit (an alphanumeric character ()
+  [:upper:]  a letter in uppercase
+  [:space:]  a whitespace character, as defined by the syntax table
+  [:xdigit:] an hexadecimal digit
+  [:cntrl:]  a control character
+  [:ascii:]  an ascii character
+Syntax classes:
+</p>
+
+<p>
+\s-   whitespace character        \s/   character quote character
+\sw   word constituent            \s$   paired delimiter
+\s_   symbol constituent          \s'   expression prefix
+\s.   punctuation character       \s&lt;   comment starter
+\s(   open delimiter character    \s&gt;   comment ender
+\s)   close delimiter character   \s!   generic comment delimiter
+\s"   string quote character      \s|   generic string delimiter
+\s\   escape character
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org31351ed" class="outline-3">
+<h3 id="org31351ed">Vectors</h3>
+<div class="outline-text-3" id="text-org31351ed">
+<p>
+Get an element from a vector
+</p>
+
+<pre class="example" id="orgdd2094b">
+;; get a element from vector
+(aref ["a" "b" "c"] 0) ; ⇒ "a"
+;; get a element from vector
+(elt ["a" "b" "c"] 0) ; ⇒ "a"
+</pre>
+
+<p>
+What's the difference between <code>aref</code> and <code>elt</code>?
+<code>elt</code> is more general. It works on vector and list. But if you know
+it's vector, you should use <code>aref</code>, because it's precise and faster.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb67287" class="outline-3">
+<h3 id="orgbb67287">Timers</h3>
+<div class="outline-text-3" id="text-orgbb67287">
+<p>
+You can run specified function at specified time and with a specific timeout! Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
+</p>
+
+<blockquote>
+<p>
+The list-timers command lists all the currently active timers. There’s
+only one command available in the buffer displayed: c
+(timer-list-cancel) that will cancel the timer on the line under
+point.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgd99f192" class="outline-3">
+<h3 id="orgd99f192">(interactive) functions</h3>
+<div class="outline-text-3" id="text-orgd99f192">
+<p>
+Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
+</p>
+
+<pre class="example" id="org1ecb208">
+(defun minemacs/demo-function (url &amp;optional handler)
+  "Example function."
+  (interactive (list
+		(read-from-minibuffer "URL: ")
+		(completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+   (message (format "url: %s, handler: %s" url handler )))
+</pre>
+</div>
+</div>
+<div id="outline-container-org9298d61" class="outline-3">
+<h3 id="org9298d61">Buffer management</h3>
+<div class="outline-text-3" id="text-org9298d61">
+<p>
+Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer">stackoverflow</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-clear-buffer</span> ()
+  <span style="color: #99bfcf; font-style: italic;">"clear whole buffer add contents to the kill ring"</span>
+  (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
+  (kill-region (point-min) (point-max)))
+
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">minemacs-clear-buffer-permenantly</span> ()
+  <span style="color: #99bfcf; font-style: italic;">"clear whole buffer, contents is not added to the kill ring"</span>
+  (<span style="color: #eba8a8; font-weight: bold;">interactive</span>)
+  (delete-region (point-min) (point-max)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org291f723" class="outline-3">
+<h3 id="org291f723">Commands, functions and variables</h3>
+<div class="outline-text-3" id="text-org291f723">
+<p>
+Just press <code>C-h o</code> to get help on those symbols.
+</p>
+
+<ul class="org-ul">
+<li><code>align-regexp</code></li>
+<li><code>add-file-local-variable</code> (append at bottom of the file) and <code>add-file-local-variable-prop-line</code> (prepend in the first line)</li>
+<li><code>browse-url-of-buffer</code></li>
+<li><code>completions-max-height</code></li>
+<li><code>find-name-dired</code></li>
+<li><code>json-pretty-print-buffer</code></li>
+<li><code>org-archive-subtree-default</code></li>
+<li><code>org-babel-load-file</code></li>
+<li><code>org-agenda-include-diary</code></li>
+<li><code>pp-eval-expression</code></li>
+<li><code>imenu-generic-expression</code></li>
+<li><code>proced</code></li>
+<li><code>shr-inhibit-images</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org59784c6" class="outline-3">
+<h3 id="org59784c6">Libaries</h3>
+<div class="outline-text-3" id="text-org59784c6">
+<ul class="org-ul">
+<li><a href="https://tkf.github.io/emacs-request/">request.el</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgada6e24" class="outline-3">
+<h3 id="orgada6e24">Useful topics</h3>
+<div class="outline-text-3" id="text-orgada6e24">
+<ul class="org-ul">
+<li><a href="https://orgmode.org/manual/Results-of-Evaluation.html">Results of Evaluation</a></li>
+<li><p>
+<a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
+</p>
+
+<pre class="example" id="orge1f88a0">
+(let ((start (point-min))
+      (end (point-max)))
+  (buffer-substring start end))
+</pre></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org37bb73c" class="outline-2">
+<h2 id="org37bb73c">Credits</h2>
+<div class="outline-text-2" id="text-org37bb73c">
+<p>
+I would like to thanks:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.gnu.org/software/emacs/">The Emacs editor</a> and his <b>guru</b> <a href="https://stallman.org/">Richard Stallman</a>.</li>
+<li><a href="https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf">The Elisp documentation</a></li>
+<li><a href="http://kelvinh.github.io/">Kelvin Hu</a> for his <a href="https://github.com/kelvinh/.emacs.d">emacs configuration</a> and the idea to write it in a <b>literate style</b>.</li>
+<li><a href="http://www.howardism.org/">Howard Abrams</a> for his <a href="https://github.com/howardabrams/dot-files">dotfiles</a>.</li>
+<li><a href="https://github.com/aaronbieber">Aaron Bieber</a> for his dotfiles and for the wonderful speech <a href="https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc">Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs</a> that makes me <b>fall in love</b> with Emacs. ;-)</li>
+<li><a href="https://protesilaos.com/">Protesilaos Stavrou</a> for his <a href="https://protesilaos.com/dotemacs/">comprehensive "dotemacs" (.emacs) for GNU/Linux</a> and <a href="https://protesilaos.com/codelog/">the huge amount of posts and videos about Emacs</a>.</li>
+<li><a href="https://github.com/sponsors/daviwil">David Wilson</a> for his fantastic <a href="https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ">System Crafters screencasts</a>!</li>
+<li><a href="http://staff.science.uva.nl/~dominik/">Carsten Dominik</a>, creator of <a href="http://orgmode.org">org-mode</a> 🦄 also thanks to <a href="https://orgmode.org/worg/">worg</a> 🌈</li>
+<li><a href="https://gitlab.com/spudlyo">Mike Hamrick</a> for <a href="https://gitlab.com/spudlyo/orgdemo2">orgdemo2</a> which is really useful if you want learn a lot of stuff about <code>org-mode</code>.</li>
+<li><a href="http://ehneilsen.net">Eric H. Neilsen, Jr.</a> for his wonderful  <a href="http://ehneilsen.net/notebook/orgExamples/org-examples.html">org-mode examples and cookbook</a>.</li>
+<li><a href="https://www.omarpolo.com/">Omar Polo</a> and <a href="https://ict4g.net/adolfo/index.html">Adolfo Villafiorita</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2023-07-15 Sat 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

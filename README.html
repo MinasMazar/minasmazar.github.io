@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ Blorg</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="/"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ Blorg</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgfbedcbd">Emacs and Org</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfbedcbd" class="outline-2">
+<h2 id="orgfbedcbd">Emacs and Org</h2>
+<div class="outline-text-2" id="text-orgfbedcbd">
+<p>
+This is the source code of <a href="https://minasmazar.github.io">my personal website</a>. It is written in <code>org-mode</code> and is hosted on <a href="https://pages.github.com/">Github pages</a>. It uses the <code>org-publish</code> function to generate the static site you're reading right now.
+</p>
+
+<p>
+For more information about <code>Emacs</code>, <code>org-mode</code> and its publishing feature:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://orgmode.org/">https://orgmode.org/</a></li>
+<li><a href="https://orgmode.org/worg/">https://orgmode.org/worg/</a></li>
+<li><a href="https://emacsdocs.org/">https://emacsdocs.org/</a> by Thomas F. K. Jorna (<a href="https://github.com/tefkah">tefkah</a>)</li>
+<li><a href="https://orgmode.org/manual/Publishing.html">https://orgmode.org/manual/Publishing.html</a></li>
+</ul>
+
+<p>
+If you're interested in the Emacs configuration needed to generate my website pages and the deployment workflow, refers to the <a href="minemacs.html#blorg-section"><i>Blorg section</i></a>. Here's some useful resources:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://orgmode.org/">org-mode</a></li>
+<li><a href="https://github.com/fniessen/org-html-themes">https://github.com/fniessen/org-html-themes</a></li>
+<li><a href="https://pavpanchekha.com/blog/org-mode-publish.html">https://pavpanchekha.com/blog/org-mode-publish.html</a></li>
+<li><a href="https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword">https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword</a></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">org</span>)
+(mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (project)
+          (add-to-list 'org-publish-project-alist project))
+        '(
+          (<span style="color: #50cf89;">"blorg:assets"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"*.png"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-publish-attachment)
+          (<span style="color: #50cf89;">"blorg:org"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
+           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"org"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-html-publish-to-html
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:with-author</span> nil
+           <span style="color: #d0b9f0; font-weight: bold;">:with-creator</span> t
+           <span style="color: #d0b9f0; font-weight: bold;">:with-toc</span> t
+           <span style="color: #d0b9f0; font-weight: bold;">:html-link-up</span> <span style="color: #50cf89;">"/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:html-link-home</span> <span style="color: #50cf89;">"/"</span>
+           <span style="color: #cac89f; font-style: italic;">;; </span><span style="color: #cac89f; font-style: italic;">:html-preamble blorg-html-preamble</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:section-numbers</span> nil
+           <span style="color: #d0b9f0; font-weight: bold;">:time-stamp-file</span> nil)
+          (<span style="color: #50cf89;">"blorg:publish"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"any"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-publish-attachment
+           <span style="color: #d0b9f0; font-weight: bold;">:exclude</span> <span style="color: #50cf89;">".*"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:completion-function</span> blorg-autopublish)
+          (<span style="color: #50cf89;">"blorg"</span>
+           <span style="color: #d0b9f0; font-weight: bold;">:components</span> (<span style="color: #50cf89;">"blorg:org"</span> <span style="color: #50cf89;">"blorg:assets"</span> <span style="color: #50cf89;">"blorg:publish"</span>))))
+</pre>
+</div>
+
+<p>
+Include the <a href="https://git.sr.ht/~abrahms/ox-gemini"><code>ox-gemini</code></a> package if you want to export your org files also in the <code>.gmi</code> format in order to deploy your blog as a <a href="https://gemini.circumlunar.space/">gemini capsule</a>. It provides the <code>org-gemini-publish-to-gemini</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">ox-gemini</span>)
+(add-to-list 'org-publish-project-alist
+             '(<span style="color: #50cf89;">"blorg:gmi"</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
+               <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/pages/"</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"org"</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-gemini-publish-to-gemini
+               <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:with-author</span> nil
+               <span style="color: #d0b9f0; font-weight: bold;">:with-creator</span> t
+               <span style="color: #d0b9f0; font-weight: bold;">:with-toc</span> t
+               <span style="color: #d0b9f0; font-weight: bold;">:html-link-up</span> <span style="color: #50cf89;">"/"</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:html-link-home</span> <span style="color: #50cf89;">"/"</span>
+               <span style="color: #cac89f; font-style: italic;">;; </span><span style="color: #cac89f; font-style: italic;">:html-preamble blorg-html-preamble</span>
+               <span style="color: #d0b9f0; font-weight: bold;">:section-numbers</span> nil
+               <span style="color: #d0b9f0; font-weight: bold;">:time-stamp-file</span> nil))
+</pre>
+</div>
+
+<p>
+🚧 This section about RSS is a work in progress 🚧
+</p>
+
+<p>
+The package <code>ox-rss</code> is needed if you want to generate a RSS (it exports the <code>org-rss-publish-to-rss</code> function).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">ox-rss</span>)
+</pre>
+</div>
+
+<p>
+Every link in <code>org-mode</code> has a prefix that define a <i>type</i> (<code>img:logo.png</code> <code>file:about.org</code>). Every type should provide two functions for <i>follow</i> and <i>export</i> actions. This snippet comes from <a href="https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html">this SO thread</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">org-custom-link-raw-relative-follow</span> (path)
+  (org-open-file-with-emacs
+   (format <span style="color: #50cf89;">"./%s"</span> path)))
+
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">org-custom-link-raw-relative-export</span> (path desc format)
+  (<span style="color: #eba8a8; font-weight: bold;">cond</span>
+   ((eq format 'html)
+    (format <span style="color: #50cf89;">"&lt;a href=\"/%s\" alt=\"%s\"/&gt;%s&lt;/a&gt;"</span> path desc desc))))
+
+(org-add-link-type <span style="color: #50cf89;">"raw-relative"</span> 'org-custom-link-img-follow 'org-custom-link-img-export)
+</pre>
+</div>
+
+<p>
+Now define some handy <code>org-capture</code> templates!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (entry) (add-to-list 'org-capture-templates entry))
+        '((<span style="color: #50cf89;">"B"</span> <span style="color: #50cf89;">"Blorg: bookmark"</span> entry (file <span style="color: #50cf89;">"~/minasmazar.github.io/pages/bookmarks.org"</span>)
+           <span style="color: #50cf89;">"* %?\n\n %a"</span> <span style="color: #d0b9f0; font-weight: bold;">:prepend</span> t)
+          (<span style="color: #50cf89;">"J"</span> <span style="color: #50cf89;">"Blorg: journal"</span> entry (file+datetree <span style="color: #50cf89;">"~/minasmazar.github.io/pages/journal.org"</span>)
+           <span style="color: #50cf89;">"* %?\nEntered on %U\n %i\n %a"</span> <span style="color: #d0b9f0; font-weight: bold;">:jump-to-captured</span> t)))
+</pre>
+</div>
+
+<p>
+Here we define the function that uses <code>git</code> to publish my static site to my personal Github pages. The pre-requisite is that the destitnation directory exists and has a git repo already initialized and the remote already set up.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">defcustom</span> <span style="color: #f59acf;">blorg-autopublish</span> nil
+  <span style="color: #99bfcf; font-style: italic;">"Define if autopublish feature is enabled. Used in the function =blorg-autopublish="</span>)
+
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-html-preamble</span> ()
+  <span style="color: #99bfcf; font-style: italic;">"&lt;div&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=\"/\"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;"</span>)
+
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-autopublish</span> (options)
+  (<span style="color: #eba8a8; font-weight: bold;">let*</span> ((default-directory (plist-get options <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span>)))
+    (<span style="color: #eba8a8; font-weight: bold;">if</span> blorg-autopublish
+  (blorg-add-commit-and-push default-directory)
+(message <span style="color: #50cf89;">"[blorg] autopublish simulation"</span>))))
+
+(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-add-commit-and-push</span> (directory)
+  <span style="color: #99bfcf; font-style: italic;">"Add all files, commit and push"</span>
+  (cd directory)
+  (<span style="color: #eba8a8; font-weight: bold;">let*</span> ((commit-msg (format <span style="color: #50cf89;">"Autopublish [%s]"</span> (current-time-string)))
+   (command (format <span style="color: #50cf89;">"git add . ; git commit -m '</span><span style="color: #cfaaff;">%s</span><span style="color: #50cf89;">' ; git push origin master --force"</span> commit-msg)))
+    (shell-command command)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-04-21 Sun 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
