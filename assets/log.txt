@@ -1,0 +1,4 @@
+## This is a text log
+
+I hope your browser is smart enough so you can read this raw-text page without the need to download the document!
+

@@ -428,6 +428,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =org-babel-load-file=
 - =org-agenda-include-diary=
 - =pp-eval-expression=
+- =imenu-generic-expression=
 - =proced=
 - =shr-inhibit-images=
 

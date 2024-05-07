@@ -327,7 +327,7 @@ When adding a feature, try to add some fast keybinding to access it (the <i>supe
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org569b123">
+<pre class="example" id="orgbece2bc">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -802,7 +802,7 @@ Syntax classes:
 Get an element from a vector
 </p>
 
-<pre class="example" id="orgfd821b4">
+<pre class="example" id="org0d0388f">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -842,7 +842,7 @@ point.
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org1712684">
+<pre class="example" id="org97bef1a">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -892,6 +892,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>org-babel-load-file</code></li>
 <li><code>org-agenda-include-diary</code></li>
 <li><code>pp-eval-expression</code></li>
+<li><code>imenu-generic-expression</code></li>
 <li><code>proced</code></li>
 <li><code>shr-inhibit-images</code></li>
 </ul>
@@ -916,7 +917,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org1ad79cf">
+<pre class="example" id="org333dfd0">
 (let ((start (point-min))
       (end (point-max)))
   (buffer-substring start end))
