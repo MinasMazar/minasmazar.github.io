@@ -3,6 +3,14 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-31 Wed>
 
+* Docker
+
+Autostart docker container
+
+#+begin_src sh
+docker update --restart unless-stopped <docker-container>
+#+end_src
+
 * Installing Linux on MacBookPro
 ** Bluetooh issues
 

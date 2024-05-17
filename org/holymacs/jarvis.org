@@ -46,7 +46,19 @@
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
-* Second Brain ([[https://www.orgroam.com/][Org-roam]])
+* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
+
+#+begin_src elisp
+  (use-package org
+    :config
+    (add-to-list 'org-capture-templates
+		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
+		    "* TODO %?\n %i\n  %a"))
+    :bind
+    (:map org-mode-map
+	  ("M-p" . #'org-move-subtree-up)
+	  ("M-n" . #'org-move-subtree-down)))
+#+end_src
 
 #+begin_src elisp
 (use-package org-roam
@@ -91,16 +103,147 @@ Also there are some external packages
     ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
 #+end_src
 
-* News
+* News and Mail
 ** RSS Reader (elfeed)
 
 #+begin_src elisp
   (use-package elfeed
     :bind
-    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (set-timer "10min" t #'elfeed-update))))
+    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
     :config
     (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
 #+end_src
+
+** COMMENT Mu4e ⚠️ wip ⚠️
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle ~/.emacs.d/modules/mu4e_wip.el
+:END:
+
+*** Dependencies
+
+Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
+
+Useful links:
+- http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+- https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
+- https://isync.sourceforge.io/mbsync.html
+
+*** Configuration
+
+#+begin_example toml
+  IMAPAccount gmail-imaps
+  Host imap.gmail.com
+  Port 993
+  #UseIMAPS yes
+  #RequireSSl yes
+  SSLType IMAPS
+  SSLVersions TLSv1.2
+  AuthMechs PLAIN
+  User minasmazar@gmail.com
+  #Pass supercomplicatedpassword
+  PassCmd "pass gmail/imaps"
+
+  IMAPStore gmail-remote
+  Account gmail-imaps
+
+  MaildirStore gmail-local
+  Path ~/MailDir/gmail/
+  Inbox ~/MailDir/gmail/INBOX
+  Subfolders Verbatim
+
+  Channel gmail
+  #Master :gmail-remote:
+  #Slave :gmail-local:
+  Far :gmail-remote:
+  Near :gmail-local:
+  Create Both
+  Expunge Both
+  Patterns *
+  SyncState *
+#+end_example
+
+#+begin_example emacs-lisp
+  (require 'mu4e)
+  (setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+  (auth-source-pass-enable)
+  (setq smtpmail-debug-info t)
+#+end_example
+
+To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= variable. An interesting screencast/article from System Crafters about that can be found [[https://systemcrafters.net/emacs-mail/managing-multiple-accounts/][here]].
+
+#+begin_example elisp
+  (setq smtpmail-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-service 465
+	smtpmail-stream-type 'ssl
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+  (setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+#+end_example
+
+** COMMENT Gnus ⚠️ wip ⚠️
+
+To configure gnus in order to read your Gmail, you have to:
+
+- create a password token on the Gmail account
+- enter an authentication line in your =authinfo=
+
+  #+begin_export ascii
+  machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
+#+end_export
+
+Then configure the =gnus-select-method=
+
+#+begin_example elisp
+  (setq gnus-select-method
+	'(nnimap "gmail"
+		 (nnimap-address "imap.gmail.com")
+		 (nnimap-server-port "imaps")
+		 (nnimap-stream ssl)))
+#+end_example
 
 * Media
 

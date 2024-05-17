@@ -19,10 +19,10 @@ As mentioned in the [[file:~/minasmazar.github.io/org/holymacs.org::*Specs][*Hol
 #+begin_src elisp
   (use-package consult
     :bind
-    (("s-j" . consult-buffer)
-     ("s-i" . consult-imenu-multi)
+    (("s-b" . consult-buffer)
+     ("s-i" . consult-outline)
      ("s-l" . consult-history)
-     ("s-I" . consult-outline)
+     ("s-I" . consult-imenu-multi)
      ("s-f" . consult-line)
      ("s-t" . consult-grep)))
 #+end_src

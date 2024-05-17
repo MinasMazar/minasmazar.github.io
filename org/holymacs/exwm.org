@@ -1,4 +1,3 @@
-
 #+TITLE: Holymacs ~ Consult module
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
@@ -18,8 +17,9 @@
 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
     (defun holymacs/xrandr-set-monitors ()
       (start-process-shell-command "xrandr" nil
-					  ;"xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal")
-				   "xrandr --output DP-2 --primary --mode 1920x1080 --output eDP-1 --left-of DP-2 --auto"))
+				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+				   "xrandr --output eDP-1 --primary --mode 1920x1080"
+				   ))
     (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
     (require 'exwm-systemtray)
     (exwm-systemtray-enable))
@@ -27,7 +27,7 @@
 
 ** Autostart applications
 
-#+begin_src sh
+#+begin_example sh
   nm-applet &
   blueman-applet &
-#+end_src
+#+end_example

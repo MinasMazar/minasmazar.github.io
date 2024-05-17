@@ -2,19 +2,29 @@
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2023-07-15 Sat>
-#+PROPERTY: header-args :tangle ~/.emacs.d/init.el :mkdirp yes
 #+STARTUP: show2levels
-#+SETUPFILE: ../templates/_header.org
+
 #+OPTIONS: toc:t
 
 * Specs
 
-When adding a feature, try to add some fast keybinding to access it (the /super/ key is often a good choice).
+It's a literate configuration but I'm not good at writing, this means that it will not be so literate in the end 😂 If you're reading this and you're new to the emacs world I recommend to view this document using Emacs: if you're reading the =org= version (from source repository) or from the internet using the Emacs browser =eww=, you can ~C-h o~ (or ~C-h p~ for packages, usually =use-package=) to have more information from Emacs documentation
 
-* Package Manager
+** COMMENT Main principles:
+
+....
+
+- when adding a feature, try to add some fast keybinding to access it (the /super/ key is often a good choice)
+
+* Holymacs
+:PROPERTIES:
+:header-args: :tangle ~/.emacs.d/init.el
+:END:
+
+** Package Manager
 
 #+begin_src elisp
-  (add-to-list 'load-path "~/.emacs.d/manual-packages/")
+  (add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
   (require 'package)
 
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -27,8 +37,7 @@ When adding a feature, try to add some fast keybinding to access it (the /super/
 	package-enable-at-startup t)
   (package-initialize)
 #+end_src
-
-* Main configuration
+** Main configuration
 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization =(customize-variable 'user-full-name)=.
 
@@ -43,6 +52,7 @@ Remember to set your name and email address! Place here your real data, or use t
 	make-backup-files nil)
 #+end_src
 
+Just ~C-h o~ over those functions for more information.
 
 #+begin_src elisp
   (ffap-bindings)
@@ -50,8 +60,8 @@ Remember to set your name and email address! Place here your real data, or use t
   (recentf-mode 1)
 #+end_src
 
-* Bookmarks
-** eww-bookmark-jump
+*** Bookmarks
+**** eww-bookmark-jump
 
 Here add a custom bookmark handler relying on =browse-url= and =browse-url-handlers=, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
 
@@ -62,7 +72,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     (browse-url (bookmark-prop-get bookmark 'location)))
 #+end_src
 
-* Dired
+*** Dired
 
 #+begin_src elisp
   (require 'dired)
@@ -79,7 +89,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (add-hook 'dired-mode-hook #'dired-omit-mode)
 #+end_src
 
-* Appearance
+*** Appearance
 
 #+begin_src elisp
   (menu-bar-mode -1)
@@ -89,14 +99,22 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 	visible-bell t)
 #+end_src
 
-* Orderless
+*** TODO Window management
+
+No configuration till now. If you want to learn something about this topic there [[https://karthinks.com/software/emacs-window-management-almanac/][this fantastic article]], or ~C-h o~.
+
+#+begin_src elisp
+  (winner-mode 1)
+#+end_src
+
+*** Orderless
 #+begin_src elisp
   (use-package orderless
     :custom
     (completion-styles '(orderless partial-completion)))
 #+end_src
 
-* Vertico
+*** Vertico
 
 #+begin_src elisp
   (use-package vertico
@@ -107,15 +125,19 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 	  vertico-cycle t))
 #+end_src
 
-* Company
+*** Auto-completion
 
 #+begin_src elisp
-  (use-package company
+  (use-package corfu
+    :hook
+    (eshell-mode . (lambda ()
+		     (setq-local corfu-auto nil)
+		     (corfu-mode)))
     :config
-    (global-company-mode))
+    (global-corfu-mode))
 #+end_src
 
-* Embark
+*** Embark
 
 #+begin_src elisp
   (use-package embark
@@ -139,14 +161,15 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 	   ("," . append-to-previous-buffer)))
 #+end_src
 
-* Eshell
+*** Eshell
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
+  (add-to-list 'org-babel-load-languages '(eshell . t))
   (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
 #+end_src
 
-* Keybindings
-** Custom keybindings
+*** Keybindings
+**** Custom keybindings
 
 In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypoint for commands I often use, as for =org= commands. I'll use ~M-o M-o~ to map major-mode related commands.
 
@@ -156,13 +179,14 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "M-o 8") #'emoji-search)
   (global-set-key (kbd "M-o e") #'eshell)
   (global-set-key (kbd "M-o E") #'project-eshell)
+  (global-set-key (kbd "M-o h") #'info-display-manual)
 #+end_src
 
 #+begin_src elisp
   (define-key dired-mode-map (kbd "M-o M-o h") #'dired-omit-mode)
 #+end_src
 
-*** For not graphical client (i.e. emacs -nw)
+**** For not graphical client (i.e. emacs -nw)
 
 Sometimes when you run Emacs in old terminal emulators, you don't have access to the ~alt~ or ~super~ key. For this reason I redefine important Emacs standard keybindings to ~M-x~ and the =god-mode= toggle.
 
@@ -173,7 +197,7 @@ Sometimes when you run Emacs in old terminal emulators, you don't have access to
   (global-set-key (kbd "C-l") 'god-local-mode)
 #+end_src
 
-** Ease isearch UX
+**** Ease isearch UX
 
 Uses normal movements keys and =TAB= key to move through =isearch=.
 
@@ -184,7 +208,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (define-key isearch-mode-map (kbd "<S-tab>") 'isearch-repeat-backward)
 #+end_src
 
-** Translations keys
+**** Translations keys
 
 #+begin_src elisp
   (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
@@ -194,7 +218,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (define-key key-translation-map (kbd "s-O") (kbd "M-o M-o"))
 #+end_src
 
-** Super-key
+**** Super-key
 
 #+begin_src elisp
   (global-set-key (kbd "s-0") (kbd "C-x 0"))
@@ -207,9 +231,10 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-N") (kbd "C-x C-j"))
   (global-set-key (kbd "s-[") (kbd "C-x <left>"))
   (global-set-key (kbd "s-]") (kbd "C-x <right>"))
-  (global-set-key (kbd "s-,") #'switch-to-completions)
+  (global-set-key (kbd "s-,") #'switch-to-completions) ;; useful if you don't use ido, vertico or similar
   (global-set-key (kbd "s-b") #'switch-to-buffer)
   (global-set-key (kbd "s-B") #'ibuffer)
+  (global-set-key (kbd "s-j") #'recentf)
   (global-set-key (kbd "s-)") #'kill-this-buffer)
   (global-set-key (kbd "s--") #'bookmark-jump)
   (global-set-key (kbd "s-_") #'bookmark-set)
@@ -223,7 +248,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-P") #'project-find-file)
 #+end_src
 
-** god-mode
+**** god-mode
 
 #+begin_src elisp
   (use-package god-mode
@@ -253,7 +278,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (god-mode))
 #+end_src
 
-** which-key
+**** which-key
 
 #+begin_src elisp
   (use-package which-key
@@ -261,7 +286,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (which-key-mode))
 #+end_src
 
-* Shared configurations
+** Shared configuration
 
 Here's I share my most used configuration files across systems by simply usiung a shared directory.
 
@@ -274,9 +299,17 @@ Here's I share my most used configuration files across systems by simply usiung 
 	    org-roam-directory "~/Dropbox/org-roam/"))
   (load custom-file 'noerror)
 #+end_src
+** Modules
+*** Compile
 
-* Modules
-** Autoload
+Re-tangle all modules. I don't think a specific command is needed. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block.
+
+#+begin_src elisp :tangle no
+  (mapcar #'org-babel-tangle-file
+	  (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp))
+#+end_src
+
+*** Autoload
 
 Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
 
@@ -291,15 +324,16 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 
 Here's the list of modules I'm using. They consists in =.org= files tangling to specific =.el= file in the *modules* directory (=~/.emacs.d/modules/=).
 
-** Blorg
+*** Blorg
 
 The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
 
-** [[file:holymacs/jarvis.org][jarvis.el]]
-** TODO [[file:modules/hydra.org][Hail Hydra]]
+*** [[file:holymacs/jarvis.org][jarvis.el]]
+*** TODO [[file:modules/hydra.org][Hail Hydra]]
+SCHEDULED: <2024-05-24 ven 11:00>
 
-* On hand documentation
-** Regular Expression Syntax (regexp)
+** On hand documentation
+*** Regular Expression Syntax (regexp)
 
 You can use the wonderful tool =regexp-builder=.
 
@@ -366,7 +400,7 @@ Syntax classes:
   \s\   escape character
 #+end_quote
 
-** Vectors
+*** Vectors
 
 Get an element from a vector
 
@@ -381,7 +415,7 @@ What's the difference between =aref= and =elt=?
 =elt= is more general. It works on vector and list. But if you know
 it's vector, you should use =aref=, because it's precise and faster.
 
-** Handle List
+*** Handle List
 
 To find an element
 
@@ -393,7 +427,7 @@ To find an element
   (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 #+end_example
 
-** Timers
+*** Timers
 
 You can run specified function at specified time and with a specific timeout. Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
 
@@ -408,7 +442,7 @@ only one command available in the buffer displayed: c
 point.
 #+END_QUOTE
 
-** (interactive) functions
+*** (interactive) functions
 
 Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
 
@@ -420,13 +454,13 @@ Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-functio
 		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
      (message (format "url: %s, handler: %s" url handler )))
 #+end_example
-** Insert colorize text programmatically
+*** Insert colorize text programmatically
 
 #+begin_example elisp
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 #+end_example
 
-** Buffer management
+*** Buffer management
 
 Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer][stackoverflow]].
 
@@ -442,7 +476,7 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   (delete-region (point-min) (point-max)))
 #+end_src
 
-** Other Commands, functions and variables
+*** Other Commands, functions and variables
 
 Just press ~C-h o~ to get help on those symbols.
 
@@ -454,6 +488,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =json-pretty-print-buffer=
 - =org-archive-subtree-default=
 - =org-babel-load-file=
+- =org-todo-keywords=
 - =org-agenda-include-diary=
 - =pp-eval-expression=
 - =imenu-generic-expression=
@@ -461,11 +496,11 @@ Just press ~C-h o~ to get help on those symbols.
 - =shr-inhibit-images=
 - =command-switch-alist=
 
-** Libaries
+*** Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]
 
-** Useful topics
+*** Useful topics
 
 - [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
 - [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]
