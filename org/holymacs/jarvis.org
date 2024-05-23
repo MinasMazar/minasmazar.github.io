@@ -114,11 +114,7 @@ Also there are some external packages
     (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
 #+end_src
 
-** COMMENT Mu4e ⚠️ wip ⚠️
-:PROPERTIES:
-:header-args:emacs-lisp: :tangle ~/.emacs.d/modules/mu4e_wip.el
-:END:
-
+** Mu4e
 *** Dependencies
 
 Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
@@ -139,7 +135,7 @@ Useful links:
   SSLType IMAPS
   SSLVersions TLSv1.2
   AuthMechs PLAIN
-  User minasmazar@gmail.com
+  User your-email@gmail.com
   #Pass supercomplicatedpassword
   PassCmd "pass gmail/imaps"
 
@@ -193,6 +189,11 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 	smtpmail-stream-type 'ssl
 	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
   (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+#+end_example
+
+In case you need to handle multiple mail accounts.
+
+#+begin_example elisp
   (setq mu4e-contexts
 	(list
 	 ;; Work account
