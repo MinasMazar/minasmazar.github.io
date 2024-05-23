@@ -329,10 +329,67 @@ Here's the list of modules I'm using. They consists in =.org= files tangling to 
 The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
 
 *** [[file:holymacs/jarvis.org][jarvis.el]]
-*** TODO [[file:modules/hydra.org][Hail Hydra]]
-SCHEDULED: <2024-05-24 ven 11:00>
-
 ** On hand documentation
+*** Other Commands, functions and variables
+
+Just press ~C-h o~ to get help on those symbols.
+
+- =align-regexp=
+- =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
+- =browse-url-of-buffer=
+- =completions-max-height=
+- =find-name-dired=
+- =json-pretty-print-buffer=
+- =mm-discouraged-alternatives=
+- =org-archive-subtree-default=
+- =org-babel-load-file=
+- =org-todo-keywords=
+- =org-agenda-include-diary=
+- =pp-eval-expression=
+- =imenu-generic-expression=
+- =proced=
+- =shr-inhibit-images=
+- =command-switch-alist=
+
+*** Vectors
+
+Get an element from a vector
+
+#+begin_example emacs-lisp
+;; get a element from vector
+(aref ["a" "b" "c"] 0) ; ⇒ "a"
+;; get a element from vector
+(elt ["a" "b" "c"] 0) ; ⇒ "a"
+#+end_example
+
+What's the difference between =aref= and =elt=?
+=elt= is more general. It works on vector and list. But if you know
+it's vector, you should use =aref=, because it's precise and faster.
+
+*** Handle List
+
+To find an element
+
+- =member=
+- =contains=
+- =seq-find=
+
+#+begin_example elisp
+  (seq-find (lambda (val) (= 3 val)) '(1 2 3))
+#+end_example
+
+*** (interactive) functions
+
+Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
+
+#+begin_example emacs-lisp
+  (defun minemacs/demo-function (url &optional handler)
+    "Example function."
+    (interactive (list
+		  (read-from-minibuffer "URL: ")
+		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+     (message (format "url: %s, handler: %s" url handler )))
+#+end_example
 *** Regular Expression Syntax (regexp)
 
 You can use the wonderful tool =regexp-builder=.
@@ -400,33 +457,6 @@ Syntax classes:
   \s\   escape character
 #+end_quote
 
-*** Vectors
-
-Get an element from a vector
-
-#+begin_example emacs-lisp
-;; get a element from vector
-(aref ["a" "b" "c"] 0) ; ⇒ "a"
-;; get a element from vector
-(elt ["a" "b" "c"] 0) ; ⇒ "a"
-#+end_example
-
-What's the difference between =aref= and =elt=?
-=elt= is more general. It works on vector and list. But if you know
-it's vector, you should use =aref=, because it's precise and faster.
-
-*** Handle List
-
-To find an element
-
-- =member=
-- =contains=
-- =seq-find=
-
-#+begin_example elisp
-  (seq-find (lambda (val) (= 3 val)) '(1 2 3))
-#+end_example
-
 *** Timers
 
 You can run specified function at specified time and with a specific timeout. Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
@@ -442,18 +472,6 @@ only one command available in the buffer displayed: c
 point.
 #+END_QUOTE
 
-*** (interactive) functions
-
-Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
-
-#+begin_example emacs-lisp
-  (defun minemacs/demo-function (url &optional handler)
-    "Example function."
-    (interactive (list
-		  (read-from-minibuffer "URL: ")
-		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
-     (message (format "url: %s, handler: %s" url handler )))
-#+end_example
 *** Insert colorize text programmatically
 
 #+begin_example elisp
@@ -475,26 +493,6 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   (interactive)
   (delete-region (point-min) (point-max)))
 #+end_src
-
-*** Other Commands, functions and variables
-
-Just press ~C-h o~ to get help on those symbols.
-
-- =align-regexp=
-- =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
-- =browse-url-of-buffer=
-- =completions-max-height=
-- =find-name-dired=
-- =json-pretty-print-buffer=
-- =org-archive-subtree-default=
-- =org-babel-load-file=
-- =org-todo-keywords=
-- =org-agenda-include-diary=
-- =pp-eval-expression=
-- =imenu-generic-expression=
-- =proced=
-- =shr-inhibit-images=
-- =command-switch-alist=
 
 *** Libaries
 
