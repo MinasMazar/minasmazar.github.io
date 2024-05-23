@@ -3,7 +3,7 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2023-07-15 Sat>
 #+STARTUP: show2levels
-
+#+SETUPFILE: ../../templates/_header.org
 #+OPTIONS: toc:t
 
 * Specs
