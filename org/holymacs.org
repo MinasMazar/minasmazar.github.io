@@ -38,6 +38,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
   (package-initialize)
 #+end_src
 ** Main configuration
+*** User data, tab, backup files and major modes
 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization =(customize-variable 'user-full-name)=.
 
@@ -70,6 +71,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
     Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
     (browse-url (bookmark-prop-get bookmark 'location)))
+  (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
 *** Dired
@@ -284,6 +286,13 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (use-package which-key
     :config
     (which-key-mode))
+#+end_src
+
+*** Projects
+
+#+begin_src elisp
+  (require 'project)
+  (add-to-list 'project-switch-commands '(project-shell "Shell"))
 #+end_src
 
 ** Shared configuration

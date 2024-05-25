@@ -253,6 +253,14 @@ I don't want wm keybindings to interfere with Emacs, so I'll wrap all i3 keybind
 
 - https://remixicon.com/
 
+* Git
+
+How do I change the author and committer name/email for multiple commits?
+
+#+begin_src sh
+  git rebase -r a5bf6c2 --exec 'git commit --amend --no-edit --reset-author'
+#+end_src
+
 * Pulseaudio
 
 You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
