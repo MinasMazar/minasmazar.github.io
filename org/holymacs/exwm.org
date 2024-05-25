@@ -2,7 +2,7 @@
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-04-20 Sat>
-#+PROPERTY: header-args :tangle ~/.emacs.d/modules/exwm.el :mkdirp yes
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/exwm.el :mkdirp yes :tangle no
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
