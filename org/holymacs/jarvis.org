@@ -8,7 +8,7 @@
 
 * Tabspaces
 
-#+begin_src elisp :tangle no
+#+begin_src elisp
   (use-package tabspaces
     :hook (after-init . tabspaces-mode)
     :commands (tabspaces-switch-or-create-workspace
@@ -47,6 +47,8 @@
     (popper-echo-mode +1))
 #+end_src
 * Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
+
+Add a capture template to store notes in =inbox=
 
 #+begin_src elisp
   (use-package org
@@ -188,7 +190,7 @@ Useful links:
   (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
 	mu4e-get-mail-command "mbsync -a"
-	mu4e-maildir "~/Mail"
+	;;mu4e-maildir "~/Mail"
 	mu4e-update-interval (* 60 10)
 	smtpmail-default-smtp-server "smtp.gmail.com"
 	smtpmail-smtp-server "smtp.gmail.com"
@@ -200,6 +202,7 @@ Useful links:
 	mu4e-drafts-folder "/[Gmail].Drafts"
 	mu4e-sent-folder   "/[Gmail].Sent Mail"
 	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
 	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
   (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
   (auth-source-pass-enable)

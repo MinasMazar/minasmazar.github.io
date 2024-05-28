@@ -135,10 +135,26 @@ No configuration till now. If you want to learn something about this topic there
     (eshell-mode . (lambda ()
 		     (setq-local corfu-auto nil)
 		     (corfu-mode)))
-    :config
+    :init
     (global-corfu-mode))
 #+end_src
 
+#+begin_src elisp
+  (use-package cape
+    :init
+    (add-hook 'completion-at-point-functions #'cape-dabbrev)
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block)
+    (add-hook 'completion-at-point-functions #'cape-history)
+    ;;(add-hook 'completion-at-point-functions #'cape-keyword)
+    ;;(add-hook 'completion-at-point-functions #'cape-tex)
+    ;;(add-hook 'completion-at-point-functions #'cape-sgml)
+    ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
+    (add-hook 'completion-at-point-functions #'cape-abbrev)
+    (add-hook 'completion-at-point-functions #'cape-dict)
+    (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+    (add-hook 'completion-at-point-functions #'cape-line))
+#+end_src
 *** Embark
 
 #+begin_src elisp
@@ -343,22 +359,23 @@ The *Blorg* publishing functions described in [[https://github.com/MinasMazar/mi
 
 Just press ~C-h o~ to get help on those symbols.
 
-- =align-regexp=
 - =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
+- =align-regexp=
 - =browse-url-of-buffer=
+- =command-switch-alist=
 - =completions-max-height=
+- =describe-text-properties=
 - =find-name-dired=
+- =imenu-generic-expression=
 - =json-pretty-print-buffer=
 - =mm-discouraged-alternatives=
+- =org-agenda-include-diary=
 - =org-archive-subtree-default=
 - =org-babel-load-file=
 - =org-todo-keywords=
-- =org-agenda-include-diary=
 - =pp-eval-expression=
-- =imenu-generic-expression=
 - =proced=
 - =shr-inhibit-images=
-- =command-switch-alist=
 
 *** Vectors
 

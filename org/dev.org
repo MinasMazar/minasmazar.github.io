@@ -2,13 +2,14 @@
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-31 Wed>
+#+STARTUP: overview
 
 * Docker
 
-Autostart docker container
+Disable/enable autostart of a docker container.
 
 #+begin_src sh
-docker update --restart unless-stopped <docker-container>
+docker update --restart [no|unless-stopped] <docker-container>
 #+end_src
 
 * Installing Linux on MacBookPro
@@ -271,7 +272,19 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
   pacmd move-sink-input 5 1
 #+end_src
 
-# Local Variables:
-# browse-url-default-browser: #'browse-url-firefox
-# browse-url-handlers: nil
-# End:
+* GPG
+** Keep GnuPG credentials cached for entire user session
+
+For GnuPG 2.1 and below edit user configuration file at =~/.gnupg/gpg-agent.conf=. In the example below the TTL is set to 3h.
+
+#+begin_src sh :tangle ~/.gnupg/gpg-agent.conf
+default-cache-ttl 10800
+max-cache-ttl 10800
+#+end_src
+
+Then restart the agent
+
+#+begin_src sh
+  gpgconf --kill gpg-agent
+  gpg-agent --daemon --use-standard-socket
+#+end_src
