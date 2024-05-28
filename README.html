@@ -203,14 +203,14 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgfbedcbd">Emacs and Org</a></li>
+<li><a href="#org71cb521">Emacs and Org</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgfbedcbd" class="outline-2">
-<h2 id="orgfbedcbd">Emacs and Org</h2>
-<div class="outline-text-2" id="text-orgfbedcbd">
+<div id="outline-container-org71cb521" class="outline-2">
+<h2 id="org71cb521">Emacs and Org</h2>
+<div class="outline-text-2" id="text-org71cb521">
 <p>
 This is the source code of <a href="https://minasmazar.github.io">my personal website</a>. It is written in <code>org-mode</code> and is hosted on <a href="https://pages.github.com/">Github pages</a>. It uses the <code>org-publish</code> function to generate the static site you're reading right now.
 </p>
@@ -238,39 +238,41 @@ If you're interested in the Emacs configuration needed to generate my website pa
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">require</span> '<span style="color: #cfaaff;">org</span>)
-(mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (project)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">org</span>)
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">ox-publish</span>)
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">org-capture</span>)
+(mapcar (<span style="color: #00c089; font-weight: bold;">lambda</span> (project)
           (add-to-list 'org-publish-project-alist project))
         '(
-          (<span style="color: #50cf89;">"blorg:assets"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"*.png"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-publish-attachment)
-          (<span style="color: #50cf89;">"blorg:org"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
-           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"org"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-html-publish-to-html
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:with-author</span> nil
-           <span style="color: #d0b9f0; font-weight: bold;">:with-creator</span> t
-           <span style="color: #d0b9f0; font-weight: bold;">:with-toc</span> t
-           <span style="color: #d0b9f0; font-weight: bold;">:html-link-up</span> <span style="color: #50cf89;">"/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:html-link-home</span> <span style="color: #50cf89;">"/"</span>
-           <span style="color: #cac89f; font-style: italic;">;; </span><span style="color: #cac89f; font-style: italic;">:html-preamble blorg-html-preamble</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:section-numbers</span> nil
-           <span style="color: #d0b9f0; font-weight: bold;">:time-stamp-file</span> nil)
-          (<span style="color: #50cf89;">"blorg:publish"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/Public/blorg/"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"any"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-publish-attachment
-           <span style="color: #d0b9f0; font-weight: bold;">:exclude</span> <span style="color: #50cf89;">".*"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:completion-function</span> blorg-autopublish)
-          (<span style="color: #50cf89;">"blorg"</span>
-           <span style="color: #d0b9f0; font-weight: bold;">:components</span> (<span style="color: #50cf89;">"blorg:org"</span> <span style="color: #50cf89;">"blorg:assets"</span> <span style="color: #50cf89;">"blorg:publish"</span>))))
+          (<span style="color: #af9fff;">"blorg:assets"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:base-directory</span> <span style="color: #af9fff;">"~/minasmazar.github.io/assets"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:base-extension</span> <span style="color: #af9fff;">".*"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-directory</span> <span style="color: #af9fff;">"~/Public/blorg/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:recursive</span> t
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-function</span> org-publish-attachment)
+          (<span style="color: #af9fff;">"blorg:org"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:recursive</span> t
+           <span style="color: #3fb83f; font-weight: bold;">:base-directory</span> <span style="color: #af9fff;">"~/minasmazar.github.io/org/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:base-extension</span> <span style="color: #af9fff;">"org"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-function</span> org-html-publish-to-html
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-directory</span> <span style="color: #af9fff;">"~/Public/blorg/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:with-author</span> nil
+           <span style="color: #3fb83f; font-weight: bold;">:with-creator</span> t
+           <span style="color: #3fb83f; font-weight: bold;">:with-toc</span> t
+           <span style="color: #3fb83f; font-weight: bold;">:html-link-up</span> <span style="color: #af9fff;">"/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:html-link-home</span> <span style="color: #af9fff;">"/"</span>
+           <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">:html-preamble blorg-html-preamble</span>
+           <span style="color: #3fb83f; font-weight: bold;">:section-numbers</span> nil
+           <span style="color: #3fb83f; font-weight: bold;">:time-stamp-file</span> nil)
+          (<span style="color: #af9fff;">"blorg:publish"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:base-directory</span> <span style="color: #af9fff;">"~/minasmazar.github.io/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-directory</span> <span style="color: #af9fff;">"~/Public/blorg/"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:base-extension</span> <span style="color: #af9fff;">"any"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:publishing-function</span> org-publish-attachment
+           <span style="color: #3fb83f; font-weight: bold;">:exclude</span> <span style="color: #af9fff;">".*"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:completion-function</span> blorg-autopublish)
+          (<span style="color: #af9fff;">"blorg"</span>
+           <span style="color: #3fb83f; font-weight: bold;">:components</span> (<span style="color: #af9fff;">"blorg:org"</span> <span style="color: #af9fff;">"blorg:assets"</span> <span style="color: #af9fff;">"blorg:publish"</span>))))
 </pre>
 </div>
 
@@ -279,22 +281,22 @@ Include the <a href="https://git.sr.ht/~abrahms/ox-gemini"><code>ox-gemini</code
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">ox-gemini</span>)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">ox-gemini</span>)
 (add-to-list 'org-publish-project-alist
-             '(<span style="color: #50cf89;">"blorg:gmi"</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:recursive</span> t
-               <span style="color: #d0b9f0; font-weight: bold;">:base-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/pages/"</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:base-extension</span> <span style="color: #50cf89;">"org"</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:publishing-function</span> org-gemini-publish-to-gemini
-               <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span> <span style="color: #50cf89;">"~/minasmazar.github.io/"</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:with-author</span> nil
-               <span style="color: #d0b9f0; font-weight: bold;">:with-creator</span> t
-               <span style="color: #d0b9f0; font-weight: bold;">:with-toc</span> t
-               <span style="color: #d0b9f0; font-weight: bold;">:html-link-up</span> <span style="color: #50cf89;">"/"</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:html-link-home</span> <span style="color: #50cf89;">"/"</span>
-               <span style="color: #cac89f; font-style: italic;">;; </span><span style="color: #cac89f; font-style: italic;">:html-preamble blorg-html-preamble</span>
-               <span style="color: #d0b9f0; font-weight: bold;">:section-numbers</span> nil
-               <span style="color: #d0b9f0; font-weight: bold;">:time-stamp-file</span> nil))
+             '(<span style="color: #af9fff;">"blorg:gmi"</span>
+               <span style="color: #3fb83f; font-weight: bold;">:recursive</span> t
+               <span style="color: #3fb83f; font-weight: bold;">:base-directory</span> <span style="color: #af9fff;">"~/minasmazar.github.io/pages/"</span>
+               <span style="color: #3fb83f; font-weight: bold;">:base-extension</span> <span style="color: #af9fff;">"org"</span>
+               <span style="color: #3fb83f; font-weight: bold;">:publishing-function</span> org-gemini-publish-to-gemini
+               <span style="color: #3fb83f; font-weight: bold;">:publishing-directory</span> <span style="color: #af9fff;">"~/minasmazar.github.io/"</span>
+               <span style="color: #3fb83f; font-weight: bold;">:with-author</span> nil
+               <span style="color: #3fb83f; font-weight: bold;">:with-creator</span> t
+               <span style="color: #3fb83f; font-weight: bold;">:with-toc</span> t
+               <span style="color: #3fb83f; font-weight: bold;">:html-link-up</span> <span style="color: #af9fff;">"/"</span>
+               <span style="color: #3fb83f; font-weight: bold;">:html-link-home</span> <span style="color: #af9fff;">"/"</span>
+               <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">:html-preamble blorg-html-preamble</span>
+               <span style="color: #3fb83f; font-weight: bold;">:section-numbers</span> nil
+               <span style="color: #3fb83f; font-weight: bold;">:time-stamp-file</span> nil))
 </pre>
 </div>
 
@@ -307,7 +309,7 @@ The package <code>ox-rss</code> is needed if you want to generate a RSS (it expo
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">ox-rss</span>)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">ox-rss</span>)
 </pre>
 </div>
 
@@ -316,16 +318,16 @@ Every link in <code>org-mode</code> has a prefix that define a <i>type</i> (<cod
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">org-custom-link-raw-relative-follow</span> (path)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">org-custom-link-raw-relative-follow</span> (path)
   (org-open-file-with-emacs
-   (format <span style="color: #50cf89;">"./%s"</span> path)))
+   (format <span style="color: #af9fff;">"./%s"</span> path)))
 
-(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">org-custom-link-raw-relative-export</span> (path desc format)
-  (<span style="color: #eba8a8; font-weight: bold;">cond</span>
+(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">org-custom-link-raw-relative-export</span> (path desc format)
+  (<span style="color: #00c089; font-weight: bold;">cond</span>
    ((eq format 'html)
-    (format <span style="color: #50cf89;">"&lt;a href=\"/%s\" alt=\"%s\"/&gt;%s&lt;/a&gt;"</span> path desc desc))))
+    (format <span style="color: #af9fff;">"&lt;a href=\"/%s\" alt=\"%s\"/&gt;%s&lt;/a&gt;"</span> path desc desc))))
 
-(org-add-link-type <span style="color: #50cf89;">"raw-relative"</span> 'org-custom-link-img-follow 'org-custom-link-img-export)
+(org-add-link-type <span style="color: #af9fff;">"raw-relative"</span> 'org-custom-link-img-follow 'org-custom-link-img-export)
 </pre>
 </div>
 
@@ -334,11 +336,11 @@ Now define some handy <code>org-capture</code> templates!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(mapcar (<span style="color: #eba8a8; font-weight: bold;">lambda</span> (entry) (add-to-list 'org-capture-templates entry))
-        '((<span style="color: #50cf89;">"B"</span> <span style="color: #50cf89;">"Blorg: bookmark"</span> entry (file <span style="color: #50cf89;">"~/minasmazar.github.io/pages/bookmarks.org"</span>)
-           <span style="color: #50cf89;">"* %?\n\n %a"</span> <span style="color: #d0b9f0; font-weight: bold;">:prepend</span> t)
-          (<span style="color: #50cf89;">"J"</span> <span style="color: #50cf89;">"Blorg: journal"</span> entry (file+datetree <span style="color: #50cf89;">"~/minasmazar.github.io/pages/journal.org"</span>)
-           <span style="color: #50cf89;">"* %?\nEntered on %U\n %i\n %a"</span> <span style="color: #d0b9f0; font-weight: bold;">:jump-to-captured</span> t)))
+<pre class="src src-elisp">(mapcar (<span style="color: #00c089; font-weight: bold;">lambda</span> (entry) (add-to-list 'org-capture-templates entry))
+        '((<span style="color: #af9fff;">"B"</span> <span style="color: #af9fff;">"Blorg: bookmark"</span> entry (file <span style="color: #af9fff;">"~/minasmazar.github.io/pages/bookmarks.org"</span>)
+           <span style="color: #af9fff;">"* %?\n\n %a"</span> <span style="color: #3fb83f; font-weight: bold;">:prepend</span> t)
+          (<span style="color: #af9fff;">"J"</span> <span style="color: #af9fff;">"Blorg: journal"</span> entry (file+datetree <span style="color: #af9fff;">"~/minasmazar.github.io/pages/journal.org"</span>)
+           <span style="color: #af9fff;">"* %?\nEntered on %U\n %i\n %a"</span> <span style="color: #3fb83f; font-weight: bold;">:jump-to-captured</span> t)))
 </pre>
 </div>
 
@@ -347,23 +349,24 @@ Here we define the function that uses <code>git</code> to publish my static site
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">defcustom</span> <span style="color: #f59acf;">blorg-autopublish</span> nil
-  <span style="color: #99bfcf; font-style: italic;">"Define if autopublish feature is enabled. Used in the function =blorg-autopublish="</span>)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">defcustom</span> <span style="color: #78afff;">blorg-autopublish</span> nil
+  <span style="color: #7fc07f; font-style: italic;">"Define if autopublish feature is enabled. Used in the function =blorg-autopublish="</span>)
 
-(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-html-preamble</span> ()
-  <span style="color: #99bfcf; font-style: italic;">"&lt;div&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=\"/\"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;"</span>)
+(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">blorg-html-preamble</span> ()
+  <span style="color: #7fc07f; font-style: italic;">"&lt;div&gt;&lt;ul&gt;&lt;li&gt;&lt;a href=\"/\"&gt;Home&lt;/a&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;"</span>)
 
-(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-autopublish</span> (options)
-  (<span style="color: #eba8a8; font-weight: bold;">let*</span> ((default-directory (plist-get options <span style="color: #d0b9f0; font-weight: bold;">:publishing-directory</span>)))
-    (<span style="color: #eba8a8; font-weight: bold;">if</span> blorg-autopublish
-  (blorg-add-commit-and-push default-directory)
-(message <span style="color: #50cf89;">"[blorg] autopublish simulation"</span>))))
+(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">blorg-autopublish</span> (options)
+  (<span style="color: #00c089; font-weight: bold;">let*</span> ((default-directory (plist-get options <span style="color: #3fb83f; font-weight: bold;">:publishing-directory</span>)))
+    (<span style="color: #00c089; font-weight: bold;">if</span> blorg-autopublish
+        (blorg-add-commit-and-push default-directory)
+      (message <span style="color: #af9fff;">"[blorg] autopublish simulation"</span>))))
 
-(<span style="color: #eba8a8; font-weight: bold;">defun</span> <span style="color: #7fca5a;">blorg-add-commit-and-push</span> (directory)
-  <span style="color: #99bfcf; font-style: italic;">"Add all files, commit and push"</span>
+(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">blorg-add-commit-and-push</span> (directory)
+  <span style="color: #7fc07f; font-style: italic;">"Add all files, commit and push"</span>
   (cd directory)
-  (<span style="color: #eba8a8; font-weight: bold;">let*</span> ((commit-msg (format <span style="color: #50cf89;">"Autopublish [%s]"</span> (current-time-string)))
-   (command (format <span style="color: #50cf89;">"git add . ; git commit -m '</span><span style="color: #cfaaff;">%s</span><span style="color: #50cf89;">' ; git push origin master --force"</span> commit-msg)))
+  (<span style="color: #00c089; font-weight: bold;">let*</span> ((commit-msg (format <span style="color: #af9fff;">"Autopublish [%s]"</span> (current-time-string)))
+         (command (format <span style="color: #af9fff;">"git add . ; git commit -m '</span><span style="color: #37aff6;">%s</span><span style="color: #af9fff;">' ; git push origin master --force"</span> commit-msg)))
+    (message commit-msg)
     (shell-command command)))
 </pre>
 </div>

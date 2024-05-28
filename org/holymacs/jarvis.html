@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ Jarvis module</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../holymacs.html"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ Jarvis module</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orge9a3583">Tabspaces</a></li>
+<li><a href="#org32e0a3a">Org and Second Brain (Org-roam)</a></li>
+<li><a href="#org410099f">Alarm!</a></li>
+<li><a href="#orgfa7aa4b">News and Mail</a>
+<ul>
+<li><a href="#org06cdb68">RSS Reader (elfeed)</a></li>
+<li><a href="#org1433323">Mu4e</a></li>
+</ul>
+</li>
+<li><a href="#orgc171269">Media</a></li>
+<li><a href="#org2bf496b">Search on the web: engine-mode</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge9a3583" class="outline-2">
+<h2 id="orge9a3583">Tabspaces</h2>
+<div class="outline-text-2" id="text-orge9a3583">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">tabspaces</span>
+  <span style="color: #3fb83f; font-weight: bold;">:hook</span> (after-init . tabspaces-mode)
+  <span style="color: #3fb83f; font-weight: bold;">:commands</span> (tabspaces-switch-or-create-workspace
+             tabspaces-open-or-create-project-and-workspace)
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  ((<span style="color: #af9fff;">"s-{"</span> . tab-previous)
+   (<span style="color: #af9fff;">"s-}"</span> . tab-next))
+  <span style="color: #3fb83f; font-weight: bold;">:custom</span>
+  (tabspaces-keymap-prefix <span style="color: #af9fff;">"M-o w"</span>)
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab <span style="color: #af9fff;">"Default"</span>)
+  (tabspaces-remove-to-default t)
+  (tabspaces-initialize-project-with-todo t)
+  (tabspaces-todo-file-name <span style="color: #af9fff;">"project-todo.org"</span>)
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">sessions</span>
+  (tabspaces-session t)
+  (tabspaces-session-auto-restore t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org32e0a3a" class="outline-2">
+<h2 id="org32e0a3a">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
+<div class="outline-text-2" id="text-org32e0a3a">
+<p>
+Add a capture template to store notes in <code>inbox</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org</span>
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (add-to-list 'org-capture-templates
+               '(<span style="color: #af9fff;">"i"</span> <span style="color: #af9fff;">"Inbox"</span> entry (file+headline <span style="color: #af9fff;">"~/Dropbox/org/inbox.org"</span> <span style="color: #af9fff;">"Inbox"</span>)
+                  <span style="color: #af9fff;">"* TODO %?\n %i\n  %a"</span>))
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  (<span style="color: #3fb83f; font-weight: bold;">:map</span> org-mode-map
+        (<span style="color: #af9fff;">"M-p"</span> . #'org-move-subtree-up)
+        (<span style="color: #af9fff;">"M-n"</span> . #'org-move-subtree-down)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org-roam</span>
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  ((<span style="color: #af9fff;">"M-o r f"</span> . #'org-roam-node-find)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org410099f" class="outline-2">
+<h2 id="org410099f">Alarm!</h2>
+<div class="outline-text-2" id="text-org410099f">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">alarm-clock</span>
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">holymacs/jarvis/set-alarm-10min-fire!</span> ()
+    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+    (alarm-clock-set <span style="color: #af9fff;">"10min"</span> <span style="color: #af9fff;">"FIRE!"</span>))
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  (<span style="color: #af9fff;">"M-o ! 1"</span> . #'holymacs/jarvis/set-alarm-10min-fire!))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfa7aa4b" class="outline-2">
+<h2 id="orgfa7aa4b">News and Mail</h2>
+<div class="outline-text-2" id="text-orgfa7aa4b">
+</div>
+<div id="outline-container-org06cdb68" class="outline-3">
+<h3 id="org06cdb68">RSS Reader (elfeed)</h3>
+<div class="outline-text-3" id="text-org06cdb68">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed</span>
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map (<span style="color: #af9fff;">"U"</span> . (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (run-at-time <span style="color: #af9fff;">"10min"</span> t #'elfeed-update))))
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+</pre>
+</div>
+
+<p>
+Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-tube">elfeed-tube</a>!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed-tube</span>
+  <span style="color: #3fb83f; font-weight: bold;">:after</span> elfeed
+  <span style="color: #3fb83f; font-weight: bold;">:demand</span> t
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(setq elfeed-tube-auto-save-p nil) ; default value</span>
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(setq elfeed-tube-auto-fetch-p t)  ; default value</span>
+  (elfeed-tube-setup)
+
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-show-mode-map
+              (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              <span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map
+              (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
+
+(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed-tube-mpv</span>
+  <span style="color: #3fb83f; font-weight: bold;">:after</span> elfeed-tube
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-show-mode-map
+              (<span style="color: #af9fff;">"C-c C-f"</span> . elfeed-tube-mpv-follow-mode)
+              (<span style="color: #af9fff;">"C-c C-w"</span> . elfeed-tube-mpv-where)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1433323" class="outline-3">
+<h3 id="org1433323">Mu4e</h3>
+<div class="outline-text-3" id="text-org1433323">
+</div>
+<div id="outline-container-orgd23975b" class="outline-4">
+<h4 id="orgd23975b">Dependencies</h4>
+<div class="outline-text-4" id="text-orgd23975b">
+<p>
+Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like <code>mbsync</code>. You should also rely on <code>pass</code>, the <a href="https://www.passwordstore.org/">the standard unix password manager</a>, in order to store and fetch your passwords in a secure way.
+</p>
+
+<p>
+Useful links:
+</p>
+<ul class="org-ul">
+<li><a href="http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync">http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync</a></li>
+<li><a href="https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html">https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html</a></li>
+<li><a href="https://isync.sourceforge.io/mbsync.html">https://isync.sourceforge.io/mbsync.html</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfef1412" class="outline-4">
+<h4 id="orgfef1412">Configuration</h4>
+<div class="outline-text-4" id="text-orgfef1412">
+<pre class="example" id="orgd2c714f">
+IMAPAccount gmail-imaps
+Host imap.gmail.com
+Port 993
+#UseIMAPS yes
+#RequireSSl yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+AuthMechs PLAIN
+User your-email@gmail.com
+#Pass supercomplicatedpassword
+PassCmd "pass gmail/imaps"
+
+IMAPStore gmail-remote
+Account gmail-imaps
+
+MaildirStore gmail-local
+Path ~/MailDir/gmail/
+Inbox ~/MailDir/gmail/INBOX
+Subfolders Verbatim
+
+Channel gmail
+#Master :gmail-remote:
+#Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
+Create Both
+Expunge Both
+Patterns *
+SyncState *
+</pre>
+
+<pre class="example" id="orgd7c0353">
+(require 'mu4e)
+(setq send-mail-function 'smtpmail-send-it
+      message-send-mail-function 'smtpmail-send-it
+      mu4e-get-mail-command "mbsync -a"
+      ;;mu4e-maildir "~/Mail"
+      mu4e-update-interval (* 60 10)
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      ;;smtpmail-stream-type 'ssl
+      ;;smtpmail-smtp-service 465
+      smtpmail-stream-type 'starttls
+      smtpmail-smtp-service 587
+      ;;smtpmail-use-gnutls t
+      mu4e-drafts-folder "/[Gmail].Drafts"
+      mu4e-sent-folder   "/[Gmail].Sent Mail"
+      mu4e-trash-folder  "/[Gmail].Trash"
+      mm-discouraged-alternatives '("text/html")
+      mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+(auth-source-pass-enable)
+(setq smtpmail-debug-info t)
+</pre>
+
+<p>
+To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
+</p>
+
+<pre class="example" id="orga86108b">
+(setq smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 465
+      smtpmail-stream-type 'ssl
+      mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+</pre>
+
+<p>
+In case you need to handle multiple mail accounts.
+</p>
+
+<pre class="example" id="orgccf1909">
+(setq mu4e-contexts
+      (list
+       ;; Work account
+       (make-mu4e-context
+	:name "GMail"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "my-email@gmail.com")
+		(user-full-name    . "My-Email (Gmail)")
+		(mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		(mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		(mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		(mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+       ;; Personal account
+       (make-mu4e-context
+	:name "Yahoo"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "my-email@yahoo.com")
+		(user-full-name    . "My-Email (Yahoo)")
+		(mu4e-drafts-folder  . "/Yahoo/Drafts")
+		(mu4e-sent-folder  . "/Yahoo/Sent")
+		(mu4e-refile-folder  . "/Yahoo/Archive")
+		(mu4e-trash-folder  . "/Yahoo/Trash")))))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc171269" class="outline-2">
+<h2 id="orgc171269">Media</h2>
+<div class="outline-text-2" id="text-orgc171269">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">bongo</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2bf496b" class="outline-2">
+<h2 id="org2bf496b">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org2bf496b">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">engine-mode</span>
+  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+  (<span style="color: #00c089; font-weight: bold;">setq</span> engine/browser-function #'browse-url-firefox)
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">engine/execute-search</span> (search-engine-url browser-function search-term)
+    <span style="color: #7fc07f; font-style: italic;">"Display the results of the query."</span>
+    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+    (<span style="color: #00c089; font-weight: bold;">let</span> ((browse-url-handlers nil)
+          (browse-url-browser-function browser-function))
+      (browse-url
+       (format-spec search-engine-url
+                    (format-spec-make ?s (url-hexify-string search-term))))))
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> duckduckgo
+    <span style="color: #af9fff;">"https://duckduckgo.com/?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"d"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> github
+    <span style="color: #af9fff;">"https://github.com/search?ref=simplesearch&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"h"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google
+    <span style="color: #af9fff;">"https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"g"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-images
+    <span style="color: #af9fff;">"https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"i"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #af9fff;">"https://maps.google.com/maps?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Google Maps"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"m"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-maps
+    <span style="color: #af9fff;">"https://www.openstreetmap.org/search?query=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"OpenStreetMap"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"M"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-it
+    <span style="color: #af9fff;">"https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate to IT"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"t"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> google-translate-to-en
+    <span style="color: #af9fff;">"https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Translate from IT to English"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"T"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> stack-overflow
+    <span style="color: #af9fff;">"https://stackoverflow.com/search?q=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"s"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> wikipedia
+    <span style="color: #af9fff;">"https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"w"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:docstring</span> <span style="color: #af9fff;">"Searchin' the wikis."</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'eww-browse-url)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> youtube
+    <span style="color: #af9fff;">"https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"y"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> amazon
+    <span style="color: #af9fff;">"https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"a"</span>)
+
+  (<span style="color: #00c089; font-weight: bold;">defengine</span> cap
+    <span style="color: #af9fff;">"https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"</span>
+    <span style="color: #3fb83f; font-weight: bold;">:browser</span> 'browse-url-firefox
+    <span style="color: #3fb83f; font-weight: bold;">:keybinding</span> <span style="color: #af9fff;">"C"</span>)
+
+  (engine-mode t))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-04-20 Sat 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
