@@ -135,6 +135,8 @@ No configuration till now. If you want to learn something about this topic there
     (eshell-mode . (lambda ()
 		     (setq-local corfu-auto nil)
 		     (corfu-mode)))
+    :custom
+    (corfu-cycle t)
     :init
     (global-corfu-mode))
 #+end_src
@@ -370,6 +372,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =json-pretty-print-buffer=
 - =mm-discouraged-alternatives=
 - =org-agenda-include-diary=
+- =org-agenda-custom-commands=
 - =org-archive-subtree-default=
 - =org-babel-load-file=
 - =org-todo-keywords=
