@@ -252,10 +252,9 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-[") (kbd "C-x <left>"))
   (global-set-key (kbd "s-]") (kbd "C-x <right>"))
   (global-set-key (kbd "s-,") #'switch-to-completions) ;; useful if you don't use ido, vertico or similar
-  (global-set-key (kbd "s-b") #'switch-to-buffer)
-  (global-set-key (kbd "s-B") #'ibuffer)
-  (global-set-key (kbd "s-j") #'recentf)
-  (global-set-key (kbd "s-)") #'kill-this-buffer)
+  (global-set-key (kbd "s-b") #'ibuffer)
+  (global-set-key (kbd "s-j") #'switch-to-buffer)
+  (global-set-key (kbd "s-)") #'kill-current-buffer)
   (global-set-key (kbd "s--") #'bookmark-jump)
   (global-set-key (kbd "s-_") #'bookmark-set)
   (global-set-key (kbd "s-q") #'tab-next)
