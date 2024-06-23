@@ -1,0 +1,22 @@
+#+TITLE: Holymacs ~ Look 'n feel
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-06-20 Thu>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/look_n_feel.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+* Icons
+
+#+begin_src elisp
+  (use-package all-the-icons)
+  (use-package all-the-icons-gnus
+    :config
+    (all-the-icons-gnus-setup))
+  (use-package all-the-icons-dired
+    :hook
+    (dired-mode . all-the-icons-dired-mode))
+  (use-package all-the-icons-ibuffer
+    :hook
+    (ibuffer-mode . all-the-icons-ibuffer-mode))
+#+end_src

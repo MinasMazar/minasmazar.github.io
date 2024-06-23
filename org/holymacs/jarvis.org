@@ -6,7 +6,7 @@
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
-* Tabspaces
+* COMMENT Tabspaces
 
 #+begin_src elisp
   (use-package tabspaces
@@ -46,6 +46,23 @@
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
+* COMMENT HTTP Client
+
+#+begin_src elisp
+(use-package request)
+#+end_src
+
+Example usage
+
+#+begin_example
+(request "http://httpbin.org/get"
+  :params '(("key" . "value") ("key2" . "value2"))
+  :parser 'json-read
+  :success (cl-function
+            (lambda (&key data &allow-other-keys)
+              (message "I sent: %S" (assoc-default 'args data)))))
+#+end_example
+
 * Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
 
 Add a capture template to store notes in =inbox=
@@ -210,16 +227,6 @@ Useful links:
 #+end_example
 
 To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= variable. An interesting screencast/article from System Crafters about that can be found [[https://systemcrafters.net/emacs-mail/managing-multiple-accounts/][here]].
-
-#+begin_example elisp
-  (setq smtpmail-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-service 465
-	smtpmail-stream-type 'ssl
-	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
-  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
-#+end_example
-
-In case you need to handle multiple mail accounts.
 
 #+begin_example elisp
   (setq mu4e-contexts
