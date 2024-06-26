@@ -18,6 +18,7 @@
 
 #+begin_src elisp
   (use-package docker)
+  (use-package dockerfile-mode)
   (use-package docker-compose-mode)
 #+end_src
 
@@ -34,7 +35,7 @@
 ** Markdown
 
 #+begin_src elisp
-(use-package markdown-mode)
+  (use-package markdown-mode)
 #+end_src
 
 * Terminal emulator

@@ -12,6 +12,12 @@ Disable/enable autostart of a docker container.
 docker update --restart [no|unless-stopped] <docker-container>
 #+end_src
 
+Playing Sound in Docker Containers ([[https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35][here the source article]])
+
+#+begin_src sh
+  docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
+#+end_src
+
 * Installing Linux on MacBookPro
 ** Bluetooh issues
 
@@ -271,6 +277,10 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
   pacmd list-sink-inputs
   pacmd move-sink-input 5 1
 #+end_src
+
+* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
+
+If you need to write a crontab entry you can use https://crontab.guru/
 
 * GPG
 ** Keep GnuPG credentials cached for entire user session

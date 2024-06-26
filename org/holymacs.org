@@ -8,7 +8,7 @@
 
 * Specs
 
-It's a literate configuration but I'm not good at writing, this means that it will not be so literate in the end 😂 If you're reading this and you're new to the emacs world I recommend to view this document using Emacs: if you're reading the =org= version (from source repository) or from the internet using the Emacs browser =eww=, you can ~C-h o~ (or ~C-h p~ for packages, usually =use-package=) to have more information from Emacs documentation
+It's a literate configuration but I'm not good at writing, this means that it will not be so literate in the end 😂 If you're reading this and you're new to the emacs world I recommend to view this document using Emacs: if you're reading the =org= version (from source repository) or from the internet using the Emacs browser =eww=, you can ~C-h o~ (or ~C-h p~ for packages) to have more information from Emacs documentation.
 
 ** COMMENT Main principles:
 
@@ -362,6 +362,7 @@ Just press ~C-h o~ to get help on those symbols.
 
 - =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
 - =align-regexp=
+- =auto-mode-alist=
 - =browse-url-of-buffer=
 - =command-switch-alist=
 - =completions-max-height=
