@@ -116,7 +116,16 @@ No configuration till now. If you want to learn something about this topic there
     (completion-styles '(orderless partial-completion)))
 #+end_src
 
-*** Vertico
+*** Minibuffer and Completion framework
+**** Minibuffer
+
+#+begin_src elisp
+  (setq enable-recursive-minibuffers t)
+  (add-hook 'minibuffer-setup-hook (lambda () (local-set-key (kbd "C-o") #'switch-to-completions)))
+  (define-key completion-list-mode-map (kbd "e") #'switch-to-minibuffer)
+#+end_src
+
+**** Vertico
 
 #+begin_src elisp
   (use-package vertico
@@ -302,7 +311,8 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
 #+begin_src elisp
   (use-package which-key
     :config
-    (which-key-mode))
+    (which-key-mode)
+    (which-key-enable-god-mode-support))
 #+end_src
 
 *** Projects

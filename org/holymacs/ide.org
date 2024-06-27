@@ -27,9 +27,11 @@
 
 #+begin_src elisp
   (use-package elixir-mode)
-  (use-package alchemist
-    :config
-    (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+  (use-package exunit)
+  ;; Alchemist seems to be outdated and not more maintained
+  ;; (use-package alchemist
+  ;;   :config
+  ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
 #+end_src
 * Markup languages
 ** Markdown

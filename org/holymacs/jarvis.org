@@ -133,7 +133,7 @@ Also there are some external packages
     (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
 #+end_src
 
-Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]!
+Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]! ❤️ Thanks a lot to [[https://github.com/karthink][karthink]] 🙏
 
 #+begin_src elisp
   (use-package elfeed-tube
