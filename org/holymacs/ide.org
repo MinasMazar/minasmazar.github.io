@@ -27,7 +27,9 @@
 
 #+begin_src elisp
   (use-package elixir-mode)
-  (use-package exunit)
+  (use-package exunit
+    :hook
+    (elixir-mode . exunit-mode))
   ;; Alchemist seems to be outdated and not more maintained
   ;; (use-package alchemist
   ;;   :config

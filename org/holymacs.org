@@ -71,6 +71,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
     Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
     (browse-url (bookmark-prop-get bookmark 'location)))
+  (require 'eww)
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
@@ -378,6 +379,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =completions-max-height=
 - =describe-text-properties=
 - =find-name-dired=
+- =image-crop=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=
 - =mm-discouraged-alternatives=
