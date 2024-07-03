@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Holymacs</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -235,110 +235,113 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0409cb1">Specs</a></li>
-<li><a href="#org1bd858a">Holymacs</a>
+<li><a href="#orgf3323eb">Specs</a></li>
+<li><a href="#org8ea2269">Holymacs</a>
 <ul>
-<li><a href="#org09a8297">Package Manager</a></li>
-<li><a href="#org35b70bb">Main configuration</a>
+<li><a href="#org740abc9">Package Manager</a></li>
+<li><a href="#orgf24503e">Main configuration</a>
 <ul>
-<li><a href="#org26af1bd">User data, tab, backup files and major modes</a></li>
-<li><a href="#org662407d">Bookmarks</a></li>
-<li><a href="#org0d207eb">Dired</a></li>
-<li><a href="#org44fc864">Appearance</a></li>
-<li><a href="#orgab0d394"><span class="todo TODO">TODO</span> Window management</a></li>
-<li><a href="#org0f92d9d">Orderless</a></li>
-<li><a href="#orgd3e9580">Vertico</a></li>
-<li><a href="#orgc78eea1">Auto-completion</a></li>
-<li><a href="#orgf167eb2">Embark</a></li>
-<li><a href="#org1afdeae">Eshell</a></li>
-<li><a href="#org2ea26ff">Keybindings</a></li>
-<li><a href="#org4559db3">Projects</a></li>
+<li><a href="#orge87fee3">User data</a></li>
+<li><a href="#org3c3ca81">Tab key, backup files and enabled major modes</a></li>
+<li><a href="#org6c2f3f7">Bookmarks</a></li>
+<li><a href="#orgc2dbfe8">Dired</a></li>
+<li><a href="#org12bcb19">Appearance</a></li>
+<li><a href="#org9334547">Window and Tabs management</a></li>
+<li><a href="#orga167078">Orderless</a></li>
+<li><a href="#org30d6d41">Minibuffer and Completion framework</a></li>
+<li><a href="#org4e95d58">Auto-completion</a></li>
+<li><a href="#orgcf0c388">Embark</a></li>
+<li><a href="#orgcc0b22f">Eshell</a></li>
+<li><a href="#org1287432">Projects</a></li>
+<li><a href="#orgd1468dd">Keybindings</a></li>
 </ul>
 </li>
-<li><a href="#org31dfa64">Shared configuration</a></li>
-<li><a href="#orga626bc2">Modules</a>
+<li><a href="#org61adc6e">Shared configuration</a></li>
+<li><a href="#org4d73808">Modules</a>
 <ul>
-<li><a href="#orga7eacf2">Compile</a></li>
-<li><a href="#orgab8976c">Autoload</a></li>
-<li><a href="#orgd3bd82a">Blorg</a></li>
-<li><a href="#orgbf29e56">jarvis.el</a></li>
+<li><a href="#orgfc0015e">Compile</a></li>
+<li><a href="#org66271ef">Autoload</a></li>
+<li><a href="#orgbfd9759">Blorg</a></li>
+<li><a href="#org3f97108">jarvis.el</a></li>
 </ul>
 </li>
-<li><a href="#org37fb8a2">On hand documentation</a>
+<li><a href="#orgea62027">On hand documentation</a>
 <ul>
-<li><a href="#org8f37656">Other Commands, functions and variables</a></li>
-<li><a href="#org26a7543">Vectors</a></li>
-<li><a href="#orgb092f20">Handle List</a></li>
-<li><a href="#org68013b8">(interactive) functions</a></li>
-<li><a href="#orge94b4c2">Regular Expression Syntax (regexp)</a></li>
-<li><a href="#orgdd99fe5">Timers</a></li>
-<li><a href="#org7db07c8">Insert colorize text programmatically</a></li>
-<li><a href="#orga3e33b5">Buffer management</a></li>
-<li><a href="#org5224a89">Libaries</a></li>
-<li><a href="#orgc32ccd8">Useful topics</a></li>
+<li><a href="#org7938068">Other Commands, functions and variables</a></li>
+<li><a href="#orgf5e008e">String and Symbols</a></li>
+<li><a href="#org52f8233">Vectors</a></li>
+<li><a href="#orgcf51af5">Handle List</a></li>
+<li><a href="#org294905d">(interactive) functions</a></li>
+<li><a href="#org225ad48">Regular Expression Syntax (regexp)</a></li>
+<li><a href="#orgf1bc37b">Timers</a></li>
+<li><a href="#orgcd812c7">Insert colorize text programmatically</a></li>
+<li><a href="#org9ffa7a4">Buffer management</a></li>
+<li><a href="#orge41ef85">Libaries</a></li>
+<li><a href="#orgefb3715">Useful topics</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org3c45da5">Credits</a></li>
+<li><a href="#org969388d">Credits</a></li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org0409cb1" class="outline-2">
-<h2 id="org0409cb1">Specs</h2>
-<div class="outline-text-2" id="text-org0409cb1">
+<div id="outline-container-orgf3323eb" class="outline-2">
+<h2 id="orgf3323eb">Specs</h2>
+<div class="outline-text-2" id="text-orgf3323eb">
 <p>
-It's a literate configuration but I'm not good at writing, this means that it will not be so literate in the end 😂 If you're reading this and you're new to the emacs world I recommend to view this document using Emacs: if you're reading the <code>org</code> version (from source repository) or from the internet using the Emacs browser <code>eww</code>, you can <code>C-h o</code> (or <code>C-h p</code> for packages, usually <code>use-package</code>) to have more information from Emacs documentation
+It's a literate configuration but I'm not good at writing, this means that it will not be so literate in the end 😂 If you're reading this and you're new to the emacs world I recommend to view this document using Emacs: if you're reading the <code>org</code> version (from source repository) or from the internet using the Emacs browser <code>eww</code>, you can <code>C-h o</code> (or <code>C-h p</code> for packages) to have more information from Emacs documentation.
 </p>
 </div>
 </div>
-
-<div id="outline-container-org1bd858a" class="outline-2">
-<h2 id="org1bd858a">Holymacs</h2>
-<div class="outline-text-2" id="text-org1bd858a">
+<div id="outline-container-org8ea2269" class="outline-2">
+<h2 id="org8ea2269">Holymacs</h2>
+<div class="outline-text-2" id="text-org8ea2269">
 </div>
-
-<div id="outline-container-org09a8297" class="outline-3">
-<h3 id="org09a8297">Package Manager</h3>
-<div class="outline-text-3" id="text-org09a8297">
+<div id="outline-container-org740abc9" class="outline-3">
+<h3 id="org740abc9">Package Manager</h3>
+<div class="outline-text-3" id="text-org740abc9">
 <div class="org-src-container">
 <pre class="src src-elisp">(add-to-list 'load-path <span style="color: #af9fff;">"~/.emacs.d/vendor/"</span>) <span style="color: #b7a07f; font-style: italic;">; </span><span style="color: #b7a07f; font-style: italic;">that's your sandbox</span>
 (<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">package</span>)
 
 (<span style="color: #00c089; font-weight: bold;">setq</span> package-archives '((<span style="color: #af9fff;">"melpa"</span> . <span style="color: #af9fff;">"https://melpa.org/packages/"</span>)
-                         (<span style="color: #af9fff;">"elpa"</span> . <span style="color: #af9fff;">"https://elpa.gnu.org/packages/"</span>)
-                         (<span style="color: #af9fff;">"nongnu"</span> . <span style="color: #af9fff;">"https://elpa.nongnu.org/nongnu/"</span>)))
+                           (<span style="color: #af9fff;">"elpa"</span> . <span style="color: #af9fff;">"https://elpa.gnu.org/packages/"</span>)
+                           (<span style="color: #af9fff;">"nongnu"</span> . <span style="color: #af9fff;">"https://elpa.nongnu.org/nongnu/"</span>)))
 
 (<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package</span>)
 (<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package-ensure</span>)
 (<span style="color: #00c089; font-weight: bold;">setq</span> use-package-always-ensure t
-      package-enable-at-startup t)
+        package-enable-at-startup t)
 (package-initialize)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org35b70bb" class="outline-3">
-<h3 id="org35b70bb">Main configuration</h3>
-<div class="outline-text-3" id="text-org35b70bb">
+<div id="outline-container-orgf24503e" class="outline-3">
+<h3 id="orgf24503e">Main configuration</h3>
+<div class="outline-text-3" id="text-orgf24503e">
 </div>
-<div id="outline-container-org26af1bd" class="outline-4">
-<h4 id="org26af1bd">User data, tab, backup files and major modes</h4>
-<div class="outline-text-4" id="text-org26af1bd">
+<div id="outline-container-orge87fee3" class="outline-4">
+<h4 id="orge87fee3">User data</h4>
+<div class="outline-text-4" id="text-orge87fee3">
 <p>
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org57164cb">
+<pre class="example" id="orgb9f96ca">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
-
+</div>
+</div>
+<div id="outline-container-org3c3ca81" class="outline-4">
+<h4 id="org3c3ca81">Tab key, backup files and enabled major modes</h4>
+<div class="outline-text-4" id="text-org3c3ca81">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">setq</span> tab-always-indent 'complete
-      enable-recursive-minibuffers t
-      make-backup-files nil)
+        enable-recursive-minibuffers t
+        make-backup-files nil)
 </pre>
 </div>
 
@@ -354,14 +357,13 @@ Just <code>C-h o</code> over those functions for more information.
 </div>
 </div>
 </div>
-
-<div id="outline-container-org662407d" class="outline-4">
-<h4 id="org662407d">Bookmarks</h4>
-<div class="outline-text-4" id="text-org662407d">
+<div id="outline-container-org6c2f3f7" class="outline-4">
+<h4 id="org6c2f3f7">Bookmarks</h4>
+<div class="outline-text-4" id="text-org6c2f3f7">
 </div>
 <ul class="org-ul">
-<li><a id="org4161353"></a>eww-bookmark-jump<br />
-<div class="outline-text-5" id="text-org4161353">
+<li><a id="orgaa8f9c9"></a>eww-bookmark-jump<br />
+<div class="outline-text-5" id="text-orgaa8f9c9">
 <p>
 Here add a custom bookmark handler relying on <code>browse-url</code> and <code>browse-url-handlers</code>, so even if we store a bookmark via <code>eww</code>, we're going to use the proper browser when opening it.
 </p>
@@ -371,6 +373,7 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
   <span style="color: #7fc07f; font-style: italic;">"Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.</span>
 <span style="color: #7fc07f; font-style: italic;">  Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"</span>
   (browse-url (bookmark-prop-get bookmark 'location)))
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">eww</span>)
 (<span style="color: #00c089; font-weight: bold;">defalias</span> #'eww-bookmark-jump #'browse-url-bookmark-jump)
 </pre>
 </div>
@@ -378,17 +381,16 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 </li>
 </ul>
 </div>
-
-<div id="outline-container-org0d207eb" class="outline-4">
-<h4 id="org0d207eb">Dired</h4>
-<div class="outline-text-4" id="text-org0d207eb">
+<div id="outline-container-orgc2dbfe8" class="outline-4">
+<h4 id="orgc2dbfe8">Dired</h4>
+<div class="outline-text-4" id="text-orgc2dbfe8">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">dired</span>)
 (<span style="color: #00c089; font-weight: bold;">setq</span> make-backup-files nil
-      tab-always-indent 'complete
-      dired-dwim-target t
-      dired-listing-switches <span style="color: #af9fff;">"-alth"</span>
-      dired-omit-files <span style="color: #af9fff;">"\\`[.]?#</span><span style="color: #cfc04f;">\\</span><span style="color: #3fb83f;">|</span><span style="color: #af9fff;">\\`[.][.]?"</span>)
+        tab-always-indent 'complete
+        dired-dwim-target t
+        dired-listing-switches <span style="color: #af9fff;">"-alth"</span>
+        dired-omit-files <span style="color: #af9fff;">"\\`[.]?#</span><span style="color: #cfc04f;">\\</span><span style="color: #3fb83f;">|</span><span style="color: #af9fff;">\\`[.][.]?"</span>)
 (define-key dired-mode-map (kbd <span style="color: #af9fff;">"W"</span>) #'wdired-change-to-wdired-mode)
 (define-key dired-mode-map (kbd <span style="color: #af9fff;">"H"</span>) #'dired-omit-mode)
 (define-key dired-mode-map (kbd <span style="color: #af9fff;">"M-p"</span>) (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (dired-previous-line 1) (dired-display-file)))
@@ -399,71 +401,93 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org44fc864" class="outline-4">
-<h4 id="org44fc864">Appearance</h4>
-<div class="outline-text-4" id="text-org44fc864">
+<div id="outline-container-org12bcb19" class="outline-4">
+<h4 id="org12bcb19">Appearance</h4>
+<div class="outline-text-4" id="text-org12bcb19">
 <div class="org-src-container">
 <pre class="src src-elisp">(menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (<span style="color: #00c089; font-weight: bold;">setq</span> ring-bell-function 'ignore
-      visible-bell t)
+        visible-bell t)
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgab0d394" class="outline-4">
-<h4 id="orgab0d394"><span class="todo TODO">TODO</span> Window management</h4>
-<div class="outline-text-4" id="text-orgab0d394">
+<div id="outline-container-org9334547" class="outline-4">
+<h4 id="org9334547">Window and Tabs management</h4>
+<div class="outline-text-4" id="text-org9334547">
 <p>
-No configuration till now. If you want to learn something about this topic there <a href="https://karthinks.com/software/emacs-window-management-almanac/">this fantastic article</a>, or <code>C-h o</code>.
+No configuration till now. If you want to learn something about this topic there <a href="https://karthinks.com/software/emacs-window-management-almanac/">this fantastic article</a>, or place the cursor on the function and <code>C-h o</code>.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-elisp">(winner-mode 1)
 </pre>
 </div>
-</div>
-</div>
 
-<div id="outline-container-org0f92d9d" class="outline-4">
-<h4 id="org0f92d9d">Orderless</h4>
-<div class="outline-text-4" id="text-org0f92d9d">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">orderless</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">holymacs-new-tab</span> (name)
+  <span style="color: #7fc07f; font-style: italic;">"Create a new tab with NAME. When called interactively asks for the name in the minibuffer."</span>
+  (<span style="color: #00c089; font-weight: bold;">interactive</span> <span style="color: #af9fff;">"MTab: "</span>)
+  (tab-new)
+  (tab-rename name))
+
+(global-set-key (kbd <span style="color: #af9fff;">"M-o w"</span>) #'holymacs-new-tab)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga167078" class="outline-4">
+<h4 id="orga167078">Orderless</h4>
+<div class="outline-text-4" id="text-orga167078">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> orderless
   <span style="color: #3fb83f; font-weight: bold;">:custom</span>
   (completion-styles '(orderless partial-completion)))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgd3e9580" class="outline-4">
-<h4 id="orgd3e9580">Vertico</h4>
-<div class="outline-text-4" id="text-orgd3e9580">
+<div id="outline-container-org30d6d41" class="outline-4">
+<h4 id="org30d6d41">Minibuffer and Completion framework</h4>
+<div class="outline-text-4" id="text-org30d6d41">
+</div>
+<ul class="org-ul">
+<li><a id="orgd0edd2c"></a>Minibuffer<br />
+<div class="outline-text-5" id="text-orgd0edd2c">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">vertico</span>
-  <span style="color: #3fb83f; font-weight: bold;">:init</span>
-  (vertico-mode t)
-  (<span style="color: #00c089; font-weight: bold;">setq</span> vertico-count 10
-        vertico-resize t
-        vertico-cycle t))
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">setq</span> enable-recursive-minibuffers t)
+(add-hook 'minibuffer-setup-hook (<span style="color: #00c089; font-weight: bold;">lambda</span> () (local-set-key (kbd <span style="color: #af9fff;">"C-o"</span>) #'switch-to-completions)))
+(define-key completion-list-mode-map (kbd <span style="color: #af9fff;">"e"</span>) #'switch-to-minibuffer)
 </pre>
 </div>
 </div>
-</div>
-
-<div id="outline-container-orgc78eea1" class="outline-4">
-<h4 id="orgc78eea1">Auto-completion</h4>
-<div class="outline-text-4" id="text-orgc78eea1">
+</li>
+<li><a id="org78d1f0e"></a>Vertico<br />
+<div class="outline-text-5" id="text-org78d1f0e">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">corfu</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> vertico
+  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+  (vertico-mode t)
+  (<span style="color: #00c089; font-weight: bold;">setq</span> vertico-count 10
+          vertico-resize t
+          vertico-cycle t))
+</pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div id="outline-container-org4e95d58" class="outline-4">
+<h4 id="org4e95d58">Auto-completion</h4>
+<div class="outline-text-4" id="text-org4e95d58">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> corfu
   <span style="color: #3fb83f; font-weight: bold;">:hook</span>
   (eshell-mode . (<span style="color: #00c089; font-weight: bold;">lambda</span> ()
-                   (<span style="color: #00c089; font-weight: bold;">setq-local</span> corfu-auto nil)
-                   (corfu-mode)))
+                     (<span style="color: #00c089; font-weight: bold;">setq-local</span> corfu-auto nil)
+                     (corfu-mode)))
   <span style="color: #3fb83f; font-weight: bold;">:custom</span>
   (corfu-cycle t)
   <span style="color: #3fb83f; font-weight: bold;">:init</span>
@@ -472,7 +496,7 @@ No configuration till now. If you want to learn something about this topic there
 </div>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">cape</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> cape
   <span style="color: #3fb83f; font-weight: bold;">:init</span>
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
@@ -490,37 +514,36 @@ No configuration till now. If you want to learn something about this topic there
 </div>
 </div>
 </div>
-<div id="outline-container-orgf167eb2" class="outline-4">
-<h4 id="orgf167eb2">Embark</h4>
-<div class="outline-text-4" id="text-orgf167eb2">
+<div id="outline-container-orgcf0c388" class="outline-4">
+<h4 id="orgcf0c388">Embark</h4>
+<div class="outline-text-4" id="text-orgcf0c388">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">embark</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> embark
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
   (add-to-list 'god-exempt-major-modes 'embark-mode)
   <span style="color: #3fb83f; font-weight: bold;">:bind*</span>
   (<span style="color: #af9fff;">"C-,"</span> . embark-act)
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-general-map
-        (<span style="color: #af9fff;">"C-w"</span> . browse-url))
+          (<span style="color: #af9fff;">"C-w"</span> . browse-url))
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-identifier-map
-        (<span style="color: #af9fff;">"R"</span> . query-replace)
-        (<span style="color: #af9fff;">"O"</span> . multi-occur-in-matching-buffers)
-        (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
-        (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
+          (<span style="color: #af9fff;">"R"</span> . query-replace)
+          (<span style="color: #af9fff;">"O"</span> . multi-occur-in-matching-buffers)
+          (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
+          (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> embark-url-map
-        (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
-        (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
+          (<span style="color: #af9fff;">"c"</span> . browse-url-chrome)
+          (<span style="color: #af9fff;">"f"</span> . browse-url-firefox))
   (<span style="color: #3fb83f; font-weight: bold;">:map</span>  embark-file-map
-         (<span style="color: #af9fff;">"p"</span> . project-find-file)
-         (<span style="color: #af9fff;">"b"</span> . project-switch-to-buffer)
-         (<span style="color: #af9fff;">","</span> . append-to-previous-buffer)))
+           (<span style="color: #af9fff;">"p"</span> . project-find-file)
+           (<span style="color: #af9fff;">"b"</span> . project-switch-to-buffer)
+           (<span style="color: #af9fff;">","</span> . append-to-previous-buffer)))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org1afdeae" class="outline-4">
-<h4 id="org1afdeae">Eshell</h4>
-<div class="outline-text-4" id="text-org1afdeae">
+<div id="outline-container-orgcc0b22f" class="outline-4">
+<h4 id="orgcc0b22f">Eshell</h4>
+<div class="outline-text-4" id="text-orgcc0b22f">
 <div class="org-src-container">
 <pre class="src src-elisp">(add-to-list 'org-babel-load-languages '(eshell . t))
 (add-hook 'eshell-mode-hook (<span style="color: #00c089; font-weight: bold;">lambda</span> () (define-key eshell-mode-map (kbd <span style="color: #af9fff;">"C-o"</span>) #'kill-this-buffer)))
@@ -528,14 +551,23 @@ No configuration till now. If you want to learn something about this topic there
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2ea26ff" class="outline-4">
-<h4 id="org2ea26ff">Keybindings</h4>
-<div class="outline-text-4" id="text-org2ea26ff">
+<div id="outline-container-org1287432" class="outline-4">
+<h4 id="org1287432">Projects</h4>
+<div class="outline-text-4" id="text-org1287432">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">project</span>)
+(add-to-list 'project-switch-commands '(project-shell <span style="color: #af9fff;">"Shell"</span>))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd1468dd" class="outline-4">
+<h4 id="orgd1468dd">Keybindings</h4>
+<div class="outline-text-4" id="text-orgd1468dd">
 </div>
 <ul class="org-ul">
-<li><a id="org55b0618"></a>Custom keybindings<br />
-<div class="outline-text-5" id="text-org55b0618">
+<li><a id="orgc40fbfd"></a>Custom keybindings<br />
+<div class="outline-text-5" id="text-orgc40fbfd">
 <p>
 In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of an entrypoint for commands I often use, as for <code>org</code> commands. I'll use <code>M-o M-o</code> to map major-mode related commands.
 </p>
@@ -556,9 +588,8 @@ In vanilla Emacs the <code>M-o</code> keybinding is free: I'll use it as sort of
 </div>
 </div>
 </li>
-
-<li><a id="org5d25d9e"></a>For not graphical client (i.e. emacs -nw)<br />
-<div class="outline-text-5" id="text-org5d25d9e">
+<li><a id="org6e50c9e"></a>For not graphical client (i.e. emacs -nw)<br />
+<div class="outline-text-5" id="text-org6e50c9e">
 <p>
 Sometimes when you run Emacs in old terminal emulators, you don't have access to the <code>alt</code> or <code>super</code> key. For this reason I redefine important Emacs standard keybindings to <code>M-x</code> and the <code>god-mode</code> toggle.
 </p>
@@ -572,9 +603,8 @@ Sometimes when you run Emacs in old terminal emulators, you don't have access to
 </div>
 </div>
 </li>
-
-<li><a id="org808e886"></a>Ease isearch UX<br />
-<div class="outline-text-5" id="text-org808e886">
+<li><a id="org80f50d8"></a>Ease isearch UX<br />
+<div class="outline-text-5" id="text-org80f50d8">
 <p>
 Uses normal movements keys and <code>TAB</code> key to move through <code>isearch</code>.
 </p>
@@ -588,9 +618,8 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 </div>
 </div>
 </li>
-
-<li><a id="org0145be1"></a>Translations keys<br />
-<div class="outline-text-5" id="text-org0145be1">
+<li><a id="orgcd48b6f"></a>Translations keys<br />
+<div class="outline-text-5" id="text-orgcd48b6f">
 <div class="org-src-container">
 <pre class="src src-elisp">(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-k"</span>) (kbd <span style="color: #af9fff;">"M-x"</span>))
 (define-key key-translation-map (kbd <span style="color: #af9fff;">"s-m"</span>) (kbd <span style="color: #af9fff;">"C-x"</span>))
@@ -601,9 +630,8 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 </div>
 </div>
 </li>
-
-<li><a id="orgba7577d"></a>Super-key<br />
-<div class="outline-text-5" id="text-orgba7577d">
+<li><a id="orgf5b5d20"></a>Super-key<br />
+<div class="outline-text-5" id="text-orgf5b5d20">
 <div class="org-src-container">
 <pre class="src src-elisp">(global-set-key (kbd <span style="color: #af9fff;">"s-0"</span>) (kbd <span style="color: #af9fff;">"C-x 0"</span>))
 (global-set-key (kbd <span style="color: #af9fff;">"s-1"</span>) (kbd <span style="color: #af9fff;">"C-x 1"</span>))
@@ -616,10 +644,9 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 (global-set-key (kbd <span style="color: #af9fff;">"s-["</span>) (kbd <span style="color: #af9fff;">"C-x &lt;left&gt;"</span>))
 (global-set-key (kbd <span style="color: #af9fff;">"s-]"</span>) (kbd <span style="color: #af9fff;">"C-x &lt;right&gt;"</span>))
 (global-set-key (kbd <span style="color: #af9fff;">"s-,"</span>) #'switch-to-completions) <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">useful if you don't use ido, vertico or similar</span>
-(global-set-key (kbd <span style="color: #af9fff;">"s-b"</span>) #'switch-to-buffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s-B"</span>) #'ibuffer)
-(global-set-key (kbd <span style="color: #af9fff;">"s-j"</span>) #'recentf)
-(global-set-key (kbd <span style="color: #af9fff;">"s-)"</span>) #'kill-this-buffer)
+(global-set-key (kbd <span style="color: #af9fff;">"s-b"</span>) #'ibuffer)
+(global-set-key (kbd <span style="color: #af9fff;">"s-j"</span>) #'switch-to-buffer)
+(global-set-key (kbd <span style="color: #af9fff;">"s-)"</span>) #'kill-current-buffer)
 (global-set-key (kbd <span style="color: #af9fff;">"s--"</span>) #'bookmark-jump)
 (global-set-key (kbd <span style="color: #af9fff;">"s-_"</span>) #'bookmark-set)
 (global-set-key (kbd <span style="color: #af9fff;">"s-q"</span>) #'tab-next)
@@ -634,11 +661,10 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 </div>
 </div>
 </li>
-
-<li><a id="org47e80ce"></a>god-mode<br />
-<div class="outline-text-5" id="text-org47e80ce">
+<li><a id="org05732b0"></a>god-mode<br />
+<div class="outline-text-5" id="text-org05732b0">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">god-mode</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> god-mode
   <span style="color: #3fb83f; font-weight: bold;">:init</span>
   (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
     (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
@@ -667,35 +693,23 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 </div>
 </div>
 </li>
-
-<li><a id="org441a714"></a>which-key<br />
-<div class="outline-text-5" id="text-org441a714">
+<li><a id="orge46cea0"></a>which-key<br />
+<div class="outline-text-5" id="text-orge46cea0">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">which-key</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> which-key
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
-  (which-key-mode))
+  (which-key-mode)
+  (which-key-enable-god-mode-support))
 </pre>
 </div>
 </div>
 </li>
 </ul>
 </div>
-
-<div id="outline-container-org4559db3" class="outline-4">
-<h4 id="org4559db3">Projects</h4>
-<div class="outline-text-4" id="text-org4559db3">
-<div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">project</span>)
-(add-to-list 'project-switch-commands '(project-shell <span style="color: #af9fff;">"Shell"</span>))
-</pre>
 </div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org31dfa64" class="outline-3">
-<h3 id="org31dfa64">Shared configuration</h3>
-<div class="outline-text-3" id="text-org31dfa64">
+<div id="outline-container-org61adc6e" class="outline-3">
+<h3 id="org61adc6e">Shared configuration</h3>
+<div class="outline-text-3" id="text-org61adc6e">
 <p>
 Here's I share my most used configuration files across systems by simply usiung a shared directory.
 </p>
@@ -703,48 +717,47 @@ Here's I share my most used configuration files across systems by simply usiung 
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">if</span> (file-exists-p <span style="color: #af9fff;">"~/Dropbox/emacs/"</span>)
     (<span style="color: #00c089; font-weight: bold;">setq</span> bookmark-file <span style="color: #af9fff;">"~/Dropbox/emacs/bookmarks"</span>
-          eshell-aliases-file <span style="color: #af9fff;">"~/Dropbox/emacs/eshell-aliases"</span>
-          custom-file <span style="color: #af9fff;">"~/.emacs.d/custom.el"</span>
-          org-agenda-files '(<span style="color: #af9fff;">"~/Dropbox/org/"</span>)
-          org-roam-directory <span style="color: #af9fff;">"~/Dropbox/org-roam/"</span>))
+            eshell-aliases-file <span style="color: #af9fff;">"~/Dropbox/emacs/eshell-aliases"</span>
+            custom-file <span style="color: #af9fff;">"~/.emacs.d/custom.el"</span>
+            org-agenda-files '(<span style="color: #af9fff;">"~/Dropbox/org/"</span>)
+            org-roam-directory <span style="color: #af9fff;">"~/Dropbox/org-roam/"</span>))
 (load custom-file 'noerror)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga626bc2" class="outline-3">
-<h3 id="orga626bc2">Modules</h3>
-<div class="outline-text-3" id="text-orga626bc2">
+<div id="outline-container-org4d73808" class="outline-3">
+<h3 id="org4d73808">Modules</h3>
+<div class="outline-text-3" id="text-org4d73808">
 </div>
-<div id="outline-container-orga7eacf2" class="outline-4">
-<h4 id="orga7eacf2">Compile</h4>
-<div class="outline-text-4" id="text-orga7eacf2">
+<div id="outline-container-orgfc0015e" class="outline-4">
+<h4 id="orgfc0015e">Compile</h4>
+<div class="outline-text-4" id="text-orgfc0015e">
 <p>
 Re-tangle all modules. I don't think a specific command is needed. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-elisp">(mapcar #'org-babel-tangle-file
-        (directory-files <span style="color: #af9fff;">"holymacs"</span> t <span style="color: #af9fff;">"\\.org$"</span> directory-files-no-dot-files-regexp))
+          (directory-files <span style="color: #af9fff;">"holymacs"</span> t <span style="color: #af9fff;">"\\.org$"</span> directory-files-no-dot-files-regexp))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgab8976c" class="outline-4">
-<h4 id="orgab8976c">Autoload</h4>
-<div class="outline-text-4" id="text-orgab8976c">
+<div id="outline-container-org66271ef" class="outline-4">
+<h4 id="org66271ef">Autoload</h4>
+<div class="outline-text-4" id="text-org66271ef">
 <p>
 Here we define a mechanism to easily extend your Emacs experience with some custom defined <i>modules</i>, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the <b>layers</b> in <b>Doom Emacs</b>), but I'm not creating a whole mechanism to handle this: just place an <code>.el</code> file in the <code>~/.emacs.d/modules/</code> directory, and it will be autoloaded.
 </p>
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #00c089; font-weight: bold;">let*</span> ((modules-dir (concat user-emacs-directory <span style="color: #af9fff;">"modules/"</span>))
-       (modules (<span style="color: #00c089; font-weight: bold;">if</span> (file-exists-p modules-dir)
-                    (directory-files modules-dir))))
+         (modules (<span style="color: #00c089; font-weight: bold;">if</span> (file-exists-p modules-dir)
+                      (directory-files modules-dir))))
   (<span style="color: #00c089; font-weight: bold;">if</span> modules (mapcar (<span style="color: #00c089; font-weight: bold;">lambda</span> (module)
-                        (load (concat modules-dir module) 'noerror))
-                      modules)))
+                          (load (concat modules-dir module) 'noerror))
+                        modules)))
 </pre>
 </div>
 
@@ -753,27 +766,25 @@ Here's the list of modules I'm using. They consists in <code>.org</code> files t
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgd3bd82a" class="outline-4">
-<h4 id="orgd3bd82a">Blorg</h4>
-<div class="outline-text-4" id="text-orgd3bd82a">
+<div id="outline-container-orgbfd9759" class="outline-4">
+<h4 id="orgbfd9759">Blorg</h4>
+<div class="outline-text-4" id="text-orgbfd9759">
 <p>
 The <b>Blorg</b> publishing functions described in <a href="https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org">README.org</a> will tangle its code in the <code>blorg.el</code> module.
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgbf29e56" class="outline-4">
-<h4 id="orgbf29e56"><a href="holymacs/jarvis.html">jarvis.el</a></h4>
+<div id="outline-container-org3f97108" class="outline-4">
+<h4 id="org3f97108"><a href="holymacs/jarvis.html">jarvis.el</a></h4>
 </div>
 </div>
-<div id="outline-container-org37fb8a2" class="outline-3">
-<h3 id="org37fb8a2">On hand documentation</h3>
-<div class="outline-text-3" id="text-org37fb8a2">
+<div id="outline-container-orgea62027" class="outline-3">
+<h3 id="orgea62027">On hand documentation</h3>
+<div class="outline-text-3" id="text-orgea62027">
 </div>
-<div id="outline-container-org8f37656" class="outline-4">
-<h4 id="org8f37656">Other Commands, functions and variables</h4>
-<div class="outline-text-4" id="text-org8f37656">
+<div id="outline-container-org7938068" class="outline-4">
+<h4 id="org7938068">Other Commands, functions and variables</h4>
+<div class="outline-text-4" id="text-org7938068">
 <p>
 Just press <code>C-h o</code> to get help on those symbols.
 </p>
@@ -781,11 +792,13 @@ Just press <code>C-h o</code> to get help on those symbols.
 <ul class="org-ul">
 <li><code>add-file-local-variable</code> (append at bottom of the file) and <code>add-file-local-variable-prop-line</code> (prepend in the first line)</li>
 <li><code>align-regexp</code></li>
+<li><code>auto-mode-alist</code></li>
 <li><code>browse-url-of-buffer</code></li>
 <li><code>command-switch-alist</code></li>
 <li><code>completions-max-height</code></li>
 <li><code>describe-text-properties</code></li>
 <li><code>find-name-dired</code></li>
+<li><code>image-crop</code></li>
 <li><code>imenu-generic-expression</code></li>
 <li><code>json-pretty-print-buffer</code></li>
 <li><code>mm-discouraged-alternatives</code></li>
@@ -800,15 +813,26 @@ Just press <code>C-h o</code> to get help on those symbols.
 </ul>
 </div>
 </div>
-
-<div id="outline-container-org26a7543" class="outline-4">
-<h4 id="org26a7543">Vectors</h4>
-<div class="outline-text-4" id="text-org26a7543">
+<div id="outline-container-orgf5e008e" class="outline-4">
+<h4 id="orgf5e008e">String and Symbols</h4>
+<div class="outline-text-4" id="text-orgf5e008e">
+<div class="org-src-container">
+<pre class="src src-elisp">(symbol-name 'some-symbol)
+<span style="color: #b7a07f; font-style: italic;">; </span><span style="color: #b7a07f; font-style: italic;">=&gt; "some-symbol"</span>
+(intern <span style="color: #af9fff;">"some-symbol"</span>)
+<span style="color: #b7a07f; font-style: italic;">; </span><span style="color: #b7a07f; font-style: italic;">=&gt; some-symbol</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org52f8233" class="outline-4">
+<h4 id="org52f8233">Vectors</h4>
+<div class="outline-text-4" id="text-org52f8233">
 <p>
 Get an element from a vector
 </p>
 
-<pre class="example" id="org2cb8cd1">
+<pre class="example" id="org3e1fd3c">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -822,10 +846,9 @@ it's vector, you should use <code>aref</code>, because it's precise and faster.
 </p>
 </div>
 </div>
-
-<div id="outline-container-orgb092f20" class="outline-4">
-<h4 id="orgb092f20">Handle List</h4>
-<div class="outline-text-4" id="text-orgb092f20">
+<div id="outline-container-orgcf51af5" class="outline-4">
+<h4 id="orgcf51af5">Handle List</h4>
+<div class="outline-text-4" id="text-orgcf51af5">
 <p>
 To find an element
 </p>
@@ -836,32 +859,31 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org453cf02">
+<pre class="example" id="org372331f">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
 </div>
-
-<div id="outline-container-org68013b8" class="outline-4">
-<h4 id="org68013b8">(interactive) functions</h4>
-<div class="outline-text-4" id="text-org68013b8">
+<div id="outline-container-org294905d" class="outline-4">
+<h4 id="org294905d">(interactive) functions</h4>
+<div class="outline-text-4" id="text-org294905d">
 <p>
-Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
+Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgd1a45ff">
+<pre class="example" id="orgd6748c5">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
-		(read-from-minibuffer "URL: ")
-		(completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+		  (read-from-minibuffer "URL: ")
+		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
    (message (format "url: %s, handler: %s" url handler )))
 </pre>
 </div>
 </div>
-<div id="outline-container-orge94b4c2" class="outline-4">
-<h4 id="orge94b4c2">Regular Expression Syntax (regexp)</h4>
-<div class="outline-text-4" id="text-orge94b4c2">
+<div id="outline-container-org225ad48" class="outline-4">
+<h4 id="org225ad48">Regular Expression Syntax (regexp)</h4>
+<div class="outline-text-4" id="text-org225ad48">
 <p>
 You can use the wonderful tool <code>regexp-builder</code>.
 </p>
@@ -952,15 +974,14 @@ Syntax classes:
 </blockquote>
 </div>
 </div>
-
-<div id="outline-container-orgdd99fe5" class="outline-4">
-<h4 id="orgdd99fe5">Timers</h4>
-<div class="outline-text-4" id="text-orgdd99fe5">
+<div id="outline-container-orgf1bc37b" class="outline-4">
+<h4 id="orgf1bc37b">Timers</h4>
+<div class="outline-text-4" id="text-orgf1bc37b">
 <p>
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="org10e5d08">
+<pre class="example" id="orgce1cb36">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -974,19 +995,17 @@ point.
 </blockquote>
 </div>
 </div>
-
-<div id="outline-container-org7db07c8" class="outline-4">
-<h4 id="org7db07c8">Insert colorize text programmatically</h4>
-<div class="outline-text-4" id="text-org7db07c8">
-<pre class="example" id="org64ee8be">
+<div id="outline-container-orgcd812c7" class="outline-4">
+<h4 id="orgcd812c7">Insert colorize text programmatically</h4>
+<div class="outline-text-4" id="text-orgcd812c7">
+<pre class="example" id="orga9f4c7d">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
 </div>
-
-<div id="outline-container-orga3e33b5" class="outline-4">
-<h4 id="orga3e33b5">Buffer management</h4>
-<div class="outline-text-4" id="text-orga3e33b5">
+<div id="outline-container-org9ffa7a4" class="outline-4">
+<h4 id="org9ffa7a4">Buffer management</h4>
+<div class="outline-text-4" id="text-org9ffa7a4">
 <p>
 Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer">stackoverflow</a>.
 </p>
@@ -1005,28 +1024,26 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 </div>
 </div>
 </div>
-
-<div id="outline-container-org5224a89" class="outline-4">
-<h4 id="org5224a89">Libaries</h4>
-<div class="outline-text-4" id="text-org5224a89">
+<div id="outline-container-orge41ef85" class="outline-4">
+<h4 id="orge41ef85">Libaries</h4>
+<div class="outline-text-4" id="text-orge41ef85">
 <ul class="org-ul">
 <li><a href="https://tkf.github.io/emacs-request/">request.el</a></li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orgc32ccd8" class="outline-4">
-<h4 id="orgc32ccd8">Useful topics</h4>
-<div class="outline-text-4" id="text-orgc32ccd8">
+<div id="outline-container-orgefb3715" class="outline-4">
+<h4 id="orgefb3715">Useful topics</h4>
+<div class="outline-text-4" id="text-orgefb3715">
 <ul class="org-ul">
 <li><a href="https://orgmode.org/manual/Results-of-Evaluation.html">Results of Evaluation</a></li>
 <li><p>
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org34c44e9">
+<pre class="example" id="org88e0a28">
 (let ((start (point-min))
-      (end (point-max)))
+	  (end (point-max)))
   (buffer-substring start end))
 </pre></li>
 </ul>
@@ -1034,9 +1051,9 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 </div>
 </div>
 </div>
-<div id="outline-container-org3c45da5" class="outline-2">
-<h2 id="org3c45da5">Credits</h2>
-<div class="outline-text-2" id="text-org3c45da5">
+<div id="outline-container-org969388d" class="outline-2">
+<h2 id="org969388d">Credits</h2>
+<div class="outline-text-2" id="text-org969388d">
 <p>
 I would like to thanks:
 </p>
@@ -1058,7 +1075,7 @@ I would like to thanks:
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2023-07-15 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

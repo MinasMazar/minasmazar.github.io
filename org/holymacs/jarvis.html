@@ -25,29 +25,28 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge9a3583">Tabspaces</a></li>
-<li><a href="#org32e0a3a">Org and Second Brain (Org-roam)</a></li>
-<li><a href="#org410099f">Alarm!</a></li>
-<li><a href="#orgfa7aa4b">News and Mail</a>
+<li><a href="#org05f0ee1">Tabspaces</a></li>
+<li><a href="#orgff932da">Org and Second Brain (Org-roam)</a></li>
+<li><a href="#org8f655b9">Alarm!</a></li>
+<li><a href="#orgf637e17">News and Mail</a>
 <ul>
-<li><a href="#org06cdb68">RSS Reader (elfeed)</a></li>
-<li><a href="#org1433323">Mu4e</a></li>
+<li><a href="#org707b947">RSS Reader (elfeed)</a></li>
+<li><a href="#org750af7b">Mu4e</a></li>
 </ul>
 </li>
-<li><a href="#orgc171269">Media</a></li>
-<li><a href="#org2bf496b">Search on the web: engine-mode</a></li>
+<li><a href="#org61606e0">Media</a></li>
+<li><a href="#org24f5531">Search on the web: engine-mode</a></li>
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orge9a3583" class="outline-2">
-<h2 id="orge9a3583">Tabspaces</h2>
-<div class="outline-text-2" id="text-orge9a3583">
+<div id="outline-container-org05f0ee1" class="outline-2">
+<h2 id="org05f0ee1">Tabspaces</h2>
+<div class="outline-text-2" id="text-org05f0ee1">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">tabspaces</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> tabspaces
   <span style="color: #3fb83f; font-weight: bold;">:hook</span> (after-init . tabspaces-mode)
   <span style="color: #3fb83f; font-weight: bold;">:commands</span> (tabspaces-switch-or-create-workspace
-             tabspaces-open-or-create-project-and-workspace)
+               tabspaces-open-or-create-project-and-workspace)
   <span style="color: #3fb83f; font-weight: bold;">:bind</span>
   ((<span style="color: #af9fff;">"s-{"</span> . tab-previous)
    (<span style="color: #af9fff;">"s-}"</span> . tab-next))
@@ -58,48 +57,47 @@
   (tabspaces-remove-to-default t)
   (tabspaces-initialize-project-with-todo t)
   (tabspaces-todo-file-name <span style="color: #af9fff;">"project-todo.org"</span>)
-  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">sessions</span>
-  (tabspaces-session t)
-  (tabspaces-session-auto-restore t))
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">I don't want tabspaces to manage sessions, so I keep those lines commented out.</span>
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(tabspaces-session t)</span>
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(tabspaces-session-auto-restore t))</span>
+  )
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org32e0a3a" class="outline-2">
-<h2 id="org32e0a3a">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
-<div class="outline-text-2" id="text-org32e0a3a">
+<div id="outline-container-orgff932da" class="outline-2">
+<h2 id="orgff932da">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
+<div class="outline-text-2" id="text-orgff932da">
 <p>
 Add a capture template to store notes in <code>inbox</code>
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> org
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
   (add-to-list 'org-capture-templates
-               '(<span style="color: #af9fff;">"i"</span> <span style="color: #af9fff;">"Inbox"</span> entry (file+headline <span style="color: #af9fff;">"~/Dropbox/org/inbox.org"</span> <span style="color: #af9fff;">"Inbox"</span>)
-                  <span style="color: #af9fff;">"* TODO %?\n %i\n  %a"</span>))
+                 '(<span style="color: #af9fff;">"i"</span> <span style="color: #af9fff;">"Inbox"</span> entry (file+headline <span style="color: #af9fff;">"~/Dropbox/org/inbox.org"</span> <span style="color: #af9fff;">"Inbox"</span>)
+                    <span style="color: #af9fff;">"* TODO %?\n %i\n  %a"</span>))
   <span style="color: #3fb83f; font-weight: bold;">:bind</span>
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> org-mode-map
-        (<span style="color: #af9fff;">"M-p"</span> . #'org-move-subtree-up)
-        (<span style="color: #af9fff;">"M-n"</span> . #'org-move-subtree-down)))
+          (<span style="color: #af9fff;">"M-p"</span> . #'org-move-subtree-up)
+          (<span style="color: #af9fff;">"M-n"</span> . #'org-move-subtree-down)))
 </pre>
 </div>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">org-roam</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> org-roam
   <span style="color: #3fb83f; font-weight: bold;">:bind</span>
   ((<span style="color: #af9fff;">"M-o r f"</span> . #'org-roam-node-find)))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org410099f" class="outline-2">
-<h2 id="org410099f">Alarm!</h2>
-<div class="outline-text-2" id="text-org410099f">
+<div id="outline-container-org8f655b9" class="outline-2">
+<h2 id="org8f655b9">Alarm!</h2>
+<div class="outline-text-2" id="text-org8f655b9">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">alarm-clock</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> alarm-clock
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
   (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">holymacs/jarvis/set-alarm-10min-fire!</span> ()
     (<span style="color: #00c089; font-weight: bold;">interactive</span>)
@@ -110,16 +108,15 @@ Add a capture template to store notes in <code>inbox</code>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgfa7aa4b" class="outline-2">
-<h2 id="orgfa7aa4b">News and Mail</h2>
-<div class="outline-text-2" id="text-orgfa7aa4b">
+<div id="outline-container-orgf637e17" class="outline-2">
+<h2 id="orgf637e17">News and Mail</h2>
+<div class="outline-text-2" id="text-orgf637e17">
 </div>
-<div id="outline-container-org06cdb68" class="outline-3">
-<h3 id="org06cdb68">RSS Reader (elfeed)</h3>
-<div class="outline-text-3" id="text-org06cdb68">
+<div id="outline-container-org707b947" class="outline-3">
+<h3 id="org707b947">RSS Reader (elfeed)</h3>
+<div class="outline-text-3" id="text-org707b947">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> elfeed
   <span style="color: #3fb83f; font-weight: bold;">:bind</span>
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map (<span style="color: #af9fff;">"U"</span> . (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (run-at-time <span style="color: #af9fff;">"10min"</span> t #'elfeed-update))))
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
@@ -128,11 +125,11 @@ Add a capture template to store notes in <code>inbox</code>
 </div>
 
 <p>
-Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-tube">elfeed-tube</a>!
+Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-tube">elfeed-tube</a>! ❤️ Thanks a lot to <a href="https://github.com/karthink">karthink</a> 🙏
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed-tube</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> elfeed-tube
   <span style="color: #3fb83f; font-weight: bold;">:after</span> elfeed
   <span style="color: #3fb83f; font-weight: bold;">:demand</span> t
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
@@ -141,29 +138,28 @@ Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-
   (elfeed-tube-setup)
 
   <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-show-mode-map
-              (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)
-              <span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map
-              (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
-              ([remap save-buffer] . elfeed-tube-save)))
+                (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)
+                <span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map
+                (<span style="color: #af9fff;">"F"</span> . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)))
 
-(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">elfeed-tube-mpv</span>
+(<span style="color: #00c089; font-weight: bold;">use-package</span> elfeed-tube-mpv
   <span style="color: #3fb83f; font-weight: bold;">:after</span> elfeed-tube
   <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-show-mode-map
-              (<span style="color: #af9fff;">"C-c C-f"</span> . elfeed-tube-mpv-follow-mode)
-              (<span style="color: #af9fff;">"C-c C-w"</span> . elfeed-tube-mpv-where)))
+                (<span style="color: #af9fff;">"C-c C-f"</span> . elfeed-tube-mpv-follow-mode)
+                (<span style="color: #af9fff;">"C-c C-w"</span> . elfeed-tube-mpv-where)))
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org1433323" class="outline-3">
-<h3 id="org1433323">Mu4e</h3>
-<div class="outline-text-3" id="text-org1433323">
+<div id="outline-container-org750af7b" class="outline-3">
+<h3 id="org750af7b">Mu4e</h3>
+<div class="outline-text-3" id="text-org750af7b">
 </div>
-<div id="outline-container-orgd23975b" class="outline-4">
-<h4 id="orgd23975b">Dependencies</h4>
-<div class="outline-text-4" id="text-orgd23975b">
+<div id="outline-container-org8489ab4" class="outline-4">
+<h4 id="org8489ab4">Dependencies</h4>
+<div class="outline-text-4" id="text-org8489ab4">
 <p>
 Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like <code>mbsync</code>. You should also rely on <code>pass</code>, the <a href="https://www.passwordstore.org/">the standard unix password manager</a>, in order to store and fetch your passwords in a secure way.
 </p>
@@ -178,11 +174,10 @@ Useful links:
 </ul>
 </div>
 </div>
-
-<div id="outline-container-orgfef1412" class="outline-4">
-<h4 id="orgfef1412">Configuration</h4>
-<div class="outline-text-4" id="text-orgfef1412">
-<pre class="example" id="orgd2c714f">
+<div id="outline-container-org103fa85" class="outline-4">
+<h4 id="org103fa85">Configuration</h4>
+<div class="outline-text-4" id="text-org103fa85">
+<pre class="example" id="org54bca92">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -214,25 +209,25 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="orgd7c0353">
+<pre class="example" id="org6682fc9">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
-      message-send-mail-function 'smtpmail-send-it
-      mu4e-get-mail-command "mbsync -a"
-      ;;mu4e-maildir "~/Mail"
-      mu4e-update-interval (* 60 10)
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      ;;smtpmail-stream-type 'ssl
-      ;;smtpmail-smtp-service 465
-      smtpmail-stream-type 'starttls
-      smtpmail-smtp-service 587
-      ;;smtpmail-use-gnutls t
-      mu4e-drafts-folder "/[Gmail].Drafts"
-      mu4e-sent-folder   "/[Gmail].Sent Mail"
-      mu4e-trash-folder  "/[Gmail].Trash"
-      mm-discouraged-alternatives '("text/html")
-      mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
 (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
 (auth-source-pass-enable)
 (setq smtpmail-debug-info t)
@@ -242,69 +237,55 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="orga86108b">
-(setq smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 465
-      smtpmail-stream-type 'ssl
-      mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
-(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
-</pre>
-
-<p>
-In case you need to handle multiple mail accounts.
-</p>
-
-<pre class="example" id="orgccf1909">
+<pre class="example" id="org34bfb8a">
 (setq mu4e-contexts
-      (list
-       ;; Work account
-       (make-mu4e-context
-	:name "GMail"
-	:match-func
-	(lambda (msg)
-	  (when msg
-	    (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-	:vars '((user-mail-address . "my-email@gmail.com")
-		(user-full-name    . "My-Email (Gmail)")
-		(mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
-		(mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
-		(mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
-		(mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
 
-       ;; Personal account
-       (make-mu4e-context
-	:name "Yahoo"
-	:match-func
-	(lambda (msg)
-	  (when msg
-	    (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
-	:vars '((user-mail-address . "my-email@yahoo.com")
-		(user-full-name    . "My-Email (Yahoo)")
-		(mu4e-drafts-folder  . "/Yahoo/Drafts")
-		(mu4e-sent-folder  . "/Yahoo/Sent")
-		(mu4e-refile-folder  . "/Yahoo/Archive")
-		(mu4e-trash-folder  . "/Yahoo/Trash")))))
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 </pre>
 </div>
 </div>
 </div>
 </div>
-
-<div id="outline-container-orgc171269" class="outline-2">
-<h2 id="orgc171269">Media</h2>
-<div class="outline-text-2" id="text-orgc171269">
+<div id="outline-container-org61606e0" class="outline-2">
+<h2 id="org61606e0">Media</h2>
+<div class="outline-text-2" id="text-org61606e0">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">bongo</span>)
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> bongo)
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-org2bf496b" class="outline-2">
-<h2 id="org2bf496b">Search on the web: engine-mode</h2>
-<div class="outline-text-2" id="text-org2bf496b">
+<div id="outline-container-org24f5531" class="outline-2">
+<h2 id="org24f5531">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org24f5531">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> <span style="color: #37aff6;">engine-mode</span>
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> engine-mode
   <span style="color: #3fb83f; font-weight: bold;">:init</span>
   (<span style="color: #00c089; font-weight: bold;">setq</span> engine/browser-function #'browse-url-firefox)
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
@@ -312,10 +293,10 @@ In case you need to handle multiple mail accounts.
     <span style="color: #7fc07f; font-style: italic;">"Display the results of the query."</span>
     (<span style="color: #00c089; font-weight: bold;">interactive</span>)
     (<span style="color: #00c089; font-weight: bold;">let</span> ((browse-url-handlers nil)
-          (browse-url-browser-function browser-function))
-      (browse-url
-       (format-spec search-engine-url
-                    (format-spec-make ?s (url-hexify-string search-term))))))
+            (browse-url-browser-function browser-function))
+        (browse-url
+         (format-spec search-engine-url
+                      (format-spec-make ?s (url-hexify-string search-term))))))
 
   (<span style="color: #00c089; font-weight: bold;">defengine</span> duckduckgo
     <span style="color: #af9fff;">"https://duckduckgo.com/?q=%s"</span>
@@ -388,7 +369,7 @@ In case you need to handle multiple mail accounts.
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
