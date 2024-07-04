@@ -21,6 +21,22 @@
     (ibuffer-mode . all-the-icons-ibuffer-mode))
 #+end_src
 
+* Beautify
+
+#+begin_src elisp
+  (use-package org-modern
+    :config
+    (global-org-modern-mode))
+#+end_src
+
+* Highlight line
+
+#+begin_src elisp
+  (use-package beacon
+    :config
+    (beacon-mode 1))
+#+end_src
+
 * Themes
 
 #+begin_src elisp
@@ -33,8 +49,10 @@
        ((and (>= month 10) (< month 12)) 'autumn)
        ((or (>= month 12) (< month 3) 'winter))))
 
-    (let* ((month (car (calendar-current-date)))
-  	(season (get-season month))
-  	(theme-name (format "ef-%s" season)))
-      (load-theme (intern theme-name))))
+    (defun set-season-theme ()
+      (interactive)
+      (let* ((month (car (calendar-current-date)))
+  	   (season (get-season month))
+  	   (theme-name (format "ef-%s" season)))
+        (load-theme (intern theme-name)))))
 #+end_src

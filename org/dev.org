@@ -79,6 +79,14 @@ could not compile dependency :ssl_verify_fun, "mix compile" failed. Errors may h
 In this case, install the =erlang-public-key= package should solve the issue.
 
 
+The Raspbian issue: another error that can occur while building a docker image on Raspbian that uses =apt-get= commands is
+
+#+begin_src sh
+  ERROR: failed to solve: process "/bin/sh -c apt-get update -y &&   apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates &&   apt-get clean && rm -f /var/lib/apt/lists/*_*" did not complete successfully: exit code: 159
+#+end_src
+
+It seems there's a problem with [[https://github.com/moby/moby/issues/40734][libseccomp]]; according to [[https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm][this SO thread]] the solution is to upgrade libseccomp manually **on the host system**: download [[https://packages.debian.org/sid/libseccomp2][here]] and =sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb=.
+
 ** Usefull links for troubleshooting
 
 - https://github.com/teslamate-org/teslamate/issues/3691

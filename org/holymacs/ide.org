@@ -53,6 +53,7 @@
 
 #+begin_src elisp
   (use-package vterm
+    :after 'god-mode
     :config
     (add-to-list 'god-exempt-major-modes 'vterm-mode)
 

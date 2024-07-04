@@ -128,6 +128,7 @@ Also there are some external packages
 
 #+begin_src elisp
   (use-package elfeed
+    :after 'god-mode
     :bind
     (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
     :config

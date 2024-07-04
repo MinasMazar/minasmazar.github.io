@@ -295,16 +295,17 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-P") #'project-find-file)
 #+end_src
 
-**** god-mode
+**** God mode
 
 #+begin_src elisp
   (use-package god-mode
-    :init
-    (defun minemacs-god-mode-enabled ()
-      (setq cursor-type 'box))
+    :config
     (defun minemacs-god-mode-disabled ()
       (setq cursor-type 'bar))
-    :config
+
+    (defun minemacs-god-mode-enabled ()
+      (setq cursor-type 'box))
+
     (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
     (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
     (global-set-key (kbd "s-n") #'god-local-mode)
@@ -317,11 +318,13 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
     (define-key god-local-mode-map (kbd "{") #'backward-sexp)
     (define-key god-local-mode-map (kbd "}") #'forward-sexp)
-    (add-to-list 'god-exempt-major-modes 'compilation-mode)
-    (add-to-list 'god-exempt-major-modes 'org-capture-mode)
-    (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
-    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
-    (add-to-list 'god-exempt-major-modes 'elfeed-show-mode)
+    (mapcar (lambda (exempted-major-mode)
+  	    (add-to-list 'god-exempt-major-modes exempted-major-mode))
+  	  '(compilation-mode
+  	    org-capture-mode
+  	    org-agenda-mode
+  	    elfeed-search-mode
+  	    elfeed-show-mode))
     (god-mode))
 #+end_src
 
@@ -389,6 +392,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =command-switch-alist=
 - =completions-max-height=
 - =describe-text-properties=
+- =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
 - =find-name-dired=
 - =image-crop=
 - =imenu-generic-expression=
