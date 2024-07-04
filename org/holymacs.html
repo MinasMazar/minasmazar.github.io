@@ -265,7 +265,11 @@
 <li><a href="#org3f97108">jarvis.el</a></li>
 </ul>
 </li>
+</ul>
+</li>
 <li><a href="#orgea62027">On hand documentation</a>
+<ul>
+<li>
 <ul>
 <li><a href="#org7938068">Other Commands, functions and variables</a></li>
 <li><a href="#orgf5e008e">String and Symbols</a></li>
@@ -329,7 +333,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="orgb9f96ca">
+<pre class="example" id="org46ace05">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -667,6 +671,7 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> god-mode
   <span style="color: #3fb83f; font-weight: bold;">:init</span>
   (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
+    <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(set-face-background 'mode-line-active "#00f5ff")</span>
     (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
   (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-disabled</span> ()
     (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'bar))
@@ -778,9 +783,10 @@ The <b>Blorg</b> publishing functions described in <a href="https://github.com/M
 <h4 id="org3f97108"><a href="holymacs/jarvis.html">jarvis.el</a></h4>
 </div>
 </div>
-<div id="outline-container-orgea62027" class="outline-3">
-<h3 id="orgea62027">On hand documentation</h3>
-<div class="outline-text-3" id="text-orgea62027">
+</div>
+<div id="outline-container-orgea62027" class="outline-2">
+<h2 id="orgea62027">On hand documentation</h2>
+<div class="outline-text-2" id="text-orgea62027">
 </div>
 <div id="outline-container-org7938068" class="outline-4">
 <h4 id="org7938068">Other Commands, functions and variables</h4>
@@ -832,7 +838,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org3e1fd3c">
+<pre class="example" id="orgcc1f0d9">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -859,7 +865,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org372331f">
+<pre class="example" id="orge89e06c">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -871,7 +877,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgd6748c5">
+<pre class="example" id="org639faef">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -981,7 +987,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orgce1cb36">
+<pre class="example" id="org4018a6f">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -998,7 +1004,7 @@ point.
 <div id="outline-container-orgcd812c7" class="outline-4">
 <h4 id="orgcd812c7">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-orgcd812c7">
-<pre class="example" id="orga9f4c7d">
+<pre class="example" id="org82d8f77">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1041,13 +1047,12 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org88e0a28">
+<pre class="example" id="org772d959">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
 </pre></li>
 </ul>
-</div>
 </div>
 </div>
 </div>

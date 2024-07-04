@@ -209,6 +209,8 @@
 <li><a href="#org67297dc">Playing Sound in Docker Containers (here the source article)</a></li>
 <li><a href="#org43a93cb">Rename a docker image</a></li>
 <li><a href="#orgd88b3ac">Rename a docker container</a></li>
+<li><a href="#org241b75e">Installing Docker on Raspberry PI</a></li>
+<li><a href="#org2a5b614">Usefull links for troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#orgd04b2b4">Icons</a></li>
@@ -217,7 +219,6 @@
 <li><a href="#orgda7e43a">Crontab</a></li>
 <li><a href="#org069856b">Elixir</a>
 <ul>
-<li><a href="#org5b40e98">Installing Elixir on Raspberry</a></li>
 <li><a href="#org51a9660">Phoenix Livebooks</a></li>
 </ul>
 </li>
@@ -267,6 +268,91 @@
 <pre class="src src-sh">sudo docker rename oldname_app newname_app
 </pre>
 </div>
+</div>
+</div>
+<div id="outline-container-org241b75e" class="outline-3">
+<h3 id="org241b75e">Installing Docker on Raspberry PI</h3>
+<div class="outline-text-3" id="text-org241b75e">
+<p>
+Follow <a href="https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository">the instructions in the Docker documentation</a>. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b7a07f; font-style: italic;">#</span><span style="color: #b7a07f; font-style: italic;">!/bin/</span><span style="color: #00c089; font-weight: bold;">bash</span>
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Uninstall unofficial distributions of Docker packages in APT</span>
+
+sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Remove images, containers, volumes, or custom configuration files </span>
+
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Add Docker's official GPG key:</span>
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Set up Docker's APT repository:</span>
+<span style="color: #3fb83f; font-weight: bold;">echo</span> <span style="color: #af9fff;">\</span>
+  <span style="color: #af9fff;">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \</span>
+<span style="color: #af9fff;">  $(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME") stable"</span> | <span style="color: #af9fff;">\</span>
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt-get update
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Install Docker packages</span>
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Verify that the installation is successful by running the hello-world image:</span>
+sudo docker run hello-world
+</pre>
+</div>
+
+<p>
+Remember to keep the Build and App images in sync (see <a href="https://github.com/teslamate-org/teslamate/issues/3691#issuecomment-1966074893">here</a>)
+</p>
+
+<p>
+When building an image, you can see an error like <i>cannot find the image for the platform&#x2026;</i>. Consider to add <code>--platform arm64</code> flag to the <code>docker build</code> command. <a href="https://docs.docker.com/reference/cli/docker/buildx/build/#platform">Here's the official Docker documentation</a> for this flag. Also keep an eye <a href="https://github.com/containerd/containerd/blob/v1.4.3/platforms/platforms.go#L63">to this file</a> to get a list of platforms. Remember you can detect the platform of the current machine via <code>uname -a</code>.
+</p>
+
+<p>
+If you're using Docker to run Elixir, you can face an error like this during the dependencies compilation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">could not compile dependency :ssl_verify_fun, <span style="color: #af9fff;">"mix compile"</span> failed. Errors may have been logged above. You can recompile this dependency with <span style="color: #af9fff;">"mix deps.compile ssl_verify_fun"</span>, update it with <span style="color: #af9fff;">"mix deps.update ssl_verify_fun"</span> or clean it with <span style="color: #af9fff;">"mix deps.clean ssl_verify_fun"</span>
+</pre>
+</div>
+
+<p>
+In this case, install the <code>erlang-public-key</code> package should solve the issue.
+</p>
+
+
+<p>
+The Raspbian issue: another error that can occur while building a docker image on Raspbian that uses <code>apt-get</code> commands is
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ERROR: failed to solve: process <span style="color: #af9fff;">"/bin/sh -c apt-get update -y &amp;&amp;   apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates &amp;&amp;   apt-get clean &amp;&amp; rm -f /var/lib/apt/lists/*_*"</span> did not complete successfully: exit code: 159
+</pre>
+</div>
+
+<p>
+It seems there's a problem with <a href="https://github.com/moby/moby/issues/40734">libseccomp</a>; according to <a href="https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm">this SO thread</a> the solution is to upgrade libseccomp manually <b><b>on the host system</b></b>: download <a href="https://packages.debian.org/sid/libseccomp2">here</a> and <code>sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org2a5b614" class="outline-3">
+<h3 id="org2a5b614">Usefull links for troubleshooting</h3>
+<div class="outline-text-3" id="text-org2a5b614">
+<ul class="org-ul">
+<li><a href="https://github.com/teslamate-org/teslamate/issues/3691">https://github.com/teslamate-org/teslamate/issues/3691</a></li>
+</ul>
 </div>
 </div>
 </div>
@@ -320,61 +406,6 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">https://elixir-toolbox.dev/</a></li>
 </ul>
-</div>
-<div id="outline-container-org5b40e98" class="outline-3">
-<h3 id="org5b40e98">Installing Elixir on Raspberry</h3>
-<div class="outline-text-3" id="text-org5b40e98">
-<p>
-Follow <a href="https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository">the instructions in the Docker documentation</a>. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh"><span style="color: #b7a07f; font-style: italic;">#</span><span style="color: #b7a07f; font-style: italic;">!/bin/</span><span style="color: #00c089; font-weight: bold;">bash</span>
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Uninstall unofficial distributions of Docker packages in APT</span>
-
-sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Remove images, containers, volumes, or custom configuration files </span>
-
-sudo rm -rf /var/lib/docker
-sudo rm -rf /var/lib/containerd
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Add Docker's official GPG key:</span>
-sudo apt-get update
-sudo apt-get install ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Set up Docker's APT repository:</span>
-<span style="color: #3fb83f; font-weight: bold;">echo</span> <span style="color: #af9fff;">\</span>
-  <span style="color: #af9fff;">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \</span>
-<span style="color: #af9fff;">  $(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME") stable"</span> | <span style="color: #af9fff;">\</span>
-  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
-sudo apt-get update
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Install Docker packages</span>
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Verify that the installation is successful by running the hello-world image:</span>
-sudo docker run hello-world
-</pre>
-</div>
-
-<p>
-You can face an error like this:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">could not compile dependency :ssl_verify_fun, <span style="color: #af9fff;">"mix compile"</span> failed. Errors may have been logged above. You can recompile this dependency with <span style="color: #af9fff;">"mix deps.compile ssl_verify_fun"</span>, update it with <span style="color: #af9fff;">"mix deps.update ssl_verify_fun"</span> or clean it with <span style="color: #af9fff;">"mix deps.clean ssl_verify_fun"</span>
-</pre>
-</div>
-
-<p>
-In this case, install the <code>erlang-public-key</code> package should solve the issue.
-</p>
-</div>
 </div>
 <div id="outline-container-org51a9660" class="outline-3">
 <h3 id="org51a9660">Phoenix Livebooks</h3>
