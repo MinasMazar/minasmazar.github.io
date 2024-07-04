@@ -20,3 +20,21 @@
     :hook
     (ibuffer-mode . all-the-icons-ibuffer-mode))
 #+end_src
+
+* Themes
+
+#+begin_src elisp
+  (use-package ef-themes
+    :config
+    (defun get-season (month)
+      (cond
+       ((and (>= month 3) (< month 6)) 'spring)
+       ((and (>= month 6) (< month 9)) 'summer)
+       ((and (>= month 10) (< month 12)) 'autumn)
+       ((or (>= month 12) (< month 3) 'winter))))
+
+    (let* ((month (car (calendar-current-date)))
+  	(season (get-season month))
+  	(theme-name (format "ef-%s" season)))
+      (load-theme (intern theme-name))))
+#+end_src

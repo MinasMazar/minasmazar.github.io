@@ -38,7 +38,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
   (package-initialize)
 #+end_src
 ** Main configuration
-*** User data, tab, backup files and major modes
+*** User data
 
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization =(customize-variable 'user-full-name)=.
 
@@ -47,6 +47,7 @@ Remember to set your name and email address! Place here your real data, or use t
         user-mail-address "username@domain.net")
 #+end_example
 
+*** Tab key, backup files and enabled major modes
 #+begin_src elisp
   (setq tab-always-indent 'complete
 	enable-recursive-minibuffers t
@@ -102,12 +103,22 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 	visible-bell t)
 #+end_src
 
-*** TODO Window management
+*** Window and Tabs management
 
-No configuration till now. If you want to learn something about this topic there [[https://karthinks.com/software/emacs-window-management-almanac/][this fantastic article]], or ~C-h o~.
+No configuration till now. If you want to learn something about this topic there [[https://karthinks.com/software/emacs-window-management-almanac/][this fantastic article]], or place the cursor on the function and ~C-h o~.
 
 #+begin_src elisp
   (winner-mode 1)
+#+end_src
+
+#+begin_src elisp
+  (defun holymacs-new-tab (name)
+    "Create a new tab with NAME. When called interactively asks for the name in the minibuffer."
+    (interactive "MTab: ")
+    (tab-new)
+    (tab-rename name))
+
+  (global-set-key (kbd "M-o w") #'holymacs-new-tab)
 #+end_src
 
 *** Orderless
@@ -196,6 +207,13 @@ No configuration till now. If you want to learn something about this topic there
 #+begin_src elisp :tangle no
   (add-to-list 'org-babel-load-languages '(eshell . t))
   (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
+#+end_src
+
+*** Projects
+
+#+begin_src elisp
+  (require 'project)
+  (add-to-list 'project-switch-commands '(project-shell "Shell"))
 #+end_src
 
 *** Keybindings
@@ -316,13 +334,6 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (which-key-enable-god-mode-support))
 #+end_src
 
-*** Projects
-
-#+begin_src elisp
-  (require 'project)
-  (add-to-list 'project-switch-commands '(project-shell "Shell"))
-#+end_src
-
 ** Shared configuration
 
 Here's I share my most used configuration files across systems by simply usiung a shared directory.
@@ -366,7 +377,7 @@ Here's the list of modules I'm using. They consists in =.org= files tangling to 
 The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
 
 *** [[file:holymacs/jarvis.org][jarvis.el]]
-** On hand documentation
+* On hand documentation
 *** Other Commands, functions and variables
 
 Just press ~C-h o~ to get help on those symbols.
@@ -391,6 +402,15 @@ Just press ~C-h o~ to get help on those symbols.
 - =pp-eval-expression=
 - =proced=
 - =shr-inhibit-images=
+
+*** String and Symbols
+
+#+begin_src elisp
+(symbol-name 'some-symbol)
+; => "some-symbol"
+(intern "some-symbol")
+; => some-symbol
+#+end_src
 
 *** Vectors
 

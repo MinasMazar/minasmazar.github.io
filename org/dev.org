@@ -5,18 +5,83 @@
 #+STARTUP: overview
 
 * Docker
-
-Disable/enable autostart of a docker container.
+** Disable/enable autostart of a docker container.
 
 #+begin_src sh
 docker update --restart [no|unless-stopped] <docker-container>
 #+end_src
 
-Playing Sound in Docker Containers ([[https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35][here the source article]])
+** Playing Sound in Docker Containers ([[https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35][here the source article]])
 
 #+begin_src sh
   docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
 #+end_src
+
+** Rename a docker image
+
+#+begin_src sh
+  docker tag OldName:tag NewName:tag
+#+end_src
+
+** Rename a docker container
+
+#+begin_src sh
+  sudo docker rename oldname_app newname_app
+#+end_src
+
+** Installing Docker on Raspberry PI
+
+Follow [[https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository][the instructions in the Docker documentation]]. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
+
+#+begin_src sh
+  #!/bin/bash
+
+  # Uninstall unofficial distributions of Docker packages in APT
+
+  sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+  # Remove images, containers, volumes, or custom configuration files 
+
+  sudo rm -rf /var/lib/docker
+  sudo rm -rf /var/lib/containerd
+
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  # Set up Docker's APT repository:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  # Install Docker packages
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # Verify that the installation is successful by running the hello-world image:
+  sudo docker run hello-world
+#+end_src
+
+Remember to keep the Build and App images in sync (see [[https://github.com/teslamate-org/teslamate/issues/3691#issuecomment-1966074893][here]])
+
+When building an image, you can see an error like /cannot find the image for the platform.../. Consider to add =--platform arm64= flag to the =docker build= command. [[https://docs.docker.com/reference/cli/docker/buildx/build/#platform][Here's the official Docker documentation]] for this flag. Also keep an eye [[https://github.com/containerd/containerd/blob/v1.4.3/platforms/platforms.go#L63][to this file]] to get a list of platforms. Remember you can detect the platform of the current machine via =uname -a=.
+
+If you're using Docker to run Elixir, you can face an error like this during the dependencies compilation:
+
+#+begin_src sh
+could not compile dependency :ssl_verify_fun, "mix compile" failed. Errors may have been logged above. You can recompile this dependency with "mix deps.compile ssl_verify_fun", update it with "mix deps.update ssl_verify_fun" or clean it with "mix deps.clean ssl_verify_fun"
+#+end_src
+
+In this case, install the =erlang-public-key= package should solve the issue.
+
+
+** Usefull links for troubleshooting
+
+- https://github.com/teslamate-org/teslamate/issues/3691
 
 * Icons
 
@@ -47,6 +112,13 @@ If you need to write a crontab entry you can use https://crontab.guru/
 * [[https://elixir-lang.org/][Elixir]]
 
 - https://elixir-toolbox.dev/
+
+** Phoenix Livebooks
+
+- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
+- https://github.com/aslakjohansen/livebook-demos
+- https://github.com/Arp-G/async-elixir
+- https://github.com/whatyouhide/guide_async_processing_in_elixir
 
 * GPG
 ** Keep GnuPG credentials cached for entire user session

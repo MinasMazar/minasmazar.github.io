@@ -1,4 +1,4 @@
-#+TITLE: Holymacs ~ Jarvis module
+#+TITLE: Holymacs ~ IDE
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-04-20 Sat>
@@ -35,6 +35,12 @@
   ;;   :config
   ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
 #+end_src
+** LSP
+
+#+begin_src elisp
+  (use-package eglot)
+#+end_src
+
 * Markup languages
 ** Markdown
 
@@ -48,7 +54,13 @@
 #+begin_src elisp
   (use-package vterm
     :config
-    (add-to-list 'god-exempt-major-modes 'vterm-mode))
+    (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+    (defun holymacs-vterm-exec (command)
+      (interactive "sCommand: ")
+      (let ((buffer-name (format "*vterm <%s>*" command)))
+        (with-current-buffer (vterm buffer-name)
+  	(vterm-send-string (format "%s && exit\n" command))))))
 #+end_src
 
 Some useful functions integrating =vterm= and *Tmux*.
@@ -56,11 +68,5 @@ Some useful functions integrating =vterm= and *Tmux*.
 #+begin_src elisp
   (defun holymacs-tmux/open ()
     (interactive)
-    (holymacs-vterm-exec "tmux attach || tmux && exit"))
-
-  (defun holymacs-vterm-exec (command)
-    (interactive "sCommand: ")
-    (let ((buffer-name (format "*vterm <%s>*" command)))
-      (with-current-buffer (vterm buffer-name)
-	(vterm-send-string (format "%s\n" command)))))
+    (holymacs-vterm-exec "tmux attach || tmux"))
 #+end_src

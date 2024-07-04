@@ -6,13 +6,13 @@
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
-* COMMENT Tabspaces
+* Tabspaces
 
 #+begin_src elisp
   (use-package tabspaces
     :hook (after-init . tabspaces-mode)
     :commands (tabspaces-switch-or-create-workspace
-	       tabspaces-open-or-create-project-and-workspace)
+  	       tabspaces-open-or-create-project-and-workspace)
     :bind
     (("s-{" . tab-previous)
      ("s-}" . tab-next))
@@ -23,16 +23,17 @@
     (tabspaces-remove-to-default t)
     (tabspaces-initialize-project-with-todo t)
     (tabspaces-todo-file-name "project-todo.org")
-    ;; sessions
-    (tabspaces-session t)
-    (tabspaces-session-auto-restore t))
+    ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+    ;; (tabspaces-session t)
+    ;; (tabspaces-session-auto-restore t))
+    )
 #+end_src
 
 * COMMENT Pop terminal ⚠️ wip ⚠️
 
 #+begin_src elisp
   (use-package popper
-    :bind (("s-p"   . popper-toggle)
+    :bind (("s-~"   . popper-toggle)
 	   ("s-`"   . popper-cycle)
 	   ("C-M-`" . popper-toggle-type))
     :init
