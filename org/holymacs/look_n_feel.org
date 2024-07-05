@@ -21,6 +21,24 @@
     (ibuffer-mode . all-the-icons-ibuffer-mode))
 #+end_src
 
+* Dashboard
+
+#+begin_src elisp
+  (use-package dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    :custom
+    (dashboard-week-agenda t)
+    (dashboard-icon-type 'all-the-icons)
+    (dashboard-set-file-icons t)
+    (dashboard-set-heading-icons t)
+    (dashboard-navigation-cycle t)
+    (dashboard-item-shortcuts '((recents   . "r")
+                                (bookmarks . "m")
+                                (projects  . "p")
+                                (agenda    . "a")
+                                (registers . "e"))))
+#+end_src
 * Beautify
 
 #+begin_src elisp

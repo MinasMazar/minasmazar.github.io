@@ -351,7 +351,6 @@ Here's I share my most used configuration files across systems by simply usiung 
   (load custom-file 'noerror)
 #+end_src
 ** Modules
-*** Compile
 
 Re-tangle all modules. I don't think a specific command is needed. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block.
 
@@ -359,8 +358,6 @@ Re-tangle all modules. I don't think a specific command is needed. When you want
   (mapcar #'org-babel-tangle-file
 	  (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp))
 #+end_src
-
-*** Autoload
 
 Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
 
@@ -380,6 +377,8 @@ Here's the list of modules I'm using. They consists in =.org= files tangling to 
 The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
 
 *** [[file:holymacs/jarvis.org][jarvis.el]]
+*** [[file:holymacs/ide.org][IDE]]
+
 * On hand documentation
 *** Other Commands, functions and variables
 

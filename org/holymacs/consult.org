@@ -26,3 +26,11 @@ As mentioned in the [[file:~/minasmazar.github.io/org/holymacs.org::*Specs][*Hol
      ("s-f" . consult-line)
      ("s-t" . consult-grep)))
 #+end_src
+
+#+begin_src elisp
+  (use-package marginalia
+    :bind (:map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src

@@ -64,6 +64,16 @@ Example usage
               (message "I sent: %S" (assoc-default 'args data)))))
 #+end_example
 
+* COMMENT Emacs Async
+
+#+begin_src elisp
+  (use-package emacs-async)
+#+end_src
+
+#+begin_example elisp
+  (async-start (lambda () (sleep-for 3)) (lambda (ff) (message "done")))
+#+end_example
+
 * Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
 
 Add a capture template to store notes in =inbox=
