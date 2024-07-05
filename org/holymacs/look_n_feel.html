@@ -26,6 +26,7 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org1a60148">Icons</a></li>
+<li><a href="#orgf4baf1e">Dashboard</a></li>
 <li><a href="#org27885d0">Beautify</a></li>
 <li><a href="#org92319e7">Highlight line</a></li>
 <li><a href="#orga90dd13">Themes</a></li>
@@ -46,6 +47,28 @@
 (<span style="color: #00c089; font-weight: bold;">use-package</span> all-the-icons-ibuffer
   <span style="color: #3fb83f; font-weight: bold;">:hook</span>
   (ibuffer-mode . all-the-icons-ibuffer-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf4baf1e" class="outline-2">
+<h2 id="orgf4baf1e">Dashboard</h2>
+<div class="outline-text-2" id="text-orgf4baf1e">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> dashboard
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (dashboard-setup-startup-hook)
+  <span style="color: #3fb83f; font-weight: bold;">:custom</span>
+  (dashboard-week-agenda t)
+  (dashboard-icon-type 'all-the-icons)
+  (dashboard-set-file-icons t)
+  (dashboard-set-heading-icons t)
+  (dashboard-navigation-cycle t)
+  (dashboard-item-shortcuts '((recents   . <span style="color: #af9fff;">"r"</span>)
+                              (bookmarks . <span style="color: #af9fff;">"m"</span>)
+                              (projects  . <span style="color: #af9fff;">"p"</span>)
+                              (agenda    . <span style="color: #af9fff;">"a"</span>)
+                              (registers . <span style="color: #af9fff;">"e"</span>))))
 </pre>
 </div>
 </div>

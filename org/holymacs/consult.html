@@ -52,6 +52,15 @@ As mentioned in the <a href="org/holymacs.html#orgf3323eb"><b>Holymacs Specs</b>
    (<span style="color: #af9fff;">"s-t"</span> . consult-grep)))
 </pre>
 </div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> marginalia
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> minibuffer-local-map
+         (<span style="color: #af9fff;">"M-A"</span> . marginalia-cycle))
+  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+  (marginalia-mode))
+</pre>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>

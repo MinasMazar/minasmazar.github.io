@@ -117,6 +117,7 @@ Add a capture template to store notes in <code>inbox</code>
 <div class="outline-text-3" id="text-org707b947">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> elfeed
+  <span style="color: #3fb83f; font-weight: bold;">:after</span> 'god-mode
   <span style="color: #3fb83f; font-weight: bold;">:bind</span>
   (<span style="color: #3fb83f; font-weight: bold;">:map</span> elfeed-search-mode-map (<span style="color: #af9fff;">"U"</span> . (<span style="color: #00c089; font-weight: bold;">lambda</span> () (<span style="color: #00c089; font-weight: bold;">interactive</span>) (run-at-time <span style="color: #af9fff;">"10min"</span> t #'elfeed-update))))
   <span style="color: #3fb83f; font-weight: bold;">:config</span>
@@ -177,7 +178,7 @@ Useful links:
 <div id="outline-container-org103fa85" class="outline-4">
 <h4 id="org103fa85">Configuration</h4>
 <div class="outline-text-4" id="text-org103fa85">
-<pre class="example" id="org54bca92">
+<pre class="example" id="org19bea94">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -209,7 +210,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="org6682fc9">
+<pre class="example" id="org7a0f5c6">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -237,7 +238,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org34bfb8a">
+<pre class="example" id="org6f66ef4">
 (setq mu4e-contexts
 	(list
 	 ;; Work account

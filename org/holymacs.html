@@ -259,10 +259,9 @@
 <li><a href="#org61adc6e">Shared configuration</a></li>
 <li><a href="#org4d73808">Modules</a>
 <ul>
-<li><a href="#orgfc0015e">Compile</a></li>
-<li><a href="#org66271ef">Autoload</a></li>
 <li><a href="#orgbfd9759">Blorg</a></li>
 <li><a href="#org3f97108">jarvis.el</a></li>
+<li><a href="#org4fe7d31">IDE</a></li>
 </ul>
 </li>
 </ul>
@@ -333,7 +332,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org46ace05">
+<pre class="example" id="orgdd26d98">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -665,17 +664,17 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 </div>
 </div>
 </li>
-<li><a id="org05732b0"></a>god-mode<br />
-<div class="outline-text-5" id="text-org05732b0">
+<li><a id="org707b115"></a>God mode<br />
+<div class="outline-text-5" id="text-org707b115">
 <div class="org-src-container">
 <pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> god-mode
-  <span style="color: #3fb83f; font-weight: bold;">:init</span>
-  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
-    <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(set-face-background 'mode-line-active "#00f5ff")</span>
-    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
   (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-disabled</span> ()
     (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'bar))
-  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
+    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
+
   (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
   (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
   (global-set-key (kbd <span style="color: #af9fff;">"s-n"</span>) #'god-local-mode)
@@ -688,11 +687,13 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
   (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"]"</span>) #'forward-paragraph)
   (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"{"</span>) #'backward-sexp)
   (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"}"</span>) #'forward-sexp)
-  (add-to-list 'god-exempt-major-modes 'compilation-mode)
-  (add-to-list 'god-exempt-major-modes 'org-capture-mode)
-  (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
-  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
-  (add-to-list 'god-exempt-major-modes 'elfeed-show-mode)
+  (mapcar (<span style="color: #00c089; font-weight: bold;">lambda</span> (exempted-major-mode)
+            (add-to-list 'god-exempt-major-modes exempted-major-mode))
+          '(compilation-mode
+            org-capture-mode
+            org-agenda-mode
+            elfeed-search-mode
+            elfeed-show-mode))
   (god-mode))
 </pre>
 </div>
@@ -734,10 +735,6 @@ Here's I share my most used configuration files across systems by simply usiung 
 <div id="outline-container-org4d73808" class="outline-3">
 <h3 id="org4d73808">Modules</h3>
 <div class="outline-text-3" id="text-org4d73808">
-</div>
-<div id="outline-container-orgfc0015e" class="outline-4">
-<h4 id="orgfc0015e">Compile</h4>
-<div class="outline-text-4" id="text-orgfc0015e">
 <p>
 Re-tangle all modules. I don't think a specific command is needed. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block.
 </p>
@@ -747,11 +744,7 @@ Re-tangle all modules. I don't think a specific command is needed. When you want
           (directory-files <span style="color: #af9fff;">"holymacs"</span> t <span style="color: #af9fff;">"\\.org$"</span> directory-files-no-dot-files-regexp))
 </pre>
 </div>
-</div>
-</div>
-<div id="outline-container-org66271ef" class="outline-4">
-<h4 id="org66271ef">Autoload</h4>
-<div class="outline-text-4" id="text-org66271ef">
+
 <p>
 Here we define a mechanism to easily extend your Emacs experience with some custom defined <i>modules</i>, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the <b>layers</b> in <b>Doom Emacs</b>), but I'm not creating a whole mechanism to handle this: just place an <code>.el</code> file in the <code>~/.emacs.d/modules/</code> directory, and it will be autoloaded.
 </p>
@@ -770,7 +763,6 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 Here's the list of modules I'm using. They consists in <code>.org</code> files tangling to specific <code>.el</code> file in the <b>modules</b> directory (<code>~/.emacs.d/modules/</code>).
 </p>
 </div>
-</div>
 <div id="outline-container-orgbfd9759" class="outline-4">
 <h4 id="orgbfd9759">Blorg</h4>
 <div class="outline-text-4" id="text-orgbfd9759">
@@ -781,6 +773,9 @@ The <b>Blorg</b> publishing functions described in <a href="https://github.com/M
 </div>
 <div id="outline-container-org3f97108" class="outline-4">
 <h4 id="org3f97108"><a href="holymacs/jarvis.html">jarvis.el</a></h4>
+</div>
+<div id="outline-container-org4fe7d31" class="outline-4">
+<h4 id="org4fe7d31"><a href="holymacs/ide.html">IDE</a></h4>
 </div>
 </div>
 </div>
@@ -803,6 +798,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>command-switch-alist</code></li>
 <li><code>completions-max-height</code></li>
 <li><code>describe-text-properties</code></li>
+<li><code>face-remap-add-relative</code> and <code>face-remap-remove-relative</code> to easily modify faces in current buffer</li>
 <li><code>find-name-dired</code></li>
 <li><code>image-crop</code></li>
 <li><code>imenu-generic-expression</code></li>
@@ -838,7 +834,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="orgcc1f0d9">
+<pre class="example" id="org7c97f77">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -865,7 +861,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="orge89e06c">
+<pre class="example" id="org9092f30">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -877,7 +873,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org639faef">
+<pre class="example" id="orgdcb904a">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -987,7 +983,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="org4018a6f">
+<pre class="example" id="org175cb7f">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -1004,7 +1000,7 @@ point.
 <div id="outline-container-orgcd812c7" class="outline-4">
 <h4 id="orgcd812c7">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-orgcd812c7">
-<pre class="example" id="org82d8f77">
+<pre class="example" id="orge90050c">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1047,7 +1043,7 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org772d959">
+<pre class="example" id="org96810fb">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
