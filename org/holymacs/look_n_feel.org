@@ -27,6 +27,10 @@
   (use-package dashboard
     :config
     (dashboard-setup-startup-hook)
+    :bind
+    (:map dashboard-mode-map
+  	("n" . #'widget-forward)
+  	("p" . #'widget-backward))
     :custom
     (dashboard-week-agenda t)
     (dashboard-icon-type 'all-the-icons)
