@@ -6,6 +6,14 @@
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
+* Jarvis
+
+#+begin_src elisp
+    (defun holymacs/jarvis-teste-rasate ()
+      (interactive)
+      (holymacs-with-private-data
+  	 (holymacs-async (format "mpv %s" holymacs/jarvis--teste-rasate-pathname))))
+#+end_src
 * Tabspaces
 
 #+begin_src elisp
@@ -47,6 +55,14 @@
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
+* Focus current window
+
+#+begin_src elisp
+  (use-package golden-ratio
+    :bind
+    (("M-o W" . #'golden-ratio-mode)))
+#+end_src
+
 * COMMENT HTTP Client
 
 #+begin_src elisp

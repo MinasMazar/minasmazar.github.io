@@ -372,6 +372,34 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 
 Here's the list of modules I'm using. They consists in =.org= files tangling to specific =.el= file in the *modules* directory (=~/.emacs.d/modules/=).
 
+* COMMENT Helpers
+#+begin_src elisp
+  (defun holymacs-with-private-data (&optional body)
+    (load "~/.emacs.d/private.el" 'noerror)
+    body)
+
+  (defun holymacs-async (cmd)
+    (holymacs-inspect cmd)
+    (save-window-excursion
+      (async-shell-command cmd "*holymacs-async*")))
+
+  (defun holymacs-async (cmd &body)
+    (let ((exec-str (format cmd body)))
+      (holymacs-inspect cmd)
+      (save-window-excursion
+        (async-shell-command cmd "*holymacs-async*")))
+
+  (defun holymacs-async-kill ()
+    (kill-buffer-ask "*holymacs-async*"))
+
+  (defun holymacs-inspect (obj)
+    (message (format "holymacs-inspect: %s" obj))
+    obj)
+#+end_src
+
+#+RESULTS:
+: holymacs-inspect
+
 *** Blorg
 
 The *Blorg* publishing functions described in [[https://github.com/MinasMazar/minasmazar.github.io/blob/master/README.org][README.org]] will tangle its code in the =blorg.el= module.
@@ -558,6 +586,24 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   (delete-region (point-min) (point-max)))
 #+end_src
 
+*** Faces and fonts
+
+If you'd like to have a smaller font on compialtion buffers
+
+#+begin_src elisp
+  (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
+#+end_src
+
+Useful function if you want to quick inspect the face under cursor
+
+#+begin_src elisp
+  (defun what-face (pos)
+    (interactive "d")
+    (let ((face (or (get-char-property pos 'read-face-name)
+                    (get-char-property pos 'face))))
+      (if face (message "Face: %s" face) (message "No face at %d" pos))))
+#+end_src
+
 *** Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]
@@ -574,9 +620,7 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   #+end_example
 * Credits
 
-  I would like to thanks:
-- [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
-- [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+I would like to thanks:
 - [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
 - [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
 - [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
