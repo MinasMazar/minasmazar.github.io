@@ -6,6 +6,6 @@
 Hello dudes, welcome to my cave 👋
 
 - [[file:about.org][about me]]
-- [[file:holymacs.org][holymacs]] ~ my Emacs configuration [[raw-relative:pages/holymacs.org][[raw org]​]]
+- [[file:emacs.org][emacs]]
 - [[file:dev.org][dev stuff]] 🤓
 - [[file:bookmarks.org][bookmarks]]
