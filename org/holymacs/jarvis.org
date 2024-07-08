@@ -9,10 +9,11 @@
 * Jarvis
 
 #+begin_src elisp
-    (defun holymacs/jarvis-teste-rasate ()
-      (interactive)
-      (holymacs-with-private-data
-  	 (holymacs-async (format "mpv %s" holymacs/jarvis--teste-rasate-pathname))))
+  (defun holymacs/jarvis-play-something! ()
+    (interactive)
+    (holymacs-with-private-data
+     (if (boundp 'holymacs/jarvis--play-something-pathname)
+         (holymacs-async (format "mpv %s" holymacs/jarvis--play-something-pathname) "*jarvis*"))))
 #+end_src
 * Tabspaces
 

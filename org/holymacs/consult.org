@@ -20,10 +20,9 @@ As mentioned in the [[file:~/minasmazar.github.io/org/holymacs.org::*Specs][*Hol
   (use-package consult
     :bind
     (("s-j" . consult-buffer)
-     ("s-i" . consult-outline)
+     ("s-i" . consult-imenu-multi)
      ("s-l" . consult-history)
-     ("s-I" . consult-imenu-multi)
-     ("s-f" . consult-line)
+     ("s-f" . consult-line-multi)
      ("s-t" . consult-grep)))
 #+end_src
 

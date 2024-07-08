@@ -351,8 +351,9 @@ Here's I share my most used configuration files across systems by simply usiung 
   (load custom-file 'noerror)
 #+end_src
 ** Modules
+*** Compilation
 
-Re-tangle all modules. I don't think a specific command is needed. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block.
+Re-tangle all modules. I don't think a specific command is needed, unless in the future I want to achieve something more complex. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block (i.e. ~C-c~ if you're reading this in org-mode (experimenting with *eww* and auto-activate =org-mode=.
 
 #+begin_src elisp :tangle no
   (mapcar #'org-babel-tangle-file
@@ -372,25 +373,35 @@ Here we define a mechanism to easily extend your Emacs experience with some cust
 
 Here's the list of modules I'm using. They consists in =.org= files tangling to specific =.el= file in the *modules* directory (=~/.emacs.d/modules/=).
 
-* COMMENT Helpers
+*** Helpers (🔬experimental)
 #+begin_src elisp
-  (defun holymacs-with-private-data (&optional body)
-    (load "~/.emacs.d/private.el" 'noerror)
-    body)
+  (defvar holymacs--private-data-pathname
+    "~/Dropbox/emacs/private.el"
+    "Holymacs store here some data; its purpose is to keep some data separate and almost secure.")
 
-  (defun holymacs-async (cmd)
+  (defmacro holymacs-with-private-data (&rest body)
+    `(progn
+       (load holymacs--private-data-pathname)
+       ,@body))
+
+  (defun holymacs-kill (name)
+    (interactive "Bbuffer:")
+    (when (get-buffer name)
+      (progn
+        (holymacs-inspect (format "killing %s" name))
+        (kill-buffer name))))
+
+  (defun holymacs-async (cmd &optional name)
+    (interactive (list (read-from-minibuffer "Cmd: ")
+    		     (read-from-minibuffer "buffer: " "*holymacs-aync*")))
+    (holymacs-inspect cmd)
+    (save-window-excursion
+      (async-shell-command cmd name)))
+
+  (defun holymacs-async (cmd &body)
     (holymacs-inspect cmd)
     (save-window-excursion
       (async-shell-command cmd "*holymacs-async*")))
-
-  (defun holymacs-async (cmd &body)
-    (let ((exec-str (format cmd body)))
-      (holymacs-inspect cmd)
-      (save-window-excursion
-        (async-shell-command cmd "*holymacs-async*")))
-
-  (defun holymacs-async-kill ()
-    (kill-buffer-ask "*holymacs-async*"))
 
   (defun holymacs-inspect (obj)
     (message (format "holymacs-inspect: %s" obj))
@@ -441,6 +452,13 @@ Just press ~C-h o~ to get help on those symbols.
 ; => "some-symbol"
 (intern "some-symbol")
 ; => some-symbol
+#+end_src
+
+*** Macros
+
+#+begin_src elisp
+  (defmacro ++ (x)
+    (list 'setq x (list '1+ x)))
 #+end_src
 
 *** Vectors
