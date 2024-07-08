@@ -51,9 +51,10 @@
 * Terminal emulator
 ** Vterm
 
+Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
+
 #+begin_src elisp
   (use-package vterm
-    :after 'god-mode
     :config
     (add-to-list 'god-exempt-major-modes 'vterm-mode)
 
@@ -61,13 +62,8 @@
       (interactive "sCommand: ")
       (let ((buffer-name (format "*vterm <%s>*" command)))
         (with-current-buffer (vterm buffer-name)
-  	(vterm-send-string (format "%s && exit\n" command))))))
-#+end_src
-
-Some useful functions integrating =vterm= and *Tmux*.
-
-#+begin_src elisp
-  (defun holymacs-tmux/open ()
-    (interactive)
-    (holymacs-vterm-exec "tmux attach || tmux"))
+  	(vterm-send-string (format "%s && exit\n" command)))))
+    (defun holymacs-tmux/open ()
+      (interactive)
+      (holymacs-vterm-exec "tmux attach || tmux")))
 #+end_src
