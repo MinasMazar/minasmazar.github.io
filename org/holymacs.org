@@ -351,27 +351,38 @@ Here's I share my most used configuration files across systems by simply usiung 
   (load custom-file 'noerror)
 #+end_src
 ** Modules
-*** Compilation
+*** Compilation and loading
 
 Re-tangle all modules. I don't think a specific command is needed, unless in the future I want to achieve something more complex. When you want to sync the literate files to the actual Emacs configuration, open this org file and eval the next code block (i.e. ~C-c~ if you're reading this in org-mode (experimenting with *eww* and auto-activate =org-mode=.
 
-#+begin_src elisp :tangle no
-  (mapcar #'org-babel-tangle-file
-	  (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp))
+#+begin_src elisp
+  (defun holymacs-compile ()
+    "Babel-compile all '*.org' literate configuration files in './holymacs' to generate emacs modules files. Load them with 'holymacs-modules-load'"
+    (interactive)
+    (message "holymacs: compilation..")
+    (mapcar #'org-babel-tangle-file
+  	  (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp)))
 #+end_src
 
 Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
 
-#+begin_src emacs-lisp
-  (let* ((modules-dir (concat user-emacs-directory "modules/"))
-	 (modules (if (file-exists-p modules-dir)
-		      (directory-files modules-dir))))
-    (if modules (mapcar (lambda (module)
-			  (load (concat modules-dir module) 'noerror))
-			modules)))
+#+begin_src elisp
+  (defun holymacs-modules-load ()
+    "Load all modules '*.el' files in './.emacs.d/modules/' babel-generated with 'holymacs-compile'"
+    (interactive)
+    (let* ((modules-dir (concat user-emacs-directory "modules/"))
+  	 (modules (if (file-exists-p modules-dir)
+  		      (directory-files modules-dir))))
+      (if modules (mapcar (lambda (module)
+  			  (load (concat modules-dir module) 'noerror))
+  			modules))))
 #+end_src
 
-Here's the list of modules I'm using. They consists in =.org= files tangling to specific =.el= file in the *modules* directory (=~/.emacs.d/modules/=).
+Load modules!
+
+#+begin_src elisp
+  (holymacs-modules-load)
+#+end_src
 
 *** Helpers (🔬experimental)
 #+begin_src elisp
