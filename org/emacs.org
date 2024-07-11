@@ -12,6 +12,7 @@ OPTIONS: toc:t
 Here's some resources:
 - [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
 - [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+- [[file:holymacs.org][Holymacs]] ([[raw-relative:][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
 
 In the years I wrote several Emacs configuration files and also some /distros/, but right now I'm using my own backed emacs named [[file:holymacs.org][=holymacs=]].
 
