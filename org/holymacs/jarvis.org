@@ -11,21 +11,7 @@
 Preview the HTML exported buffer you see when exporting an org file in a preview using some built-in Emacs function.
 
 #+begin_src elisp
-  ;; (defadvice org-html-export-as-html (after preview-html-buffer)
-  ;;   "Open the exported HTML buffer in a preview using =browse-url-of-buffer="
-  ;;   (message "ADVICE")
-  ;;   (browse-url-of-buffer (current-buffer)))
-
   (advice-add #'org-html-export-as-html :filter-return #'browse-url-of-buffer)
-#+end_src
-
-Automatically open raw urls of =.org= extension in =org-mode=.
-
-#+begin_src elisp
-  (defun holymacs-eww-raw-advice-after ()
-    (if (string-match "\.org$" (eww-current-url))
-        (org-mode)))
-  (advice-add #'eww-display-raw after #'holymacs-eww-raw-advice-after)
 #+end_src
 
 There's too silence here.. 😱 let's just play something! 🤘

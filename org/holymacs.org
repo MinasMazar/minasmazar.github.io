@@ -455,6 +455,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =pp-eval-expression=
 - =proced=
 - =shr-inhibit-images=
+- =string-match=
 
 *** String and Symbols
 
