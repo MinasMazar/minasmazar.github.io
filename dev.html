@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MinasMazar's blog ~ dev stuff</title>
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -203,23 +203,296 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org1676473">Icons</a></li>
+<li><a href="#org2b4af51">Docker</a>
+<ul>
+<li><a href="#org7d97b85">Disable/enable autostart of a docker container.</a></li>
+<li><a href="#org67297dc">Playing Sound in Docker Containers (here the source article)</a></li>
+<li><a href="#org43a93cb">Rename a docker image</a></li>
+<li><a href="#orgd88b3ac">Rename a docker container</a></li>
+<li><a href="#org241b75e">Installing Docker on Raspberry PI</a></li>
+<li><a href="#org2a5b614">Usefull links for troubleshooting</a></li>
+</ul>
+</li>
+<li><a href="#orgd04b2b4">Icons</a></li>
+<li><a href="#org9e6999a">Git</a></li>
+<li><a href="#org13e8c8a">Pulseaudio</a></li>
+<li><a href="#orgda7e43a">Crontab</a></li>
+<li><a href="#org069856b">Elixir</a>
+<ul>
+<li><a href="#org51a9660">Phoenix Livebooks</a></li>
+</ul>
+</li>
+<li><a href="#org56dd366">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
+<li><a href="#orgca0173b">Add a service to systemd</a></li>
+<li><a href="#org417b95f">GPG</a>
+<ul>
+<li><a href="#orgfa9fe24">Keep GnuPG credentials cached for entire user session</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
+<div id="outline-container-org2b4af51" class="outline-2">
+<h2 id="org2b4af51">Docker</h2>
+<div class="outline-text-2" id="text-org2b4af51">
+</div>
+<div id="outline-container-org7d97b85" class="outline-3">
+<h3 id="org7d97b85">Disable/enable autostart of a docker container.</h3>
+<div class="outline-text-3" id="text-org7d97b85">
+<div class="org-src-container">
+<pre class="src src-sh">docker update --restart [no|unless-stopped] &lt;docker-container&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org67297dc" class="outline-3">
+<h3 id="org67297dc">Playing Sound in Docker Containers (<a href="https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35">here the source article</a>)</h3>
+<div class="outline-text-3" id="text-org67297dc">
+<div class="org-src-container">
+<pre class="src src-sh">docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org43a93cb" class="outline-3">
+<h3 id="org43a93cb">Rename a docker image</h3>
+<div class="outline-text-3" id="text-org43a93cb">
+<div class="org-src-container">
+<pre class="src src-sh">docker tag OldName:tag NewName:tag
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd88b3ac" class="outline-3">
+<h3 id="orgd88b3ac">Rename a docker container</h3>
+<div class="outline-text-3" id="text-orgd88b3ac">
+<div class="org-src-container">
+<pre class="src src-sh">sudo docker rename oldname_app newname_app
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org241b75e" class="outline-3">
+<h3 id="org241b75e">Installing Docker on Raspberry PI</h3>
+<div class="outline-text-3" id="text-org241b75e">
+<p>
+Follow <a href="https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository">the instructions in the Docker documentation</a>. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
+</p>
 
-<div id="outline-container-org1676473" class="outline-2">
-<h2 id="org1676473">Icons</h2>
-<div class="outline-text-2" id="text-org1676473">
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #b7a07f; font-style: italic;">#</span><span style="color: #b7a07f; font-style: italic;">!/bin/</span><span style="color: #00c089; font-weight: bold;">bash</span>
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Uninstall unofficial distributions of Docker packages in APT</span>
+
+sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Remove images, containers, volumes, or custom configuration files </span>
+
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Add Docker's official GPG key:</span>
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Set up Docker's APT repository:</span>
+<span style="color: #3fb83f; font-weight: bold;">echo</span> <span style="color: #af9fff;">\</span>
+  <span style="color: #af9fff;">"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \</span>
+<span style="color: #af9fff;">  $(. /etc/os-release &amp;&amp; echo "$VERSION_CODENAME") stable"</span> | <span style="color: #af9fff;">\</span>
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt-get update
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Install Docker packages</span>
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+<span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">Verify that the installation is successful by running the hello-world image:</span>
+sudo docker run hello-world
+</pre>
+</div>
+
+<p>
+Remember to keep the Build and App images in sync (see <a href="https://github.com/teslamate-org/teslamate/issues/3691#issuecomment-1966074893">here</a>)
+</p>
+
+<p>
+When building an image, you can see an error like <i>cannot find the image for the platform&#x2026;</i>. Consider to add <code>--platform arm64</code> flag to the <code>docker build</code> command. <a href="https://docs.docker.com/reference/cli/docker/buildx/build/#platform">Here's the official Docker documentation</a> for this flag. Also keep an eye <a href="https://github.com/containerd/containerd/blob/v1.4.3/platforms/platforms.go#L63">to this file</a> to get a list of platforms. Remember you can detect the platform of the current machine via <code>uname -a</code>.
+</p>
+
+<p>
+If you're using Docker to run Elixir, you can face an error like this during the dependencies compilation:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">could not compile dependency :ssl_verify_fun, <span style="color: #af9fff;">"mix compile"</span> failed. Errors may have been logged above. You can recompile this dependency with <span style="color: #af9fff;">"mix deps.compile ssl_verify_fun"</span>, update it with <span style="color: #af9fff;">"mix deps.update ssl_verify_fun"</span> or clean it with <span style="color: #af9fff;">"mix deps.clean ssl_verify_fun"</span>
+</pre>
+</div>
+
+<p>
+In this case, install the <code>erlang-public-key</code> package should solve the issue.
+</p>
+
+
+<p>
+The Raspbian issue: another error that can occur while building a docker image on Raspbian that uses <code>apt-get</code> commands is
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ERROR: failed to solve: process <span style="color: #af9fff;">"/bin/sh -c apt-get update -y &amp;&amp;   apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates &amp;&amp;   apt-get clean &amp;&amp; rm -f /var/lib/apt/lists/*_*"</span> did not complete successfully: exit code: 159
+</pre>
+</div>
+
+<p>
+It seems there's a problem with <a href="https://github.com/moby/moby/issues/40734">libseccomp</a>; according to <a href="https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm">this SO thread</a> the solution is to upgrade libseccomp manually <b><b>on the host system</b></b>: download <a href="https://packages.debian.org/sid/libseccomp2">here</a> and <code>sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org2a5b614" class="outline-3">
+<h3 id="org2a5b614">Usefull links for troubleshooting</h3>
+<div class="outline-text-3" id="text-org2a5b614">
+<ul class="org-ul">
+<li><a href="https://github.com/teslamate-org/teslamate/issues/3691">https://github.com/teslamate-org/teslamate/issues/3691</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd04b2b4" class="outline-2">
+<h2 id="orgd04b2b4">Icons</h2>
+<div class="outline-text-2" id="text-orgd04b2b4">
 <ul class="org-ul">
 <li><a href="https://remixicon.com/">https://remixicon.com/</a></li>
 </ul>
 </div>
 </div>
+<div id="outline-container-org9e6999a" class="outline-2">
+<h2 id="org9e6999a">Git</h2>
+<div class="outline-text-2" id="text-org9e6999a">
+<p>
+How do I change the author and committer name/email for multiple commits?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git rebase -r a5bf6c2 --exec <span style="color: #af9fff;">'git commit --amend --no-edit --reset-author'</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org13e8c8a" class="outline-2">
+<h2 id="org13e8c8a">Pulseaudio</h2>
+<div class="outline-text-2" id="text-org13e8c8a">
+<p>
+You can refer this interesting <a href="https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback">SO thread</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacmd help list-sinks
+pacmd list-sink-inputs
+pacmd move-sink-input 5 1
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgda7e43a" class="outline-2">
+<h2 id="orgda7e43a"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
+<div class="outline-text-2" id="text-orgda7e43a">
+<p>
+If you need to write a crontab entry you can use <a href="https://crontab.guru/">https://crontab.guru/</a>
+</p>
+</div>
+</div>
+<div id="outline-container-org069856b" class="outline-2">
+<h2 id="org069856b"><a href="https://elixir-lang.org/">Elixir</a></h2>
+<div class="outline-text-2" id="text-org069856b">
+<ul class="org-ul">
+<li><a href="https://elixir-toolbox.dev/">https://elixir-toolbox.dev/</a></li>
+</ul>
+
+<p>
+Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
+</pre>
+</div>
+</div>
+<div id="outline-container-org51a9660" class="outline-3">
+<h3 id="org51a9660">Phoenix Livebooks</h3>
+<div class="outline-text-3" id="text-org51a9660">
+<ul class="org-ul">
+<li><a href="https://notes.club/">Discover Livebook notebooks (Elixir)</a></li>
+<li><a href="https://github.com/aslakjohansen/livebook-demos">https://github.com/aslakjohansen/livebook-demos</a></li>
+<li><a href="https://github.com/Arp-G/async-elixir">https://github.com/Arp-G/async-elixir</a></li>
+<li><a href="https://github.com/whatyouhide/guide_async_processing_in_elixir">https://github.com/whatyouhide/guide_async_processing_in_elixir</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org56dd366" class="outline-2">
+<h2 id="org56dd366"><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">How to use a Raspberry Pi in <i>kiosk mode</i></a></h2>
+</div>
+<div id="outline-container-orgca0173b" class="outline-2">
+<h2 id="orgca0173b">Add a service to systemd</h2>
+<div class="outline-text-2" id="text-orgca0173b">
+<p>
+More info <a href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all">here</a>. Here's an article on how to create and manage <a href="https://www.baeldung.com/linux/systemd-create-user-services">user’s services With systemd</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-toml"><span style="color: #b7a07f; font-style: italic;"># </span><span style="color: #b7a07f; font-style: italic;">/lib/systemd/system/clock.service</span>
+  [<span style="color: #7fcfdf;">Unit</span>]
+  <span style="color: #78afff;">Description</span>=Start Clock
+
+  [<span style="color: #7fcfdf;">Service</span>]
+  <span style="color: #78afff;">Environment</span>=DISPLAY=:0
+  <span style="color: #78afff;">Environment</span>=XAUTHORITY=/home/pi/.Xauthority
+  <span style="color: #78afff;">ExecStart</span>=/usr/bin/python3 /home/pi/clock.py
+  <span style="color: #78afff;">Restart</span>=always
+  <span style="color: #78afff;">RestartSec</span>=10s
+  <span style="color: #78afff;">KillMode</span>=process
+  <span style="color: #78afff;">TimeoutSec</span>=infinity
+
+  [<span style="color: #7fcfdf;">Install</span>]
+  <span style="color: #78afff;">WantedBy</span>=graphical.target
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org417b95f" class="outline-2">
+<h2 id="org417b95f">GPG</h2>
+<div class="outline-text-2" id="text-org417b95f">
+</div>
+<div id="outline-container-orgfa9fe24" class="outline-3">
+<h3 id="orgfa9fe24">Keep GnuPG credentials cached for entire user session</h3>
+<div class="outline-text-3" id="text-orgfa9fe24">
+<p>
+For GnuPG 2.1 and below edit user configuration file at <code>~/.gnupg/gpg-agent.conf</code>. In the example below the TTL is set to 3h.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">default-cache-ttl 10800
+max-cache-ttl 10800
+</pre>
+</div>
+
+<p>
+Then restart the agent
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpgconf --kill gpg-agent
+gpg-agent --daemon --use-standard-socket
+</pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-01-31 Wed 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

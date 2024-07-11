@@ -38,24 +38,32 @@ Let's install it!
 </p>
 
 <p>
-As mentioned in the <a href="holymacs.html#org0409cb1"><b>Holymacs Specs</b></a> we're going to also add some super bindings.
+As mentioned in the <a href="holymacs.html#orgf3323eb"><b>Holymacs Specs</b></a> we're going to also add some super bindings.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">consult</span>
-  <span style="color: #d0b9f0; font-weight: bold;">:bind</span>
-  ((<span style="color: #50cf89;">"s-j"</span> . consult-buffer)
-   (<span style="color: #50cf89;">"s-i"</span> . consult-imenu-multi)
-   (<span style="color: #50cf89;">"s-l"</span> . consult-history)
-   (<span style="color: #50cf89;">"s-I"</span> . consult-outline)
-   (<span style="color: #50cf89;">"s-f"</span> . consult-line)
-   (<span style="color: #50cf89;">"s-t"</span> . consult-grep)))
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> consult
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  ((<span style="color: #af9fff;">"s-j"</span> . consult-buffer)
+   (<span style="color: #af9fff;">"s-i"</span> . consult-imenu-multi)
+   (<span style="color: #af9fff;">"s-l"</span> . consult-history)
+   (<span style="color: #af9fff;">"s-f"</span> . consult-line-multi)
+   (<span style="color: #af9fff;">"s-t"</span> . consult-grep)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> marginalia
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span> (<span style="color: #3fb83f; font-weight: bold;">:map</span> minibuffer-local-map
+         (<span style="color: #af9fff;">"M-A"</span> . marginalia-cycle))
+  <span style="color: #3fb83f; font-weight: bold;">:init</span>
+  (marginalia-mode))
 </pre>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

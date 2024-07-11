@@ -1,0 +1,174 @@
+#+TITLE: MinasMazar's blog ~ dev stuff
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-01-31 Wed>
+#+STARTUP: overview
+
+* Docker
+** Disable/enable autostart of a docker container.
+
+#+begin_src sh
+docker update --restart [no|unless-stopped] <docker-container>
+#+end_src
+
+** Playing Sound in Docker Containers ([[https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35][here the source article]])
+
+#+begin_src sh
+  docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
+#+end_src
+
+** Rename a docker image
+
+#+begin_src sh
+  docker tag OldName:tag NewName:tag
+#+end_src
+
+** Rename a docker container
+
+#+begin_src sh
+  sudo docker rename oldname_app newname_app
+#+end_src
+
+** Installing Docker on Raspberry PI
+
+Follow [[https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository][the instructions in the Docker documentation]]. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
+
+#+begin_src sh
+  #!/bin/bash
+
+  # Uninstall unofficial distributions of Docker packages in APT
+
+  sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+  # Remove images, containers, volumes, or custom configuration files 
+
+  sudo rm -rf /var/lib/docker
+  sudo rm -rf /var/lib/containerd
+
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  # Set up Docker's APT repository:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  # Install Docker packages
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # Verify that the installation is successful by running the hello-world image:
+  sudo docker run hello-world
+#+end_src
+
+Remember to keep the Build and App images in sync (see [[https://github.com/teslamate-org/teslamate/issues/3691#issuecomment-1966074893][here]])
+
+When building an image, you can see an error like /cannot find the image for the platform.../. Consider to add =--platform arm64= flag to the =docker build= command. [[https://docs.docker.com/reference/cli/docker/buildx/build/#platform][Here's the official Docker documentation]] for this flag. Also keep an eye [[https://github.com/containerd/containerd/blob/v1.4.3/platforms/platforms.go#L63][to this file]] to get a list of platforms. Remember you can detect the platform of the current machine via =uname -a=.
+
+If you're using Docker to run Elixir, you can face an error like this during the dependencies compilation:
+
+#+begin_src sh
+could not compile dependency :ssl_verify_fun, "mix compile" failed. Errors may have been logged above. You can recompile this dependency with "mix deps.compile ssl_verify_fun", update it with "mix deps.update ssl_verify_fun" or clean it with "mix deps.clean ssl_verify_fun"
+#+end_src
+
+In this case, install the =erlang-public-key= package should solve the issue.
+
+
+The Raspbian issue: another error that can occur while building a docker image on Raspbian that uses =apt-get= commands is
+
+#+begin_src sh
+  ERROR: failed to solve: process "/bin/sh -c apt-get update -y &&   apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates &&   apt-get clean && rm -f /var/lib/apt/lists/*_*" did not complete successfully: exit code: 159
+#+end_src
+
+It seems there's a problem with [[https://github.com/moby/moby/issues/40734][libseccomp]]; according to [[https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm][this SO thread]] the solution is to upgrade libseccomp manually **on the host system**: download [[https://packages.debian.org/sid/libseccomp2][here]] and =sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb=.
+
+** Usefull links for troubleshooting
+
+- https://github.com/teslamate-org/teslamate/issues/3691
+
+* Icons
+
+- https://remixicon.com/
+
+* Git
+
+How do I change the author and committer name/email for multiple commits?
+
+#+begin_src sh
+  git rebase -r a5bf6c2 --exec 'git commit --amend --no-edit --reset-author'
+#+end_src
+
+* Pulseaudio
+
+You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
+
+#+begin_src sh
+  pacmd help list-sinks
+  pacmd list-sink-inputs
+  pacmd move-sink-input 5 1
+#+end_src
+
+* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
+
+If you need to write a crontab entry you can use https://crontab.guru/
+
+* [[https://elixir-lang.org/][Elixir]]
+
+- https://elixir-toolbox.dev/
+
+Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+
+#+begin_src sh
+  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+#+end_src
+** Phoenix Livebooks
+
+- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
+- https://github.com/aslakjohansen/livebook-demos
+- https://github.com/Arp-G/async-elixir
+- https://github.com/whatyouhide/guide_async_processing_in_elixir
+
+* [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
+* Add a service to systemd
+
+More info [[https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all][here]]. Here's an article on how to create and manage [[https://www.baeldung.com/linux/systemd-create-user-services][user’s services With systemd]].
+
+#+begin_src toml
+# /lib/systemd/system/clock.service
+  [Unit]
+  Description=Start Clock
+
+  [Service]
+  Environment=DISPLAY=:0
+  Environment=XAUTHORITY=/home/pi/.Xauthority
+  ExecStart=/usr/bin/python3 /home/pi/clock.py
+  Restart=always
+  RestartSec=10s
+  KillMode=process
+  TimeoutSec=infinity
+
+  [Install]
+  WantedBy=graphical.target
+#+end_src
+
+* GPG
+** Keep GnuPG credentials cached for entire user session
+
+For GnuPG 2.1 and below edit user configuration file at =~/.gnupg/gpg-agent.conf=. In the example below the TTL is set to 3h.
+
+#+begin_src sh :tangle ~/.gnupg/gpg-agent.conf
+default-cache-ttl 10800
+max-cache-ttl 10800
+#+end_src
+
+Then restart the agent
+
+#+begin_src sh
+  gpgconf --kill gpg-agent
+  gpg-agent --daemon --use-standard-socket
+#+end_src

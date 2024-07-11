@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ Look 'n feel</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../holymacs.html"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ Look 'n feel</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org1a60148">Icons</a></li>
+<li><a href="#orgf4baf1e">Dashboard</a></li>
+<li><a href="#org27885d0">Beautify</a></li>
+<li><a href="#org92319e7">Highlight line</a></li>
+<li><a href="#orga90dd13">Themes</a></li>
+<li><a href="#org3731f30">Modeline</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org1a60148" class="outline-2">
+<h2 id="org1a60148">Icons</h2>
+<div class="outline-text-2" id="text-org1a60148">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> all-the-icons)
+(<span style="color: #00c089; font-weight: bold;">use-package</span> all-the-icons-gnus
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (all-the-icons-gnus-setup))
+(<span style="color: #00c089; font-weight: bold;">use-package</span> all-the-icons-dired
+  <span style="color: #3fb83f; font-weight: bold;">:hook</span>
+  (dired-mode . all-the-icons-dired-mode))
+(<span style="color: #00c089; font-weight: bold;">use-package</span> all-the-icons-ibuffer
+  <span style="color: #3fb83f; font-weight: bold;">:hook</span>
+  (ibuffer-mode . all-the-icons-ibuffer-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf4baf1e" class="outline-2">
+<h2 id="orgf4baf1e">Dashboard</h2>
+<div class="outline-text-2" id="text-orgf4baf1e">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> dashboard
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (dashboard-setup-startup-hook)
+  <span style="color: #3fb83f; font-weight: bold;">:bind</span>
+  (<span style="color: #3fb83f; font-weight: bold;">:map</span> dashboard-mode-map
+        (<span style="color: #af9fff;">"n"</span> . #'widget-forward)
+        (<span style="color: #af9fff;">"p"</span> . #'widget-backward))
+  <span style="color: #3fb83f; font-weight: bold;">:custom</span>
+  (dashboard-week-agenda t)
+  (dashboard-icon-type 'all-the-icons)
+  (dashboard-set-file-icons t)
+  (dashboard-set-heading-icons t)
+  (dashboard-navigation-cycle t)
+  (dashboard-items '((recents   . 5)
+                     (bookmarks . 5)
+                     (projects  . 5)
+                     (agenda    . 5)
+                     (registers . 5)))
+  (dashboard-item-shortcuts '((recents   . <span style="color: #af9fff;">"r"</span>)
+                              (bookmarks . <span style="color: #af9fff;">"m"</span>)
+                              (projects  . <span style="color: #af9fff;">"p"</span>)
+                              (agenda    . <span style="color: #af9fff;">"a"</span>)
+                              (registers . <span style="color: #af9fff;">"e"</span>))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org27885d0" class="outline-2">
+<h2 id="org27885d0">Beautify</h2>
+<div class="outline-text-2" id="text-org27885d0">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> org-modern
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (global-org-modern-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org92319e7" class="outline-2">
+<h2 id="org92319e7">Highlight line</h2>
+<div class="outline-text-2" id="text-org92319e7">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> beacon
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (beacon-mode 1))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga90dd13" class="outline-2">
+<h2 id="orga90dd13">Themes</h2>
+<div class="outline-text-2" id="text-orga90dd13">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> ef-themes
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">get-season</span> (month)
+    (<span style="color: #00c089; font-weight: bold;">cond</span>
+     ((<span style="color: #00c089; font-weight: bold;">and</span> (&gt;= month 3) (&lt; month 6)) 'spring)
+     ((<span style="color: #00c089; font-weight: bold;">and</span> (&gt;= month 6) (&lt; month 9)) 'summer)
+     ((<span style="color: #00c089; font-weight: bold;">and</span> (&gt;= month 10) (&lt; month 12)) 'autumn)
+     ((<span style="color: #00c089; font-weight: bold;">or</span> (&gt;= month 12) (&lt; month 3) 'winter))))
+
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">set-season-theme</span> ()
+    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+    (<span style="color: #00c089; font-weight: bold;">let*</span> ((month (car (calendar-current-date)))
+           (season (get-season month))
+           (theme-name (format <span style="color: #af9fff;">"ef-%s"</span> season)))
+      (load-theme (intern theme-name)))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3731f30" class="outline-2">
+<h2 id="org3731f30">Modeline</h2>
+<div class="outline-text-2" id="text-org3731f30">
+<p>
+Install the <code>doom-modeline</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> doom-modeline
+  <span style="color: #3fb83f; font-weight: bold;">:hook</span> (after-init . doom-modeline-mode))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-06-20 Thu 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

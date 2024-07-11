@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MinasMazar's blog</title>
+<title>MinasMazar's blog ~ Emacs</title>
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -198,17 +198,110 @@
  |
  <a accesskey="H" href="/"> HOME </a>
 </div><div id="content" class="content">
-<h1 class="title">MinasMazar's blog</h1>
+<h1 class="title">MinasMazar's blog ~ Emacs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org7c08ba6">Minemacs</a></li>
+</ul>
+</div>
+</div>
 <p>
-Hello dudes, welcome to my cave 👋
+OPTIONS: toc:t
 </p>
 
+<p>
+⛪ I'm a fervent Emacs evangelist!
+</p>
+
+<p>
+Here's some resources:
+</p>
 <ul class="org-ul">
-<li><a href="about.html">about me</a></li>
-<li><a href="emacs.html">emacs</a></li>
-<li><a href="dev.html">dev stuff</a> 🤓</li>
-<li><a href="bookmarks.html">bookmarks</a></li>
+<li><a href="https://www.gnu.org/software/emacs/">The Emacs editor</a> and his <b>guru</b> <a href="https://stallman.org/">Richard Stallman</a>.</li>
+<li><a href="https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf">The Elisp documentation</a></li>
 </ul>
+
+<p>
+In the years I wrote several Emacs configuration files and also some <i>distros</i>, but right now I'm using my own backed emacs named <a href="holymacs.html"><code>holymacs</code></a>.
+</p>
+<div id="outline-container-org7c08ba6" class="outline-2">
+<h2 id="org7c08ba6">Minemacs</h2>
+<div class="outline-text-2" id="text-org7c08ba6">
+<p>
+This is a real minimal Emacs configuration, useful if when I'm dealing with a low-resources machine and I just want to stick wit h the more vanilla possible configuration.
+</p>
+
+<p>
+If you want to try it you can open your Emacs, ~M-x eww "<a href="https://minasmazar.github.io/emacs.org">https://minasmazar.github.io/emacs.org</a>".
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp"><span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">Package management</span>
+<span style="color: #b7a07f; font-style: italic;">;;</span>
+(add-to-list 'load-path <span style="color: #af9fff;">"~/.emacs.d/vendor/"</span>) <span style="color: #b7a07f; font-style: italic;">; </span><span style="color: #b7a07f; font-style: italic;">that's your sandbox</span>
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">package</span>)
+
+(<span style="color: #00c089; font-weight: bold;">setq</span> package-archives '((<span style="color: #af9fff;">"melpa"</span> . <span style="color: #af9fff;">"https://melpa.org/packages/"</span>)
+                         (<span style="color: #af9fff;">"elpa"</span> . <span style="color: #af9fff;">"https://elpa.gnu.org/packages/"</span>)
+                         (<span style="color: #af9fff;">"nongnu"</span> . <span style="color: #af9fff;">"https://elpa.nongnu.org/nongnu/"</span>)))
+
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package</span>)
+(<span style="color: #00c089; font-weight: bold;">require</span> '<span style="color: #37aff6;">use-package-ensure</span>)
+(<span style="color: #00c089; font-weight: bold;">setq</span> use-package-always-ensure t
+      package-enable-at-startup t)
+(package-initialize)
+
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">Override a bunch of configurationn</span>
+<span style="color: #b7a07f; font-style: italic;">;;</span>
+(<span style="color: #00c089; font-weight: bold;">setq</span> completion-styles '(flex)
+      enable-recursive-minibuffers t)
+
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">Install and configure packages</span>
+<span style="color: #b7a07f; font-style: italic;">;;</span>
+(<span style="color: #00c089; font-weight: bold;">use-package</span> god-mode
+  <span style="color: #3fb83f; font-weight: bold;">:ensure</span> t
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-disabled</span> ()
+    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'bar))
+
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">minemacs-god-mode-enabled</span> ()
+    (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box))
+
+  (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
+  (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
+  <span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(global-set-key (kbd "s-n") #'god-local-mode)</span>
+  (global-set-key (kbd <span style="color: #af9fff;">"C-l"</span>) #'god-local-mode)
+  (define-key god-local-mode-map (kbd <span style="color: #af9fff;">"i"</span>) #'god-local-mode))
+
+(<span style="color: #00c089; font-weight: bold;">use-package</span> hydra
+  <span style="color: #3fb83f; font-weight: bold;">:ensure</span> t
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (<span style="color: #00c089; font-weight: bold;">defhydra</span> hydra-kommand (<span style="color: #3fb83f; font-weight: bold;">:color</span> blue
+                                  <span style="color: #3fb83f; font-weight: bold;">:pre</span> (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'box)
+                                  <span style="color: #3fb83f; font-weight: bold;">:post</span> (<span style="color: #00c089; font-weight: bold;">setq</span> cursor-type 'bar))
+    <span style="color: #7fc07f; font-style: italic;">"Hydra"</span>
+    (<span style="color: #af9fff;">"k"</span> #'execute-extended-command <span style="color: #af9fff;">"&#128640; Kommand"</span>)
+    (<span style="color: #af9fff;">"l"</span> #'god-mode <span style="color: #af9fff;">"&#128124; god"</span>)
+    (<span style="color: #af9fff;">"i"</span> #'ibuffer <span style="color: #af9fff;">"&#8596;&#65039; buffers"</span>)
+    (<span style="color: #af9fff;">"b"</span> #'bookmark-jump <span style="color: #af9fff;">"&#128278; bookmark"</span>)
+    (<span style="color: #af9fff;">"C-k"</span> nil <span style="color: #af9fff;">"_q_uit"</span>)))
+
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">Keybindings</span>
+<span style="color: #b7a07f; font-style: italic;">;;</span>
+(global-set-key (kbd <span style="color: #af9fff;">"M-o"</span>) #'hydra-kommand/body))
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(global-set-key (kbd "s-k") #'execute-extended-command)</span>
+(global-set-key (kbd <span style="color: #af9fff;">"C-k"</span>) #'execute-extended-command)
+(define-key key-translation-map (kbd <span style="color: #af9fff;">"s-o"</span>) (kbd <span style="color: #af9fff;">"M-o"</span>))
+(define-key completion-list-mode-map (kbd <span style="color: #af9fff;">"C-c"</span>) #'switch-to-minibuffer)
+(define-key completion-list-mode-map (kbd <span style="color: #af9fff;">"e"</span>) #'switch-to-minibuffer)
+(define-key minibuffer-mode-map (kbd <span style="color: #af9fff;">"C-n"</span>) #'switch-to-completions)
+(define-key minibuffer-mode-map (kbd <span style="color: #af9fff;">"C-c"</span>) #'switch-to-completions)
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2023-07-15 Sat 00:00</p>

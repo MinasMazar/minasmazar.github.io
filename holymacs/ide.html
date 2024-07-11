@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Holymacs ~ Jarvis module</title>
+<title>Holymacs ~ IDE</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
@@ -20,17 +20,131 @@
  |
  <a accesskey="H" href="/"> HOME </a>
 </div><div id="content" class="content">
-<h1 class="title">Holymacs ~ Jarvis module</h1>
+<h1 class="title">Holymacs ~ IDE</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org2900b93">Versioning</a></li>
+<li><a href="#org6e0b3fe">Docker</a></li>
+<li><a href="#orgf767c19">Programming languages</a>
+<ul>
+<li><a href="#orga3a7d31">Elixir</a></li>
+<li><a href="#org4c450bd">LSP</a></li>
+</ul>
+</li>
+<li><a href="#orgc1cf5a2">Markup languages</a>
+<ul>
+<li><a href="#orgf54bba6">Markdown</a></li>
+</ul>
+</li>
+<li><a href="#org9a9a3c5">Terminal emulator</a>
+<ul>
+<li><a href="#org4bbb38b">Vterm</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org2900b93" class="outline-2">
+<h2 id="org2900b93">Versioning</h2>
+<div class="outline-text-2" id="text-org2900b93">
 <div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #eba8a8; font-weight: bold;">use-package</span> <span style="color: #cfaaff;">magit</span>
-<span style="color: #d0b9f0; font-weight: bold;">:bind</span>
-((<span style="color: #50cf89;">"C-x g"</span> . #'magit-status)))
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> magit
+<span style="color: #3fb83f; font-weight: bold;">:bind</span>
+((<span style="color: #af9fff;">"C-x g"</span> . #'magit-status)))
 </pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6e0b3fe" class="outline-2">
+<h2 id="org6e0b3fe">Docker</h2>
+<div class="outline-text-2" id="text-org6e0b3fe">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> docker)
+(<span style="color: #00c089; font-weight: bold;">use-package</span> dockerfile-mode)
+(<span style="color: #00c089; font-weight: bold;">use-package</span> docker-compose-mode)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf767c19" class="outline-2">
+<h2 id="orgf767c19">Programming languages</h2>
+<div class="outline-text-2" id="text-orgf767c19">
+</div>
+<div id="outline-container-orga3a7d31" class="outline-3">
+<h3 id="orga3a7d31">Elixir</h3>
+<div class="outline-text-3" id="text-orga3a7d31">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> elixir-mode)
+(<span style="color: #00c089; font-weight: bold;">use-package</span> exunit
+  <span style="color: #3fb83f; font-weight: bold;">:hook</span>
+  (elixir-mode . exunit-mode))
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">Alchemist seems to be outdated and not more maintained</span>
+<span style="color: #b7a07f; font-style: italic;">;; </span><span style="color: #b7a07f; font-style: italic;">(use-package alchemist</span>
+<span style="color: #b7a07f; font-style: italic;">;;   </span><span style="color: #b7a07f; font-style: italic;">:config</span>
+<span style="color: #b7a07f; font-style: italic;">;;   </span><span style="color: #b7a07f; font-style: italic;">(add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4c450bd" class="outline-3">
+<h3 id="org4c450bd">LSP</h3>
+<div class="outline-text-3" id="text-org4c450bd">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> eglot)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc1cf5a2" class="outline-2">
+<h2 id="orgc1cf5a2">Markup languages</h2>
+<div class="outline-text-2" id="text-orgc1cf5a2">
+</div>
+<div id="outline-container-orgf54bba6" class="outline-3">
+<h3 id="orgf54bba6">Markdown</h3>
+<div class="outline-text-3" id="text-orgf54bba6">
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> markdown-mode)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org9a9a3c5" class="outline-2">
+<h2 id="org9a9a3c5">Terminal emulator</h2>
+<div class="outline-text-2" id="text-org9a9a3c5">
+</div>
+<div id="outline-container-org4bbb38b" class="outline-3">
+<h3 id="org4bbb38b">Vterm</h3>
+<div class="outline-text-3" id="text-org4bbb38b">
+<p>
+Here install <code>vterm</code> and some  useful functions to ease interaction with <b>Tmux</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(<span style="color: #00c089; font-weight: bold;">use-package</span> vterm
+  <span style="color: #3fb83f; font-weight: bold;">:config</span>
+  (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">holymacs-vterm-exec</span> (command)
+    (<span style="color: #00c089; font-weight: bold;">interactive</span> <span style="color: #af9fff;">"sCommand: "</span>)
+    (<span style="color: #00c089; font-weight: bold;">let</span> ((buffer-name (format <span style="color: #af9fff;">"*vterm &lt;%s&gt;*"</span> command)))
+      (<span style="color: #00c089; font-weight: bold;">with-current-buffer</span> (vterm buffer-name)
+        (vterm-send-string (format <span style="color: #af9fff;">"%s &amp;&amp; exit\n"</span> command)))))
+  (<span style="color: #00c089; font-weight: bold;">defun</span> <span style="color: #7fc500;">holymacs-tmux/open</span> ()
+    (<span style="color: #00c089; font-weight: bold;">interactive</span>)
+    (holymacs-vterm-exec <span style="color: #af9fff;">"tmux attach || tmux"</span>)))
+</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.2 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.4)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

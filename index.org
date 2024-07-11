@@ -1,0 +1,11 @@
+#+TITLE: MinasMazar's blog
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+
+Hello dudes, welcome to my cave 👋
+
+- [[file:about.org][about me]]
+- [[file:emacs.org][emacs]]
+- [[file:dev.org][dev stuff]] 🤓
+- [[file:bookmarks.org][bookmarks]]

@@ -1,0 +1,85 @@
+#+TITLE: MinasMazar's blog ~ Emacs
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+#+STARTUP: show2levels
+#+SETUPFILE: ../../templates/_header.org
+#+PROPERTY: header-args :tangle ~/.emacs
+OPTIONS: toc:t
+
+⛪ I'm a fervent Emacs evangelist!
+
+Here's some resources:
+- [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
+- [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+
+In the years I wrote several Emacs configuration files and also some /distros/, but right now I'm using my own backed emacs named [[file:holymacs.org][=holymacs=]].
+
+** Minemacs
+
+This is a real minimal Emacs configuration, useful if when I'm dealing with a low-resources machine and I just want to stick wit h the more vanilla possible configuration.
+
+If you want to try it you can open your Emacs, ~M-x eww "https://minasmazar.github.io/emacs.org".
+
+#+begin_src elisp
+  ;; Package management
+  ;;
+  (add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  			 ("elpa" . "https://elpa.gnu.org/packages/")
+  			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+  (require 'use-package)
+  (require 'use-package-ensure)
+  (setq use-package-always-ensure t
+        package-enable-at-startup t)
+  (package-initialize)
+
+  ;; Override a bunch of configurationn
+  ;;
+  (setq completion-styles '(flex)
+        enable-recursive-minibuffers t)
+
+  ;; Install and configure packages
+  ;;
+  (use-package god-mode
+    :ensure t
+    :config
+    (defun minemacs-god-mode-disabled ()
+      (setq cursor-type 'bar))
+
+    (defun minemacs-god-mode-enabled ()
+      (setq cursor-type 'box))
+
+    (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
+    (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
+    ;; (global-set-key (kbd "s-n") #'god-local-mode)
+    (global-set-key (kbd "C-l") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "i") #'god-local-mode))
+
+  (use-package hydra
+    :ensure t
+    :config
+    (defhydra hydra-kommand (:color blue
+  				  :pre (setq cursor-type 'box)
+  				  :post (setq cursor-type 'bar))
+      "Hydra"
+      ("k" #'execute-extended-command "🚀 Kommand")
+      ("l" #'god-mode "👼 god")
+      ("i" #'ibuffer "↔️ buffers")
+      ("b" #'bookmark-jump "🔖 bookmark")
+      ("C-k" nil "_q_uit")))
+
+  ;; Keybindings
+  ;;
+  (global-set-key (kbd "M-o") #'hydra-kommand/body))
+  ;; (global-set-key (kbd "s-k") #'execute-extended-command)
+  (global-set-key (kbd "C-k") #'execute-extended-command)
+  (define-key key-translation-map (kbd "s-o") (kbd "M-o"))
+  (define-key completion-list-mode-map (kbd "C-c") #'switch-to-minibuffer)
+  (define-key completion-list-mode-map (kbd "e") #'switch-to-minibuffer)
+  (define-key minibuffer-mode-map (kbd "C-n") #'switch-to-completions)
+  (define-key minibuffer-mode-map (kbd "C-c") #'switch-to-completions)
+#+end_src
