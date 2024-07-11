@@ -22,6 +22,8 @@ If you're interested in the Emacs configuration needed to generate my website pa
 - https://pavpanchekha.com/blog/org-mode-publish.html
 - https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword
 
+The =blorg:org-src= is a task that publishes the source org files, the source of the HTML page you're probably on right now.
+
 #+begin_src elisp
   (require 'org)
   (require 'ox-publish)
@@ -32,6 +34,12 @@ If you're interested in the Emacs configuration needed to generate my website pa
 	    ("blorg:assets"
 	     :base-directory "~/minasmazar.github.io/assets"
 	     :base-extension ".*"
+	     :publishing-directory "~/Public/blorg/"
+	     :recursive t
+	     :publishing-function org-publish-attachment)
+	    ("blorg:org-src"
+	     :base-directory "~/minasmazar.github.io/org"
+	     :base-extension "org"
 	     :publishing-directory "~/Public/blorg/"
 	     :recursive t
 	     :publishing-function org-publish-attachment)
@@ -57,7 +65,7 @@ If you're interested in the Emacs configuration needed to generate my website pa
 	     :exclude ".*"
 	     :completion-function blorg-autopublish)
 	    ("blorg"
-	     :components ("blorg:org" "blorg:assets" "blorg:publish"))))
+	     :components ("blorg:org-src" "blorg:org" "blorg:assets" "blorg:publish"))))
 #+end_src
 
 Include the [[https://git.sr.ht/~abrahms/ox-gemini][=ox-gemini=]] package if you want to export your org files also in the =.gmi= format in order to deploy your blog as a [[https://gemini.circumlunar.space/][gemini capsule]]. It provides the =org-gemini-publish-to-gemini=.
