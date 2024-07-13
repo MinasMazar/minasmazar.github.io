@@ -23,6 +23,25 @@ This is a real minimal Emacs configuration, useful if when I'm dealing with a lo
 If you want to try it you can open your Emacs, ~M-x eww "https://minasmazar.github.io/emacs.org".
 
 #+begin_src elisp
+  ;; minemacs.el
+  ;;
+
+  ;; Set by Emacs
+  ;;
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(modal-mode 'hydra))
+
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+
   ;; Package management
   ;;
   (add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
@@ -43,10 +62,14 @@ If you want to try it you can open your Emacs, ~M-x eww "https://minasmazar.gith
   (setq completion-styles '(flex)
         enable-recursive-minibuffers t)
 
+  (defcustom modal-mode 'god "Modal mode to use  (god-mode, hydra)" :options '(god hydra))
+
   ;; Install and configure packages
+  ;;
   ;;
   (use-package god-mode
     :ensure t
+    :if (eq modal-mode 'god)
     :config
     (defun minemacs-god-mode-disabled ()
       (setq cursor-type 'bar))
@@ -57,28 +80,61 @@ If you want to try it you can open your Emacs, ~M-x eww "https://minasmazar.gith
     (add-hook 'god-mode-enabled-hook 'minemacs-god-mode-enabled)
     (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
     ;; (global-set-key (kbd "s-n") #'god-local-mode)
-    (global-set-key (kbd "C-l") #'god-local-mode)
+    ;; (global-set-key (kbd "C-l") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "U") #'undo)
     (define-key god-local-mode-map (kbd "i") #'god-local-mode))
 
   (use-package hydra
     :ensure t
+    :if (eq modal-mode 'hydra)
     :config
+
+    (defun send-key(key)
+      (setq unread-command-events (listify-key-sequence key)))
+
+
+    (defhydra hydra-move (:color pink
+  			       :pre (setq cursor-type 'box)
+  			       :post (setq cursor-type 'bar))
+      "hydra-move:"
+      ("w" #'kill-ring-save "w")
+      ("n" #'next-line "n")
+      ("p" #'previous-line "p")
+      ("[" #'scroll-up-command "[")
+      ("]" #'scroll-down-command "]")
+      ("<" #'beginning-of-buffer "<")
+      ("o" #'other-window "o")
+      ("b" #'switch-to-buffer "b")
+      (">" #'end-of-buffer ">")
+      ("u" #'undo "undo")
+      ("2" #'split-window-below "2")
+      ("0" #'kill-this-buffer "0")
+      ("1" #'delete-other-windows "1")
+      ("C-l" nil "quit"))
+
     (defhydra hydra-kommand (:color blue
   				  :pre (setq cursor-type 'box)
   				  :post (setq cursor-type 'bar))
-      "Hydra"
+      "hydra-kommand"
       ("k" #'execute-extended-command "🚀 Kommand")
+      ("K" #'kill-line "kill-line")
+      ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+      ("m" #'hydra-move/body "move")
+      ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
       ("l" #'god-mode "👼 god")
       ("i" #'ibuffer "↔️ buffers")
+      ("r" #'repeat "repeat")
+      ("x" #'dabbrev-expand "expand")
       ("b" #'bookmark-jump "🔖 bookmark")
-      ("C-k" nil "_q_uit")))
+      ("C-k" nil "_q_uit"))
+
+    (global-set-key (kbd "M-x") #'hydra-kommand/body)
+    (global-set-key (kbd "C-l") #'hydra-move/body))
 
   ;; Keybindings
   ;;
-  (global-set-key (kbd "M-o") #'hydra-kommand/body))
-  ;; (global-set-key (kbd "s-k") #'execute-extended-command)
-  (global-set-key (kbd "C-k") #'execute-extended-command)
-  (define-key key-translation-map (kbd "s-o") (kbd "M-o"))
+  (define-key key-translation-map (kbd "C-k") (kbd "M-x"))
+
   (define-key completion-list-mode-map (kbd "C-c") #'switch-to-minibuffer)
   (define-key completion-list-mode-map (kbd "e") #'switch-to-minibuffer)
   (define-key minibuffer-mode-map (kbd "C-n") #'switch-to-completions)
