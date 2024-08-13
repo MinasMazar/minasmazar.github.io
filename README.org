@@ -1,0 +1,184 @@
+#+TITLE: Holymacs ~ Blorg
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-21 Sun>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/blorg.el :mkdirp yes
+
+* Emacs and Org
+** References
+
+This is the source code of [[https://minasmazar.github.io][my personal website]]. It is written in =org-mode= and is hosted on [[https://pages.github.com/][Github pages]]. It uses the =org-publish= function to generate the static site you're reading right now.
+
+For more information about =Emacs=, =org-mode= and its publishing feature:
+
+- https://orgmode.org/
+- https://orgmode.org/worg/
+- https://emacsdocs.org/ by Thomas F. K. Jorna ([[https://github.com/tefkah][tefkah]])
+- https://orgmode.org/manual/Publishing.html
+
+If you're interested in the Emacs configuration needed to generate my website pages and the deployment workflow, refers to the [[file:minemacs.org::#blorg-section][/Blorg section/]]. Here's some useful resources:
+
+- [[https://orgmode.org/][org-mode]]
+- [[https://github.com/fniessen/org-html-themes]]
+- https://pavpanchekha.com/blog/org-mode-publish.html
+- https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword
+
+** Blorg
+*** Publish
+
+The =blorg:org-src= is a task that publishes the source org files, the source of the HTML page you're probably on right now.
+
+#+begin_src elisp
+  (require 'org)
+  (require 'ox-publish)
+  (require 'org-capture)
+  (mapcar (lambda (project)
+	    (add-to-list 'org-publish-project-alist project))
+	  '(
+	    ("blorg:assets"
+	     :base-directory "~/minasmazar.github.io/assets"
+	     :base-extension ".*"
+	     :publishing-directory "~/Public/blorg/"
+	     :recursive t
+	     :publishing-function org-publish-attachment)
+	    ("blorg:org-src"
+	     :base-directory "~/minasmazar.github.io/org"
+	     :base-extension "org"
+	     :publishing-directory "~/Public/blorg/"
+	     :recursive t
+	     :publishing-function org-publish-attachment)
+	    ("blorg:org"
+	     :recursive t
+	     :base-directory "~/minasmazar.github.io/org/"
+	     :base-extension "org"
+	     :publishing-function org-html-publish-to-html
+	     :publishing-directory "~/Public/blorg/"
+	     :with-author nil
+	     :with-creator t
+	     :with-toc t
+	     :html-link-up "/"
+	     :html-link-home "/"
+	     ;; :html-preamble blorg-html-preamble
+	     :section-numbers nil
+	     :time-stamp-file nil)
+	    ("blorg:publish"
+	     :base-directory "~/minasmazar.github.io/"
+	     :publishing-directory "~/Public/blorg/"
+	     :base-extension "any"
+	     :publishing-function org-publish-attachment
+	     :exclude ".*"
+	     :completion-function blorg-autopublish)
+	    ("blorg"
+	     :components ("blorg:org-src" "blorg:org" "blorg:assets" "blorg:publish"))))
+#+end_src
+
+Include the [[https://git.sr.ht/~abrahms/ox-gemini][=ox-gemini=]] package if you want to export your org files also in the =.gmi= format in order to deploy your blog as a [[https://gemini.circumlunar.space/][gemini capsule]]. It provides the =org-gemini-publish-to-gemini=.
+
+#+begin_src elisp
+  (use-package ox-gemini)
+  (add-to-list 'org-publish-project-alist
+	       '("blorg:gmi"
+		 :recursive t
+		 :base-directory "~/minasmazar.github.io/pages/"
+		 :base-extension "org"
+		 :publishing-function org-gemini-publish-to-gemini
+		 :publishing-directory "~/minasmazar.github.io/"
+		 :with-author nil
+		 :with-creator t
+		 :with-toc t
+		 :html-link-up "/"
+		 :html-link-home "/"
+		 ;; :html-preamble blorg-html-preamble
+		 :section-numbers nil
+		 :time-stamp-file nil))
+#+end_src
+
+🚧 This section about RSS is a work in progress 🚧
+
+The package =ox-rss= is needed if you want to generate a RSS (it exports the ~org-rss-publish-to-rss~ function).
+
+#+begin_src elisp :tangle no
+  (use-package ox-rss)
+#+end_src
+
+Every link in =org-mode= has a prefix that define a /type/ (=img:logo.png= =file:about.org=). Every type should provide two functions for /follow/ and /export/ actions. This snippet comes from [[https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html][this SO thread]].
+
+#+begin_src elisp
+  (defun org-custom-link-raw-relative-follow (path)
+    (org-open-file-with-emacs
+     (format "./%s" path)))
+
+  (defun org-custom-link-raw-relative-export (path desc format)
+    (cond
+     ((eq format 'html)
+      (format "<a href=\"/%s\" alt=\"%s\"/>%s</a>" path desc desc))))
+
+  (org-add-link-type "raw-relative" 'org-custom-link-img-follow 'org-custom-link-img-export)
+#+end_src
+
+Now define some handy =org-capture= templates!
+
+#+begin_src elisp
+  (mapcar (lambda (entry) (add-to-list 'org-capture-templates entry))
+	  '(("B" "Blorg: bookmark" entry (file "~/minasmazar.github.io/pages/bookmarks.org")
+	     "* %?\n\n %a" :prepend t)
+	    ("J" "Blorg: journal" entry (file+datetree "~/minasmazar.github.io/pages/journal.org")
+	     "* %?\nEntered on %U\n %i\n %a" :jump-to-captured t)))
+#+end_src
+
+Here we define the function that uses ~git~ to publish my static site to my personal Github pages. The pre-requisite is that the destitnation directory exists and has a git repo already initialized and the remote already set up.
+
+#+begin_src elisp
+  (defcustom blorg-autopublish nil
+    "Define if autopublish feature is enabled. Used in the function =blorg-autopublish=")
+
+  (defun blorg-html-preamble ()
+    "<div><ul><li><a href=\"/\">Home</a></li></ul></div>")
+
+  (defun blorg-autopublish (options)
+    (let* ((default-directory (plist-get options :publishing-directory)))
+      (if blorg-autopublish
+	  (blorg-add-commit-and-push default-directory)
+	(message "[blorg] autopublish simulation"))))
+
+  (defun blorg-add-commit-and-push (directory)
+    "Add all files, commit and push"
+    (cd directory)
+    (let* ((commit-msg (format "Autopublish [%s]" (current-time-string)))
+	   (command (format "git add . ; git commit -m '%s' ; git push origin master --force" commit-msg)))
+      (message commit-msg)
+      (shell-command command)))
+#+end_src
+
+*** COMMENT Navigate weblorgs!                                         :experimental:
+
+Navigate =org-mode= websites!
+
+Automatically open raw urls of =.org= extension in =org-mode=. This is not a very common scenario, is more of an expermient with Emacs advices. Comment out the to test it.
+
+#+begin_src elisp
+  (defun holymacs-eww-raw-advice-after (&rest r)
+    (with-current-buffer "*eww*"
+      (if (and (eww-current-url) (string-match "\.org$" (eww-current-url)))
+  	(progn
+  	  (eww-open-in-new-buffer nil (eww-current-url))
+  	  (with-current-buffer (current-buffer)
+  	    (funcall 'org-mode))))))
+
+  ;; (advice-add #'eww-display-raw :after #'holymacs-eww-raw-advice-after)
+#+end_src
+
+Every link in =org-mode= has a prefix that define a /type/ (=img:logo.png= =file:about.org=). Every type should provide two functions for /follow/ and /export/ actions. This snippet comes from [[https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html][this SO thread]].
+
+#+begin_src elisp
+  (defun org-custom-link-raw-relative-follow (path)
+    (org-open-file-with-emacs
+     (format "./%s" path)))
+
+  (defun org-custom-link-raw-relative-export (path desc format)
+    (cond
+     ((eq format 'html)
+      (format "<a href=\"/%s\" alt=\"%s\"/>%s</a>" path desc desc))))
+
+  (org-add-link-type "raw-relative" 'org-custom-link-img-follow 'org-custom-link-img-export)
+#+end_src

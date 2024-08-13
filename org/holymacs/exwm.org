@@ -1,0 +1,33 @@
+#+TITLE: Holymacs ~ Consult module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/exwm.el :mkdirp yes :tangle no
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+#+begin_src elisp
+  (use-package exwm
+    :config
+    (require 'exwm-config)
+    (exwm-config-example)
+    (require 'exwm-randr)
+    (exwm-randr-enable)
+    (setq exwm-workspace-number 2
+	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
+    (defun holymacs/xrandr-set-monitors ()
+      (start-process-shell-command "xrandr" nil
+				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+				   "xrandr --output eDP-1 --primary --mode 1920x1080"
+				   ))
+    (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable))
+#+end_src
+
+** Autostart applications
+
+#+begin_example sh
+  nm-applet &
+  blueman-applet &
+#+end_example

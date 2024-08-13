@@ -1,0 +1,18 @@
+#+TITLE: Holymacs ~ Port
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-06-20 Thu>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/port.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+** MacOS                                         :portability:
+
+On MacOS there are some problem on well syncing ENVs variables.
+A solution is to install the *exec-path-from-shell* package
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src

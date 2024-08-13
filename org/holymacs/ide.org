@@ -1,0 +1,70 @@
+#+TITLE: Holymacs ~ IDE
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/ide.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+* Versioning
+
+#+begin_src elisp
+  (use-package magit
+  :bind
+  (("C-x g" . #'magit-status)))
+#+end_src
+
+* Docker
+
+#+begin_src elisp
+  (use-package docker)
+  (use-package dockerfile-mode)
+  (use-package docker-compose-mode)
+#+end_src
+
+* Programming languages
+** Elixir
+
+#+begin_src elisp
+  (use-package elixir-mode)
+  (use-package exunit
+    :hook
+    (elixir-mode . exunit-mode))
+  ;; Alchemist seems to be outdated and not more maintained
+  ;; (use-package alchemist
+  ;;   :config
+  ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+#+end_src
+** LSP
+
+#+begin_src elisp
+  (use-package eglot)
+#+end_src
+
+* Markup languages
+** Markdown
+
+#+begin_src elisp
+  (use-package markdown-mode)
+#+end_src
+
+* Terminal emulator
+** Vterm
+
+Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
+
+#+begin_src elisp
+  (use-package vterm
+    :after god-mode
+    :config
+    (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+    (defun holymacs-vterm-exec (command)
+      (interactive "sCommand: ")
+      (let ((buffer-name (format "*vterm <%s>*" command)))
+        (with-current-buffer (vterm buffer-name)
+  	(vterm-send-string (format "%s && exit\n" command)))))
+    (defun holymacs-tmux/open ()
+      (interactive)
+      (holymacs-vterm-exec "tmux attach || tmux")))
+#+end_src

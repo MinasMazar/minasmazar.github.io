@@ -1,0 +1,17 @@
+#+TITLE: MinasMazar's blog ~ Emacs
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+#+STARTUP: show2levels
+#+SETUPFILE: ../../templates/_header.org
+#+PROPERTY: header-args :tangle ~/.emacs.d.minemacs/init.el :mkdirp true
+OPTIONS: toc:t
+
+⛪ I'm a fervent Emacs evangelist!
+
+Here's some resources:
+- [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
+- [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+- [[file:holymacs.org][Holymacs]] ([[raw-relative:][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
+
+In the years I wrote several Emacs configuration files and also some /distros/, but right now I'm using my own backed emacs named [[file:holymacs.org][=holymacs=]]. There is also another configuration called [[file:minemacs.org][=minemacs=]], that aims to be as minimal as possible (i.e. prefer built-in solutions over using external packages).
