@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Minemacs</title>
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="/"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Minemacs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3fa3d18"><span class="todo TODO">TODO</span> Introduction</a></li>
+<li><a href="#org91dcf62">Init</a>
+<ul>
+<li><a href="#org5776ff7">Package initialization</a></li>
+<li><a href="#orgc45d080">Main configurations</a></li>
+<li><a href="#orgbfb67dd">Modal editing</a></li>
+<li><a href="#org5287e07">Org</a></li>
+</ul>
+</li>
+<li><a href="#orgc312ae8">Modules</a>
+<ul>
+<li><a href="#org30b6324">Auto-completion</a></li>
+<li><a href="#org6576f7c">Hydra</a></li>
+<li><a href="#orge12adc5">Embark</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3fa3d18" class="outline-2">
+<h2 id="org3fa3d18"><span class="todo TODO">TODO</span> Introduction</h2>
+</div>
+<div id="outline-container-org91dcf62" class="outline-2">
+<h2 id="org91dcf62">Init</h2>
+<div class="outline-text-2" id="text-org91dcf62">
+</div>
+<div id="outline-container-org5776ff7" class="outline-3">
+<h3 id="org5776ff7">Package initialization</h3>
+<div class="outline-text-3" id="text-org5776ff7">
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+(require 'use-package)
+(require 'use-package-ensure)
+(setq use-package-always-ensure t
+      package-enable-at-startup t)
+(package-initialize)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc45d080" class="outline-3">
+<h3 id="orgc45d080">Main configurations</h3>
+<div class="outline-text-3" id="text-orgc45d080">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package emacs
+  :ensure nil
+  :defer
+  :hook ((after-init . toggle-frame-maximized)
+         (minibuffer-setup . (lambda ()
+                               (local-set-key (kbd "C-o") #'switch-to-completions)
+                               (local-set-key (kbd "C-n") #'switch-to-completions)
+                               (local-set-key (kbd "C-c") #'switch-to-completions))))
+  :custom
+  (use-short-answers t)
+  (enable-recursive-minibuffers t)
+  (shr-inhibit-images t)
+  (initial-buffer-choice #'eshell)
+  :config
+  (tool-bar-mode -1)
+  ;; (menu-bar-mode -1)
+  (savehist-mode 1)
+  (recentf-mode 1)
+  (ffap-bindings)
+  (fido-vertical-mode 1)
+
+  ;; Shared configuration
+  (if (file-exists-p "~/Dropbox/minemacs/")
+      (setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+            eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
+            custom-file "~/Dropbox/minemacs/custom.el"))
+  (if (file-exists-p "~/Dropbox/minemacs/org")
+      (setq org-agenda-files '("~/Dropbox/minemacs/org/")
+            org-roam-directory "~/Dropbox/minemacs/org/roam/"))
+
+  ;; Helpers
+  (defun minemacs-files-in-emacs-subdir (subdir)
+    (message "Scan files in emacs subdir %s" subdir)
+    (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
+      (message "Scan files in dir %s" scan-dir)
+      (if (file-exists-p scan-dir)
+          (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+
+  ;; Modules
+  (defun minemacs-modules-load ()
+    "Load all modules '*.el' files in './.emacs.d/modules/'"
+    (interactive)
+    ;; TODO: locate-dominating-file
+    (let ((modules (minemacs-files-in-emacs-subdir "modules")))
+      (if modules (mapcar (lambda (module)
+                            (load  module 'noerror))
+                          modules))))
+
+  ;; Contexts
+  (defun minemacs-contexts ()
+    (minemacs-files-in-emacs-subdir "contexts"))
+
+  (defun minemacs-switch-context (&amp;optional context)
+    (interactive (list (completing-read "Context: " (minemacs-contexts))))
+    (load context 'noerror)
+    (setq-local default-directory context)
+    (hack-dir-local-variables-non-file-buffer))
+
+  (load custom-file 'noerror)
+  (minemacs-modules-load)
+  :bind
+  (("s-k" . #'execute-extended-command)
+   ("s--" . #'bookmark-jump)
+   ("s-)" . #'kill-current-buffer)
+   ("s-[" . #'previous-buffer)
+   ("s-]" . #'next-buffer)
+   ("s-N" . #'dired-jump)
+   ("s-e" . #'dabbrev-expand)
+   ("s-r" . #'repeat)
+   ("s-w" . #'other-window)
+   ("s-1" . #'delete-other-windows)
+   ("s-2" . #'split-window-below)
+   ("s-3" . #'split-window-right)
+   ("s-0" . #'delete-window)
+   :map key-translation-map
+   ("s-m" . "\C-x")
+   ("s-M" . "\C-c")
+   :map isearch-mode-map
+   ("C-p" . #'isearch-repeat-backward)
+   ("C-n" . #'isearch-repeat-forward)
+   ("&lt;tab&gt;" . #'isearch-repeat-forward)
+   ("&lt;S-tab&gt;" . #'isearch-repeat-backward)
+   :map completion-list-mode-map
+   ("e" . #'switch-to-minibuffer)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbfb67dd" class="outline-3">
+<h3 id="orgbfb67dd">Modal editing</h3>
+<div class="outline-text-3" id="text-orgbfb67dd">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package god-mode
+  :ensure t
+  :init
+  (defun minemacs-god-mode-disabled ()
+    (setq cursor-type 'bar))
+
+  (defun minemacs-god-mode-enabled ()
+    (setq cursor-type 'box))
+
+  :hook ((god-mode-enabled . minemacs-god-mode-enabled)
+         (god-mode-disabled . minemacs-god-mode-disabled))
+  :bind
+  (("s-n" . #'god-local-mode)
+   :map god-local-mode-map
+   ("i" . #'god-local-mode)
+   ("u" . #'undo)
+   ("U" . #'redo)
+   ("[" . #'backward-paragraph)
+   ("]" . #'forward-paragraph))
+  :config
+  (god-mode-all 1))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org5287e07" class="outline-3">
+<h3 id="org5287e07">Org</h3>
+<div class="outline-text-3" id="text-org5287e07">
+<div class="org-src-container">
+<pre class="src src-elisp">(setq org-agenda-custom-commands
+      '(("p" "Planning" tags-todo "+@planning")
+        ("u" "Untagged" tags-todo "-{.*}")))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc312ae8" class="outline-2">
+<h2 id="orgc312ae8">Modules</h2>
+<div class="outline-text-2" id="text-orgc312ae8">
+</div>
+<div id="outline-container-org30b6324" class="outline-3">
+<h3 id="org30b6324">Auto-completion</h3>
+<div class="outline-text-3" id="text-org30b6324">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package corfu
+  :hook
+  (eshell-mode . (lambda ()
+                     (setq-local corfu-auto nil)
+                     (corfu-mode)))
+  :custom
+  (corfu-cycle t)
+  :config
+  (global-corfu-mode))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package cape
+  :init
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-history)
+  ;;(add-hook 'completion-at-point-functions #'cape-keyword)
+  ;;(add-hook 'completion-at-point-functions #'cape-tex)
+  ;;(add-hook 'completion-at-point-functions #'cape-sgml)
+  ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-hook 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-hook 'completion-at-point-functions #'cape-dict)
+  ;;(add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  (add-hook 'completion-at-point-functions #'cape-line))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6576f7c" class="outline-3">
+<h3 id="org6576f7c">Hydra</h3>
+<div class="outline-text-3" id="text-org6576f7c">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package hydra
+  :ensure t
+  :init
+
+  (defun send-key(key)
+    (setq unread-command-events (listify-key-sequence key)))
+
+  :config
+  (defhydra hydra-modal (:color pink
+                             :pre (setq cursor-type 'box)
+                             :post (setq cursor-type 'bar))
+            "hydra-move:"
+            ("w" #'kill-ring-save "w")
+            ("n" #'next-line "n")
+            ("p" #'previous-line "p")
+            ("k" #'kill-buffer "k")
+            ("K" #'kill-line "K")
+            ("]" #'scroll-up-command "]")
+            ("[" #'scroll-down-command "[")
+            ("&lt;" #'beginning-of-buffer "&lt;")
+            ("o" #'other-window "o")
+            ("b" #'switch-to-buffer "b")
+            ("&gt;" #'end-of-buffer "&gt;")
+            ("u" #'undo "undo")
+            ("2" #'split-window-below "2")
+            ("0" #'delete-window "0")
+            ("1" #'delete-other-windows "1")
+            ("i" nil "quit"))
+
+  (defhydra hydra-kommand (:color teal
+                                  :pre (setq cursor-type 'box)
+                                  :post (setq cursor-type 'bar))
+            "hydra-kommand"
+            ("k" #'execute-extended-command "🚀 Kommand")
+            ("m" #'hydra-modal/body "modal")
+            ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+            ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
+            ("e" #'eval-defun "Λ eval-defun")
+            ("l" #'god-mode "👼 god")
+            ("r" #'repeat "repeat")
+            ("x" #'dabbrev-expand "expand")
+            ("b" #'ibuffer "🧰 ibuffer")
+            ("j" #'bookmark-jump "🔖 bookmark")
+            ("a" #'org-agenda)
+            ("q" nil "_q_uit"))
+  :bind
+  (("s-o" . #'hydra-kommand/body)
+   ("s-l" . #'hydra-modal/body)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge12adc5" class="outline-3">
+<h3 id="orge12adc5">Embark</h3>
+<div class="outline-text-3" id="text-orge12adc5">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package embark
+  :after god-mode
+  :config
+  (add-to-list 'god-exempt-major-modes 'embark-mode)
+  :bind*
+  ("C-," . embark-act)
+  (:map embark-general-map
+          ("C-w" . browse-url))
+  (:map embark-identifier-map
+          ("R" . query-replace)
+          ("O" . multi-occur-in-matching-buffers)
+          ("c" . browse-url-chrome)
+          ("f" . browse-url-firefox))
+  (:map embark-url-map
+          ("c" . browse-url-chrome)
+          ("f" . browse-url-firefox))
+  (:map  embark-file-map
+           ("p" . project-find-file)
+           ("b" . project-switch-to-buffer)
+           ("," . append-to-previous-buffer)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-08-08 Thu 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

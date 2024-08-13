@@ -1,0 +1,6 @@
+#+TITLE: MinasMazar's blog ~ About
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2023-07-15 Sat>
+
+Visit [[https://github.com/MinasMazar][my profile on Github]]!

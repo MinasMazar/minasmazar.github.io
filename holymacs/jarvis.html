@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ Jarvis module</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../holymacs.html"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ Jarvis module</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org0f505f6">Jarvis</a></li>
+<li><a href="#org70f3f5d">Tabspaces</a></li>
+<li><a href="#org59f11c2">Focus current window</a></li>
+<li><a href="#org258a3cc">Org and Second Brain (Org-roam)</a></li>
+<li><a href="#orgc5d5e2a">Alarm!</a></li>
+<li><a href="#org1ed2f02">News and Mail</a>
+<ul>
+<li><a href="#orgfc22f64">RSS Reader (elfeed)</a></li>
+<li><a href="#orgb159cb8">Mu4e</a></li>
+</ul>
+</li>
+<li><a href="#orgaf3b9b0">Media</a></li>
+<li><a href="#org655028b">Search on the web: engine-mode</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0f505f6" class="outline-2">
+<h2 id="org0f505f6">Jarvis</h2>
+<div class="outline-text-2" id="text-org0f505f6">
+<p>
+Preview the HTML exported buffer you see when exporting an org file in a preview using some built-in Emacs function.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(advice-add #'org-html-export-as-html :filter-return #'browse-url-of-buffer)
+</pre>
+</div>
+
+<p>
+There's too silence here.. 😱 let's just play something! 🤘
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(defcustom holymacs-jarvis-youtube-sources
+  '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
+  "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
+  :type '(repeat :tag "URLs" (string)))
+
+(defun holymacs-jarvis-play-youtube (&amp;optional url)
+  "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
+  (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
+  (let ((command (format "mpv \"%s\"" url))
+        (buffer-name (format "MPV: %s" url)))
+    (async-shell-command command buffer-name)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org70f3f5d" class="outline-2">
+<h2 id="org70f3f5d">Tabspaces</h2>
+<div class="outline-text-2" id="text-org70f3f5d">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package tabspaces
+  :hook (after-init . tabspaces-mode)
+  :commands (tabspaces-switch-or-create-workspace
+               tabspaces-open-or-create-project-and-workspace)
+  :bind
+  (("s-{" . tab-previous)
+   ("s-}" . tab-next))
+  :custom
+  (tabspaces-keymap-prefix "M-o w")
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-initialize-project-with-todo t)
+  (tabspaces-todo-file-name "project-todo.org")
+  ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+  ;; (tabspaces-session t)
+  ;; (tabspaces-session-auto-restore t))
+  )
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org59f11c2" class="outline-2">
+<h2 id="org59f11c2">Focus current window</h2>
+<div class="outline-text-2" id="text-org59f11c2">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package golden-ratio
+  :bind
+  (("M-o W" . #'golden-ratio-mode)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org258a3cc" class="outline-2">
+<h2 id="org258a3cc">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
+<div class="outline-text-2" id="text-org258a3cc">
+<p>
+Add a capture template to store notes in <code>inbox</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package org
+  :config
+  (require 'org-capture)
+  (add-to-list 'org-capture-templates
+                 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
+                    "* TODO %?\n %i\n  %a"))
+  :bind
+  (:map org-mode-map
+          ("M-p" . #'org-move-subtree-up)
+          ("M-n" . #'org-move-subtree-down)))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package org-roam
+  :bind
+  (("M-o r f" . #'org-roam-node-find)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgc5d5e2a" class="outline-2">
+<h2 id="orgc5d5e2a">Alarm!</h2>
+<div class="outline-text-2" id="text-orgc5d5e2a">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package alarm-clock
+  :config
+  (defun holymacs/jarvis/set-alarm-10min-fire! ()
+    (interactive)
+    (alarm-clock-set "10min" "FIRE!"))
+  :bind
+  ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1ed2f02" class="outline-2">
+<h2 id="org1ed2f02">News and Mail</h2>
+<div class="outline-text-2" id="text-org1ed2f02">
+</div>
+<div id="outline-container-orgfc22f64" class="outline-3">
+<h3 id="orgfc22f64">RSS Reader (elfeed)</h3>
+<div class="outline-text-3" id="text-orgfc22f64">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package elfeed
+  :after 'god-mode
+  :bind
+  (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
+  :config
+  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+</pre>
+</div>
+
+<p>
+Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-tube">elfeed-tube</a>! ❤️ Thanks a lot to <a href="https://github.com/karthink">karthink</a> 🙏
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package elfeed-tube
+  :after elfeed
+  :demand t
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  :bind (:map elfeed-show-mode-map
+                ("F" . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)
+                :map elfeed-search-mode-map
+                ("F" . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :after elfeed-tube
+  :bind (:map elfeed-show-mode-map
+                ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+                ("C-c C-w" . elfeed-tube-mpv-where)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb159cb8" class="outline-3">
+<h3 id="orgb159cb8">Mu4e</h3>
+<div class="outline-text-3" id="text-orgb159cb8">
+</div>
+<div id="outline-container-orgbc64213" class="outline-4">
+<h4 id="orgbc64213">Dependencies</h4>
+<div class="outline-text-4" id="text-orgbc64213">
+<p>
+Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like <code>mbsync</code>. You should also rely on <code>pass</code>, the <a href="https://www.passwordstore.org/">the standard unix password manager</a>, in order to store and fetch your passwords in a secure way.
+</p>
+
+<p>
+Useful links:
+</p>
+<ul class="org-ul">
+<li><a href="http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync">http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync</a></li>
+<li><a href="https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html">https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html</a></li>
+<li><a href="https://isync.sourceforge.io/mbsync.html">https://isync.sourceforge.io/mbsync.html</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgff5baf2" class="outline-4">
+<h4 id="orgff5baf2">Configuration</h4>
+<div class="outline-text-4" id="text-orgff5baf2">
+<pre class="example" id="orgf55ccf3">
+IMAPAccount gmail-imaps
+Host imap.gmail.com
+Port 993
+#UseIMAPS yes
+#RequireSSl yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+AuthMechs PLAIN
+User your-email@gmail.com
+#Pass supercomplicatedpassword
+PassCmd "pass gmail/imaps"
+
+IMAPStore gmail-remote
+Account gmail-imaps
+
+MaildirStore gmail-local
+Path ~/MailDir/gmail/
+Inbox ~/MailDir/gmail/INBOX
+Subfolders Verbatim
+
+Channel gmail
+#Master :gmail-remote:
+#Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
+Create Both
+Expunge Both
+Patterns *
+SyncState *
+</pre>
+
+<pre class="example" id="org5e9dc1c">
+(require 'mu4e)
+(setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+(auth-source-pass-enable)
+(setq smtpmail-debug-info t)
+</pre>
+
+<p>
+To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
+</p>
+
+<pre class="example" id="orgb055a47">
+(setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgaf3b9b0" class="outline-2">
+<h2 id="orgaf3b9b0">Media</h2>
+<div class="outline-text-2" id="text-orgaf3b9b0">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package bongo)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org655028b" class="outline-2">
+<h2 id="org655028b">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org655028b">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package engine-mode
+  :init
+  (setq engine/browser-function #'browse-url-firefox)
+  :config
+  (defun engine/execute-search (search-engine-url browser-function search-term)
+    "Display the results of the query."
+    (interactive)
+    (let ((browse-url-handlers nil)
+            (browse-url-browser-function browser-function))
+        (browse-url
+         (format-spec search-engine-url
+                      (format-spec-make ?s (url-hexify-string search-term))))))
+
+  (defengine duckduckgo
+    "https://duckduckgo.com/?q=%s"
+    :browser 'eww-browse-url
+    :keybinding "d")
+
+  (defengine github
+    "https://github.com/search?ref=simplesearch&amp;q=%s"
+    :keybinding "h")
+
+  (defengine google
+    "https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"
+    :browser 'browse-url-firefox
+    :keybinding "g")
+
+  (defengine google-images
+    "https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"
+    :keybinding "i")
+
+  (defengine google-maps
+    "https://maps.google.com/maps?q=%s"
+    :docstring "Google Maps"
+    :keybinding "m")
+
+  (defengine google-maps
+    "https://www.openstreetmap.org/search?query=%s"
+    :docstring "OpenStreetMap"
+    :keybinding "M")
+
+  (defengine google-translate-to-it
+    "https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"
+    :docstring "Translate to IT"
+    :keybinding "t")
+
+  (defengine google-translate-to-en
+    "https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"
+    :docstring "Translate from IT to English"
+    :browser 'browse-url-firefox
+    :keybinding "T")
+
+  (defengine stack-overflow
+    "https://stackoverflow.com/search?q=%s"
+    :keybinding "s")
+
+  (defengine wikipedia
+    "https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"
+    :keybinding "w"
+    :docstring "Searchin' the wikis."
+    :browser 'eww-browse-url)
+
+  (defengine youtube
+    "https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"
+    :keybinding "y")
+
+  (defengine amazon
+    "https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"
+    :browser 'browse-url-firefox
+    :keybinding "a")
+
+  (defengine cap
+    "https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"
+    :browser 'browse-url-firefox
+    :keybinding "C")
+
+  (engine-mode t))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-04-20 Sat 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
