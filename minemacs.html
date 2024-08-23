@@ -308,7 +308,7 @@
   (defun minemacs-switch-context (&amp;optional context)
     (interactive (list (completing-read "Context: " (minemacs-contexts))))
     (load context 'noerror)
-    (setq-local default-directory context)
+    ;; (setq-local default-directory context)
     (hack-dir-local-variables-non-file-buffer))
 
   (load custom-file 'noerror)
