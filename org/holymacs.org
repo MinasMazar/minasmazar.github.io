@@ -178,6 +178,7 @@ No configuration till now. If you want to learn something about this topic there
     (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
     (add-hook 'completion-at-point-functions #'cape-line))
 #+end_src
+
 *** Embark
 
 #+begin_src elisp
@@ -206,8 +207,30 @@ No configuration till now. If you want to learn something about this topic there
 
 #+begin_src elisp :tangle no
   (add-to-list 'org-babel-load-languages '(eshell . t))
-  (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
 #+end_src
+
+An example of [[info:eshell#Aliases][eshell aliases]].
+
+#+begin_example txt
+alias clear clear -1
+alias vsnap ffmpeg -i $1 -ss 10 -frames:v 1 $2
+alias econf view-file "~/minasmazar.github.io/org/holymacs.org"
+alias t holymacs-tmux/open
+alias q bury-buffer
+alias g magit-status
+alias customize (find-file custom-file)
+alias o view-file $1
+alias d dired-jump t $1
+alias aliases (view-file eshell-aliases-file)
+alias agenda (org-agenda "t")
+alias x async-shell-command $1
+alias l ls -lh $*
+alias $* what $*
+alias yt (elfeed-search "@6-months-ago +unread +news")
+alias reload eshell-read-aliases-list
+alias v eshell-exec-visual $1
+alias www eww $1
+#+end_example
 
 *** Projects
 
@@ -226,6 +249,7 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "M-o k") #'org-capture)
   (global-set-key (kbd "M-o 8") #'emoji-search)
   (global-set-key (kbd "M-o e") #'eshell)
+  (global-set-key (kbd "M-o b") #'ibuffer)
   (global-set-key (kbd "M-o E") #'project-eshell)
   (global-set-key (kbd "M-o h") #'info-display-manual)
 #+end_src
@@ -248,7 +272,7 @@ Sometimes when you run Emacs in old terminal emulators, you don't have access to
 #+RESULTS:
 : god-local-mode
 
-**** Ease isearch UX
+**** Ease Isearch navigation
 
 Uses normal movements keys and =TAB= key to move through =isearch=.
 
@@ -278,7 +302,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-3") (kbd "C-x 3"))
   (global-set-key (kbd "s-w") (kbd "C-x o"))
   (global-set-key (kbd "s-r") (kbd "C-x z"))
-  (global-set-key (kbd "s-i") (kbd "C-M-i"))
+  (global-set-key (kbd "s-i") (kbd "M-g i"))
   (global-set-key (kbd "s-N") (kbd "C-x C-j"))
   (global-set-key (kbd "s-[") (kbd "C-x <left>"))
   (global-set-key (kbd "s-]") (kbd "C-x <right>"))
@@ -288,7 +312,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-)") #'kill-current-buffer)
   (global-set-key (kbd "s--") #'bookmark-jump)
   (global-set-key (kbd "s-_") #'bookmark-set)
-  (global-set-key (kbd "s-q") #'tab-next)
+  (global-set-key (kbd "s-q") #'tab-switch)
   (global-set-key (kbd "s-\\") #'other-frame)
   (global-set-key (kbd "s-t") #'find-name-dired)
   (global-set-key (kbd "s-e") #'dabbrev-expand)
@@ -313,6 +337,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
     (global-set-key (kbd "s-n") #'god-local-mode)
     (define-key god-local-mode-map (kbd "i") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "I") (kbd "C-c '"))
     (define-key god-local-mode-map (kbd "u") #'undo)
     (define-key god-local-mode-map (kbd "U") #'undo-redo)
     (define-key god-local-mode-map (kbd ">") #'end-of-buffer)
@@ -321,6 +346,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
     (define-key god-local-mode-map (kbd "{") #'backward-sexp)
     (define-key god-local-mode-map (kbd "}") #'forward-sexp)
+    (define-key god-local-mode-map (kbd "H") #'describe-symbol)
     (mapcar (lambda (exempted-major-mode)
   	    (add-to-list 'god-exempt-major-modes exempted-major-mode))
   	  '(compilation-mode
@@ -364,7 +390,8 @@ Re-tangle all modules. I don't think a specific command is needed, unless in the
     (interactive)
     (message "holymacs: compilation..")
     (mapcar #'org-babel-tangle-file
-  	  (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp)))
+  	  (let ((default-directory "~/minasmazar.github.io/org/"))
+  	       (directory-files "holymacs" t "\\.org$" directory-files-no-dot-files-regexp))))
 #+end_src
 
 Here we define a mechanism to easily extend your Emacs experience with some custom defined /modules/, a set of packages and configuration that can be grouped for any reason (they're the equivalent of the *layers* in *Doom Emacs*), but I'm not creating a whole mechanism to handle this: just place an =.el= file in the =~/.emacs.d/modules/= directory, and it will be autoloaded.
@@ -433,7 +460,7 @@ The *Blorg* publishing functions described in [[https://github.com/MinasMazar/mi
 *** [[file:holymacs/ide.org][IDE]]
 
 * On hand documentation
-*** Other Commands, functions and variables
+*** Other Commands, functions, variables, keybindings
 
 Just press ~C-h o~ to get help on those symbols.
 
@@ -443,7 +470,10 @@ Just press ~C-h o~ to get help on those symbols.
 - =browse-url-of-buffer=
 - =command-switch-alist=
 - =completions-max-height=
+- =completion-auto-help=
 - =compilation-scroll-output=
+- =current-time-string=
+- =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
 - =find-name-dired=
@@ -460,6 +490,15 @@ Just press ~C-h o~ to get help on those symbols.
 - =proced=
 - =shr-inhibit-images=
 - =string-match=
+- ~C-x @~
+
+*** [[info:org#Working with Source Code][Org code-blocks]]
+
+#+begin_example org
+,#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
+  wc -w $filename
+,#+END_SRC
+#+end_example
 
 *** String and Symbols
 
@@ -519,7 +558,12 @@ Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-functio
 
 *** Regular Expression Syntax (regexp)
 
-You can use the wonderful tool =regexp-builder=.
+You can use the wonderful tool =regexp-builder=. Use =string-match= to run a regexp and =match-string= to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
+
+#+begin_example elisp
+(let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
+  (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
+#+end_example
 
 #+begin_quote
 Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
@@ -590,6 +634,7 @@ You can run specified function at specified time and with a specific timeout. Ch
 
 #+BEGIN_EXAMPLE elisp
 (run-at-time "11 min" t #'elfeed-update)
+(run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 #+END_EXAMPLE
 
 #+BEGIN_QUOTE
@@ -639,6 +684,11 @@ Useful function if you want to quick inspect the face under cursor
       (if face (message "Face: %s" face) (message "No face at %d" pos))))
 #+end_src
 
+Get the list of font families =(font-family-list)=; here's the code to set a random font family in the current frame.
+
+#+begin_src elisp
+  (set-face-font 'default (seq-random-elt (font-family-list)))
+#+end_src
 *** Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]
@@ -658,10 +708,11 @@ Useful function if you want to quick inspect the face under cursor
 I would like to thanks:
 - [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
 - [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
-- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
+- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
 - [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
 - [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
-- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄 also thanks to [[https://orgmode.org/worg/][worg]] 🌈
+- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄
+- [[https://orgmode.org/worg/][worg]] 🌈
 - [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
 - [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
 - [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]

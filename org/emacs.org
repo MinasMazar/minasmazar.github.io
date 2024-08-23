@@ -5,13 +5,431 @@
 #+STARTUP: show2levels
 #+SETUPFILE: ../../templates/_header.org
 #+PROPERTY: header-args :tangle ~/.emacs.d.minemacs/init.el :mkdirp true
-OPTIONS: toc:t
+#+OPTIONS: toc:nil
 
-⛪ I'm a fervent Emacs evangelist!
+I'm a fervent [[https://www.gnu.org/software/emacs][Emacs]] evangelist! ⛪
 
-Here's some resources:
-- [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
-- [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
-- [[file:holymacs.org][Holymacs]] ([[raw-relative:][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
+* Why Emacs?
 
-In the years I wrote several Emacs configuration files and also some /distros/, but right now I'm using my own backed emacs named [[file:holymacs.org][=holymacs=]]. There is also another configuration called [[file:minemacs.org][=minemacs=]], that aims to be as minimal as possible (i.e. prefer built-in solutions over using external packages).
+I think the video [[https://www.youtube.com/watch?v=sBc7toJaCxw]["Returning to the Church (of Emacs)"]] by [[https://joshblais.com/][Joshua Blais]] explains it very well ☺️
+
+* My configurations
+- [[file:emacs/minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
+- [[file:holymacs.org][Holymacs]] ([[eww:/holymacs.org][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
+- [[/init.el][init.el]] (real minimal configuration adding only =god-mode= as /modal editing/ layer)
+
+* Resources and Credits
+
+- [[https://www.gnu.org/software/emacs/documentation.html][Emacs]] [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][Elisp manual (pdf)]]
+- [[https://wikemacs.org/wiki/Emacs_Wiki][WikEmacs]], [[https://www.emacswiki.org/][EmacsWiki]], [[https://emacs.stackexchange.com/][StackExchange]], [[https://www.reddit.com/r/emacs/][Reddit]]
+- [[https://raw.githubusercontent.com/emacs-tw/awesome-elisp/refs/heads/master/README.org][Awesome Elisp]]
+- online documentation for [[http://orgmode.org][org-mode 🦄]] and [[https://orgmode.org/worg/][worg 🌈]]
+- [[https://emacs.tv/][EmacsTV! 📺]]
+
+#+begin_src emacs-lisp
+  (use-package emacstv
+    :vc (:url "https://github.com/emacstv/emacstv.github.io"))
+#+end_src
+
+  Here's some /credits/ from other adepts for their inspiring work 😁
+
+- [[https://stallman.org/][Richard Stallman]]
+- [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
+- [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
+- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]]
+  that makes me *fall in love* with Emacs. ;-)
+- [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
+- [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
+- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄
+- [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
+- [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
+- [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
+- [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]], [[https://karthinks.com/tags/emacs/][Karthinks]]
+
+* On hand doc: Commands, functions, variables, keybindings
+
+Just press ~C-h o~ to get help on those symbols.
+
+- =add-file-local-variable= (append at bottom of the file) and =add-file-local-variable-prop-line= (prepend in the first line)
+- =align-regexp=
+- =auto-mode-alist=
+- =browse-url-generic-program=
+- =browse-url-of-buffer=
+- =command-switch-alist=
+- =completions-max-height=
+- =completion-auto-help=
+- =compilation-scroll-output=
+- =current-time-string=
+- =dired-guess-shell-alist-user=
+- =display-time-day-and-date=
+- =display-time-mode=
+- =epa-pinentry-mode=
+- =format-time-string=
+- =describe-text-properties=
+- =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
+- =find-name-dired=
+- =frame-title-format=
+- =image-crop=
+- =imenu-generic-expression=
+- =json-pretty-print-buffer=
+- =make-list= and =number-sequence=
+- =mm-discouraged-alternatives=
+- =org-agenda-include-diary=
+- =org-agenda-custom-commands=
+- =org-archive-subtree-default=
+- =org-babel-load-file=
+- =org-todo-keywords=
+- =pp-eval-expression=
+- =proced=
+- =project-switch-commands=
+- =shr-inhibit-images=
+- =string-match=
+
+- ~C-x @~ prefix allow to reach/remap alt/super/Hyper keys
+- ~C-h R~
+
+* [[info:org#Working with Source Code][Org code-blocks]]
+
+#+begin_example org
+,#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
+  wc -w $filename
+,#+END_SRC
+#+end_example
+
+* String and Symbols
+
+#+begin_src elisp
+(symbol-name 'some-symbol)
+; => "some-symbol"
+(intern "some-symbol")
+; => some-symbol
+#+end_src
+
+* Macros
+
+#+begin_src elisp
+  (defmacro ++ (x)
+    (list 'setq x (list '1+ x)))
+#+end_src
+
+* Vectors
+
+Get an element from a vector
+
+#+begin_example emacs-lisp
+;; get a element from vector
+(aref ["a" "b" "c"] 0) ; ⇒ "a"
+;; get a element from vector
+(elt ["a" "b" "c"] 0) ; ⇒ "a"
+#+end_example
+
+What's the difference between =aref= and =elt=?
+=elt= is more general. It works on vector and list. But if you know
+it's vector, you should use =aref=, because it's precise and faster.
+
+* Handle List
+
+To find an element
+
+- =member=
+- =contains=
+- =seq-find=
+
+#+begin_example elisp
+  (seq-find (lambda (val) (= 3 val)) '(1 2 3))
+#+end_example
+
+* Ibuffer
+
+To occur among marked buffers in =ibuffer= press ~O~.
+
+* Imenu
+* Eshell
+
+Download four random images from picsum using an index.
+
+#+begin_src elisp
+  for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
+#+end_src
+
+* EWW ~ experimenting with =eww-retrieve-command=
+
+Possible values for this variable could be
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
+
+* (interactive) functions
+
+Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
+
+#+begin_example emacs-lisp
+  (defun minemacs/demo-function (url &optional handler)
+    "Example function."
+    (interactive (list
+		  (read-from-minibuffer "URL: ")
+		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+     (message (format "url: %s, handler: %s" url handler )))
+#+end_example
+
+* Regular Expression Syntax (regexp)
+
+You can use the wonderful tool =regexp-builder=. Use =string-match= to run a regexp and =match-string= to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
+
+#+begin_example elisp
+(let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
+  (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
+#+end_example
+
+#+begin_quote
+Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
+
+The following characters are special : . * + ? ^ $ \ [
+
+Between brackets [], the following are special : ] - ^
+
+Many characters are special when they follow a backslash – see below.
+
+  .        any character (but newline)
+  *        previous character or group, repeated 0 or more time
+  +        previous character or group, repeated 1 or more time
+  ?        previous character or group, repeated 0 or 1 time
+  ^        start of line
+  $        end of line
+  [...]    any character between brackets
+  [^..]    any character not in the brackets
+  [a-z]    any character between a and z
+  \        prevents interpretation of following special char
+  \|       or
+  \w       word constituent
+  \b       word boundary
+  \sc      character with c syntax (e.g. \s- for whitespace char)
+  \( \)    start\end of group
+  \< \>    start\end of word
+  \_< \_>  start\end of symbol
+  \` \'    start\end of buffer\string
+  \1       string matched by the first group
+  \n       string matched by the nth group
+  \{3\}    previous character or group, repeated 3 times
+  \{3,\}   previous character or group, repeated 3 or more times
+  \{3,6\}  previous character or group, repeated 3 to 6 times
+  \=       match succeeds if it is located at point
+*?, +?, and ?? are non-greedy versions of *, +, and ? – see NonGreedyRegexp. Also, \W, \B, and \Sc match any character that does not match \w, \b, and \sc.
+
+Characters are organized by category. Use C-u C-x = to display the category of the character under the cursor.
+
+  \ca      ascii character
+  \Ca      non-ascii character (newline included)
+  \cl      latin character
+  \cg      greek character
+Here are some syntax classes that can be used between brackets, e.g. [[:upper:]\|[:digit:]\.].
+
+  [:digit:]  a digit, same as [0-9]
+  [:alpha:]  a letter (an alphabetic character)
+  [:alnum:]  a letter or adigit (an alphanumeric character ()
+  [:upper:]  a letter in uppercase
+  [:space:]  a whitespace character, as defined by the syntax table
+  [:xdigit:] an hexadecimal digit
+  [:cntrl:]  a control character
+  [:ascii:]  an ascii character
+Syntax classes:
+
+  \s-   whitespace character        \s/   character quote character
+  \sw   word constituent            \s$   paired delimiter
+  \s_   symbol constituent          \s'   expression prefix
+  \s.   punctuation character       \s<   comment starter
+  \s(   open delimiter character    \s>   comment ender
+  \s)   close delimiter character   \s!   generic comment delimiter
+  \s"   string quote character      \s|   generic string delimiter
+  \s\   escape character
+#+end_quote
+
+* Timers
+
+You can run specified function at specified time and with a specific timeout. Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
+
+#+BEGIN_EXAMPLE elisp
+(run-at-time "11 min" t #'elfeed-update)
+(run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
+#+END_EXAMPLE
+
+#+BEGIN_QUOTE
+The list-timers command lists all the currently active timers. There’s
+only one command available in the buffer displayed: c
+(timer-list-cancel) that will cancel the timer on the line under
+point.
+#+END_QUOTE
+
+* Insert colorize text programmatically
+
+#+begin_example elisp
+(insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
+#+end_example
+
+* Buffer management
+
+Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer][stackoverflow]].
+
+#+begin_src emacs-lisp :tangle no
+(defun minemacs-clear-buffer ()
+  "clear whole buffer add contents to the kill ring"
+  (interactive)
+  (kill-region (point-min) (point-max)))
+
+(defun minemacs-clear-buffer-permenantly ()
+  "clear whole buffer, contents is not added to the kill ring"
+  (interactive)
+  (delete-region (point-min) (point-max)))
+#+end_src
+
+* Transparent frames
+#+begin_src emacs-lisp
+(set-frame-parameter nil 'alpha-background 100) ; For current frame
+(add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
+#+end_src
+* Faces and fonts
+
+If you'd like to have a smaller font on compialtion buffers
+
+#+begin_src elisp
+  (add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
+#+end_src
+
+Useful function if you want to quick inspect the face under cursor
+
+#+begin_src elisp
+  (defun what-face (pos)
+    (interactive "d")
+    (let ((face (or (get-char-property pos 'read-face-name)
+                    (get-char-property pos 'face))))
+      (if face (message "Face: %s" face) (message "No face at %d" pos))))
+#+end_src
+
+Get the list of font families =(font-family-list)=; here's the code to set a random font family in the current frame.
+
+#+begin_src elisp
+  (set-face-font 'default (seq-random-elt (font-family-list)))
+#+end_src
+* Libaries
+
+- [[https://tkf.github.io/emacs-request/][request.el]]
+
+* Widget example
+
+Example stolen from [[https://www.gnu.org/software/emacs/manual/html_node/widget/Programming-Example.html][here]].
+
+#+begin_src emacs-lisp
+  (require 'widget)
+
+  (eval-when-compile
+    (require 'wid-edit))
+
+  (defvar widget-example-repeat)
+
+  (defun widget-example ()
+    "Create the widgets from the Widget manual."
+    (interactive)
+    (let ((buffer (switch-to-buffer "*Widget Example*")))
+      (with-current-buffer buffer
+	(kill-all-local-variables)
+	(make-local-variable 'widget-example-repeat)
+	(let ((inhibit-read-only t))
+	  (erase-buffer))
+	(remove-overlays)
+	(widget-insert "Here is some documentation.\n\n")
+	(widget-create 'editable-field
+		       :size 13
+		       :format "Name: %v " ; Text after the field!
+		       "My Name")
+	(widget-create 'menu-choice
+		       :tag "Choose"
+		       :value "This"
+		       :help-echo "Choose me, please!"
+		       :notify (lambda (widget &rest ignore)
+				 (message "%s is a good choice!"
+					  (widget-value widget)))
+		       '(item :tag "This option" :value "This")
+		       '(choice-item "That option")
+		       '(editable-field :menu-tag "No option" "Thus option"))
+	(widget-create 'editable-field
+		       :format "Address: %v"
+		       "Some Place\nIn some City\nSome country.")
+	(widget-insert "\nSee also ")
+	(widget-create 'link
+		       :notify (lambda (&rest ignore)
+				 (widget-value-set widget-example-repeat
+						   '("En" "To" "Tre"))
+				 (widget-setup))
+		       "other work")
+	(widget-insert
+	 " for more information.\n\nNumbers: count to three below\n")
+	(setq widget-example-repeat
+	      (widget-create 'editable-list
+			     :entry-format "%i %d %v"
+			     :notify
+			     (lambda (widget &rest ignore)
+			       (let ((old (widget-get widget
+						      ':example-length))
+				     (new (length (widget-value widget))))
+				 (unless (eq old new)
+				   (widget-put widget ':example-length new)
+				   (message "You can count to %d." new))))
+			     :value '("One" "Eh, two?" "Five!")
+			     '(editable-field :value "three")))
+	(widget-insert "\n\nSelect multiple:\n\n")
+	(widget-create 'checkbox t)
+	(widget-insert " This\n")
+	(widget-create 'checkbox nil)
+	(widget-insert " That\n")
+	(widget-create 'checkbox
+		       :notify (lambda (&rest ignore) (message "Tickle"))
+		       t)
+	(widget-insert " Thus\n\nSelect one:\n\n")
+	(widget-create 'radio-button-choice
+		       :value "One"
+		       :notify (lambda (widget &rest ignore)
+				 (message "You selected %s"
+					  (widget-value widget)))
+		       '(item "One") '(item "Another One.")
+		       '(item "A Final One."))
+	(widget-insert "\n")
+	(widget-create 'push-button
+		       :notify (lambda (&rest ignore)
+				 (if (= (length
+					 (widget-value widget-example-repeat))
+					3)
+				     (message "Congratulation!")
+				   (error "Three was the count!")))
+		       "Apply Form")
+	(widget-insert " ")
+	(widget-create 'push-button
+		       :notify (lambda (&rest ignore)
+				 (widget-example))
+		       "Reset Form")
+	(widget-insert "\n")
+	(use-local-map widget-keymap)
+	(widget-setup))
+      (pop-to-buffer buffer)))
+#+end_src
+
+* Kiosk
+
+Drive a graphical Emacs instance via =emacsclient=.
+
+#+begin_src emacs-lisp
+  (defun first-x-frame ()
+    (car (filtered-frame-list (lambda (frame) (member (framep frame) '(ns x))))))
+
+  (defmacro with-x-frame (body)
+    `(let ((frame (first-x-frame)))
+      (with-selected-frame frame ,body)))
+#+end_src
+
+* Useful topics
+- [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key-Bindings in Emacs]]
+- [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
+- [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]
+
+  #+begin_example elisp
+    (let ((start (point-min))
+	  (end (point-max)))
+      (buffer-substring start end))
+  #+end_example

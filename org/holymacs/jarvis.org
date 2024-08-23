@@ -4,53 +4,70 @@
 #+DATE: <2024-04-20 Sat>
 #+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
 #+SETUPFILE: ../../templates/_header.org
+#+STARTUP: show2levels
 #+HTML_LINK_UP: ../holymacs.html
 
-* Jarvis
-
-Preview the HTML exported buffer you see when exporting an org file in a preview using some built-in Emacs function.
+* Helpers
 
 #+begin_src elisp
-  (advice-add #'org-html-export-as-html :filter-return #'browse-url-of-buffer)
+  (defun holymacs-random (items)
+    "Pick a random element from a list"
+    (nth (random (length items)) items))
+
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
 #+end_src
 
-There's too silence here.. 😱 let's just play something! 🤘
+* Youtube
 
 #+begin_src elisp
-    (defcustom holymacs-jarvis-youtube-sources
-      '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
-      "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
-      :type '(repeat :tag "URLs" (string)))
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
-    (defun holymacs-jarvis-play-youtube (&optional url)
-      "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
-      (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
-      (let ((command (format "mpv \"%s\"" url))
-    	(buffer-name (format "MPV: %s" url)))
-        (async-shell-command command buffer-name)))
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (let ((command (format "mpv \"%s\"" url))
+  	(buffer-name (format "mpv: %s" url)))
+      (async-shell-command command buffer-name)))
+
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+    (interactive)
+    (let ((url (holymacs-random jarvis/youtube-sources)))
+      (jarvis/open-youtube url)))
+
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (browse-url-default-browser url))
 #+end_src
 
-* Tabspaces
+Check [[https://developers.google.com/apis-explorer?hl=it][documentation about Google APIs]].
 
 #+begin_src elisp
-  (use-package tabspaces
-    :hook (after-init . tabspaces-mode)
-    :commands (tabspaces-switch-or-create-workspace
-  	       tabspaces-open-or-create-project-and-workspace)
-    :bind
-    (("s-{" . tab-previous)
-     ("s-}" . tab-next))
-    :custom
-    (tabspaces-keymap-prefix "M-o w")
-    (tabspaces-use-filtered-buffers-as-default t)
-    (tabspaces-default-tab "Default")
-    (tabspaces-remove-to-default t)
-    (tabspaces-initialize-project-with-todo t)
-    (tabspaces-todo-file-name "project-todo.org")
-    ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
-    ;; (tabspaces-session t)
-    ;; (tabspaces-session-auto-restore t))
-    )
+  (use-package password-store) ;;  (password-store-get "youtube-api")
+  (use-package request
+    :after password-store
+    :config
+    (defcustom jarvis/youtube-api-key "" "Youtube API key")
+    (defvar jarvis/youtube-api-key "" "Youtube API key")
+    (defun jarvis/channel-vids (url)
+      "Get a list of videos given a Youtube channel (url)"
+      (request "https://www.googleapis.com/youtube/v3/search"
+        :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 2))
+        :parser 'json-read
+        :success (cl-function
+  		(lambda (&key data &allow-other-keys)
+                    (when data
+                      (with-current-buffer (get-buffer-create "*youtube-vids*")
+                        (erase-buffer)
+                        (insert (prin1-to-string data))
+                        (pop-to-buffer (current-buffer)))))))))
 #+end_src
 
 * COMMENT Pop terminal ⚠️ wip ⚠️
@@ -71,31 +88,6 @@ There's too silence here.. 😱 let's just play something! 🤘
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
-* Focus current window
-
-#+begin_src elisp
-  (use-package golden-ratio
-    :bind
-    (("M-o W" . #'golden-ratio-mode)))
-#+end_src
-
-* COMMENT HTTP Client
-
-#+begin_src elisp
-(use-package request)
-#+end_src
-
-Example usage
-
-#+begin_example
-(request "http://httpbin.org/get"
-  :params '(("key" . "value") ("key2" . "value2"))
-  :parser 'json-read
-  :success (cl-function
-            (lambda (&key data &allow-other-keys)
-              (message "I sent: %S" (assoc-default 'args data)))))
-#+end_example
-
 * COMMENT Emacs Async
 
 #+begin_src elisp
@@ -105,29 +97,6 @@ Example usage
 #+begin_example elisp
   (async-start (lambda () (sleep-for 3)) (lambda (ff) (message "done")))
 #+end_example
-
-* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
-
-Add a capture template to store notes in =inbox=
-
-#+begin_src elisp
-  (use-package org
-    :config
-    (require 'org-capture)
-    (add-to-list 'org-capture-templates
-  		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
-  		    "* TODO %?\n %i\n  %a"))
-    :bind
-    (:map org-mode-map
-  	  ("M-p" . #'org-move-subtree-up)
-  	  ("M-n" . #'org-move-subtree-down)))
-#+end_src
-
-#+begin_src elisp
-(use-package org-roam
-  :bind
-  (("M-o r f" . #'org-roam-node-find)))
-#+end_src
 
 * COMMENT Autoinsert and templates ⚠️ wip ⚠️
 
@@ -305,6 +274,10 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 #+end_example
 
+*** Tweaking
+
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
+
 ** COMMENT Gnus ⚠️ wip ⚠️
 
 To configure gnus in order to read your Gmail, you have to:
@@ -332,6 +305,28 @@ Then configure the =gnus-select-method=
   (use-package bongo)
 #+end_src
 
+* [[https://cht.sh/][cht.sh]]
+
+#+begin_src sh :tangle no
+curl https://cht.sh 
+#+end_src
+
+#+begin_src elisp
+  (defun cht.sh-help (helpable)
+    (interactive "sHelp: ")
+    (cht.sh-query "/:help"))
+
+  (defun cht.sh-list ()
+    (interactive)
+    (cht.sh-query "/:list"))
+
+  (defun cht.sh-query (query)
+    (interactive "sQuery: ")
+    (let ((cmd (format "curl https://cht.sh/%s" query))
+  	(buffer-name (format "*cht-sh* <%s>" query)))
+      (async-shell-command cmd buffer-name)))
+#+end_src
+
 * Search on the web: engine-mode
 #+begin_src elisp
   (use-package engine-mode
@@ -342,10 +337,15 @@ Then configure the =gnus-select-method=
       "Display the results of the query."
       (interactive)
       (let ((browse-url-handlers nil)
-	    (browse-url-browser-function browser-function))
-	(browse-url
-	 (format-spec search-engine-url
-		      (format-spec-make ?s (url-hexify-string search-term))))))
+  	    (browse-url-browser-function browser-function))
+  	(browse-url
+  	 (format-spec search-engine-url
+  		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine dropbox
+      "https://www.dropbox.com/search/personal?query=%s"
+      :browser 'browse-url-firefox
+      :keybinding "D")
 
     (defengine duckduckgo
       "https://duckduckgo.com/?q=%s"

@@ -1,0 +1,83 @@
+#+TITLE: MinasMazar's blog ~ Project Kiosk
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-10-28 Mon>
+#+STARTUP: overview
+
+These are some notes on how I turned my Raspberry Pi into a /Kiosk/ using Emacs.
+
+The equipment:
+- [[https://www.raspberrypi.com/products/raspberry-pi-4-model-b/][Raspberry Pi 4]] + [[https://www.waveshare.com/4.3inch-dsi-lcd.htm][Waveshare 4.3inch Capacitive Touch Display (DSI Interface, 800×480)]] within [[https://amzn.eu/d/fDUc4BF][ad-hoc case]]
+- an external TV with an HDMI cable (+ mini-HDMI adapter that plugs in the rpi case)
+
+Here's more details about [[file:dev.org::*Use Raspberry Pi in "Kiosk" mode][Raspberry PI in kiosk mode]].
+
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "kiosk.el") :mkdirp yes
+  (defun kiosk-picsum-wallpaper-stop-timer ()
+    (interactive)
+    (and (timerp picsum-wallpaper-timer-obj)
+         (cancel-timer picsum-wallpaper-timer-obj)))
+
+  (defun kiosk-picsum-wallpaper-change ()
+    (interactive)
+    (let ((display-buffer-alist (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command "display -window root  https://picsum.photos/1920/1080.jpg" nil nil)))
+
+  (defun kiosk-picsum-wallpaper-start-timer ()
+      (interactive)
+      (setq picsum-wallpaper-timer-obj (run-at-time t (* 60 19) #'kiosk-picsum-wallpaper-change)))
+#+end_src
+
+Install midori.
+
+#+begin_src sh
+  sudo apt install midori
+#+end_src
+
+This is the shell script that will start midori in fullscrenn mode, showing our =~/tmp/index.html= page.
+
+#+begin_src sh :tangle ~/kiosk.sh
+#!/bin/bash
+
+DISPLAY=:0 midori -e fullscreen file:///tmp/index.html
+#+end_src
+
+This reload the browser page each 2 minutes.
+
+#+begin_src elisp
+(defun midori-reload ()
+  (shell-command "midori -e tab-reload"))
+
+(defun midori-start-reload-timer ()
+  (run-at-time 10 120 #'midori-reload))
+
+;; (midori-start-reload-timer)
+#+end_src
+
+This is a sample =index= page written in org. You can export as HTML and show as the main content of our kiosk.
+
+#+begin_src org
+  ,#+OPTIONS: toc:nil
+  ,#+HTML_HEAD: <script src="https://cdn.tailwindcss.com"></script>
+
+  ,#+CAPTION: A random photo
+  ,#+ATTR_HTML: :alt photo image :title Gallery
+  [[https://picsum.photos/1920/1080.jpg]]
+#+end_src
+
+Or you can just write yout own HTML.
+
+#+begin_src html :tangle /tmp/index.html
+  <html>
+    <head>
+      <title>Emacs Kiosk</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body>
+      <img src="https://picsum.photos/1920/1080.jpg" class="w-screen h-screen"/>
+    </body>
+  </html>
+#+end_src
+
+

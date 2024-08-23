@@ -1,0 +1,1891 @@
+#+TITLE: Minemacs Modules
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-12-10 Tue>
+#+STARTUP: overview
+#+PROPERTY: header-args :tangle (minemacs-tangle-if-not-disabled "minemacs-modules.el") :mkdirp yes
+
+* Minemacs core
+
+#+begin_src elisp
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+  (defun stringify (obj)
+    (cond
+     ((stringp obj) obj)
+     ((symbolp obj) (symbol-name obj))
+     (t (format "%s" obj))))
+
+  (defun async-shell-command-no-window (command)
+    (interactive "sAsync shell command (no window): ")
+    (let ((display-buffer-alist
+	   (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command command)))
+
+  (defvar minemacs--cache (make-hash-table :test 'equal))
+  (defvar minemacs-cache-directory (file-name-concat user-emacs-directory ".minemacs-cache"))
+
+  (defun minemacs-cache-file-name (id &optional namespace)
+    (expand-file-name (file-name-concat minemacs-cache-directory (stringify namespace) (md5 (stringify id)))))
+
+  (defun minemacs-cache-key (id &optional namespace)
+    (list :id id :namespace namespace))
+
+  (defun minemacs-cache-get (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	  (cache-value (gethash cache-key minemacs--cache)))
+      (if cache-value cache-value (minemacs-cache-get-from-file id namespace))))
+
+  (defun minemacs-cache-get-from-file (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (when (file-readable-p cache-key)
+	(with-temp-buffer
+	  (insert-file-contents cache-key)
+	  ;;(cl-assert (eq (point) (point-min)))
+	  (read (current-buffer))))))
+
+  (defun minemacs-cache-set (id data &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (puthash cache-key data minemacs--cache) data))
+
+  (defun minemacs-cache-set-to-file (id data &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	   (cache-base-dir (file-name-directory cache-key)))
+      (mkdir cache-base-dir t)
+      (with-temp-file cache-key (prin1 data (current-buffer)))))
+#+end_src
+
+* Overrides
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "overrides.el") :mkdirp yes
+:END:
+
+** Bookmarks + browse-url
+Here add a custom bookmark handler relying on =browse-url= and =browse-url-handlers=, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
+
+#+begin_src emacs-lisp
+  (require 'eww)
+  (require 'bookmark)
+  (defun browse-url-bookmark-jump (bookmark)
+    "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
+    Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
+    (browse-url (bookmark-prop-get bookmark 'location)))
+  (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
+#+end_src
+
+* Custom Helpers
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "custom-helpers.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (require 'cl-lib)
+  (require 'ucs-normalize)
+
+  (defun random-from-list (list)
+    (nth (random (length list)) list))
+
+  (defun dashize (str)
+    (cl-remove-if
+     (lambda (char)
+       (> char 127))
+     (ucs-normalize-NFKD-string (s-dashed-words str))))
+#+end_src
+
+* Info and Help
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "info-help.el") :mkdirp yes
+:END:
+
+** Marginalia
+
+#+begin_src elisp
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+	   ("M-A" . marginalia-cycle))
+
+    ;; The :init section is always executed.
+    :init
+
+    ;; Marginalia must be activated in the :init section of use-package such that
+    ;; the mode gets enabled right away. Note that this forces loading the
+    ;; package.
+    (marginalia-mode))
+#+end_src
+
+** Helpful                                                          :disabled:
+
+#+begin_src elisp
+  (use-package helpful
+    :bind
+    ("C-h f" . #'helpful-callable)
+    ("C-h v" . #'helpful-variable)
+    ("C-h k" . #'helpful-key)
+    ("C-h x" . #'helpful-command))
+#+end_src
+
+** Show keybindings
+
+#+begin_src elisp
+  (use-package which-key
+    :config
+    (which-key-mode 1))
+#+end_src
+
+* Hail Hydra! 🐍                                               :wip:disabled:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "hydra.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (use-package hydra
+    :ensure t
+    :init
+
+    (defun send-key(key)
+      (setq unread-command-events (listify-key-sequence key)))
+
+    :config
+    (defhydra hydra-nav (:color pink
+			     :pre (setq cursor-type 'box)
+			     :post (setq cursor-type 'bar))
+	    "hydra-nav:"
+	    ("w" #'kill-ring-save "w")
+	    ("n" #'next-line "n")
+	    ("p" #'previous-line "p")
+	    ("a" #'beginning-of-line "a")
+	    ("e" #'end-of-line "e")
+	    ("<" #'beginning-of-buffer "<")
+	    ("o" #'other-window "o")
+	    (">" #'end-of-buffer ">")
+	    ("u" #'undo "undo")
+	    ("i" nil "quit"))
+
+    (defhydra hydra-kommand (:color teal
+				    :pre (setq cursor-type 'box)
+				    :post (setq cursor-type 'bar))
+	    "hydra-kommand"
+	    ("k" #'execute-extended-command "🚀 Kommand")
+	    ("m" #'hydra-nav/body "modal")
+	    ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+	    ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
+	    ("e" #'eval-defun "Λ eval-defun")
+	    ("l" #'god-mode "👼 god")
+	    ("r" #'repeat "repeat")
+	    ("x" #'dabbrev-expand "expand")
+	    ("b" #'ibuffer "🧰 ibuffer")
+	    ("j" #'bookmark-jump "🔖 bookmark")
+	    ("a" #'org-agenda)
+	    ("q" nil "_q_uit"))
+    :bind
+    (("s-o" . #'hydra-kommand/body)
+     ("s-l" . #'hydra-nav/body)))
+#+end_src
+
+* Helm 🛥️                                                           :disabled:
+
+#+begin_src emacs-lisp
+  (use-package helm
+    :bind
+    ("M-x" . #'helm-M-x)
+    ("C-x C-f" . #'helm-find-files)
+    ("C-x p" . #'helm-project)
+    :config
+    (helm-mode 1))
+  (use-package helm-eww)
+  (use-package helm-flycheck)
+  (use-package helm-flymake)
+  (use-package helm-flyspell)
+  (use-package helm-frame)
+  (use-package helm-project
+    :custom
+    (helm-project-map "C-x p"))
+  (use-package helm-swoop
+    :bind
+    ("s-f" . #'helm-swoop))
+  (use-package helm-wikipedia)
+  (use-package helm-youtube)
+#+end_src
+
+* Eshell
+** Functions
+
+#+begin_src elisp
+  (defun eshell/ve (&rest args)
+    (let* ((cmd (car args))
+	   (argv (cdr args))
+	   (argl (string-join argv " ")))
+      (if argv (eshell-exec-visual cmd argl) (eshell-exec-visual cmd))))
+#+end_src
+
+** Scripts
+
+#+begin_src elisp :tangle ~/scripts/wallpaper-set.esh :mkdirp yes
+  set wallpaper ${random-from-list ${ls ~/Pictures/wallpapers/*}}
+  ln -sf $wallpaper  ~/Pictures/wallpaper
+  feh --bg-fill ~/Pictures/wallpaper
+#+end_src
+
+* Imenu
+
+#+begin_src elisp
+  (use-package imenu
+    :init
+    (setq eww-imenu-heading-expression '((nil "^* +\\(.+\\)" 1))
+	  eshell-imenu-commands-expression '((nil "\$ \\(\\w+\\)" 1)))
+    :hook
+    (eww-mode . (lambda () (setq imenu-generic-expression eww-imenu-heading-expression)))
+    (eshell-mode . (lambda () (setq imenu-generic-expression eshell-imenu-commands-expression))))
+#+end_src
+
+* IDE 🖥️
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "ide.el") :mkdirp yes
+:END:
+
+** MacOS compatibility
+
+#+begin_src elisp
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
+
+** Markup languages
+*** Markdown
+
+#+begin_src elisp
+  (use-package markdown-mode)
+#+end_src
+
+** Data serialization
+
+#+begin_src elisp
+  (use-package csv)
+  (use-package csv-mode)
+  (use-package yaml-mode)
+#+end_src
+
+** Programming languages
+*** Elixir
+
+#+begin_src elisp
+  (use-package elixir-mode)
+  (use-package exunit
+    :hook
+    (elixir-mode . exunit-mode))
+  ;; Alchemist seems to be outdated and not more maintained
+  ;; (use-package alchemist
+  ;;   :config
+  ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+#+end_src
+
+Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
+
+#+begin_src elisp
+  (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
+#+end_src
+
+** Project
+
+#+begin_src emacs-lisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(project-shell "shell")))
+#+end_src
+
+** Versioning
+
+#+begin_src elisp
+  (use-package magit
+  :bind
+  (("C-x g" . #'magit-status)))
+#+end_src
+
+#+begin_src elisp
+  (use-package diff-hl
+    :config
+    (diff-hl-mode 1))
+#+end_src
+** Docker
+
+#+begin_src elisp
+  (use-package docker)
+  (use-package dockerfile-mode)
+  (use-package docker-compose-mode)
+#+end_src
+
+** Workspaces                                                       :disabled:
+
+#+begin_src elisp
+  (use-package tabspaces
+    :hook (after-init . tabspaces-mode)
+    :commands (tabspaces-switch-or-create-workspace
+  	     tabspaces-open-or-create-project-and-workspace)
+    :bind
+    (("s-q" . #'tab-switch)
+     ("s-{" . #'tab-previous)
+     ("s-}" . #'tab-next))
+    :custom
+    (tabspaces-keymap-prefix "C-x t w")
+    (tabspaces-use-filtered-buffers-as-default t)
+    (tabspaces-default-tab "Default")
+    (tabspaces-remove-to-default t)
+    (tabspaces-initialize-project-with-todo t)
+    (tabspaces-todo-file-name "project-todo.org")
+    ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+    ;; (tabspaces-session t)
+    ;; (tabspaces-session-auto-restore t))
+    )
+#+end_src
+
+** Templating
+
+#+begin_src elisp
+  (use-package yasnippet
+    :custom
+    (yas-snippet-dirs '("~/Dropbox/minemacs/snippets"))
+    :config
+    (yas-global-mode 1))
+
+  (use-package yasnippet-snippets
+    :after yasnippet)
+#+end_src
+
+** Terminal
+
+Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
+
+#+begin_src elisp
+  (use-package vterm
+    :after god-mode
+    :config
+    (require 'god-mode)
+    (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+    (defun minemacs-vterm-exec (command)
+      (interactive "sCommand: ")
+      (let ((buffer-name (format "*vterm <%s>*" command)))
+	(with-current-buffer (vterm buffer-name)
+	(vterm-send-string (format "%s && exit\n" command)))))
+
+    (defun minemacs-tmux/open ()
+      (interactive)
+      (minemacs-vterm-exec "tmux attach || tmux")))
+#+end_src
+
+** [[https://cht.sh/][cht.sh]]
+
+#+begin_src sh :tangle no
+curl https://cht.sh 
+#+end_src
+
+#+begin_src elisp
+  (defun cht.sh-help (helpable)
+    (interactive "sHelp: ")
+    (cht.sh-query "/:help"))
+
+  (defun cht.sh-list ()
+    (interactive)
+    (cht.sh-query "/:list"))
+
+  (defun cht.sh-query (query)
+    (interactive "sQuery: ")
+    (let ((cmd (format "curl https://cht.sh/%s" query))
+  	(buffer-name (format "*cht-sh* <%s>" query)))
+      (async-shell-command cmd buffer-name)))
+#+end_src
+
+** Github API
+
+In order to make the authentication work remember to add your Github username and API token in the =~/.authinfo.gpg=; also customize =minemacs-github-api-username= in order to match the auth source entry.
+
+#+begin_example authinfo
+  machine api.github.com login YOUR@EMAIL.COM password YOUR-GITHUB-API-TOKEN port 80
+#+end_example
+
+#+begin_src emacs-lisp
+  (defcustom minemacs-github-api-username nil "Your Github username (email)" :type '(string))
+
+  (defun minemacs-github-api-token ()
+    (if-let* ((matched (auth-source-search :host "api.github.com" :login minemacs-github-api-username :port 80))
+	      (auth (car matched)))
+	(funcall (plist-get auth :secret))))
+
+  (defun minemacs-github--display-repos (repos)
+    (with-current-buffer (get-buffer-create "test")
+      (erase-buffer)
+      (seq-doseq (repo repos)
+	(let ((name (gethash "full_name" repo)))
+	  (insert (format "=> %s\n" name))))
+      (pop-to-buffer (current-buffer))))
+
+  (defun minemacs-github--fetch-repos ()
+    (let* ((token-header (format "token %s" (minemacs-github-api-token)))
+	   (url-request-extra-headers `(
+					("Content-Type" . "application/json")
+					("Authorization" . ,token-header))))
+      (with-temp-buffer
+	(url-insert-file-contents "https://api.github.com/user/repos")
+	(minemacs-github--display-repos (json-parse-buffer)))))
+
+  (defun minemacs-github-repos ()
+    (interactive)
+    (minemacs-github--fetch-repos))
+#+end_src
+
+* Jarvis 🤖
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "jarvis.el") :mkdirp yes
+:END:
+
+Jarvis is a module that enables some high-level/automation features.
+
+** Youtube 🎥
+*** Helper functions
+
+Given a Youtuve channel URL, returns the channel ID. This is  useful in cases like when you want to get the RSS feed of a Youtube channel.
+
+#+begin_src elisp
+  (defun jarvis-youtube-get-channel-rss (url &optional action)
+    "Given a Youtuve channel URL, returns the channel ID. This is
+  useful in cases like when you want to get the RSS feed of a Youtube channel."
+    (interactive "sYoutube channel url: ")
+    (let* ((action (or action current-prefix-arg 0))
+  	 (url-user-agent "curl/8.7.1")
+  	 (url-request-extra-headers '(("Accept" . "*/*")))
+  	 (buffer (url-retrieve-synchronously url))
+  	 (feed-url (with-current-buffer buffer
+  		     (let* ((dom (libxml-parse-html-region))
+  			    (link (dom-search dom
+  					      (lambda (el)
+  						(and (string= (dom-tag el) "link")
+  						     (string= (dom-attr el 'itemprop) "url")))))
+  			    (channel-id-url (and link (dom-attr link 'href))))
+  		       (if channel-id-url
+  			   (let* ((_ (string-match "/channel/\\(\\w+\\)" channel-id-url))
+  				  (id (match-string 1 channel-id-url)))
+  			     (pop-to-buffer (current-buffer))
+  			     (format "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
+      (message feed-url)
+      (cond ((= action 1) (kill-new feed-url))
+  	  ((= action 2) (insert feed-url))
+  	  (t feed-url))))
+#+end_src
+
+*** Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)
+Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
+
+#+begin_src elisp
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (let ((entries (make-hash-table :test 'equal)))
+		   (dolist (entry jarvis/youtube-sources)
+		     (puthash (-first-item entry) (-second-item entry) entries))
+		   (list (gethash (completing-read "URL: " entries) entries))))
+    (empv-play url))
+
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+    (interactive)
+    (let ((entry (minemacs-random jarvis/youtube-sources))
+	  (url (nth 1 entry)))
+      (jarvis/open-youtube url)))
+
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+    (browse-url-default-browser url))
+#+end_src
+
+*** Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
+
+#+begin_src elisp
+  (use-package request)
+
+  (defcustom jarvis/youtube-api-key "" "Youtube API key")
+  (cl-defstruct (youtube-video (:constructor youtube-video-create)
+			       (:copier nil))
+    id title desc url channel channel-url categories tags)
+
+  (defun jarvis/youtube-search (query)
+    "Returns a list of youtube vidoes given a search term."
+    (interactive "sSearch: ")
+    (request "https://www.googleapis.com/youtube/v3/search"
+      :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
+      :parser 'json-read
+      :success (cl-function
+		(lambda (&key data &allow-other-keys)
+		  (when data
+		    (with-current-buffer (get-buffer-create "*youtube-vids*")
+		      (erase-buffer)
+		      (insert (prin1-to-string data))
+		      (pop-to-buffer (current-buffer))))))))
+
+  (defun jarvis/youtube-video (url)
+    "Returns details about a Youtube video given an URL"
+    (interactive "sURL: ")
+    (let ((id (jarvis/youtube--extract-id url)))
+      (request "https://www.googleapis.com/youtube/v3/videos"
+	:params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics,topicDetails,status,localizations"))
+	:parser 'json-read
+	:success (cl-function
+		  (lambda (&key data &allow-other-keys)
+		    (when data
+		      (let* ((items (alist-get 'items data))
+			     (video-data (elt items 0))
+			     (video (let-alist video-data
+				      (youtube-video-create
+				       :title .snippet.title
+				       :url .snippet.webpage-url
+				       :channel .snippet.channel
+				       :channel-url .snippet.channel-url
+				       :categories .snippet.categories
+				       :tags .snippet.tags
+				       :desc .snippet.description)))
+			     (buffer-name "*yt-vid*")) ; (normalize-string (youtube-video-title video))))
+			(with-current-buffer (get-buffer-create buffer-name)
+			  (erase-buffer)
+			  (insert (prin1-to-string video-data))
+			  ;; (insert (format "# [%s](%s)" (youtube-video-title video) (youtube-video-url video)))
+			  ;; (insert ?\n)
+			  ;; (insert (format "From [%s](%s)\n" (youtube-video-channel video) (youtube-video-channel-url video)))
+			  ;; (insert (youtube-video-desc video))
+			  (beginning-of-buffer)
+			  (pop-to-buffer (current-buffer))))))))))
+
+  (defun normalize-string (str)
+    (require 'cl-lib)
+    (require 'ucs-normalize)
+    (let* ((dstr (downcase str))
+	   (fstr (cl-remove-if
+		 (lambda (char)
+		   (> char 127))
+		 (ucs-normalize-NFKD-string dstr))))
+      fstr))
+
+  (defun jarvis/youtube--extract-id (string)
+    "Extract the id from a Youtube video URL"
+    (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
+      (match-string 1 string)))
+#+end_src
+
+** Collector 🗄️
+*** Video
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
+  (use-package s)
+  (require 'dom)
+
+  (defcustom jarvis-collect-video-collector-directory "~/Dropbox/collector"
+    "Base directory where to put the collected Youtube videos."
+    :type '(directory))
+
+  (defun jarvis-collect-video-collector--build-filename (vid)
+    (dashize (plist-get vid :title)))
+
+  (defun jarvis-collect-video-collector--build-pathname (vid &optional ext)
+    (let* ((ext (or ext "org"))
+	   (id (plist-get vid :id))
+	   (name (jarvis-collect-video-collector--build-filename vid))
+	   (filename (format "%s-%s.%s" id name ext)))
+      (expand-file-name filename jarvis-collect-video-collector-directory)))
+
+  (defun jarvis-collect-video-collector--insert-org-content (vid buffer)
+    (let* ((org-content-header (concat (jarvis-collect-video-collector--org-headers vid)
+				       (jarvis-collect-video-collector--org-content-embed vid)
+				       (jarvis-collect-video-collector--org-content-details vid)
+				       (jarvis-collect-video-collector--org-content-description vid)
+				       (jarvis-collect-video-collector--org-content-download vid)))
+	   (transcript-dom (plist-get vid :transcript-dom))
+	   (transcript-text (dom-texts transcript-dom)))
+      (with-current-buffer buffer
+	(erase-buffer)
+	(insert org-content-header)
+	(if transcript-dom
+	    (insert (format "\n** Transcript\n\n#+begin_quote\n%s\n#+end_quote\n"
+			    transcript-text))))))
+  (defun jarvis-collect-video-collector--org-headers (vid)
+    (let* ((title (plist-get vid :title))
+	   (link (plist-get vid :webpage-url))
+	   (author (user-full-name))
+	   (date (plist-get vid :fetched-at))
+	   (humanized-date (and date (format-time-string "%F %a" date))))
+      (format
+       "#+TITLE: %s\n#+AUTHOR: %s\n#+DATE: <%s>\n#+OPTIONS: toc:nil num:nil title:nil\n\n* [[%s][%s]]\n"
+       title author humanized-date link title)))
+
+  (defun jarvis-collect-video-collector--org-content-details (vid)
+    (let* ((title (plist-get vid :title))
+	   (webpage-url (plist-get vid :webpage-url))
+	   (channel (plist-get vid :channel))
+	   (channel-url (plist-get vid :channel-url))
+	   (channel-follower-count (plist-get vid :channel-follower-count))
+	   (humanized-duration (plist-get vid :duration))
+	   (fetched-at (plist-get vid :fetched-at))
+	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
+	   (like-count (plist-get vid :like-count))
+	   (view-count (plist-get vid :view-count))
+	   (thumbnail-url (plist-get vid :thumbnail-url)))
+      (format
+       "\n📹 *Published by* [[%s][%s]] (🧑 %s followers)\n🔄 *Last sync at* %s\n🕓 *Duration:* %s\n❤️ *Likes:* %s\n👀 *Views:* %s\n\n"
+       channel-url channel channel-follower-count humanized-fetched-at humanized-duration like-count view-count)))
+
+  (defun jarvis-collect-video-collector--org-content-embed (vid)
+    (let ((id (plist-get vid :id))
+	  (title (plist-get vid :title)))
+      (format
+       "#+BEGIN_EXPORT html\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>\n#+END_EXPORT\n"
+       id title)))
+
+  (defun jarvis-collect-video-collector--org-content-download (vid)
+    (let ((url (plist-get vid :webpage-url))
+	  (video-outfile (jarvis-collect-video-collector--build-pathname vid "mp4"))
+	  (audio-outfile (jarvis-collect-video-collector--build-pathname vid "mp3")))
+      (format
+       "\n* Download\n\n#+BEGIN_SRC sh :results output silent\nyt-dlp -o \"%s\" \"%s\"\n#+END_SRC\n#+BEGIN_SRC sh :results output silent\nyt-dlp -o \"%s\" \"%s\"\n#+END_SRC\n"
+       video-outfile url audio-outfile url)))
+
+  (defun jarvis-collect-video-collector--org-content-description (vid)
+    (let ((description (plist-get vid :description)))
+      (unless (string-blank-p description)
+	(format "\n** Description\n\n%s\n" description))))
+
+  (defun jarvis-collect-video-collector--extract-thumbnail-url (json)
+    (let* ((thumbnails (gethash "thumbnails" json))
+	   (filter-resolution-thumbnails
+	    (lambda (thumbnail)
+	      (let ((height (gethash "height" thumbnail))
+		    (width (gethash "width" thumbnail))
+		    (preference (gethash "preference" thumbnail)))
+		(and width preference (> width 300) (> preference -12)))))
+	   (sort-thumbnails
+	    (lambda (t1 t2)
+	      (let ((t1ref (gethash "preference" t1))
+		    (t2ref (gethash "preference" t2)))
+		(< t1ref t2ref))))
+	   (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
+	   (target-thumbnail (car preferred-thumbnails)))
+      (and target-thumbnail (gethash "url" target-thumbnail))))
+
+  (defun jarvis-collect-video-collector--find-transcript-format (json)
+    (let* ((auto-captions (gethash "automatic_captions" json))
+	   (langs (hash-table-keys auto-captions))
+	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
+	   (orig-lang (gethash orig-lang-key auto-captions))
+	   (ttml-format (seq-find
+			 (lambda (format)
+			   (let* ((ext (gethash "ext" format))
+				  (res (string= "ttml" ext)))
+			     res))
+			 orig-lang))
+	   (script-url (and ttml-format (gethash "url" ttml-format))))
+      script-url))
+
+  (defun jarvis-collect-video-collector--parse-info (data)
+    (let* ((id (gethash "id" data))
+	   (vid (list
+		 :id id
+		 :title (gethash "title" data)
+		 :description (string-trim (gethash "description" data))
+		 :channel (gethash "channel" data)
+		 :channel-url (gethash "channel_url" data)
+		 :channel-follower-count (gethash "channel_follower_count" data)
+		 :duration (gethash "duration" data)
+		 :like-count (gethash "like_count" data)
+		 :view-count (gethash "view_count" data)
+		 :average-rating (gethash "average_rating" data)
+		 :webpage-url (gethash "webpage_url" data)
+		 :categories (gethash "categories" data)
+		 :tags (gethash "tags" data)
+		 :thumbnail-url (jarvis-collect-video-collector--extract-thumbnail-url data)
+		 :script-url (jarvis-collect-video-collector--find-transcript-format data)
+		 :transcript-dom (gethash "transcript_dom" data)
+		 :fetched-at (gethash "fetched_at" data)
+		 )))
+      vid))
+
+  (defun jarvis-collect-video-collector--fetch-transcript (url)
+    (if url (with-current-buffer (url-retrieve-synchronously url)
+	      (let* ((dom (xml-parse-region))
+		     (body (car (dom-by-tag dom 'body)))
+		     (div (car (dom-by-tag body 'div))))
+		div))))
+
+  (defun jarvis-collect-video-collector--create-file (vid)
+    (let ((id (plist-get vid :id))
+	  (pathname (jarvis-collect-video-collector--build-pathname vid))
+	  (coding-system-for-write 'raw-text))
+      (with-temp-file pathname
+	(set-buffer-file-coding-system 'raw-text)
+	(jarvis-collect-video-collector--insert-org-content vid (current-buffer)))
+      pathname))
+
+  (defun jarvis-collect-video-collector--get-cache-entry-name (url)
+    (file-name-concat
+     jarvis-collect-video-collector-directory
+     ".cache"
+     (concat
+      (jarvis-collect-video-collector--extract-id-from-url url)
+      "-"
+      (md5 url))))
+
+  (defun jarvis-collect-video-collector--get-cache (url)
+    (let* ((filename (jarvis-collect-video-collector--get-cache-entry-name url)))
+      (and
+       (file-readable-p filename)
+       (with-temp-buffer
+	 (insert-file-contents filename)
+	 ;;(cl-assert (eq (point) (point-min)))
+	 (read (current-buffer))))))
+
+  (defun jarvis-collect-video-collector--set-cache (url data)
+    (let* ((name (md5 url))
+	   (filename (jarvis-collect-video-collector--get-cache-entry-name url))
+	   (base-dir (file-name-directory filename)))
+      (mkdir base-dir t)
+      (with-temp-file filename (prin1 data (current-buffer)))))
+
+  (defun jarvis-collect-video-collector--extract-id-from-collected-vid (file)
+    (let ((filename (file-name-base file)))
+      (and (string-match "\\(\\ca\\{11\\}\\)-" filename) (match-string 1 filename))))
+
+  (defun jarvis-collect-video-collector--extract-id-from-url (url)
+    (or
+     (and (string-match "v=\\(\\ca\\{11\\}\\)" url) (match-string 1 url))
+     (and (string-match "/\\(\\ca\\{11\\}\\)$" url) (match-string 1 url))))
+
+  (defun jarvis-collect-video-collector--canonize-url (url)
+    (let ((id (jarvis-collect-video-collector--extract-id-from-url url)))
+      (and id (format "https://www.youtube.com/watch?v=%s" id))))
+
+  (defun jarvis-collect-video-collector-fetch-info (url &optional force)
+    (let ((cache-value (jarvis-collect-video-collector--get-cache url)))
+      (if (and cache-value (not force))
+	  (jarvis-collect-video-collector--parse-info cache-value)
+	(with-temp-buffer
+	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	  ;;(insert-file "~/Desktop/vid.json") ; debug line
+	  (goto-char 0)
+	  (condition-case nil
+	      (let* ((json (json-parse-buffer))
+		     (vid (jarvis-collect-video-collector--parse-info json))
+		     (transcript-dom (jarvis-collect-video-collector--fetch-transcript (plist-get vid :script-url)))
+		     (vid (plist-put vid :transcript-dom transcript-dom)))
+		(puthash "fetched_at" (current-time) json)
+		(puthash "transcript_dom" transcript-dom json)
+		(jarvis-collect-video-collector--set-cache url json)
+		vid)
+	    (json-parse-error (error "%s" (buffer-string)))
+	    (t (error "%s" (buffer-string))))))))
+
+  (defun jarvis-collect-video-collected-vids ()
+    "Return all the collected vids in the ~jarvis-collect-video-collector-directory~."
+    (let ((files (directory-files jarvis-collect-video-collector-directory t "\\.org")))
+      (mapcar (lambda (file)
+		(let* ((id (jarvis-collect-video-collector--extract-id-from-collected-vid file))
+		       (url (jarvis-collect-video-collector--canonize-url (concat "/" id))))
+		  (cons url file)))
+	      files)))
+
+  (defun jarvis-collect-video-collect (url &optional force-fetch)
+    (interactive "sYoutube video URL: ")
+    (let ((force-fetch (or current-prefix-arg force-fetch)))
+      (if-let* ((url (jarvis-collect-video-collector--canonize-url url))
+		(vid (jarvis-collect-video-collector-fetch-info url force-fetch))
+		(pathname (jarvis-collect-video-collector--create-file vid)))
+	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
+#+end_src
+
+*** Feeds
+
+#+begin_src emacs-lisp
+  (defcustom jarvis-feeds-collector-directory "~/Dropbox/feeds/"
+    "Base directory where to put the collected feeds."
+    :type '(directory))
+
+  (defun jarvis-feeds--extract-authors-names (entry)
+    (if-let* ((meta (elfeed-entry-meta entry))
+  	      (authors (plist-get meta :authors)))
+  	(mapcar (lambda (author) (plist-get author :name)) authors)))
+
+  (defun jarvis-feeds--insert-buffer-content (entry buffer)
+    (let* ((feed (elfeed-entry-feed entry))
+           (feed-title (elfeed-feed-title feed))
+  	 (url (elfeed-entry-link entry))
+  	 (title (elfeed-entry-title entry))
+  	 (authors (jarvis-feeds--extract-authors-names entry))
+  	 (date (format-time-string "%F %R" (elfeed-entry-date entry)))
+  	 (tags (mapcar (lambda (tag) (symbol-name tag)) (or (elfeed-entry-tags entry) '(untagged))))
+           (base (and feed (elfeed-compute-base (elfeed-feed-url feed))))
+           (type (elfeed-entry-content-type entry))
+  	 (entry-content (elfeed-deref (elfeed-entry-content entry))))
+      (with-current-buffer buffer
+        (insert (format "#+TITLE: %s\n" title))
+        (dolist (author authors)
+  	(insert (format "#+AUTHOR: %s\n" author)))
+        (insert (format "#+DATE: <%s>\n" date))
+        (insert (format "#+FILETAGS: %s\n\n" (org-make-tag-string tags)))
+        (insert (format "* [[%s][%s]]\n\n" url title))
+        (if entry-content
+            (if (eq type 'html)
+                (elfeed-insert-html entry-content base)
+              (insert entry-content))
+  	(insert (propertize "(empty)\n" 'face 'italic))))))
+
+  (defun jarvis-feeds--build-entry-pathname (entry &optional ext)
+    (let* ((ext (or ext "org"))
+  	 (name (dashize (elfeed-entry-title entry)))
+  	 (date (elfeed-entry-date entry))
+  	 (year (format-time-string "%+4Y" date))
+  	 (month (format-time-string "%m" date))
+  	 (day (format-time-string "%d" date))
+           (date-str (format-time-string "%F-%H%M%S" date))
+  	 (filename (format "%s/%s/%s/%s-%s.%s" year month day date-str name ext)))
+        (expand-file-name filename jarvis-feeds-collector-directory)))
+
+  (defun jarvis-feeds--create-entry-file (entry &optional force)
+    (let* ((pathname (jarvis-feeds--build-entry-pathname entry))
+          (coding-system-for-write 'raw-text)
+  	(base-dir (file-name-directory pathname))
+  	(already-collected (member 'collected (elfeed-entry-tags entry))))
+      (when (or force (and (not already-collected) (not (file-exists-p pathname))))
+        (mkdir base-dir t)
+        (with-temp-file pathname
+  	(set-buffer-file-coding-system 'raw-text)
+  	(jarvis-feeds--insert-buffer-content entry (current-buffer)))
+        (message "Jarvis/Feeds: collected %s" pathname)
+        (elfeed-tag entry 'collected)
+        pathname)))
+
+  (defun jarvis-feeds-collect-feed (entry)
+    (interactive (list
+  		(or (and (boundp 'elfeed-show-entry) elfeed-show-entry)
+  		    (elfeed-search-selected :ignore-region))))
+    (when (elfeed-entry-p entry)
+      (let ((pathname (jarvis-feeds--create-entry-file elfeed-show-entry t)))
+        (find-file pathname))))
+
+  (defun jarvis-feeds-bulk-collect (limit)
+    (interactive "NFeed entries to collect: ")
+    (let* ((count 0))
+      (with-elfeed-db-visit (entry _feed)
+  	(setq count (1+ count))
+  	(jarvis-feeds--create-entry-file entry)
+  	(when (= count limit)
+  	  (elfeed-db-return (list :ok count))))))
+#+end_src
+
+** FFmpeg Scenecutter ⚠️ experimental ⚠️                             :disabled:
+
+#+begin_src emacs-lisp
+  (defun jarvis-scenecutter--add-scene (proc pts duration pts-time duration-time)
+    (message "Adding scene pts:%s duration:%s pts-time:%s duration-time:%s" pts duration pts-time duration-time)
+    (let* ((scene (list :pts pts :duration duration :pts-time pts-time :duration-time duration-time))
+	   (data (gethash proc jarvis-scenecutter--scenes))
+	   (scenes (plist-get data :scenes))
+	   (new-scenes (append scenes (list scene))))
+      (puthash proc (plist-put data :scenes new-scenes) jarvis-scenecutter--scenes)))
+
+  (defun jarvis-scenecutter--parse-scenes (proc input)
+    (when (string-match "Parsed_showinfo" input)
+      (let* ((_ (string-match "pts:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (pts (match-string 1 input))
+	     (_ (string-match "duration:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (duration (match-string 1 input))
+	     (_ (string-match "pts_time:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (pts-time (match-string 1 input))
+	     (_ (string-match "duration_time:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (duration-time (match-string 1 input)))
+	(and pts duration pts-time duration-time
+	     (jarvis-scenecutter--add-scene proc
+					    (string-to-number pts)
+					    (string-to-number duration)
+					    (string-to-number pts-time)
+					    (string-to-number duration-time))))))
+
+  (defun jarvis-scenecutter--create-scene-async (file scene index)
+    (let* ((name (file-name-sans-extension (file-name-base file)))
+	   (ext (file-name-extension file))
+	   (scenes-dir (file-name-sans-extension file))
+	   (scene-file (file-name-concat scenes-dir (format "%s-scene-%s.%s" name index ext)))
+	   (start (plist-get scene :pts))
+	   (duration (plist-get scene :duration))
+	   (cmd
+	    (format
+	     "ffmpeg -i %s -ss %s -t %s %s"
+	     file start duration scene-file)))
+      (message "Creating scene via: %s" cmd)
+      ;;(mkdir scenes-dir t)
+      ;;(call-process-shell-command cmd nil 0)))
+      ))
+
+  (defun jarvis-scenecutter--create-scene-thumb (file thumb-seek thumb-file)
+    (let* ((cmd (format "ffmpeg -i %s -ss %sms -frames:v 1 %s" file thumb-seek thumb-file))
+	   (thumb-width 660)
+	   (thumb-org-code (format "#+ATTR_HTML: width=\"%spx\"\n#+ATTR_ORG: :width %s\n[[%s]]\n" thumb-width thumb-width thumb-file))
+	   (proc (make-process
+		  :name thumb-file
+		  :command (list "ffmpeg" "-i" file "-ss" (format "%sms" thumb-seek) "-frames:v" "1" thumb-file)
+		  :buffer nil
+		  :sentinel (lambda (proc event)
+			      (and (equal "finished\n" event)
+				   (let* ((entry (minemacs-cache-get proc))
+					  (buffer (car entry))
+					  (point (cdr entry)))
+				     (when buffer (with-current-buffer buffer (org-redisplay-inline-images) (goto-char point)))
+				     ;; remove cache entry
+				     ))))))
+      (minemacs-cache-set proc (cons (current-buffer) (point)))
+      thumb-org-code))
+
+  (defun jarvis-scenecutter--create-scenes-thumbs (file scenes thumb-files-template)
+    (let* ((scenes-params (string-join (cons "eq(n\\,0)" (mapcar (lambda (scene) (format "eq(n\\,%d)" (plist-get scene :pts))) scenes)) "+"))
+	   (cmd (list "ffmpeg" "-i" file "-vf" (format "select='%s'" scenes-params) "-frame_pts" "1" "-vsync" "0" thumb-files-template))
+	   (proc (make-process
+		  :name (format "scenecutter-%s" file)
+		  :command cmd
+		  :buffer nil
+		  :sentinel (lambda (proc event)
+			      (and (equal "finished\n" event)
+				   (let ((buffer (minemacs-cache-get proc)))
+				     (when buffer (with-current-buffer buffer (org-redisplay-inline-images)))
+				     ;; remove cache entry
+				     ))))))
+      (minemacs-cache-set proc (current-buffer))))
+
+  (defun jarvis-scenecutter--create-scenes-index (file scenes)
+    (let* ((default-directory (file-name-directory file))
+	   (name (file-name-sans-extension (file-name-base file)))
+	   (scenes-index-file (file-name-concat default-directory (format "%s-scenes.org" name)))
+	   (buffer (find-file-noselect scenes-index-file))
+	   (title (format "%s scenes index" name))
+	   (thumb-width 660))
+      (with-current-buffer buffer
+	(jarvis-scenecutter--create-scenes-thumbs file scenes (format "%s-scene-%%d.png" name))
+	(erase-buffer)
+	(insert "# -*- org-image-actual-width: nil; eval: (org-display-inline-images); -*-\n")
+	(insert (format "#+TITLE: %s\n#+STARTUP: content\n\n" title))
+	(insert (format "* Scenes for %s\n\n" file))
+	(let ((first-scene (car scenes))
+	      (reduce-fun (lambda (prev-scene scene)
+			    (let* ((seek-start (plist-get prev-scene :pts))
+				   (seek-end (plist-get scene :pts))
+				   (thumb-seek (+ seek-start 10))
+				   (scene-file (file-name-concat default-directory (format "%s-scene-%s.mp4" name seek-start)))
+				   (thumb-file (file-name-concat default-directory (format "%s-scene-%s.png" name seek-start))))
+			      ;; (insert (format "%s\n\n" (prin1-to-string scene)))
+			      (insert (format "** %s -- %s\n\n" seek-start seek-end))
+
+			      (insert "#+begin_src emacs-lisp :results output raw replace\n")
+			      (insert (format "(jarvis-scenecutter--create-scene-thumb \"%s\" %s \"%s\")\n" file seek-start thumb-file))
+			      (insert "#+end_src\n\n")
+
+			      (insert (format "#+RESULTS:\n#+ATTR_HTML: width=\"%spx\"\n#+ATTR_ORG: :width %s\n[[%s]]\n\n" thumb-width thumb-width thumb-file))
+
+			      (insert "#+begin_src sh :results silent\n")
+			      (insert (format "ffmpeg -y -accurate_seek -i %s -ss %sus -to %sus %s\n" file seek-start seek-end scene-file))
+			      (insert "#+end_src\n\n")
+			      scene))))
+	  (seq-reduce reduce-fun scenes (list :pts 0)))
+	(basic-save-buffer)
+	(beginning-of-buffer)
+	(pop-to-buffer buffer))))
+
+  (defun jarvis-scenecutter--cache-key (file)
+    (file-name-sans-extension (file-name-base (expand-file-name file))))
+
+  (defun jarvis-scenecutter--cache-scenes-load (file)
+    (minemacs-cache-get (jarvis-scenecutter--cache-key file) :jarvis-scenecutter))
+
+  (defun jarvis-scenecutter--cache-scenes-save (file data)
+    (minemacs-cache-set (jarvis-scenecutter--cache-key file) data :jarvis-scenecutter))
+
+  (defun jarvis-scenecutter--process-scenes (file scenes)
+    (message "Processing scenes for %s" file)
+    (jarvis-scenecutter--create-scenes-index file scenes)
+    ;; (seq-do-indexed
+    ;;  (lambda (scene index)
+    ;;    (jarvis-scenecutter--create-scene-async file scene index))
+    ;;  scenes))
+    )
+
+  (defun jarvis-scenecutter--sentinel (proc event)
+    (when (string= event "finished\n")
+      (with-current-buffer (process-buffer proc)
+	(let* ((data (gethash proc jarvis-scenecutter--scenes))
+	       (file (plist-get data :file))
+	       (scenes (plist-get data :scenes)))
+	  (message "Finished extraction for %s" file)
+	  (message "extracted %s scenes" (length scenes))
+	  (jarvis-scenecutter--cache-scenes-save file data))
+	  (jarvis-scenecutter--process-scenes file scenes)
+	(remhash proc jarvis-scenecutter--scenes)
+	(kill-current-buffer))))
+
+  (defvar jarvis-scenecutter--scenes (make-hash-table))
+
+  (defun jarvis-scenecutter--extract-scenes (file)
+    (message "Started extraction for %s" file)
+    (with-current-buffer (generate-new-buffer "*jarvis-scenecutter*")
+      (let* ((pathname (expand-file-name file))
+	     (cmd (list "ffmpeg" "-i" pathname "-vf" "select='gt(scene,0.4)',showinfo" "-f" "null" "-"))
+	     (proc (make-process
+		    :name pathname
+		    :buffer (current-buffer)
+		    :command cmd
+		    :filter #'jarvis-scenecutter--parse-scenes
+		    :sentinel #'jarvis-scenecutter--sentinel)))
+	(puthash proc (list :file pathname :scenes '()) jarvis-scenecutter--scenes))))
+
+  (defun jarvis-scenecutter (file)
+    (interactive "fFile: ")
+    (let ((data (jarvis-scenecutter--cache-scenes-load file)))
+      (if data
+	  (let ((file (plist-get data :file))
+		(scenes (plist-get data :scenes)))
+	    (jarvis-scenecutter--process-scenes file scenes))
+	(jarvis-scenecutter--extract-scenes file))))
+#+end_src
+** Speak 🗣️
+
+#+begin_src elisp
+  (defun jarvis/espeak (text)
+    "Speak text using `espeak`."
+    (interactive (list
+  		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
+    (save-window-excursion
+      (async-shell-command (format "espeak -v it \"%s\"" text) nil)))
+#+end_src
+
+* AI - ChatGPT
+
+#+begin_src emacs-lisp
+  (use-package gptel
+    :custom
+    (gptel-default-mode #'org-mode))
+
+  (use-package chatgpt-shell)
+#+end_src
+
+* Bifrost 🌈                                                       :disabled:
+*** Client side (userscript)
+
+#+begin_src javascript :tangle no
+  // ==UserScript==
+  // @name         Bifrost-HTTP
+  // @namespace    http://minasmazar.github.io/bifrost
+  // @version      0.3
+  // @description  Bifrost is a userscript to bridge your Browser and an Elixir app.
+  // @author       minasmazar@gmail.com
+  // @include      *
+  // @icon         https://www.google.com/s2/favicons?sz=64&domain=undefined.localhost
+  // @grant        GM_xmlhttpRequest
+  // @grant        GM.xmlHttpRequest
+  // @grant        GM_openInTab
+  // @connect      localhost
+  // ==/UserScript==
+
+  window.bifrostCircularReplacer = function() {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+	if (seen.has(value)) {
+	  return;
+	}
+	seen.add(value);
+      }
+      return value;
+    };
+  };
+
+  window.bifrostSend = function(message) {
+    const payload = JSON.stringify({ "id": window.bifrostPageId, "location": window.location, "message": message }, window.bifrostCircularReplacer());
+    console.log(`Sending : ${message}`);
+    GM.xmlHttpRequest({
+      method: "POST",
+      url: "http://localhost:9096/bifrost",
+      data: message,
+      headers: {
+	"Content-Type": "application/x-www-form-urlencoded"
+      },
+      onload: function(response) {
+	console.log("Received response");
+      },
+      onerror: function(response) {
+	console.log("Error");
+      }
+    });
+  };
+
+  window.bifrostOpenInTab = function(url, openInBackground = true) {
+    //window.open(url, "_blank");
+    GM_openInTab(url, openInBackground);
+  };
+
+  window.bifrostSetup = function() {
+    window.bifrostPageId = crypto.randomUUID();
+    window.bifrostEventHandler = function(event) {
+      const payload = {
+	"event": {
+	  "type": event.type,
+	  "tag": event.target.tagName,
+	  "class": event.target.className,
+	  "id": event.target.id,
+	  "text": event.target.innerText,
+	  "value": event.target.value
+	}
+      };
+      // console.log(payload);
+      window.bifrostSend(payload);
+    };
+    document.addEventListener("click", window.bifrostEventHandler);
+    document.addEventListener("change", window.bifrostEventHandler);
+    document.addEventListener("input", window.bifrostEventHandler);
+
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href);
+    window.bifrostSend({"links": links});
+  };
+
+  window.addEventListener("load", window.bifrostSetup);
+#+end_src
+
+*** Server side (emacs)
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "bifrost.el") :mkdirp yes
+:END:
+
+#+begin_src emacs-lisp
+  (use-package web-server
+    :init
+    (defcustom bifrost-active t "Wether bifrost is going to handle requests or not." :type '(boolean))
+    (defvar bifrost-request-hooks nil "Hooks invoked when Bifrost request is received.")
+    :hook
+    (bifrost-request-hooks . (lambda (_request _dom)
+			       (pop-to-buffer "*bifrost*")))
+    :config
+    (require 'web-server)
+
+    (defun bifrost--request-handler (request)
+      (when bifrost-active
+	(with-current-buffer (get-buffer-create "*bifrost*" t)
+	  (let ((inhibit-read-only t))
+	    (erase-buffer)
+	    (with-slots (body) request (insert body))
+	    (beginning-of-buffer))
+	  (setq bifrost--last-request request)
+	  (let* ((json (json-parse-buffer))
+		 (location (gethash "location" json))
+		 (url (getash "href" location))
+		 (message (gethash "message" json)))
+	  (run-hook-with-args 'bifrost-request-hooks url message)))))
+
+    (defun bifrost-server-start ()
+      "Start bifrost server."
+      (interactive)
+      (setq bifrost--server
+	    (ws-start
+	     '(((:POST . ".*") .
+		(lambda (request)
+		  (with-slots (process headers body) request
+		    (let ((message (cdr (assoc "message" headers))))
+		      (ws-response-header process 200 '("Content-type" . "text/plain"))
+		      (setq bifrost--last-request request)
+		      (bifrost--request-handler request))))))
+	     9096)))
+
+    (when bifrost-active (bifrost-server-start)))
+#+end_src
+
+* Look and feel 🎨
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "look_n_feel.el") :mkdirp yes
+:END:
+** Icons
+
+#+begin_src elisp
+  (use-package all-the-icons)
+  (use-package all-the-icons-gnus
+    :config
+    (all-the-icons-gnus-setup))
+  (use-package all-the-icons-dired
+    :hook
+    (dired-mode . all-the-icons-dired-mode))
+  (use-package all-the-icons-ibuffer
+    :hook
+    (ibuffer-mode . all-the-icons-ibuffer-mode))
+#+end_src
+
+** Dashboard
+
+#+begin_src elisp
+  (use-package dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    :bind
+    (:map dashboard-mode-map
+  	("n" . #'widget-forward)
+  	("p" . #'widget-backward))
+    :custom
+    (dashboard-week-agenda t)
+    (dashboard-icon-type 'all-the-icons)
+    (dashboard-set-file-icons t)
+    (dashboard-set-heading-icons t)
+    (dashboard-navigation-cycle t)
+    (dashboard-items '((recents   . 5)
+                       (bookmarks . 5)
+                       (projects  . 5)
+                       (agenda    . 5)
+                       (registers . 5)))
+    (dashboard-item-shortcuts '((recents   . "r")
+                                (bookmarks . "m")
+                                (projects  . "p")
+                                (agenda    . "a")
+                                (registers . "e"))))
+#+end_src
+** Beautify
+
+#+begin_src elisp :tangle no
+  (use-package org-modern
+    :config
+    (global-org-modern-mode))
+#+end_src
+
+** [[https://www.emacswiki.org/emacs/TransparentEmacs][Transparent Emacs]]
+
+Remember you need a compositing manager to handle transparency (compton, compiz or else).
+
+#+begin_src elisp
+  (set-frame-parameter nil 'alpha-background 85)
+#+end_src
+
+** Highlight line                                                   :disabled:
+
+#+begin_src elisp
+  (use-package beacon
+    :config
+    (beacon-mode 1))
+#+end_src
+
+** Themes
+
+- [[https://emacsthemes.com][Emacs Themes]]
+
+#+begin_src elisp
+  (use-package ef-themes
+    :config
+    (defun get-season (month)
+      (cond
+       ((and (>= month 3) (< month 6)) 'spring)
+       ((and (>= month 6) (< month 9)) 'summer)
+       ((and (>= month 10) (< month 12)) 'autumn)
+       ((or (>= month 12) (< month 3)) 'winter)))
+
+    (defun set-season-theme ()
+      (interactive)
+      (let* ((month (car (calendar-current-date)))
+  	   (season (get-season month))
+  	   (theme-name (format "ef-%s" season)))
+        (load-theme (intern theme-name)))))
+#+end_src
+
+** Modeline
+
+Install the =doom-modeline=.
+
+#+begin_src elisp
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode))
+#+end_src
+
+#+end_src
+** Headline
+
+#+begin_src elisp
+  (defcustom minemacs-headline-content ""
+    "Content of the headline."
+    :type 'string)
+  (setq header-line-format '((:eval minemacs-headline-content)))
+#+end_src
+
+* Networking
+** Search
+
+#+begin_src elisp
+  (use-package engine-mode
+    :init
+    (setq engine/browser-function #'browse-url-firefox)
+    :config
+    (defun engine/execute-search (search-engine-url browser-function search-term)
+      "Display the results of the query."
+      (interactive)
+      (let ((browse-url-handlers nil)
+  	    (browse-url-browser-function browser-function))
+  	(browse-url
+  	 (format-spec search-engine-url
+  		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine dropbox
+      "https://www.dropbox.com/search/personal?query=%s"
+      :browser 'browse-url-firefox
+      :keybinding "D")
+
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :browser 'eww-browse-url
+      :keybinding "d")
+
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "h")
+
+    (defengine google
+      "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :browser 'browse-url-firefox
+      :keybinding "g")
+
+    (defengine google-images
+      "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      :keybinding "i")
+
+    (defengine google-maps
+      "https://maps.google.com/maps?q=%s"
+      :docstring "Google Maps"
+      :browser 'browse-url-firefox
+      :keybinding "m")
+
+    (defengine openstreet-maps
+      "https://www.openstreetmap.org/search?query=%s"
+      :docstring "OpenStreetMap"
+      :keybinding "M")
+
+    (defengine google-translate-to-it
+      "http://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      :docstring "Translate to IT"
+      :keybinding "t")
+
+    (defengine google-translate-to-en
+      "http://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      :docstring "Translate from IT to English"
+      :browser 'browse-url-firefox
+      :keybinding "T")
+
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+
+    (defengine wikipedia
+      "https://www.wikipedia.org/search-redirect.php?language=it&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."
+      :browser 'eww-browse-url)
+
+    (defengine youtube
+      "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y")
+
+    (defengine amazon
+      "https://www.amazon.it/s/ref=nb_sb_noss?&field-keywords=%s"
+      :browser 'browse-url-firefox
+      :keybinding "a")
+
+    (defengine cap
+      "https://www.nonsolocap.it/cap?k=%s&c=pescara"
+      :browser 'browse-url-firefox
+      :keybinding "C")
+
+    (engine-mode t))
+#+end_src
+
+** Browse Url
+
+Add a specific =browse-url= function which open firefox in private mode.
+
+#+begin_src emacs-lisp
+  (defun browse-url-firefox-private (url)
+    "Ask the Firefox WWW browser to load URL.
+Same as `browse-url-firefox', but sets `browse-url-firefox-arguments'."
+    (interactive "sURL: ")
+    (let ((browse-url-firefox-arguments (list "--private-window")))
+      (funcall-interactively #'browse-url-firefox url)))
+#+end_src
+
+** Gopher and Gemini
+
+#+begin_src emacs-lisp
+  (use-package elpher)
+  (use-package gemini-mode)
+#+end_src
+
+** HTTP Client
+
+#+begin_src emacs-lisp
+  (use-package walkman)
+  (use-package restclient)
+#+end_src
+
+* Multimedia 🎶
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "media.el") :mkdirp yes
+:END:
+
+** Bongo
+
+#+begin_src elisp
+  (use-package bongo
+    :bind
+    (:map dired-mode-map
+	  (("b a" . #'bongo-dired-append-enqueue-lines))))
+#+end_src
+
+The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
+
+#+begin_example elisp
+(setq bongo-custom-backend-matchers
+       '((mpv ("https:") . t)))
+#+end_example
+
+** Youtube
+
+#+begin_src elisp
+  (use-package yeetube
+    :bind
+    (:map minemacs-map
+  	("m y s" . #'yeetube-search)
+  	("m y es" . #'empv-youtube)))
+
+  (use-package ytdl
+    :bind
+    (:map minemacs-map ("m y d" . #'ytdl-download)))
+#+end_src
+
+** Pulseaudio interface
+
+#+begin_src elisp
+    (use-package pulseaudio-control
+      :after hydra
+      :defer t
+      :config
+      (defhydra hydra-pulseaudio-control (:color amaranth)
+	"
+  Control audio (pulseaudio)
+  🔊 [n] decrease | 🔉 [_p_] decrease | 🔇 _m_ute == _q_uit
+  "
+	("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
+	("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
+	("m" (lambda () (interactive) (pulseaudio-control-toggle-current-sink-mute)) nil)		       
+	("q" nil nil))
+      :bind
+      (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
+#+end_src
+
+* News 📰 and Mail 📬
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "news-mail.el") :mkdirp yes
+:END:
+** RSS
+
+#+begin_src elisp
+  (use-package elfeed
+    :after 'god-mode
+    :bind*
+    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
+    :init
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map)
+    (add-to-list 'god-exempt-major-modes 'elfeed-show-mode-map))
+#+end_src
+
+Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]! ❤️ Thanks a lot to [[https://github.com/karthink][karthink]] 🙏
+
+#+begin_src elisp
+  (use-package elfeed-tube
+    :after elfeed
+    :demand t
+    :config
+    ;; (setq elfeed-tube-auto-save-p nil) ; default value
+    ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+    (elfeed-tube-setup)
+
+    :bind (:map elfeed-show-mode-map
+		("F" . #'elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)
+		:map elfeed-search-mode-map
+		("F" . elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)))
+
+  (use-package elfeed-tube-mpv
+    :after elfeed-tube
+    :bind (:map elfeed-show-mode-map
+		("v" . #'elfeed-tube-mpv)
+		("C-c C-f" . elfeed-tube-mpv-follow-mode)
+		("C-c C-w" . elfeed-tube-mpv-where)))
+
+  (use-package elfeed-org)
+#+end_src
+
+Here's an experiment on how to iterate over the elfeed feeds
+
+#+begin_src elisp :tangle no :results raw
+  (let* ((feeds nil))
+    (with-elfeed-db-visit (entry feed)
+      (add-to-list 'feeds feed)
+      (when (equal (length feeds) 1)
+	(elfeed-db-return (list :ok feeds)))))
+#+end_src
+
+#+RESULTS:
+(:ok (#s(elfeed-feed http://www.ansa.it/web/ansait_web_rss_homepage.xml http://www.ansa.it/web/ansait_web_rss_homepage.xml Primo piano ANSA - ANSA.it nil (:canonical-url http://www.ansa.it/sito/ansait_rss.xml))))
+
+** Mail
+*** Resources
+
+- https://f-santos.gitlab.io/2020-04-24-mu4e.html
+
+*** Mu4e
+**** Dependencies
+
+Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
+
+On /deb based linux systems/ you can install those via
+
+#+begin_example sh
+  $ sudo apt install mu isync pass
+#+end_example
+
+Useful links:
+- http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+- https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
+- https://isync.sourceforge.io/mbsync.html
+
+**** Mail Account info
+
+Create a file =~/.authinfo= directly in the root of your home directory.
+
+#+begin_example authinfo
+machine smtp.example.com login myname port 587 password mypassword
+#+end_example
+
+**** mbsync configuration
+
+Configure =mbsync= via =~/.mbsyncrc= with a content similar to this:
+
+#+begin_example toml
+  IMAPAccount gmail-imaps
+  Host imap.gmail.com
+  Port 993
+  #UseIMAPS yes
+  #RequireSSl yes
+  SSLType IMAPS
+  SSLVersions TLSv1.2
+  AuthMechs PLAIN
+  User your-email@gmail.com
+  #Pass supercomplicatedpassword
+  PassCmd "pass gmail/imaps"
+
+  IMAPStore gmail-remote
+  Account gmail-imaps
+
+  MaildirStore gmail-local
+  Path ~/MailDir/gmail/
+  Inbox ~/MailDir/gmail/INBOX
+  Subfolders Verbatim
+
+  Channel gmail
+  #Master :gmail-remote:
+  #Slave :gmail-local:
+  Far :gmail-remote:
+  Near :gmail-local:
+  Create Both
+  Expunge Both
+  Patterns *
+  SyncState *
+#+end_example
+
+**** mu4e configuration
+
+#+begin_example emacs-lisp
+  (require 'mu4e)
+  (setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+  (auth-source-pass-enable)
+  (setq smtpmail-debug-info t)
+#+end_example
+
+To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= variable. An interesting screencast/article from System Crafters about that can be found [[https://systemcrafters.net/emacs-mail/managing-multiple-accounts/][here]].
+
+#+begin_example elisp
+  (setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+#+end_example
+
+**** Tweaking & Troubleshooting
+
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
+
+*** Gnus
+
+To configure gnus in order to read your Gmail, you have to:
+
+- create a password token on the Gmail account
+- enter an authentication line in your =authinfo=
+
+#+begin_export authinfo
+  machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
+#+end_export
+
+Then configure the =gnus-select-method=
+
+#+begin_example elisp
+  (setq gnus-select-method
+	'(nnimap "gmail"
+		 (nnimap-address "imap.gmail.com")
+		 (nnimap-server-port "imaps")
+		 (nnimap-stream ssl)))
+#+end_example
+
+* Utils ⚒️
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "utils.el") :mkdirp yes
+:END:
+** Password management
+
+To retrieve passwords use =(password-store-get "youtube-api")=.
+
+#+begin_src elisp
+  (use-package password-store)
+#+end_src
+
+** Alarms and clock
+
+#+begin_src elisp
+  (use-package alarm-clock)
+#+end_src
+
+* File server                                                      :disabled:
+
+Uses [[https://eschulte.github.io/emacs-web-server/][=emacs-web-server= package]]. Here's an /helloworld/ example, taken from the [[https://eschulte.github.io/emacs-web-server/tutorials/][online tutorial]].
+
+#+begin_src emacs-lisp :tangle no
+  (ws-start
+ (lambda (request)
+   (with-slots (process headers) request
+     (ws-response-header process 200 '("Content-type" . "text/plain"))
+     (process-send-string process "hello world")))
+ 9000)
+#+end_src
+
+In order to make the endpoint available in a local net (i.e =192.168.xxx.xxx=) we have to override the function =ws-start= in =web-server.el= by adding the =:host= parameter when calling =make-network-process=:
+
+#+begin_src diff :tangle no
+  (setf (ws-process server)
+        (apply
+         #'make-network-process
+         :name "ws-server"
+         :service (ws-port server)
+         :filter 'ws-filter
+         :server t
+         :nowait (< emacs-major-version 26)
+         :family 'ipv4
+  +      :host "0.0.0.0"
+         :coding 'no-conversion
+#+end_src
+
+Here's the implementation of a simple web server, serving static assets.
+
+#+begin_src emacs-lisp
+  (use-package web-server
+    ;; :vc (:url "https://github.com/eschulte/emacs-web-server.git")
+    :init
+    (defcustom minemacs-ws-enabled nil "When non-nil start the file server at Emacs startup." :type '(boolean))
+    (defcustom minemacs-ws-docroot "~/Public" "Root directory to be served within the File Server" :type '(directory))
+    :config
+    (when minemacs-ws-enabled
+      (ws-start
+       (lambda (request)
+	 (with-slots (process headers) request
+	   (let ((docroot (expand-file-name minemacs-ws-docroot))
+		 (path (url-unhex-string (substring (cdr (assoc :GET headers)) 1))))
+	     (if (ws-in-directory-p docroot path)
+		 (if (file-directory-p (expand-file-name path docroot))
+		     (ws-send-directory-list process
+					     (expand-file-name path docroot) "^[^\.]")
+		   (ws-send-file process (expand-file-name path docroot)))
+	       (ws-send-404 process)))))
+       3000)))
+#+end_src
+
+* Emacs as Window Manager
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "exwm.el") :mkdirp yes
+:END:
+
+** exwm
+Useful links:
+
+- [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
+- [[https://wiki.archlinux.org/title/EXWM][archlinux wiki]]
+
+#+begin_src elisp
+  (defun minemacs-exwm-enabled? ()
+    (equal (getenv "EXWM") "true"))
+
+  (use-package vertico-posframe
+    :if (minemacs-exwm-enabled?)
+    :config
+    (vertico-posframe-mode 1))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package pulseaudio-control)
+#+end_src
+
+#+begin_src elisp
+  (use-package exwm
+    :if (minemacs-exwm-enabled?)
+    :init
+    ;; (start-process "dex" nil "dex" "-a" "-e" "i3")
+    ;; (start-process "power-manager" nil "xfce4-power-manager")
+    ;; (start-process "xfce-settings" nil "xfsettingsd")
+    :bind
+    (:map key-translation-map
+	  ("s-m" . nil)
+	  ("s-M" . nil))
+    :config
+    (server-mode 1)
+    (display-battery-mode 1)
+
+    (global-set-key (kbd "<XF86AudioLowerVolume>") #'pulseaudio-control-decrease-sink-volume)
+    (global-set-key (kbd "<XF86AudioRaiseVolume>") #'pulseaudio-control-increase-sink-volume)
+    (global-set-key (kbd "<XF86AudioMute>") #'pulseaudio-control-toggle-current-sink-mute)
+    (global-set-key (kbd "<XF86AudioPlay>") #'minemacs-media-toggle-pause)
+
+    (require 'exwm)
+    (setq exwm-workspace-number 1)
+    ;; Make class name the buffer name.
+    (add-hook 'exwm-update-class-hook
+	      (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Global keybindings.
+    (setq exwm-systemtray-height 25
+	  exwm-input-global-keys
+	  `(([?\s-k] . execute-extended-command)
+	    ([?\s-m] . exwm-reset)
+	    ([?\s-M] . exwm-input-release-keyboard)
+	    ([?\s-\]] . next-buffer)
+	    ([?\s-\[] . previous-buffer)
+	    ([?\s-`] . other-frame)))
+
+    (setq exwm-input-simulation-keys
+	  '(([?\C-b] . [left])
+	    ([?\C-f] . [right])
+	    ([?\C-p] . [up])
+	    ([?\C-n] . [down])
+	    ([?\C-a] . [home])
+	    ([?\C-e] . [end])
+	    ([?\M-v] . [prior])
+	    ([?\C-v] . [next])
+	    ([?\C-d] . [delete])
+	    ([?\C-k] . [S-end delete])))
+
+    (exwm-enable)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-mode 1))
+#+end_src
+
+*** System configuration (Linux Mint/Ubuntu)
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+
+Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at =/usr/local/bin/exwm.sh=.
+
+#+begin_example sh :tangle /usr/local/bin/exwm.sh
+  #!/bin/sh
+
+  ## Set capslock as ctrl
+  #
+  setxkbmap -layout us -option ctrl:nocaps
+
+  ## Programs to start upon startup
+  #
+
+  dbus-launch xfsettingsd &
+  dbus-launch xfce4-power-manager &
+  dbus-launch nm-applet &                     # Network Manager
+  dbus-launch pasystray &                     # Pulseaudio volume control from tray
+  dbus-launch dex -a -e i3 &
+
+  ## Start emacs
+  #
+  export EXWM=true
+  # exec dbus-launch --exit-with-session emacs
+  exec dbus-run-session emacs
+#+end_example
+
+In order to have the =EXWM= desktop environment available in the Login manager menu (i.e. LightDM) add this to =/usr/share/xsessions/exwm.desktop=
+
+#+begin_example conf :tangle /usr/share/xsessions/exwm.desktop
+[Desktop Entry]
+Name=Exwm
+Comment=Emacs as Window Manager
+Exec=/usr/local/bin/exwm.sh
+TryExec=emacs
+Type=Application
+X-LightDM-DesktopName=exwm
+DesktopNames=exwm
+Keywords=tiling;wm;windowmanager;window;manager;emacs;
+#+end_example
+

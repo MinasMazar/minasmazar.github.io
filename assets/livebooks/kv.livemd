@@ -1,0 +1,131 @@
+<!-- livebook:{"app_settings":{"access_type":"public","show_source":true,"slug":"kv"},"autosave_interval_s":null} -->
+
+# KV
+
+```elixir
+Mix.install(
+  [
+    # {:livebook_cluster, "0.1.1", git: "git@git.sr.ht:~minasmazar/livebook_cluster"},
+    {:livebook_cluster, "0.1.1", path: Path.expand("~/workspace/livebook_cluster")},
+    {:kino, "~> 0.14.1"},
+    {:plug, "~> 1.16"},
+    {:floki, "~> 0.36.2"},
+    {:jason, "~> 1.4"}
+  ],
+  config: [
+    livebook_cluster: [slug: "kv"]
+  ]
+)
+```
+
+## Key/Value Store
+
+```elixir
+defmodule KV do
+  use GenServer
+
+  def start_link(state \\ %{}) do
+    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+  end
+
+  def init(state) do
+    LivebookCluster.subscribe()
+    {:ok, state}
+  end
+
+  def get(key) do
+    GenServer.call(__MODULE__, {:get, key})
+  end
+
+  def set(key, value) do
+    GenServer.call(__MODULE__, {:set, key, value})
+  end
+
+  def get_or_set(key, callback) when is_function(callback) do
+    get(key) || set(key, callback.())
+  end
+
+  def flush do
+    GenServer.cast(__MODULE__, :flush)
+  end
+
+  def inspect do
+    GenServer.call(__MODULE__, :inspect)
+  end
+
+  def handle_cast(:flush, _store), do: {:noreply, %{}}
+  def handle_call(:inspect, _, store), do: {:reply, store, store}
+
+  def handle_call({:get, key}, _, store) do
+    with value <- Map.get(store, key) do
+      {:reply, value, store}
+    end
+  end
+
+  def handle_call({:set, key, value}, _, store) do
+    with store <- Map.put(store, key, value) do
+      {:reply, value, store}
+    end
+  end
+
+  def handle_info({:set, key, value}, store) do
+    with store <- Map.put(store, key, value) do
+      {:noreply, store}
+    end
+  end
+end
+
+KV.start_link()
+```
+
+<!-- livebook:{"branch_parent_index":0} -->
+
+## Inspect store
+
+```elixir
+# KV.flush()
+KV.inspect()
+```
+
+<!-- livebook:{"branch_parent_index":0} -->
+
+## HTTP Server
+
+```elixir
+defmodule ApiRouter do
+  use Plug.Router
+
+  plug :match
+  plug :dispatch
+
+  get "/:key" do
+    value = KV.get(key)
+    if value do
+      send_resp(conn, 200, value)
+    else
+      send_resp(conn, 404, "not found")
+    end
+  end
+
+  get "/:key/:value" do
+    result = KV.set(key, value)
+    send_resp(conn, 200, inspect result)
+  end
+
+  match _ do
+    send_resp(conn, 404, "oops, not found")
+  end
+end
+
+Kino.Proxy.listen(ApiRouter)
+```
+
+Deploy the preview, than open the link http://localhost/proxy/apps/kv/key/ to get the key and http://localhost/proxy/apps/kv/key/value to set the value! (or http://localhost:4002/sessions/ecj6um2cz6tyion4hyf42m5dfa7boh6kiwrgewv2nglc4qmm/key and http://localhost:4002/sessions/ecj6um2cz6tyion4hyf42m5dfa7boh6kiwrgewv2nglc4qmm/key/value for a development session).
+
+N.B. the 4002 is the port I run Livebook on my devbox.
+
+<!-- livebook:{"break_markdown":true} -->
+
+### Credits
+
+* https://news.livebook.dev/livebook-0.13-expose-an-http-api-from-your-notebook-2wE6GY
