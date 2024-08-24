@@ -133,10 +133,30 @@ Toggle mute
 If you need to write a crontab entry you can use https://crontab.guru/
 
 * [[https://elixir-lang.org/][Elixir]]
+** example KV server
+#+begin_src elixir
+  defmodule Darbula.KV do
+    use Agent
 
+    def start_link do
+      Agent.start_link(fn -> %{} end, name: __MODULE__)
+    end
+
+    def get(key) do
+      Agent.get(__MODULE__, fn store -> Map.get(store, key) end)
+    end
+
+    def set(key, value) do
+      with :ok <- Agent.update(__MODULE__, fn store -> Map.put(store, key, value) end) do
+        value
+      end
+    end
+  end
+#+end_src
+** Resources
 - https://elixir-toolbox.dev/
 
-Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
 #+begin_src sh
   sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
