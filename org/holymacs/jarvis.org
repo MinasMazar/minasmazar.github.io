@@ -106,29 +106,6 @@ Example usage
   (async-start (lambda () (sleep-for 3)) (lambda (ff) (message "done")))
 #+end_example
 
-* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
-
-Add a capture template to store notes in =inbox=
-
-#+begin_src elisp
-  (use-package org
-    :config
-    (require 'org-capture)
-    (add-to-list 'org-capture-templates
-  		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
-  		    "* TODO %?\n %i\n  %a"))
-    :bind
-    (:map org-mode-map
-  	  ("M-p" . #'org-move-subtree-up)
-  	  ("M-n" . #'org-move-subtree-down)))
-#+end_src
-
-#+begin_src elisp
-(use-package org-roam
-  :bind
-  (("M-o r f" . #'org-roam-node-find)))
-#+end_src
-
 * COMMENT Autoinsert and templates ⚠️ wip ⚠️
 
 Emacs has some built-in functionalities to /auto insert/ text (expand text or via templates)
@@ -330,6 +307,28 @@ Then configure the =gnus-select-method=
 
 #+begin_src elisp
   (use-package bongo)
+#+end_src
+
+* [[https://cht.sh/][cht.sh]]
+
+#+begin_src sh
+curl https://cht.sh 
+#+end_src
+
+#+begin_src elisp
+  (defun cht.sh-help (helpable)
+    (interactive "sHelp: ")
+    (cht.sh-query "/:help"))
+
+  (defun cht.sh-list ()
+    (interactive)
+    (cht.sh-query "/:list"))
+
+  (defun cht.sh-query (query)
+    (interactive "sQuery: ")
+    (let ((cmd (format "curl https://cht.sh%s" query))
+  	(buffer-name (format "*cht-sh* <%s>" query)))
+      (async-shell-command cmd buffer-name)))
 #+end_src
 
 * Search on the web: engine-mode
