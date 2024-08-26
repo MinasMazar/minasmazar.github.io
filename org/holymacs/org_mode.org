@@ -17,6 +17,8 @@ Add a capture template to store notes in =inbox=
     (add-to-list 'org-capture-templates
   		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
   		    "* TODO %?\n %i\n  %a"))
+    :custom
+    (org-todo-keywords . '("TODO" "IN PROGRESS" "DONE"))
     :bind
     (:map org-mode-map
   	  ("M-p" . #'org-move-subtree-up)
