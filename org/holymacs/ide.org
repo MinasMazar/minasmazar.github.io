@@ -35,10 +35,24 @@
   ;;   :config
   ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
 #+end_src
+
 ** LSP
 
 #+begin_src elisp
-  (use-package eglot)
+  (use-package eglot
+    :config
+    (add-to-list 'eglot-server-programs '(elixir-mode "~/.emacs.d/elixir-ls/release/language_server.sh")))
+#+end_src
+
+*** Elixir
+
+Code stolen from [[https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/][this blogpost]] (thanks [[https://github.com/jeffkreeftmeijer][Jeff Kreeftmeijer]]!)
+
+#+begin_src sh
+  git clone git@github.com:elixir-lsp/elixir-ls.git ~/.emacs.d/elixir-ls
+  cd ~/.emacs.d/elixir-ls
+  mix deps.get
+  mix elixir_ls.release
 #+end_src
 
 * Markup languages
