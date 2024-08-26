@@ -1,0 +1,33 @@
+#+TITLE: Holymacs ~ Org mode module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/org-mode.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
+
+Add a capture template to store notes in =inbox=
+
+#+begin_src elisp
+  (use-package org
+    :config
+    (require 'org-capture)
+    (add-to-list 'org-capture-templates
+  		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
+  		    "* TODO %?\n %i\n  %a"))
+    :custom
+    (org-todo-keywords . '("TODO" "IN PROGRESS" "DONE"))
+    :bind
+    (:map org-mode-map
+  	  ("M-p" . #'org-move-subtree-up)
+  	  ("M-n" . #'org-move-subtree-down)))
+#+end_src
+
+#+begin_src elisp
+(use-package org-roam
+  :bind
+  (("M-o r f" . #'org-roam-node-find)))
+#+end_src
+

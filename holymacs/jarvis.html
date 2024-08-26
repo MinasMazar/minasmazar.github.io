@@ -28,7 +28,6 @@
 <li><a href="#org0f505f6">Jarvis</a></li>
 <li><a href="#org70f3f5d">Tabspaces</a></li>
 <li><a href="#org59f11c2">Focus current window</a></li>
-<li><a href="#org258a3cc">Org and Second Brain (Org-roam)</a></li>
 <li><a href="#orgc5d5e2a">Alarm!</a></li>
 <li><a href="#org1ed2f02">News and Mail</a>
 <ul>
@@ -37,6 +36,7 @@
 </ul>
 </li>
 <li><a href="#orgaf3b9b0">Media</a></li>
+<li><a href="#org7ba2cff">cht.sh</a></li>
 <li><a href="#org655028b">Search on the web: engine-mode</a></li>
 </ul>
 </div>
@@ -106,35 +106,6 @@ There's too silence here.. 😱 let's just play something! 🤘
 <pre class="src src-elisp">(use-package golden-ratio
   :bind
   (("M-o W" . #'golden-ratio-mode)))
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org258a3cc" class="outline-2">
-<h2 id="org258a3cc">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
-<div class="outline-text-2" id="text-org258a3cc">
-<p>
-Add a capture template to store notes in <code>inbox</code>
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(use-package org
-  :config
-  (require 'org-capture)
-  (add-to-list 'org-capture-templates
-                 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
-                    "* TODO %?\n %i\n  %a"))
-  :bind
-  (:map org-mode-map
-          ("M-p" . #'org-move-subtree-up)
-          ("M-n" . #'org-move-subtree-down)))
-</pre>
-</div>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(use-package org-roam
-  :bind
-  (("M-o r f" . #'org-roam-node-find)))
 </pre>
 </div>
 </div>
@@ -224,7 +195,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="orgf55ccf3">
+<pre class="example" id="orgacf48e3">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -256,7 +227,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="org5e9dc1c">
+<pre class="example" id="orgd9643f6">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -284,7 +255,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="orgb055a47">
+<pre class="example" id="org3be840a">
 (setq mu4e-contexts
 	(list
 	 ;; Work account
@@ -324,6 +295,32 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
 <div class="outline-text-2" id="text-orgaf3b9b0">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package bongo)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7ba2cff" class="outline-2">
+<h2 id="org7ba2cff"><a href="https://cht.sh/">cht.sh</a></h2>
+<div class="outline-text-2" id="text-org7ba2cff">
+<div class="org-src-container">
+<pre class="src src-sh">curl https://cht.sh 
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(defun cht.sh-help (helpable)
+  (interactive "sHelp: ")
+  (cht.sh-query "/:help"))
+
+(defun cht.sh-list ()
+  (interactive)
+  (cht.sh-query "/:list"))
+
+(defun cht.sh-query (query)
+  (interactive "sQuery: ")
+  (let ((cmd (format "curl https://cht.sh%s" query))
+        (buffer-name (format "*cht-sh* &lt;%s&gt;" query)))
+    (async-shell-command cmd buffer-name)))
 </pre>
 </div>
 </div>

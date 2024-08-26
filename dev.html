@@ -222,6 +222,9 @@
 <li><a href="#org79320a6">Crontab</a></li>
 <li><a href="#orgfc39bd0">Elixir</a>
 <ul>
+<li><a href="#org6f900ee">example KV server</a></li>
+<li><a href="#org4d57604">Resources</a></li>
+<li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a>
 <ul>
 <li><a href="#orgd4ec969">Dockerfile</a></li>
@@ -233,7 +236,7 @@
 </li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
 <li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#org6d9e32f">MacOS</a>
+<li><a href="#orgc5bbffa">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -466,17 +469,47 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <div id="outline-container-orgfc39bd0" class="outline-2">
 <h2 id="orgfc39bd0"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgfc39bd0">
+</div>
+<div id="outline-container-org6f900ee" class="outline-3">
+<h3 id="org6f900ee">example KV server</h3>
+<div class="outline-text-3" id="text-org6f900ee">
+<div class="org-src-container">
+<pre class="src src-elixir">defmodule Darbula.KV do
+  use Agent
+
+  def start_link do
+    Agent.start_link(fn -&gt; %{} end, name: __MODULE__)
+  end
+
+  def get(key) do
+    Agent.get(__MODULE__, fn store -&gt; Map.get(store, key) end)
+  end
+
+  def set(key, value) do
+    with :ok &lt;- Agent.update(__MODULE__, fn store -&gt; Map.put(store, key, value) end) do
+      value
+    end
+  end
+end
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org4d57604" class="outline-3">
+<h3 id="org4d57604">Resources</h3>
+<div class="outline-text-3" id="text-org4d57604">
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">https://elixir-toolbox.dev/</a></li>
 </ul>
-
-<p>
-Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).
-</p>
-
+</div>
+</div>
+<div id="outline-container-org3a0262a" class="outline-3">
+<h3 id="org3a0262a">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
+<div class="outline-text-3" id="text-org3a0262a">
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
+</div>
 </div>
 </div>
 <div id="outline-container-orgd1c6ccf" class="outline-3">
@@ -731,9 +764,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org6d9e32f" class="outline-2">
-<h2 id="org6d9e32f">MacOS</h2>
-<div class="outline-text-2" id="text-org6d9e32f">
+<div id="outline-container-orgc5bbffa" class="outline-2">
+<h2 id="orgc5bbffa">MacOS</h2>
+<div class="outline-text-2" id="text-orgc5bbffa">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -770,7 +803,7 @@ Taken from this <a href="https://osxdaily.com/2009/09/03/autoplay-quicktime-movi
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="orgefd2c42">
+<pre class="example" id="org88e30d7">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -778,7 +811,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="orgdc41dad">
+<pre class="example" id="org86e12fb">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -786,7 +819,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org018a659">
+<pre class="example" id="org023c4f9">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -797,21 +830,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org6f569c4">
+<pre class="example" id="org148c328">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgf686ee0">
+<pre class="example" id="org571a430">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org0b4ecd8">
+<pre class="example" id="org3735a88">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -830,14 +863,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org740934a">
+<pre class="example" id="org67907fe">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org8c48fd0">
+<pre class="example" id="org4eda53c">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -854,7 +887,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="orgb4e7511">
+<pre class="example" id="org19e25ca">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -862,7 +895,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org91c3f6c">
+<pre class="example" id="org7c31953">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -883,7 +916,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org2771057">
+<pre class="example" id="org8ca0a1e">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -891,7 +924,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org9248fde">
+<pre class="example" id="org6962abf">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -916,7 +949,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org261ae06">
+<pre class="example" id="org1b18838">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -927,7 +960,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org5ab4a3d">
+<pre class="example" id="org5e1f224">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -973,8 +1006,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orgc5bbffa"></a>macOS<br />
-<div class="outline-text-6" id="text-orgc5bbffa">
+<li><a id="orgfa42323"></a>macOS<br />
+<div class="outline-text-6" id="text-orgfa42323">
 <p>
 Use the avfoundation device:
 </p>

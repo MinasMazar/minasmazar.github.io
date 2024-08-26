@@ -92,8 +92,26 @@
 <h3 id="org7b6b240">LSP</h3>
 <div class="outline-text-3" id="text-org7b6b240">
 <div class="org-src-container">
-<pre class="src src-elisp">(use-package eglot)
+<pre class="src src-elisp">(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs '(elixir-mode "~/.emacs.d/elixir-ls/release/language_server.sh")))
 </pre>
+</div>
+</div>
+<div id="outline-container-orgef0432a" class="outline-4">
+<h4 id="orgef0432a">Elixir</h4>
+<div class="outline-text-4" id="text-orgef0432a">
+<p>
+Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git clone git@github.com:elixir-lsp/elixir-ls.git ~/.emacs.d/elixir-ls
+cd ~/.emacs.d/elixir-ls
+mix deps.get
+mix elixir_ls.release
+</pre>
+</div>
 </div>
 </div>
 </div>

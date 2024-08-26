@@ -433,13 +433,15 @@
     (setq unread-command-events (listify-key-sequence key)))
 
   :config
-  (defhydra hydra-modal (:color pink
+  (defhydra hydra-nav (:color pink
                              :pre (setq cursor-type 'box)
                              :post (setq cursor-type 'bar))
-            "hydra-move:"
+            "hydra-nav:"
             ("w" #'kill-ring-save "w")
             ("n" #'next-line "n")
             ("p" #'previous-line "p")
+            ("a" #'beginning-of-line "a")
+            ("e" #'end-of-line "e")
             ("k" #'kill-buffer "k")
             ("K" #'kill-line "K")
             ("]" #'scroll-up-command "]")
@@ -450,6 +452,7 @@
             ("&gt;" #'end-of-buffer "&gt;")
             ("u" #'undo "undo")
             ("2" #'split-window-below "2")
+            ("3" #'split-window-right "3")
             ("0" #'delete-window "0")
             ("1" #'delete-other-windows "1")
             ("i" nil "quit"))
@@ -459,7 +462,7 @@
                                   :post (setq cursor-type 'bar))
             "hydra-kommand"
             ("k" #'execute-extended-command "🚀 Kommand")
-            ("m" #'hydra-modal/body "modal")
+            ("m" #'hydra-nav/body "modal")
             ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
             ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
             ("e" #'eval-defun "Λ eval-defun")
@@ -472,7 +475,7 @@
             ("q" nil "_q_uit"))
   :bind
   (("s-o" . #'hydra-kommand/body)
-   ("s-l" . #'hydra-modal/body)))
+   ("s-l" . #'hydra-nav/body)))
 </pre>
 </div>
 </div>
