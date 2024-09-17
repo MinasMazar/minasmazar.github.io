@@ -149,6 +149,33 @@ If you need to write a crontab entry you can use https://crontab.guru/
   end
 #+end_src
 
+** DynamicSupervsior template
+
+#+begin_src elixir
+  defmodule MySupervisor do
+    use DynamicSupervisor
+    
+    def start_link(init_arg) do
+      DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+    end
+    
+    def start_child(foo, bar, baz) do
+      # If MyWorker is not using the new child specs, we need to pass a map:
+      # spec = %{id: MyWorker, start: {MyWorker, :start_link, [foo, bar, baz]}}
+      spec = {MyWorker, foo: foo, bar: bar, baz: baz}
+      DynamicSupervisor.start_child(__MODULE__, spec)
+    end
+    
+    @impl true
+    def init(init_arg) do
+      DynamicSupervisor.init(
+        strategy: :one_for_one,
+        extra_arguments: [init_arg]
+      )
+    end
+  end
+#+end_src
+
 ** example KV server
 
 #+begin_src elixir
@@ -171,6 +198,12 @@ If you need to write a crontab entry you can use https://crontab.guru/
   end
 #+end_src
 
+** Development Tools: Makefile
+#+begin_src makefile
+  default: s
+  s:
+  	iex -S mix phx.server
+#+end_src
 ** Resources
 - https://elixir-toolbox.dev/
 
@@ -415,6 +448,14 @@ Taken from this [[https://osxdaily.com/2009/09/03/autoplay-quicktime-movies-on-o
 defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen 1
 #+end_src
 
+* Youtube downloader (yt-dlp)
+
+Search for videos.
+
+#+begin_src sh
+  yt-dlp ytsearch10:lebron james --get-id --get-title
+#+end_src
+
 * FFMPEG
 
 ** Extract audio from video
@@ -604,6 +645,18 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
   docker-start:
   	docker container run --name darbula -p 4020:4020 --rm -t darbula:latest /app/bin/darbula start
 #+end_src
+
+Simple example on how to use =make= variables and shell environment variables.
+
+#+begin_src makefile
+  app := $$APP
+
+  default: .elixir.phoenix.new.live
+
+  .elixir.phoenix.new.live:
+  	new ${app} --live
+#+end_src
+
 * Tailwind
 ** Background Colors
 #+begin_src text
@@ -856,6 +909,7 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
   bg-rose-900  background-color: rgb(136 19 55);       
   bg-rose-950  background-color: rgb(76 5 25);       
 #+end_src
+* [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
 * GPG and SSH
 ** Keep GnuPG credentials cached for entire user session
 

@@ -226,6 +226,7 @@ In vanilla Emacs the ~M-o~ keybinding is free: I'll use it as sort of an entrypo
   (global-set-key (kbd "M-o k") #'org-capture)
   (global-set-key (kbd "M-o 8") #'emoji-search)
   (global-set-key (kbd "M-o e") #'eshell)
+  (global-set-key (kbd "M-o b") #'ibuffer)
   (global-set-key (kbd "M-o E") #'project-eshell)
   (global-set-key (kbd "M-o h") #'info-display-manual)
 #+end_src

@@ -6,7 +6,7 @@
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
-* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
+* org-mode configuration
 
 Add a capture template to store notes in =inbox=
 
@@ -24,6 +24,8 @@ Add a capture template to store notes in =inbox=
   	  ("M-p" . #'org-move-subtree-up)
   	  ("M-n" . #'org-move-subtree-down)))
 #+end_src
+
+* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
 
 #+begin_src elisp
 (use-package org-roam

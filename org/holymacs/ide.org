@@ -48,7 +48,7 @@
 
 Code stolen from [[https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/][this blogpost]] (thanks [[https://github.com/jeffkreeftmeijer][Jeff Kreeftmeijer]]!)
 
-#+begin_src sh
+#+begin_src sh :tangle no
   git clone git@github.com:elixir-lsp/elixir-ls.git ~/.emacs.d/elixir-ls
   cd ~/.emacs.d/elixir-ls
   mix deps.get
@@ -60,6 +60,23 @@ Code stolen from [[https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/][this blo
 
 #+begin_src elisp
   (use-package markdown-mode)
+#+end_src
+
+* Project management
+** Run make on list of projects
+
+#+begin_src elisp
+  (defcustom minemacs-projects '() "Project list" :type '(repeat :tag "Projects" (string :tag "Path")))
+
+  (defun minemacs-projects-make (&optional task)
+    (interactive (list (completing-read "Task: " '("dev" "run" "usage"))))
+    (mapcar
+     (lambda (project)
+       (let ((command (format "make %s" task))
+  	   (buffer-name (format "Project: <%s>" project))
+  	   (default-directory project))
+         (async-shell-command (format "cd %s && %s" project command) buffer-name)))
+     minemacs-projects))
 #+end_src
 
 * Terminal emulator
@@ -78,6 +95,7 @@ Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
       (let ((buffer-name (format "*vterm <%s>*" command)))
         (with-current-buffer (vterm buffer-name)
   	(vterm-send-string (format "%s && exit\n" command)))))
+
     (defun holymacs-tmux/open ()
       (interactive)
       (holymacs-vterm-exec "tmux attach || tmux")))
