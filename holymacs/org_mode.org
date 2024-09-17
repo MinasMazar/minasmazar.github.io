@@ -6,7 +6,7 @@
 #+SETUPFILE: ../../templates/_header.org
 #+HTML_LINK_UP: ../holymacs.html
 
-* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
+* org-mode configuration
 
 Add a capture template to store notes in =inbox=
 
@@ -18,12 +18,14 @@ Add a capture template to store notes in =inbox=
   		 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
   		    "* TODO %?\n %i\n  %a"))
     :custom
-    (org-todo-keywords . '("TODO" "IN PROGRESS" "DONE"))
+    (org-todo-keywords . '((sequence "TODO(t)" "IN PROGRESS(p)" "|" "DONE(d!)")))
     :bind
     (:map org-mode-map
   	  ("M-p" . #'org-move-subtree-up)
   	  ("M-n" . #'org-move-subtree-down)))
 #+end_src
+
+* Org and Second Brain ([[https://www.orgroam.com/][Org-roam]])
 
 #+begin_src elisp
 (use-package org-roam

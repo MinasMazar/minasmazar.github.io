@@ -222,7 +222,10 @@
 <li><a href="#org79320a6">Crontab</a></li>
 <li><a href="#orgfc39bd0">Elixir</a>
 <ul>
+<li><a href="#org740510e">GenServer template</a></li>
+<li><a href="#org9fae9e3">DynamicSupervsior template</a></li>
 <li><a href="#org6f900ee">example KV server</a></li>
+<li><a href="#org7ec988c">Development Tools: Makefile</a></li>
 <li><a href="#org4d57604">Resources</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a>
@@ -236,12 +239,13 @@
 </li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
 <li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#orgc5bbffa">MacOS</a>
+<li><a href="#orgfa42323">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
 </ul>
 </li>
+<li><a href="#org641c0df">Youtube downloader (yt-dlp)</a></li>
 <li><a href="#org4d3bf7c">FFMPEG</a>
 <ul>
 <li><a href="#orga1bece2">Extract audio from video</a></li>
@@ -262,6 +266,7 @@
 <li><a href="#org6756ff5">Background Colors</a></li>
 </ul>
 </li>
+<li><a href="#orgfb0cd55">Run make on list of projects</a></li>
 <li><a href="#org7567c99">GPG and SSH</a>
 <ul>
 <li><a href="#orgde6e32b">Keep GnuPG credentials cached for entire user session</a></li>
@@ -470,6 +475,55 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <h2 id="orgfc39bd0"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgfc39bd0">
 </div>
+<div id="outline-container-org740510e" class="outline-3">
+<h3 id="org740510e">GenServer template</h3>
+<div class="outline-text-3" id="text-org740510e">
+<div class="org-src-container">
+<pre class="src src-elixir">defmodule MyApp.Server do
+  use GenServer
+
+  def start_link(args) do
+    GenServer.start_link(__MODULE__, args, name: Map.get(args, :name, __MODULE__))
+  end
+
+  def init(_) do
+    {:ok, []}
+  end
+end
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org9fae9e3" class="outline-3">
+<h3 id="org9fae9e3">DynamicSupervsior template</h3>
+<div class="outline-text-3" id="text-org9fae9e3">
+<div class="org-src-container">
+<pre class="src src-elixir">defmodule MySupervisor do
+  use DynamicSupervisor
+
+  def start_link(init_arg) do
+    DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+  end
+
+  def start_child(foo, bar, baz) do
+    # If MyWorker is not using the new child specs, we need to pass a map:
+    # spec = %{id: MyWorker, start: {MyWorker, :start_link, [foo, bar, baz]}}
+    spec = {MyWorker, foo: foo, bar: bar, baz: baz}
+    DynamicSupervisor.start_child(__MODULE__, spec)
+  end
+
+  @impl true
+  def init(init_arg) do
+    DynamicSupervisor.init(
+      strategy: :one_for_one,
+      extra_arguments: [init_arg]
+    )
+  end
+end
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org6f900ee" class="outline-3">
 <h3 id="org6f900ee">example KV server</h3>
 <div class="outline-text-3" id="text-org6f900ee">
@@ -491,6 +545,17 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
     end
   end
 end
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7ec988c" class="outline-3">
+<h3 id="org7ec988c">Development Tools: Makefile</h3>
+<div class="outline-text-3" id="text-org7ec988c">
+<div class="org-src-container">
+<pre class="src src-makefile">default: s
+s:
+        iex -S mix phx.server
 </pre>
 </div>
 </div>
@@ -764,9 +829,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5bbffa" class="outline-2">
-<h2 id="orgc5bbffa">MacOS</h2>
-<div class="outline-text-2" id="text-orgc5bbffa">
+<div id="outline-container-orgfa42323" class="outline-2">
+<h2 id="orgfa42323">MacOS</h2>
+<div class="outline-text-2" id="text-orgfa42323">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -796,6 +861,19 @@ Taken from this <a href="https://osxdaily.com/2009/09/03/autoplay-quicktime-movi
 </div>
 </div>
 </div>
+<div id="outline-container-org641c0df" class="outline-2">
+<h2 id="org641c0df">Youtube downloader (yt-dlp)</h2>
+<div class="outline-text-2" id="text-org641c0df">
+<p>
+Search for videos.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">yt-dlp ytsearch10:lebron james --get-id --get-title
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org4d3bf7c" class="outline-2">
 <h2 id="org4d3bf7c">FFMPEG</h2>
 <div class="outline-text-2" id="text-org4d3bf7c">
@@ -803,7 +881,7 @@ Taken from this <a href="https://osxdaily.com/2009/09/03/autoplay-quicktime-movi
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org88e30d7">
+<pre class="example" id="org5ddcd25">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -811,7 +889,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org86e12fb">
+<pre class="example" id="org41209c9">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -819,7 +897,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org023c4f9">
+<pre class="example" id="org8c520ee">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -830,21 +908,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org148c328">
+<pre class="example" id="org5d77fc5">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org571a430">
+<pre class="example" id="orgf015fb8">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org3735a88">
+<pre class="example" id="org113f005">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -863,14 +941,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org67907fe">
+<pre class="example" id="orgbeee919">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org4eda53c">
+<pre class="example" id="org1ed00eb">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -887,7 +965,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org19e25ca">
+<pre class="example" id="org3f4fd66">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -895,7 +973,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org7c31953">
+<pre class="example" id="orgf776384">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -916,7 +994,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org8ca0a1e">
+<pre class="example" id="org3b78d7f">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -924,7 +1002,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org6962abf">
+<pre class="example" id="org67696f2">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -949,7 +1027,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org1b18838">
+<pre class="example" id="orgae54617">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -960,7 +1038,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org5e1f224">
+<pre class="example" id="org00ead5e">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1006,8 +1084,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orgfa42323"></a>macOS<br />
-<div class="outline-text-6" id="text-orgfa42323">
+<li><a id="org8640ada"></a>macOS<br />
+<div class="outline-text-6" id="text-org8640ada">
 <p>
 Use the avfoundation device:
 </p>
@@ -1079,6 +1157,20 @@ docker-build:
         docker build -t darbula:latest .
 docker-start:
         docker container run --name darbula -p 4020:4020 --rm -t darbula:latest /app/bin/darbula start
+</pre>
+</div>
+
+<p>
+Simple example on how to use <code>make</code> variables and shell environment variables.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-makefile">app := $$APP
+
+default: .elixir.phoenix.new.live
+
+.elixir.phoenix.new.live:
+        new ${app} --live
 </pre>
 </div>
 </div>
@@ -1343,6 +1435,9 @@ bg-rose-950  background-color: rgb(76 5 25);
 </div>
 </div>
 </div>
+</div>
+<div id="outline-container-orgfb0cd55" class="outline-2">
+<h2 id="orgfb0cd55"><a href="holymacs/ide.html#org48d8bd5">Run make on list of projects</a></h2>
 </div>
 <div id="outline-container-org7567c99" class="outline-2">
 <h2 id="org7567c99">GPG and SSH</h2>
