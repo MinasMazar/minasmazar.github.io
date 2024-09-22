@@ -30,29 +30,6 @@ There's too silence here.. 😱 let's just play something! 🤘
         (async-shell-command command buffer-name)))
 #+end_src
 
-* Tabspaces
-
-#+begin_src elisp
-  (use-package tabspaces
-    :hook (after-init . tabspaces-mode)
-    :commands (tabspaces-switch-or-create-workspace
-  	       tabspaces-open-or-create-project-and-workspace)
-    :bind
-    (("s-{" . tab-previous)
-     ("s-}" . tab-next))
-    :custom
-    (tabspaces-keymap-prefix "M-o w")
-    (tabspaces-use-filtered-buffers-as-default t)
-    (tabspaces-default-tab "Default")
-    (tabspaces-remove-to-default t)
-    (tabspaces-initialize-project-with-todo t)
-    (tabspaces-todo-file-name "project-todo.org")
-    ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
-    ;; (tabspaces-session t)
-    ;; (tabspaces-session-auto-restore t))
-    )
-#+end_src
-
 * COMMENT Pop terminal ⚠️ wip ⚠️
 
 #+begin_src elisp
