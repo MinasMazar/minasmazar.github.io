@@ -5,10 +5,17 @@
 #+STARTUP: overview
 
 * Docker
-** Handling volumes
+** Backup and port Postgres databases across images
 
+Bind to
 #+begin_src sh
   docker run --rm --name postgres --volume ~/postgres-data:/var/lib/postgresql/data postgres:latest
+#+end_src
+
+Backup volume with
+
+#+begin_src eshell
+  tar cf postgres-data_$(format-time-string "%N").tar postgres-data
 #+end_src
 
 ** Disable/enable autostart of a docker container.
@@ -195,14 +202,26 @@ If you need to write a crontab entry you can use https://crontab.guru/
         value
       end
     end
+
+    def get_or_set(key, fun) when is_function(fun) do
+      get(key) || set(key, fun.())
+    end
   end
 #+end_src
 
 ** Development Tools: Makefile
 #+begin_src makefile
-  default: s
-  s:
-  	iex -S mix phx.server
+  default: t c
+
+  c:
+  	iex -S mix
+  t:
+  	mix test
+  tt:
+  	mix test --listen-on-stdin
+  reset:
+  	mix do deps.get, deps.compile, compile
+  	make c
 #+end_src
 ** Resources
 - https://elixir-toolbox.dev/
@@ -384,6 +403,7 @@ networks:
   outside:
 
 #+end_src
+** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
 ** Phoenix Livebooks
 
 - [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
@@ -457,7 +477,6 @@ Search for videos.
 #+end_src
 
 * FFMPEG
-
 ** Extract audio from video
 #+begin_example shell
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
@@ -910,8 +929,140 @@ Simple example on how to use =make= variables and shell environment variables.
   bg-rose-950  background-color: rgb(76 5 25);       
 #+end_src
 * [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
+* Google Chrome & chromedriver
+
+Download chromedriver version according to the version of Google Chrome installed.
+- https://googlechromelabs.github.io/chrome-for-testing/
+
+How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium test run?
+
+#+begin_src sh
+chromedriver --disable-search-engine-choice-screen
+#+end_src
+
 * GPG and SSH
-** Keep GnuPG credentials cached for entire user session
+** Generate key
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+
+Remember to execute in a terminal capable of reading password via ncurses-like input method.
+
+  #+begin_src sh
+gpg --full-generate-key
+  #+end_src
+
+** List the key
+
+#+begin_src sh
+gpg --list-secret-keys --keyid-format=long
+#+end_src
+
+** Get the armored key text
+
+  #+begin_src sh
+gpg --armor --export KEYID
+  #+end_src
+
+** Upload to Github
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account
+
+From the list of GPG keys, copy the long form of the GPG key ID you'd like to use. In this example, the GPG key ID is =3AA5C34371567BD2=:
+
+#+begin_src sh
+$ gpg --list-secret-keys --keyid-format=long
+#+end_src
+
+This will output something like
+
+#+begin_src
+/Users/hubot/.gnupg/secring.gpg
+------------------------------------
+sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
+uid                          Hubot
+ssb   4096R/42B317FD4BA89E7A 2016-03-10
+#+end_src
+
+Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is =3AA5C34371567BD2=:
+
+#+begin_src sh
+$ gpg --armor --export 3AA5C34371567BD2
+#+end_src
+
+Copy your GPG key, beginning with -----BEGIN PGP PUBLIC KEY BLOCK----- and ending with -----END PGP PUBLIC KEY BLOCK-----.
+
+** Tell Git to use GPG key
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key
+
+Use the =gpg --list-secret-keys --keyid-format=long= command to list the long form of the GPG keys for which you have both a public and private key. A private key is required for signing commits or tags (same ID as for /Upload to Github/). Then:
+
+#+begin_src sh
+git config --global user.signingkey 3AA5C34371567BD2
+#+end_src
+
+** Export key pair
+
+Ref. https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file
+
+*** Export Public Key
+
+This command will export an ascii armored version of the public key:
+
+#+begin_src sh
+gpg --output public.pgp --armor --export username@email
+#+end_src
+
+N.B. when using =--armor= maybe the file extension name should be =.asc=.
+
+*** Export Secret Key
+
+This command will export an ascii armored version of the secret key:
+
+#+begin_src sh
+gpg --output private.pgp --armor --export-secret-key username@email
+#+end_src
+
+N.B. when using =--armor= maybe the file extension name should be =.asc=.
+
+Or [[https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file][if the purpose is to create a backup key, you should use the backup option]]:
+
+#+begin_src sh
+  gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+#+end_src
+
+*** Security Concerns, Backup, and Storage
+
+A PGP public key contains information about one's email address. This is generally acceptable since the public key is used to encrypt email to your address. However, in some cases, this is undesirable.
+
+For most use cases, the secret key need not be exported and should not be distributed. If the purpose is to create a backup key, you should use the backup option:
+
+#+begin_src shell
+gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+#+end_src
+
+** Import a key
+
+#+begin_src shell
+gpg --import my-key.asc
+gpg --import --allow-secret-key-import private.key
+#+end_src
+
+** Troubleshooting
+
+Interesting resources if you encounter problems:
+- https://gist.github.com/paolocarrasco/18ca8fe6e63490ae1be23e84a7039374
+
+** Generate SSH keys
+
+From [[https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent][GitHub docs]]:
+
+#+begin_src sh
+ssh-keygen -t ed25519 -C "your_email@example.com"
+#+end_src
+
+** GPG Agent: cache and timeouts
+**** Keep GnuPG credentials cached for entire user session
 
 For GnuPG 2.1 and below edit user configuration file at =~/.gnupg/gpg-agent.conf=. In the example below the TTL is set to 3h.
 
@@ -927,7 +1078,7 @@ Then restart the agent
   gpg-agent --daemon --use-standard-socket
 #+end_src
 
-** Cache SSH keys
+**** Cache SSH keys
 
 If you want to use SSH but tired of insert SSH key on every (for instance) git operation
 

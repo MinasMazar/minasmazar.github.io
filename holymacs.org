@@ -289,7 +289,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-)") #'kill-current-buffer)
   (global-set-key (kbd "s--") #'bookmark-jump)
   (global-set-key (kbd "s-_") #'bookmark-set)
-  (global-set-key (kbd "s-q") #'tab-next)
+  (global-set-key (kbd "s-q") #'tab-switch)
   (global-set-key (kbd "s-\\") #'other-frame)
   (global-set-key (kbd "s-t") #'find-name-dired)
   (global-set-key (kbd "s-e") #'dabbrev-expand)

@@ -27,9 +27,10 @@
 <ul>
 <li><a href="#org74f63df">Versioning</a></li>
 <li><a href="#org656c4e6">Docker</a></li>
+<li><a href="#org407eb8a">Workspaces</a></li>
 <li><a href="#org07faf93">Programming languages</a>
 <ul>
-<li><a href="#orgef0432a">Elixir</a></li>
+<li><a href="#orge0b435b">Elixir</a></li>
 <li><a href="#org7b6b240">LSP</a></li>
 </ul>
 </li>
@@ -73,13 +74,39 @@
 </div>
 </div>
 </div>
+<div id="outline-container-org407eb8a" class="outline-2">
+<h2 id="org407eb8a">Workspaces</h2>
+<div class="outline-text-2" id="text-org407eb8a">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package tabspaces
+  :hook (after-init . tabspaces-mode)
+  :commands (tabspaces-switch-or-create-workspace
+               tabspaces-open-or-create-project-and-workspace)
+  :bind
+  (("s-{" . tab-previous)
+   ("s-}" . tab-next))
+  :custom
+  (tabspaces-keymap-prefix "M-o w")
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-initialize-project-with-todo t)
+  (tabspaces-todo-file-name "project-todo.org")
+  ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+  ;; (tabspaces-session t)
+  ;; (tabspaces-session-auto-restore t))
+  )
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org07faf93" class="outline-2">
 <h2 id="org07faf93">Programming languages</h2>
 <div class="outline-text-2" id="text-org07faf93">
 </div>
-<div id="outline-container-orgef0432a" class="outline-3">
-<h3 id="orgef0432a">Elixir</h3>
-<div class="outline-text-3" id="text-orgef0432a">
+<div id="outline-container-orge0b435b" class="outline-3">
+<h3 id="orge0b435b">Elixir</h3>
+<div class="outline-text-3" id="text-orge0b435b">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package elixir-mode)
 (use-package exunit
@@ -103,9 +130,9 @@
 </pre>
 </div>
 </div>
-<div id="outline-container-orge0b435b" class="outline-4">
-<h4 id="orge0b435b">Elixir</h4>
-<div class="outline-text-4" id="text-orge0b435b">
+<div id="outline-container-org7122a64" class="outline-4">
+<h4 id="org7122a64">Elixir</h4>
+<div class="outline-text-4" id="text-org7122a64">
 <p>
 Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
 </p>

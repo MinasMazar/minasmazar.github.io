@@ -205,7 +205,7 @@
 <ul>
 <li><a href="#org217d12f">Docker</a>
 <ul>
-<li><a href="#org7965422">Handling volumes</a></li>
+<li><a href="#org108a1fd">Backup and port Postgres databases across images</a></li>
 <li><a href="#orgcb4af55">Disable/enable autostart of a docker container.</a></li>
 <li><a href="#org8cd9270">Playing Sound in Docker Containers (here the source article)</a></li>
 <li><a href="#orgb8586c2">Rename a docker image</a></li>
@@ -234,12 +234,13 @@
 <li><a href="#orgd4edd8f">Docker compose</a></li>
 </ul>
 </li>
+<li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
 <li><a href="#org99c3330">Phoenix Livebooks</a></li>
 </ul>
 </li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
 <li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#orgfa42323">MacOS</a>
+<li><a href="#org8640ada">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -267,10 +268,25 @@
 </ul>
 </li>
 <li><a href="#orgfb0cd55">Run make on list of projects</a></li>
+<li><a href="#org4b54590">Google Chrome &amp; chromedriver</a></li>
 <li><a href="#org7567c99">GPG and SSH</a>
 <ul>
-<li><a href="#orgde6e32b">Keep GnuPG credentials cached for entire user session</a></li>
-<li><a href="#org93c0ef4">Cache SSH keys</a></li>
+<li><a href="#orgb3ec84e">Generate key</a></li>
+<li><a href="#org95c7f0a">List the key</a></li>
+<li><a href="#orgf44a5e1">Get the armored key text</a></li>
+<li><a href="#orge5db3da">Upload to Github</a></li>
+<li><a href="#org6f008bb">Tell Git to use GPG key</a></li>
+<li><a href="#orge0567a8">Export key pair</a>
+<ul>
+<li><a href="#orgfc5c93d">Export Public Key</a></li>
+<li><a href="#orgcbaed11">Export Secret Key</a></li>
+<li><a href="#orgb5c230c">Security Concerns, Backup, and Storage</a></li>
+</ul>
+</li>
+<li><a href="#org9148f00">Import a key</a></li>
+<li><a href="#org0a2f04f">Troubleshooting</a></li>
+<li><a href="#orgedf5ccb">Generate SSH keys</a></li>
+<li><a href="#orgb0056f5">GPG Agent: cache and timeouts</a></li>
 </ul>
 </li>
 </ul>
@@ -280,11 +296,23 @@
 <h2 id="org217d12f">Docker</h2>
 <div class="outline-text-2" id="text-org217d12f">
 </div>
-<div id="outline-container-org7965422" class="outline-3">
-<h3 id="org7965422">Handling volumes</h3>
-<div class="outline-text-3" id="text-org7965422">
+<div id="outline-container-org108a1fd" class="outline-3">
+<h3 id="org108a1fd">Backup and port Postgres databases across images</h3>
+<div class="outline-text-3" id="text-org108a1fd">
+<p>
+Bind to
+</p>
 <div class="org-src-container">
 <pre class="src src-sh">docker run --rm --name postgres --volume ~/postgres-data:/var/lib/postgresql/data postgres:latest
+</pre>
+</div>
+
+<p>
+Backup volume with
+</p>
+
+<div class="org-src-container">
+<pre class="src src-eshell">tar cf postgres-data_$(format-time-string "%N").tar postgres-data
 </pre>
 </div>
 </div>
@@ -544,6 +572,10 @@ end
       value
     end
   end
+
+  def get_or_set(key, fun) when is_function(fun) do
+    get(key) || set(key, fun.())
+  end
 end
 </pre>
 </div>
@@ -553,9 +585,17 @@ end
 <h3 id="org7ec988c">Development Tools: Makefile</h3>
 <div class="outline-text-3" id="text-org7ec988c">
 <div class="org-src-container">
-<pre class="src src-makefile">default: s
-s:
-        iex -S mix phx.server
+<pre class="src src-makefile">default: t c
+
+c:
+        iex -S mix
+t:
+        mix test
+tt:
+        mix test --listen-on-stdin
+reset:
+        mix do deps.get, deps.compile, compile
+        make c
 </pre>
 </div>
 </div>
@@ -761,6 +801,9 @@ networks:
 </div>
 </div>
 </div>
+<div id="outline-container-org57cdc16" class="outline-3">
+<h3 id="org57cdc16">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
+</div>
 <div id="outline-container-org99c3330" class="outline-3">
 <h3 id="org99c3330">Phoenix Livebooks</h3>
 <div class="outline-text-3" id="text-org99c3330">
@@ -829,9 +872,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-orgfa42323" class="outline-2">
-<h2 id="orgfa42323">MacOS</h2>
-<div class="outline-text-2" id="text-orgfa42323">
+<div id="outline-container-org8640ada" class="outline-2">
+<h2 id="org8640ada">MacOS</h2>
+<div class="outline-text-2" id="text-org8640ada">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -881,7 +924,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org5ddcd25">
+<pre class="example" id="orgdda1570">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -889,7 +932,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org41209c9">
+<pre class="example" id="org2f21d2d">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -897,7 +940,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org8c520ee">
+<pre class="example" id="org19beb15">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -908,21 +951,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org5d77fc5">
+<pre class="example" id="org7bb8bdc">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgf015fb8">
+<pre class="example" id="org0534486">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org113f005">
+<pre class="example" id="org456f1e4">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -941,14 +984,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgbeee919">
+<pre class="example" id="orgccce313">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org1ed00eb">
+<pre class="example" id="orgca339db">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -965,7 +1008,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org3f4fd66">
+<pre class="example" id="org2dcd0a7">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -973,7 +1016,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgf776384">
+<pre class="example" id="org35dafe2">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -994,7 +1037,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org3b78d7f">
+<pre class="example" id="org38a4da7">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1002,7 +1045,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org67696f2">
+<pre class="example" id="orgc82e7a9">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1027,7 +1070,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="orgae54617">
+<pre class="example" id="org3c53495">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1038,7 +1081,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org00ead5e">
+<pre class="example" id="org3405174">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1084,8 +1127,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org8640ada"></a>macOS<br />
-<div class="outline-text-6" id="text-org8640ada">
+<li><a id="org9318e5d"></a>macOS<br />
+<div class="outline-text-6" id="text-org9318e5d">
 <p>
 Use the avfoundation device:
 </p>
@@ -1439,13 +1482,234 @@ bg-rose-950  background-color: rgb(76 5 25);
 <div id="outline-container-orgfb0cd55" class="outline-2">
 <h2 id="orgfb0cd55"><a href="holymacs/ide.html#org48d8bd5">Run make on list of projects</a></h2>
 </div>
+<div id="outline-container-org4b54590" class="outline-2">
+<h2 id="org4b54590">Google Chrome &amp; chromedriver</h2>
+<div class="outline-text-2" id="text-org4b54590">
+<p>
+Download chromedriver version according to the version of Google Chrome installed.
+</p>
+<ul class="org-ul">
+<li><a href="https://googlechromelabs.github.io/chrome-for-testing/">https://googlechromelabs.github.io/chrome-for-testing/</a></li>
+</ul>
+
+<p>
+How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium test run?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">chromedriver --disable-search-engine-choice-screen
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org7567c99" class="outline-2">
 <h2 id="org7567c99">GPG and SSH</h2>
 <div class="outline-text-2" id="text-org7567c99">
 </div>
-<div id="outline-container-orgde6e32b" class="outline-3">
-<h3 id="orgde6e32b">Keep GnuPG credentials cached for entire user session</h3>
-<div class="outline-text-3" id="text-orgde6e32b">
+<div id="outline-container-orgb3ec84e" class="outline-3">
+<h3 id="orgb3ec84e">Generate key</h3>
+<div class="outline-text-3" id="text-orgb3ec84e">
+<p>
+Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key</a>
+</p>
+
+<p>
+Remember to execute in a terminal capable of reading password via ncurses-like input method.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpg --full-generate-key
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org95c7f0a" class="outline-3">
+<h3 id="org95c7f0a">List the key</h3>
+<div class="outline-text-3" id="text-org95c7f0a">
+<div class="org-src-container">
+<pre class="src src-sh">gpg --list-secret-keys --keyid-format=long
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf44a5e1" class="outline-3">
+<h3 id="orgf44a5e1">Get the armored key text</h3>
+<div class="outline-text-3" id="text-orgf44a5e1">
+<div class="org-src-container">
+<pre class="src src-sh">gpg --armor --export KEYID
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge5db3da" class="outline-3">
+<h3 id="orge5db3da">Upload to Github</h3>
+<div class="outline-text-3" id="text-orge5db3da">
+<p>
+Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account">https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account</a>
+</p>
+
+<p>
+From the list of GPG keys, copy the long form of the GPG key ID you'd like to use. In this example, the GPG key ID is <code>3AA5C34371567BD2</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ gpg --list-secret-keys --keyid-format=long
+</pre>
+</div>
+
+<p>
+This will output something like
+</p>
+
+<div class="org-src-container">
+<pre class="src src-nil">/Users/hubot/.gnupg/secring.gpg
+------------------------------------
+sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
+uid                          Hubot
+ssb   4096R/42B317FD4BA89E7A 2016-03-10
+</pre>
+</div>
+
+<p>
+Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is <code>3AA5C34371567BD2</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">$ gpg --armor --export 3AA5C34371567BD2
+</pre>
+</div>
+
+<p>
+Copy your GPG key, beginning with &#x2013;&#x2014;BEGIN PGP PUBLIC KEY BLOCK&#x2013;&#x2014; and ending with &#x2013;&#x2014;END PGP PUBLIC KEY BLOCK&#x2013;&#x2014;.
+</p>
+</div>
+</div>
+<div id="outline-container-org6f008bb" class="outline-3">
+<h3 id="org6f008bb">Tell Git to use GPG key</h3>
+<div class="outline-text-3" id="text-org6f008bb">
+<p>
+Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key</a>
+</p>
+
+<p>
+Use the <code>gpg --list-secret-keys --keyid-format=long</code> command to list the long form of the GPG keys for which you have both a public and private key. A private key is required for signing commits or tags (same ID as for <i>Upload to Github</i>). Then:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git config --global user.signingkey 3AA5C34371567BD2
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge0567a8" class="outline-3">
+<h3 id="orge0567a8">Export key pair</h3>
+<div class="outline-text-3" id="text-orge0567a8">
+<p>
+Ref. <a href="https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file">https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file</a>
+</p>
+</div>
+<div id="outline-container-orgfc5c93d" class="outline-4">
+<h4 id="orgfc5c93d">Export Public Key</h4>
+<div class="outline-text-4" id="text-orgfc5c93d">
+<p>
+This command will export an ascii armored version of the public key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpg --output public.pgp --armor --export username@email
+</pre>
+</div>
+
+<p>
+N.B. when using <code>--armor</code> maybe the file extension name should be <code>.asc</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-orgcbaed11" class="outline-4">
+<h4 id="orgcbaed11">Export Secret Key</h4>
+<div class="outline-text-4" id="text-orgcbaed11">
+<p>
+This command will export an ascii armored version of the secret key:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpg --output private.pgp --armor --export-secret-key username@email
+</pre>
+</div>
+
+<p>
+N.B. when using <code>--armor</code> maybe the file extension name should be <code>.asc</code>.
+</p>
+
+<p>
+Or <a href="https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file">if the purpose is to create a backup key, you should use the backup option</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb5c230c" class="outline-4">
+<h4 id="orgb5c230c">Security Concerns, Backup, and Storage</h4>
+<div class="outline-text-4" id="text-orgb5c230c">
+<p>
+A PGP public key contains information about one's email address. This is generally acceptable since the public key is used to encrypt email to your address. However, in some cases, this is undesirable.
+</p>
+
+<p>
+For most use cases, the secret key need not be exported and should not be distributed. If the purpose is to create a backup key, you should use the backup option:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org9148f00" class="outline-3">
+<h3 id="org9148f00">Import a key</h3>
+<div class="outline-text-3" id="text-org9148f00">
+<div class="org-src-container">
+<pre class="src src-shell">gpg --import my-key.asc
+gpg --import --allow-secret-key-import private.key
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org0a2f04f" class="outline-3">
+<h3 id="org0a2f04f">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org0a2f04f">
+<p>
+Interesting resources if you encounter problems:
+</p>
+<ul class="org-ul">
+<li><a href="https://gist.github.com/paolocarrasco/18ca8fe6e63490ae1be23e84a7039374">https://gist.github.com/paolocarrasco/18ca8fe6e63490ae1be23e84a7039374</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgedf5ccb" class="outline-3">
+<h3 id="orgedf5ccb">Generate SSH keys</h3>
+<div class="outline-text-3" id="text-orgedf5ccb">
+<p>
+From <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">GitHub docs</a>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">ssh-keygen -t ed25519 -C "your_email@example.com"
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb0056f5" class="outline-3">
+<h3 id="orgb0056f5">GPG Agent: cache and timeouts</h3>
+<div class="outline-text-3" id="text-orgb0056f5">
+</div>
+<ul class="org-ul">
+<li><a id="orgde6e32b"></a>Keep GnuPG credentials cached for entire user session<br />
+<div class="outline-text-5" id="text-orgde6e32b">
 <p>
 For GnuPG 2.1 and below edit user configuration file at <code>~/.gnupg/gpg-agent.conf</code>. In the example below the TTL is set to 3h.
 </p>
@@ -1466,10 +1730,9 @@ gpg-agent --daemon --use-standard-socket
 </pre>
 </div>
 </div>
-</div>
-<div id="outline-container-org93c0ef4" class="outline-3">
-<h3 id="org93c0ef4">Cache SSH keys</h3>
-<div class="outline-text-3" id="text-org93c0ef4">
+</li>
+<li><a id="org93c0ef4"></a>Cache SSH keys<br />
+<div class="outline-text-5" id="text-org93c0ef4">
 <p>
 If you want to use SSH but tired of insert SSH key on every (for instance) git operation
 </p>
@@ -1494,6 +1757,8 @@ will have no idea where to find it.
 More info in this <a href="https://stackoverflow.com/questions/17846529/could-not-open-a-connection-to-your-authentication-agent">SO thread</a>.
 </p>
 </div>
+</li>
+</ul>
 </div>
 </div>
 </div>

@@ -26,7 +26,6 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org0f505f6">Jarvis</a></li>
-<li><a href="#org70f3f5d">Tabspaces</a></li>
 <li><a href="#org59f11c2">Focus current window</a></li>
 <li><a href="#orgc5d5e2a">Alarm!</a></li>
 <li><a href="#org1ed2f02">News and Mail</a>
@@ -69,32 +68,6 @@ There's too silence here.. 😱 let's just play something! 🤘
   (let ((command (format "mpv \"%s\"" url))
         (buffer-name (format "MPV: %s" url)))
     (async-shell-command command buffer-name)))
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org70f3f5d" class="outline-2">
-<h2 id="org70f3f5d">Tabspaces</h2>
-<div class="outline-text-2" id="text-org70f3f5d">
-<div class="org-src-container">
-<pre class="src src-elisp">(use-package tabspaces
-  :hook (after-init . tabspaces-mode)
-  :commands (tabspaces-switch-or-create-workspace
-               tabspaces-open-or-create-project-and-workspace)
-  :bind
-  (("s-{" . tab-previous)
-   ("s-}" . tab-next))
-  :custom
-  (tabspaces-keymap-prefix "M-o w")
-  (tabspaces-use-filtered-buffers-as-default t)
-  (tabspaces-default-tab "Default")
-  (tabspaces-remove-to-default t)
-  (tabspaces-initialize-project-with-todo t)
-  (tabspaces-todo-file-name "project-todo.org")
-  ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
-  ;; (tabspaces-session t)
-  ;; (tabspaces-session-auto-restore t))
-  )
 </pre>
 </div>
 </div>
@@ -195,7 +168,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="org52d4e16">
+<pre class="example" id="org86cdc7d">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -227,7 +200,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="org7064edf">
+<pre class="example" id="orga60be9e">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -255,7 +228,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org2e9a610">
+<pre class="example" id="orgbacc3ea">
 (setq mu4e-contexts
 	(list
 	 ;; Work account

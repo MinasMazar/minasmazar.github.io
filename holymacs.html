@@ -336,7 +336,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org89426b0">
+<pre class="example" id="org37d89ad">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -657,7 +657,7 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 (global-set-key (kbd "s-)") #'kill-current-buffer)
 (global-set-key (kbd "s--") #'bookmark-jump)
 (global-set-key (kbd "s-_") #'bookmark-set)
-(global-set-key (kbd "s-q") #'tab-next)
+(global-set-key (kbd "s-q") #'tab-switch)
 (global-set-key (kbd "s-\\") #'other-frame)
 (global-set-key (kbd "s-t") #'find-name-dired)
 (global-set-key (kbd "s-e") #'dabbrev-expand)
@@ -908,7 +908,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="orga944623">
+<pre class="example" id="org03a78d8">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -935,7 +935,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org18e1777">
+<pre class="example" id="org49cc791">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -947,7 +947,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgef3e187">
+<pre class="example" id="orgf67a9e2">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -1057,7 +1057,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orgdc9ef2f">
+<pre class="example" id="orgca5fc67">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -1074,7 +1074,7 @@ point.
 <div id="outline-container-org7173f83" class="outline-4">
 <h4 id="org7173f83">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-org7173f83">
-<pre class="example" id="org02417bd">
+<pre class="example" id="org88f4204">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1143,7 +1143,7 @@ Useful function if you want to quick inspect the face under cursor
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org0522b35">
+<pre class="example" id="org0453f8d">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
