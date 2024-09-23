@@ -140,6 +140,11 @@ Toggle mute
 If you need to write a crontab entry you can use https://crontab.guru/
 
 * [[https://elixir-lang.org/][Elixir]]
+** Resources
+
+- [[https://elixir-toolbox.dev/][Toolbox]]
+- [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
+
 ** GenServer template
 
 #+begin_src elixir
@@ -209,6 +214,39 @@ If you need to write a crontab entry you can use https://crontab.guru/
   end
 #+end_src
 
+** example :dets persist wrapper
+
+#+begin_src elixir
+  defmodule Mixer.Persist do
+    use GenServer
+
+    @table_name :mixer_persist
+
+    def start_link(table_name) do
+      GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
+    end
+
+    def init(table_name) do
+      {:ok, _} = :dets.open_file(table_name || @table_name, [])
+    end
+
+    def get(table_name \\ @table_name, key) do
+      case :dets.lookup(table_name, key) do
+        [{^key, value}] -> value
+        [] -> nil
+      end
+    end
+
+    def set(table_name \\ @table_name, key, value) do
+      :dets.insert(table_name, {key, value}) && value
+    end
+
+    def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
+      get(table_name, key) || set(table_name, key, fun.())
+    end
+  end
+#+end_src
+
 ** Development Tools: Makefile
 #+begin_src makefile
   default: t c
@@ -223,9 +261,6 @@ If you need to write a crontab entry you can use https://crontab.guru/
   	mix do deps.get, deps.compile, compile
   	make c
 #+end_src
-** Resources
-- https://elixir-toolbox.dev/
-
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
 #+begin_src sh

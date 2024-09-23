@@ -222,11 +222,12 @@
 <li><a href="#org79320a6">Crontab</a></li>
 <li><a href="#orgfc39bd0">Elixir</a>
 <ul>
+<li><a href="#org4d57604">Resources</a></li>
 <li><a href="#org740510e">GenServer template</a></li>
 <li><a href="#org9fae9e3">DynamicSupervsior template</a></li>
 <li><a href="#org6f900ee">example KV server</a></li>
+<li><a href="#orgaeb0a98">example :dets persist wrapper</a></li>
 <li><a href="#org7ec988c">Development Tools: Makefile</a></li>
-<li><a href="#org4d57604">Resources</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a>
 <ul>
@@ -240,7 +241,7 @@
 </li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
 <li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#org8640ada">MacOS</a>
+<li><a href="#org9318e5d">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -503,6 +504,15 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <h2 id="orgfc39bd0"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgfc39bd0">
 </div>
+<div id="outline-container-org4d57604" class="outline-3">
+<h3 id="org4d57604">Resources</h3>
+<div class="outline-text-3" id="text-org4d57604">
+<ul class="org-ul">
+<li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
+<li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org740510e" class="outline-3">
 <h3 id="org740510e">GenServer template</h3>
 <div class="outline-text-3" id="text-org740510e">
@@ -581,6 +591,42 @@ end
 </div>
 </div>
 </div>
+<div id="outline-container-orgaeb0a98" class="outline-3">
+<h3 id="orgaeb0a98">example :dets persist wrapper</h3>
+<div class="outline-text-3" id="text-orgaeb0a98">
+<div class="org-src-container">
+<pre class="src src-elixir">defmodule Mixer.Persist do
+  use GenServer
+
+  @table_name :mixer_persist
+
+  def start_link(table_name) do
+    GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
+  end
+
+  def init(table_name) do
+    {:ok, _} = :dets.open_file(table_name || @table_name, [])
+  end
+
+  def get(table_name \\ @table_name, key) do
+    case :dets.lookup(table_name, key) do
+      [{^key, value}] -&gt; value
+      [] -&gt; nil
+    end
+  end
+
+  def set(table_name \\ @table_name, key, value) do
+    :dets.insert(table_name, {key, value}) &amp;&amp; value
+  end
+
+  def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
+    get(table_name, key) || set(table_name, key, fun.())
+  end
+end
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org7ec988c" class="outline-3">
 <h3 id="org7ec988c">Development Tools: Makefile</h3>
 <div class="outline-text-3" id="text-org7ec988c">
@@ -598,14 +644,6 @@ reset:
         make c
 </pre>
 </div>
-</div>
-</div>
-<div id="outline-container-org4d57604" class="outline-3">
-<h3 id="org4d57604">Resources</h3>
-<div class="outline-text-3" id="text-org4d57604">
-<ul class="org-ul">
-<li><a href="https://elixir-toolbox.dev/">https://elixir-toolbox.dev/</a></li>
-</ul>
 </div>
 </div>
 <div id="outline-container-org3a0262a" class="outline-3">
@@ -872,9 +910,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org8640ada" class="outline-2">
-<h2 id="org8640ada">MacOS</h2>
-<div class="outline-text-2" id="text-org8640ada">
+<div id="outline-container-org9318e5d" class="outline-2">
+<h2 id="org9318e5d">MacOS</h2>
+<div class="outline-text-2" id="text-org9318e5d">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -924,7 +962,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="orgdda1570">
+<pre class="example" id="orge218ff6">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -932,7 +970,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org2f21d2d">
+<pre class="example" id="orgdca32bb">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -940,7 +978,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org19beb15">
+<pre class="example" id="orgd966d50">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -951,21 +989,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org7bb8bdc">
+<pre class="example" id="orga91558e">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org0534486">
+<pre class="example" id="orged950bb">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org456f1e4">
+<pre class="example" id="org75a4def">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -984,14 +1022,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgccce313">
+<pre class="example" id="org8a195a3">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgca339db">
+<pre class="example" id="orgd8c18c6">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1008,7 +1046,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org2dcd0a7">
+<pre class="example" id="org91590d5">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1016,7 +1054,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org35dafe2">
+<pre class="example" id="orgb59b833">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1037,7 +1075,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org38a4da7">
+<pre class="example" id="orgd6caa7e">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1045,7 +1083,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="orgc82e7a9">
+<pre class="example" id="org53b54cf">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1070,7 +1108,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org3c53495">
+<pre class="example" id="org872423a">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1081,7 +1119,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org3405174">
+<pre class="example" id="orgec7b683">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1127,8 +1165,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org9318e5d"></a>macOS<br />
-<div class="outline-text-6" id="text-org9318e5d">
+<li><a id="orgf635fd9"></a>macOS<br />
+<div class="outline-text-6" id="text-orgf635fd9">
 <p>
 Use the avfoundation device:
 </p>
