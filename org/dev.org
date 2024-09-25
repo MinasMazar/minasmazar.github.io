@@ -440,6 +440,8 @@ networks:
 
 #+end_src
 ** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
+** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
+** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
 ** Phoenix Livebooks
 
 - [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
