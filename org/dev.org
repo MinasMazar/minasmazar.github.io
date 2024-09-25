@@ -144,6 +144,7 @@ If you need to write a crontab entry you can use https://crontab.guru/
 
 - [[https://elixir-toolbox.dev/][Toolbox]]
 - [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
+- [[https://joyofelixir.com/17-mix-dependencies][Mix dependencies]]
 
 ** GenServer template
 
@@ -445,6 +446,10 @@ networks:
 - https://github.com/aslakjohansen/livebook-demos
 - https://github.com/Arp-G/async-elixir
 - https://github.com/whatyouhide/guide_async_processing_in_elixir
+
+** [[https://nerves-project.org/newsletter/][Nerves]]
+
+- [[https://nerves-project.org/newsletter/][Nervers newsletter]]
 
 * [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
 * systemd and journalctl
