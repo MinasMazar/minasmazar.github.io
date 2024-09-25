@@ -237,11 +237,12 @@
 </li>
 <li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
 <li><a href="#org99c3330">Phoenix Livebooks</a></li>
+<li><a href="#orgc0dafaa">Nerves</a></li>
 </ul>
 </li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
 <li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#org9318e5d">MacOS</a>
+<li><a href="#orgf635fd9">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -510,6 +511,7 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
+<li><a href="https://joyofelixir.com/17-mix-dependencies">Mix dependencies</a></li>
 </ul>
 </div>
 </div>
@@ -853,6 +855,14 @@ networks:
 </ul>
 </div>
 </div>
+<div id="outline-container-orgc0dafaa" class="outline-3">
+<h3 id="orgc0dafaa"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
+<div class="outline-text-3" id="text-orgc0dafaa">
+<ul class="org-ul">
+<li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
+</ul>
+</div>
+</div>
 </div>
 <div id="outline-container-org099239c" class="outline-2">
 <h2 id="org099239c"><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">How to use a Raspberry Pi in <i>kiosk mode</i></a></h2>
@@ -910,9 +920,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org9318e5d" class="outline-2">
-<h2 id="org9318e5d">MacOS</h2>
-<div class="outline-text-2" id="text-org9318e5d">
+<div id="outline-container-orgf635fd9" class="outline-2">
+<h2 id="orgf635fd9">MacOS</h2>
+<div class="outline-text-2" id="text-orgf635fd9">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -962,7 +972,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="orge218ff6">
+<pre class="example" id="org69fb40f">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -970,7 +980,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="orgdca32bb">
+<pre class="example" id="org1c0eb9f">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -978,7 +988,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="orgd966d50">
+<pre class="example" id="org91da5d1">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -989,21 +999,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orga91558e">
+<pre class="example" id="orgeb4b53b">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orged950bb">
+<pre class="example" id="org7890035">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org75a4def">
+<pre class="example" id="orge1d1557">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1022,14 +1032,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org8a195a3">
+<pre class="example" id="orgbd5c4b4">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgd8c18c6">
+<pre class="example" id="orgcde1911">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1046,7 +1056,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org91590d5">
+<pre class="example" id="org67e1eb7">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1054,7 +1064,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgb59b833">
+<pre class="example" id="orgf4a27f7">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1075,7 +1085,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orgd6caa7e">
+<pre class="example" id="orge37250d">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1083,7 +1093,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org53b54cf">
+<pre class="example" id="org0f9fd86">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1108,7 +1118,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org872423a">
+<pre class="example" id="orgb992a8b">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1119,7 +1129,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="orgec7b683">
+<pre class="example" id="orge176c7f">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1165,8 +1175,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orgf635fd9"></a>macOS<br />
-<div class="outline-text-6" id="text-orgf635fd9">
+<li><a id="org20ef99d"></a>macOS<br />
+<div class="outline-text-6" id="text-org20ef99d">
 <p>
 Use the avfoundation device:
 </p>

@@ -336,7 +336,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org37d89ad">
+<pre class="example" id="org92f7637">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -908,7 +908,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org03a78d8">
+<pre class="example" id="org9a1ff1e">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -935,7 +935,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org49cc791">
+<pre class="example" id="orgb210819">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -947,7 +947,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgf67a9e2">
+<pre class="example" id="orgb491ce0">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -1057,7 +1057,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orgca5fc67">
+<pre class="example" id="org591c9cd">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -1074,7 +1074,7 @@ point.
 <div id="outline-container-org7173f83" class="outline-4">
 <h4 id="org7173f83">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-org7173f83">
-<pre class="example" id="org88f4204">
+<pre class="example" id="orgc75543c">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1143,7 +1143,7 @@ Useful function if you want to quick inspect the face under cursor
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org0453f8d">
+<pre class="example" id="org883fd16">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
@@ -1161,7 +1161,7 @@ I would like to thanks:
 <ul class="org-ul">
 <li><a href="http://kelvinh.github.io/">Kelvin Hu</a> for his <a href="https://github.com/kelvinh/.emacs.d">emacs configuration</a> and the idea to write it in a <b>literate style</b>.</li>
 <li><a href="http://www.howardism.org/">Howard Abrams</a> for his <a href="https://github.com/howardabrams/dot-files">dotfiles</a>.</li>
-<li><a href="https://github.com/aaronbieber">Aaron Bieber</a> for his dotfiles and for the wonderful speech <a href="https://www.youtube.com/watch?v%3DJWD1Fpdd4Pc">Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs</a> that makes me <b>fall in love</b> with Emacs. ;-)</li>
+<li><a href="https://github.com/aaronbieber">Aaron Bieber</a> for his dotfiles and for the wonderful speech <a href="https://www.youtube.com/watch?v=JWD1Fpdd4Pc">Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs</a> that makes me <b>fall in love</b> with Emacs. ;-)</li>
 <li><a href="https://protesilaos.com/">Protesilaos Stavrou</a> for his <a href="https://protesilaos.com/dotemacs/">comprehensive "dotemacs" (.emacs) for GNU/Linux</a> and <a href="https://protesilaos.com/codelog/">the huge amount of posts and videos about Emacs</a>.</li>
 <li><a href="https://github.com/sponsors/daviwil">David Wilson</a> for his fantastic <a href="https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ">System Crafters screencasts</a>!</li>
 <li><a href="http://staff.science.uva.nl/~dominik/">Carsten Dominik</a>, creator of <a href="http://orgmode.org">org-mode</a> 🦄</li>
