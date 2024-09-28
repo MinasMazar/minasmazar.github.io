@@ -449,6 +449,26 @@ networks:
 - https://github.com/Arp-G/async-elixir
 - https://github.com/whatyouhide/guide_async_processing_in_elixir
 
+*** Livebook Cluster
+
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
+
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
+
+I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+
+Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
+
+- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
+- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
+
+  #+begin_src text
+  livebook -> PubSub (broadcast in current node)
+  #+end_src
+
+ Remember that this open a wide range of **security issues**.. uses it with responsibility!
+- Youtube 
+
 ** [[https://nerves-project.org/newsletter/][Nerves]]
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
@@ -716,6 +736,20 @@ Simple example on how to use =make= variables and shell environment variables.
 
   .elixir.phoenix.new.live:
   	new ${app} --live
+#+end_src
+
+* Bash :dotfiles:
+
+My =.zprofile= on my Mackbook.
+
+#+begin_src sh
+  eval "$(/usr/local/bin/brew shellenv)"
+
+  . "$HOME/.asdf/asdf.sh"
+  . "$HOME/.asdf/completions/asdf.bash"
+
+  alias e='emacs -nw --init-directory=~/.emacs.d.minemacs'
+  alias t='tmux attach'
 #+end_src
 
 * Tailwind
