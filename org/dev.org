@@ -135,6 +135,21 @@ Toggle mute
   amixer set Master toggle
 #+end_src
 
+* Linux desktop
+** Create a .desktop File
+
+#+begin_src sh
+  mkdir /home/pi/.config/autostart
+  nano /home/pi/.config/autostart/clock.desktop
+#+end_src
+
+#+begin_src toml
+  [Desktop Entry]
+  Type=Application
+  Name=Clock
+  Exec=/usr/bin/python3 /home/pi/clock.py
+#+end_src
+
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
 If you need to write a crontab entry you can use https://crontab.guru/
@@ -145,6 +160,7 @@ If you need to write a crontab entry you can use https://crontab.guru/
 - [[https://elixir-toolbox.dev/][Toolbox]]
 - [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
 - [[https://joyofelixir.com/17-mix-dependencies][Mix dependencies]]
+- [[https://learn-elixir.dev/#hiring][Learn Elixir (learn-elixir.dev/#hiring)]]
 
 ** GenServer template
 
@@ -215,7 +231,9 @@ If you need to write a crontab entry you can use https://crontab.guru/
   end
 #+end_src
 
-** example :dets persist wrapper
+** Persisting layer: :dets
+
+- https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets
 
 #+begin_src elixir
   defmodule Mixer.Persist do
@@ -262,12 +280,6 @@ If you need to write a crontab entry you can use https://crontab.guru/
   	mix do deps.get, deps.compile, compile
   	make c
 #+end_src
-** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
-
-#+begin_src sh
-  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
-#+end_src
-
 ** Dockerize Phoenix webapp (my_app)
 *** Dockerfile
 
@@ -473,34 +485,49 @@ Adding =livebook_cluster= as dependency in my livebooks I was able to make three
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
 
-* [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
-* systemd and journalctl
+* Raspberry
+** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
-Add a service to systemd
-
-More info [[https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all][here]]. Here's an article on how to create and manage [[https://www.baeldung.com/linux/systemd-create-user-services][user’s services With systemd]].
-
-#+begin_src toml
-# /lib/systemd/system/clock.service
-  [Unit]
-  Description=Start Clock
-
-  [Service]
-  Environment=DISPLAY=:0
-  Environment=XAUTHORITY=/home/pi/.Xauthority
-  ExecStart=/usr/bin/python3 /home/pi/clock.py
-  Restart=always
-  RestartSec=10s
-  KillMode=process
-  TimeoutSec=infinity
-
-  [Install]
-  WantedBy=graphical.target
+#+begin_src sh
+  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
 #+end_src
 
-Clear journalctl
+or if you want to automate via =Makefile=
 
-The self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
+#+begin_src makefile
+  raspi-setup:
+  	sudo apt update
+  	sudo apt install tmux emacs
+  	sudo apt install erlang erlang-dev elixir
+#+end_src
+** [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
+
+- [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
+
+* Systemd
+
+Add a service to systemd (more info [[https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all][here]], while here's an article on how to create and manage [[https://www.baeldung.com/linux/systemd-create-user-services][user’s services With systemd]]).
+
+Create =/lib/systemd/system/blink.service= (or =/lib/systemd/user/blink.service= in case of user-space app) with
+
+#+begin_src toml
+  [Unit]
+  Description=Blink my LED
+  After=multi-user.target
+
+  [Service]
+  Environment="MY_SHELL_ENV_VAR=value"
+  ExecStart=/usr/bin/python3 /home/pi/blink.py
+
+  [Install]
+  WantedBy=multi-user.target
+#+end_src
+
+Then start with =systemctl [--user] (enable|restart|start|stop) blink=
+
+* Journalctl
+
+Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
 
 #+begin_src sh
 journalctl --vacuum-time=2d
@@ -744,7 +771,7 @@ My =.zprofile= on my Mackbook.
 
 #+begin_src sh
   eval "$(/usr/local/bin/brew shellenv)"
-
+  eval "$(fzf --bash)"
   . "$HOME/.asdf/asdf.sh"
   . "$HOME/.asdf/completions/asdf.bash"
 
