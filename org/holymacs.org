@@ -314,6 +314,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (add-hook 'god-mode-disabled-hook 'minemacs-god-mode-disabled)
     (global-set-key (kbd "s-n") #'god-local-mode)
     (define-key god-local-mode-map (kbd "i") #'god-local-mode)
+    (define-key god-local-mode-map (kbd "I") (kbd "C-c '"))
     (define-key god-local-mode-map (kbd "u") #'undo)
     (define-key god-local-mode-map (kbd "U") #'undo-redo)
     (define-key god-local-mode-map (kbd ">") #'end-of-buffer)
@@ -322,6 +323,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
     (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
     (define-key god-local-mode-map (kbd "{") #'backward-sexp)
     (define-key god-local-mode-map (kbd "}") #'forward-sexp)
+    (define-key god-local-mode-map (kbd "H") #'describe-symbol)
     (mapcar (lambda (exempted-major-mode)
   	    (add-to-list 'god-exempt-major-modes exempted-major-mode))
   	  '(compilation-mode
