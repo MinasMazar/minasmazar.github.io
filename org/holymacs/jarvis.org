@@ -17,17 +17,34 @@ Preview the HTML exported buffer you see when exporting an org file in a preview
 There's too silence here.. 😱 let's just play something! 🤘
 
 #+begin_src elisp
-    (defcustom holymacs-jarvis-youtube-sources
-      '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
-      "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
-      :type '(repeat :tag "URLs" (string)))
+  (defun holymacs-random (items)
+   "Pick a random element from a list"
+   (nth (random (length items)) items))
 
-    (defun holymacs-jarvis-play-youtube (&optional url)
-      "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
-      (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
-      (let ((command (format "mpv \"%s\"" url))
-    	(buffer-name (format "MPV: %s" url)))
-        (async-shell-command command buffer-name)))
+  (defcustom holymacs-jarvis-youtube-sources
+    '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
+    "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat :tag "URLs" (string)))
+
+  (defun holymacs-jarvis-play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
+    (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
+    (let ((command (format "mpv \"%s\"" url))
+  	(buffer-name (format "mpv: %s" url)))
+      (async-shell-command command buffer-name)))
+
+  (defun holymacs-jarvis-open-random-youtube ()
+    "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+    (interactive)
+    (let ((url (holymacs-random holymacs-jarvis-youtube-sources)))
+      (holymacs-jarvis-open-youtube url)))
+
+  (defun holymacs-jarvis-open-youtube (&optional url)
+    "Pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+    (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
+    (browse-url-default-browser url))
+
+
 #+end_src
 
 * COMMENT Pop terminal ⚠️ wip ⚠️
