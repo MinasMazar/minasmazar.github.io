@@ -59,6 +59,12 @@
   ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
 #+end_src
 
+Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
+
+#+begin_src elisp
+  (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
+#+end_src
+
 ** LSP
 
 #+begin_src elisp

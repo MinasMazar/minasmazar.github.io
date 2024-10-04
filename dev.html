@@ -219,6 +219,11 @@
 <li><a href="#org431f702">Git</a></li>
 <li><a href="#orgfeec70c">Pulseaudio</a></li>
 <li><a href="#orgca4d479">Alsamixer</a></li>
+<li><a href="#org603e593">Linux desktop</a>
+<ul>
+<li><a href="#org5fbcd3b">Create a .desktop File</a></li>
+</ul>
+</li>
 <li><a href="#org79320a6">Crontab</a></li>
 <li><a href="#orgfc39bd0">Elixir</a>
 <ul>
@@ -226,9 +231,8 @@
 <li><a href="#org740510e">GenServer template</a></li>
 <li><a href="#org9fae9e3">DynamicSupervsior template</a></li>
 <li><a href="#org6f900ee">example KV server</a></li>
-<li><a href="#orgaeb0a98">example :dets persist wrapper</a></li>
+<li><a href="#orgcb9b98c">Persisting layer: :dets</a></li>
 <li><a href="#org7ec988c">Development Tools: Makefile</a></li>
-<li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a>
 <ul>
 <li><a href="#orgd4ec969">Dockerfile</a></li>
@@ -236,13 +240,25 @@
 </ul>
 </li>
 <li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
-<li><a href="#org99c3330">Phoenix Livebooks</a></li>
+<li><a href="#orgeaad83f">Scale serverless with FLAME!</a></li>
+<li><a href="#orgdc7dba9">Phoenix Pubsub comms across nodes</a></li>
+<li><a href="#org99c3330">Phoenix Livebooks</a>
+<ul>
+<li><a href="#org8000c4a">Livebook Cluster</a></li>
+</ul>
+</li>
 <li><a href="#orgc0dafaa">Nerves</a></li>
 </ul>
 </li>
+<li><a href="#orgc6eec79">Raspberry</a>
+<ul>
+<li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a></li>
-<li><a href="#orgef199fc">systemd and journalctl</a></li>
-<li><a href="#orgf635fd9">MacOS</a>
+</ul>
+</li>
+<li><a href="#org91dcd0c">Systemd</a></li>
+<li><a href="#orgc221107">Journalctl</a></li>
+<li><a href="#org20ef99d">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -264,6 +280,7 @@
 </ul>
 </li>
 <li><a href="#orgee02000">Makefile</a></li>
+<li><a href="#orgb011b05">Bash&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dotfiles">dotfiles</span></span></a></li>
 <li><a href="#orgc9424eb">Tailwind</a>
 <ul>
 <li><a href="#org6756ff5">Background Colors</a></li>
@@ -493,6 +510,29 @@ Toggle mute
 </div>
 </div>
 </div>
+<div id="outline-container-org603e593" class="outline-2">
+<h2 id="org603e593">Linux desktop</h2>
+<div class="outline-text-2" id="text-org603e593">
+</div>
+<div id="outline-container-org5fbcd3b" class="outline-3">
+<h3 id="org5fbcd3b">Create a .desktop File</h3>
+<div class="outline-text-3" id="text-org5fbcd3b">
+<div class="org-src-container">
+<pre class="src src-sh">mkdir /home/pi/.config/autostart
+nano /home/pi/.config/autostart/clock.desktop
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-toml">[Desktop Entry]
+Type=Application
+Name=Clock
+Exec=/usr/bin/python3 /home/pi/clock.py
+</pre>
+</div>
+</div>
+</div>
+</div>
 <div id="outline-container-org79320a6" class="outline-2">
 <h2 id="org79320a6"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
 <div class="outline-text-2" id="text-org79320a6">
@@ -512,6 +552,7 @@ If you need to write a crontab entry you can use <a href="https://crontab.guru/"
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
 <li><a href="https://joyofelixir.com/17-mix-dependencies">Mix dependencies</a></li>
+<li><a href="https://learn-elixir.dev/#hiring">Learn Elixir (learn-elixir.dev/#hiring)</a></li>
 </ul>
 </div>
 </div>
@@ -593,9 +634,13 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-orgaeb0a98" class="outline-3">
-<h3 id="orgaeb0a98">example :dets persist wrapper</h3>
-<div class="outline-text-3" id="text-orgaeb0a98">
+<div id="outline-container-orgcb9b98c" class="outline-3">
+<h3 id="orgcb9b98c">Persisting layer: :dets</h3>
+<div class="outline-text-3" id="text-orgcb9b98c">
+<ul class="org-ul">
+<li><a href="https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets">https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets</a></li>
+</ul>
+
 <div class="org-src-container">
 <pre class="src src-elixir">defmodule Mixer.Persist do
   use GenServer
@@ -644,15 +689,6 @@ tt:
 reset:
         mix do deps.get, deps.compile, compile
         make c
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org3a0262a" class="outline-3">
-<h3 id="org3a0262a">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-org3a0262a">
-<div class="org-src-container">
-<pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
 </div>
 </div>
@@ -844,6 +880,12 @@ networks:
 <div id="outline-container-org57cdc16" class="outline-3">
 <h3 id="org57cdc16">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
 </div>
+<div id="outline-container-orgeaad83f" class="outline-3">
+<h3 id="orgeaad83f">Scale serverless with <a href="https://fly.io/blog/rethinking-serverless-with-flame/">FLAME</a>!</h3>
+</div>
+<div id="outline-container-orgdc7dba9" class="outline-3">
+<h3 id="orgdc7dba9"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h3>
+</div>
 <div id="outline-container-org99c3330" class="outline-3">
 <h3 id="org99c3330">Phoenix Livebooks</h3>
 <div class="outline-text-3" id="text-org99c3330">
@@ -853,6 +895,43 @@ networks:
 <li><a href="https://github.com/Arp-G/async-elixir">https://github.com/Arp-G/async-elixir</a></li>
 <li><a href="https://github.com/whatyouhide/guide_async_processing_in_elixir">https://github.com/whatyouhide/guide_async_processing_in_elixir</a></li>
 </ul>
+</div>
+<div id="outline-container-org8000c4a" class="outline-4">
+<h4 id="org8000c4a">Livebook Cluster</h4>
+<div class="outline-text-4" id="text-org8000c4a">
+<p>
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using <a href="https://github.com/bitwalker/libcluster">libcluster</a> should be enough to make nodes to cluster together by using the <code>LocalEpmd</code> strategy. But it seems <code>PubSub</code> is not able to spot all nodes out (that's because , more info in <a href="https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3">this thread</a>).
+</p>
+
+<p>
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and <a href="https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups">pg2 don't see hidden nodes</a>.
+</p>
+
+<p>
+I've created the <a href="https://git.sr.ht/~minasmazar/livebook_cluster">livebook<sub>cluster</sub></a> package that uses <a href="https://github.com/bitwalker/libcluster">libcluster</a> and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+</p>
+
+<p>
+Adding <code>livebook_cluster</code> as dependency in my livebooks I was able to make three livebooks working together:
+</p>
+
+<ul class="org-ul">
+<li>KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features</li>
+<li><p>
+Bifrost expose two HTTP entrypoints (page, event) using <code>Kino.Proxy</code>. Using a custom <a href="https://en.wikipedia.org/wiki/Userscript">userscript</a> (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML <code>body</code>) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using <code>Phoenix.PubSub</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">livebook -&gt; PubSub (broadcast in current node)
+</pre>
+</div>
+
+<p>
+Remember that this open a wide range of <b><b>security issues</b></b>.. uses it with responsibility!
+</p></li>
+<li>Youtube</li>
+</ul>
+</div>
 </div>
 </div>
 <div id="outline-container-orgc0dafaa" class="outline-3">
@@ -864,45 +943,75 @@ networks:
 </div>
 </div>
 </div>
-<div id="outline-container-org099239c" class="outline-2">
-<h2 id="org099239c"><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">How to use a Raspberry Pi in <i>kiosk mode</i></a></h2>
+<div id="outline-container-orgc6eec79" class="outline-2">
+<h2 id="orgc6eec79">Raspberry</h2>
+<div class="outline-text-2" id="text-orgc6eec79">
 </div>
-<div id="outline-container-orgef199fc" class="outline-2">
-<h2 id="orgef199fc">systemd and journalctl</h2>
-<div class="outline-text-2" id="text-orgef199fc">
-<p>
-Add a service to systemd
-</p>
-
-<p>
-More info <a href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all">here</a>. Here's an article on how to create and manage <a href="https://www.baeldung.com/linux/systemd-create-user-services">user’s services With systemd</a>.
-</p>
-
+<div id="outline-container-org3a0262a" class="outline-3">
+<h3 id="org3a0262a">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
+<div class="outline-text-3" id="text-org3a0262a">
 <div class="org-src-container">
-<pre class="src src-toml"># /lib/systemd/system/clock.service
-  [Unit]
-  Description=Start Clock
-
-  [Service]
-  Environment=DISPLAY=:0
-  Environment=XAUTHORITY=/home/pi/.Xauthority
-  ExecStart=/usr/bin/python3 /home/pi/clock.py
-  Restart=always
-  RestartSec=10s
-  KillMode=process
-  TimeoutSec=infinity
-
-  [Install]
-  WantedBy=graphical.target
+<pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
 </div>
 
 <p>
-Clear journalctl
+or if you want to automate via <code>Makefile</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-makefile">raspi-setup:
+        sudo apt update
+        sudo apt install tmux emacs
+        sudo apt install erlang erlang-dev elixir
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org099239c" class="outline-3">
+<h3 id="org099239c"><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">How to use a Raspberry Pi in <i>kiosk mode</i></a></h3>
+<div class="outline-text-3" id="text-org099239c">
+<ul class="org-ul">
+<li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org91dcd0c" class="outline-2">
+<h2 id="org91dcd0c">Systemd</h2>
+<div class="outline-text-2" id="text-org91dcd0c">
+<p>
+Add a service to systemd (more info <a href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all">here</a>, while here's an article on how to create and manage <a href="https://www.baeldung.com/linux/systemd-create-user-services">user’s services With systemd</a>).
 </p>
 
 <p>
-The self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
+Create <code>/lib/systemd/system/blink.service</code> (or <code>/lib/systemd/user/blink.service</code> in case of user-space app) with
+</p>
+
+<div class="org-src-container">
+<pre class="src src-toml">[Unit]
+Description=Blink my LED
+After=multi-user.target
+
+[Service]
+Environment="MY_SHELL_ENV_VAR=value"
+ExecStart=/usr/bin/python3 /home/pi/blink.py
+
+[Install]
+WantedBy=multi-user.target
+</pre>
+</div>
+
+<p>
+Then start with <code>systemctl [--user] (enable|restart|start|stop) blink</code>
+</p>
+</div>
+</div>
+<div id="outline-container-orgc221107" class="outline-2">
+<h2 id="orgc221107">Journalctl</h2>
+<div class="outline-text-2" id="text-orgc221107">
+<p>
+Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
 </p>
 
 <div class="org-src-container">
@@ -920,9 +1029,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-orgf635fd9" class="outline-2">
-<h2 id="orgf635fd9">MacOS</h2>
-<div class="outline-text-2" id="text-orgf635fd9">
+<div id="outline-container-org20ef99d" class="outline-2">
+<h2 id="org20ef99d">MacOS</h2>
+<div class="outline-text-2" id="text-org20ef99d">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -972,7 +1081,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org69fb40f">
+<pre class="example" id="org8704ad2">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -980,7 +1089,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org1c0eb9f">
+<pre class="example" id="org5e6f990">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -988,7 +1097,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org91da5d1">
+<pre class="example" id="orgef0f007">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -999,21 +1108,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orgeb4b53b">
+<pre class="example" id="orge091d72">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org7890035">
+<pre class="example" id="orgd4e981f">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orge1d1557">
+<pre class="example" id="org7933923">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1032,14 +1141,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgbd5c4b4">
+<pre class="example" id="orgcc5963e">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgcde1911">
+<pre class="example" id="org71dbef5">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1056,7 +1165,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org67e1eb7">
+<pre class="example" id="orgb2a96df">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1064,7 +1173,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgf4a27f7">
+<pre class="example" id="org4578005">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1085,7 +1194,7 @@ file './infile.wav'
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orge37250d">
+<pre class="example" id="org1e7c273">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1093,7 +1202,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org0f9fd86">
+<pre class="example" id="org711f922">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1118,7 +1227,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="orgb992a8b">
+<pre class="example" id="org805382a">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1129,7 +1238,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="orge176c7f">
+<pre class="example" id="orgc0dc2c1">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1175,8 +1284,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org20ef99d"></a>macOS<br />
-<div class="outline-text-6" id="text-org20ef99d">
+<li><a id="orgcd1c369"></a>macOS<br />
+<div class="outline-text-6" id="text-orgcd1c369">
 <p>
 Use the avfoundation device:
 </p>
@@ -1262,6 +1371,25 @@ default: .elixir.phoenix.new.live
 
 .elixir.phoenix.new.live:
         new ${app} --live
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb011b05" class="outline-2">
+<h2 id="orgb011b05">Bash&#xa0;&#xa0;&#xa0;<span class="tag"><span class="dotfiles">dotfiles</span></span></h2>
+<div class="outline-text-2" id="text-orgb011b05">
+<p>
+My <code>.zprofile</code> on my Mackbook.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">eval "$(/usr/local/bin/brew shellenv)"
+eval "$(fzf --bash)"
+. "$HOME/.asdf/asdf.sh"
+. "$HOME/.asdf/completions/asdf.bash"
+
+alias e='emacs -nw --init-directory=~/.emacs.d.minemacs'
+alias t='tmux attach'
 </pre>
 </div>
 </div>

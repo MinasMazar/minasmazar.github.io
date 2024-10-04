@@ -30,7 +30,7 @@
 <li><a href="#org407eb8a">Workspaces</a></li>
 <li><a href="#org07faf93">Programming languages</a>
 <ul>
-<li><a href="#orge0b435b">Elixir</a></li>
+<li><a href="#org7122a64">Elixir</a></li>
 <li><a href="#org7b6b240">LSP</a></li>
 </ul>
 </li>
@@ -104,9 +104,9 @@
 <h2 id="org07faf93">Programming languages</h2>
 <div class="outline-text-2" id="text-org07faf93">
 </div>
-<div id="outline-container-orge0b435b" class="outline-3">
-<h3 id="orge0b435b">Elixir</h3>
-<div class="outline-text-3" id="text-orge0b435b">
+<div id="outline-container-org7122a64" class="outline-3">
+<h3 id="org7122a64">Elixir</h3>
+<div class="outline-text-3" id="text-org7122a64">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package elixir-mode)
 (use-package exunit
@@ -116,6 +116,15 @@
 ;; (use-package alchemist
 ;;   :config
 ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+</pre>
+</div>
+
+<p>
+Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's handle them!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
 </pre>
 </div>
 </div>
@@ -130,9 +139,9 @@
 </pre>
 </div>
 </div>
-<div id="outline-container-org7122a64" class="outline-4">
-<h4 id="org7122a64">Elixir</h4>
-<div class="outline-text-4" id="text-org7122a64">
+<div id="outline-container-orgee5a15f" class="outline-4">
+<h4 id="orgee5a15f">Elixir</h4>
+<div class="outline-text-4" id="text-orgee5a15f">
 <p>
 Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
 </p>
