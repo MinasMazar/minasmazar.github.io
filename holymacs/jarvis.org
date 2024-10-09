@@ -320,7 +320,7 @@ curl https://cht.sh
 
   (defun cht.sh-query (query)
     (interactive "sQuery: ")
-    (let ((cmd (format "curl https://cht.sh%s" query))
+    (let ((cmd (format "curl https://cht.sh/%s" query))
   	(buffer-name (format "*cht-sh* <%s>" query)))
       (async-shell-command cmd buffer-name)))
 #+end_src

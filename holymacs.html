@@ -272,7 +272,8 @@
 <ul>
 <li>
 <ul>
-<li><a href="#org1da8742">Other Commands, functions and variables</a></li>
+<li><a href="#org784b37d">Other Commands, functions, variables, keybindings</a></li>
+<li><a href="#org53bb9fa">Org code-blocks</a></li>
 <li><a href="#orga8d161d">String and Symbols</a></li>
 <li><a href="#org9401ba6">Macros</a></li>
 <li><a href="#orgf7e46b1">Vectors</a></li>
@@ -336,7 +337,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org34f31c1">
+<pre class="example" id="org266d7fe">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -847,9 +848,9 @@ The <b>Blorg</b> publishing functions described in <a href="https://github.com/M
 <h2 id="org77e115d">On hand documentation</h2>
 <div class="outline-text-2" id="text-org77e115d">
 </div>
-<div id="outline-container-org1da8742" class="outline-4">
-<h4 id="org1da8742">Other Commands, functions and variables</h4>
-<div class="outline-text-4" id="text-org1da8742">
+<div id="outline-container-org784b37d" class="outline-4">
+<h4 id="org784b37d">Other Commands, functions, variables, keybindings</h4>
+<div class="outline-text-4" id="text-org784b37d">
 <p>
 Just press <code>C-h o</code> to get help on those symbols.
 </p>
@@ -862,6 +863,8 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>command-switch-alist</code></li>
 <li><code>completions-max-height</code></li>
 <li><code>compilation-scroll-output</code></li>
+<li><code>current-time-string</code></li>
+<li><code>format-time-string</code></li>
 <li><code>describe-text-properties</code></li>
 <li><code>face-remap-add-relative</code> and <code>face-remap-remove-relative</code> to easily modify faces in current buffer</li>
 <li><code>find-name-dired</code></li>
@@ -878,7 +881,18 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>proced</code></li>
 <li><code>shr-inhibit-images</code></li>
 <li><code>string-match</code></li>
+<li><code>C-x @</code></li>
 </ul>
+</div>
+</div>
+<div id="outline-container-org53bb9fa" class="outline-4">
+<h4 id="org53bb9fa"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h4>
+<div class="outline-text-4" id="text-org53bb9fa">
+<pre class="example" id="orgedd4705">
+#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
+  wc -w $filename
+#+END_SRC
+</pre>
 </div>
 </div>
 <div id="outline-container-orga8d161d" class="outline-4">
@@ -910,7 +924,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org9c25e3d">
+<pre class="example" id="org96fea68">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -937,7 +951,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org959f11d">
+<pre class="example" id="org7437090">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -949,7 +963,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgb08e5bc">
+<pre class="example" id="orgfba4733">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -1059,7 +1073,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="org4ed9abe">
+<pre class="example" id="orge9b7135">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -1076,7 +1090,7 @@ point.
 <div id="outline-container-org7173f83" class="outline-4">
 <h4 id="org7173f83">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-org7173f83">
-<pre class="example" id="orgc186abe">
+<pre class="example" id="orgffe7a8e">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1145,7 +1159,7 @@ Useful function if you want to quick inspect the face under cursor
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org7713ed4">
+<pre class="example" id="org36256b1">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))

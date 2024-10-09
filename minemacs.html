@@ -314,7 +314,9 @@
   (load custom-file 'noerror)
   (minemacs-modules-load)
   :bind
-  (("s-k" . #'execute-extended-command)
+  (("C-k" . #'execute-extended-command)
+   ("C-l" . #'god-mode)
+   ("s-k" . #'execute-extended-command)
    ("s--" . #'bookmark-jump)
    ("s-)" . #'kill-current-buffer)
    ("s-[" . #'previous-buffer)

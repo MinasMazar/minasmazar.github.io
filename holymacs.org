@@ -437,7 +437,7 @@ The *Blorg* publishing functions described in [[https://github.com/MinasMazar/mi
 *** [[file:holymacs/ide.org][IDE]]
 
 * On hand documentation
-*** Other Commands, functions and variables
+*** Other Commands, functions, variables, keybindings
 
 Just press ~C-h o~ to get help on those symbols.
 
@@ -448,6 +448,8 @@ Just press ~C-h o~ to get help on those symbols.
 - =command-switch-alist=
 - =completions-max-height=
 - =compilation-scroll-output=
+- =current-time-string=
+- =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
 - =find-name-dired=
@@ -464,6 +466,15 @@ Just press ~C-h o~ to get help on those symbols.
 - =proced=
 - =shr-inhibit-images=
 - =string-match=
+- ~C-x @~
+
+*** [[info:org#Working with Source Code][Org code-blocks]]
+
+#+begin_example org
+,#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
+  wc -w $filename
+,#+END_SRC
+#+end_example
 
 *** String and Symbols
 

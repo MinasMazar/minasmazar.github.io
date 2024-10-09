@@ -185,7 +185,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="org0e90b61">
+<pre class="example" id="orgfdf877f">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -217,7 +217,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="org805a5d4">
+<pre class="example" id="org6e034b3">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -245,7 +245,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org1417d8b">
+<pre class="example" id="orgca01721">
 (setq mu4e-contexts
 	(list
 	 ;; Work account
@@ -308,7 +308,7 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
 
 (defun cht.sh-query (query)
   (interactive "sQuery: ")
-  (let ((cmd (format "curl https://cht.sh%s" query))
+  (let ((cmd (format "curl https://cht.sh/%s" query))
         (buffer-name (format "*cht-sh* &lt;%s&gt;" query)))
     (async-shell-command cmd buffer-name)))
 </pre>

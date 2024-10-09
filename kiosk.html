@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>MinasMazar's blog ~ Emacs</title>
+<title>&lrm;</title>
 <meta name="generator" content="Org Mode" />
 <style type="text/css">
   #content { max-width: 60em; margin: auto; }
@@ -198,28 +198,83 @@
  |
  <a accesskey="H" href="/"> HOME </a>
 </div><div id="content" class="content">
-<h1 class="title">MinasMazar's blog ~ Emacs</h1>
-<p>
-OPTIONS: toc:t
-</p>
-
-<p>
-⛪ I'm a fervent Emacs evangelist!
-</p>
-
-<p>
-Here's some resources:
-</p>
-<ul class="org-ul">
-<li><a href="https://www.gnu.org/software/emacs/">The Emacs editor</a> and his <b>guru</b> <a href="https://stallman.org/">Richard Stallman</a>.</li>
-<li><a href="https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf">The Elisp documentation</a></li>
-<li><a href="holymacs.html">Holymacs</a> (<a href="file:///holymacs.html">raw</a> version, usefull if you want to experiment the <a href="file:///Users/invisigoth/minasmazar.github.io/README.html#orgdf7fd5e"><b><b>Visit Navigate weblorgs!</b></b></a>)</li>
-<li>⚠️ work-in-progress ⚠️ <a href="minemacs.html">minemacs</a> (aims to be as minimal as possible, preferring built-in solutions over using external packages)</li>
-<li><a href="file:///init.el">init.el</a> (real minimal configuration adding only <code>god-mode</code> as <i>modal editing</i> layer)</li>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgc27c87f">Using Emacs as Kiosk using Midori</a></li>
 </ul>
 </div>
+</div>
+<div id="outline-container-orgc27c87f" class="outline-2">
+<h2 id="orgc27c87f">Using Emacs as Kiosk using Midori</h2>
+<div class="outline-text-2" id="text-orgc27c87f">
+<p>
+Install midori.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt install midori
+</pre>
+</div>
+
+<p>
+This is the shell script that will start midori in fullscrenn mode, showing our <code>~/tmp/index.html</code> page.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">#!/bin/bash
+
+DISPLAY=:0 midori -e fullscreen file:///tmp/index.html
+</pre>
+</div>
+
+<p>
+This reload the browser page each 2 minutes.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(defun midori-reload ()
+  (shell-command "midori -e tab-reload"))
+
+(defun midori-start-reload-timer ()
+  (run-at-time 10 120 #'midori-reload))
+
+;; (midori-start-reload-timer)
+</pre>
+</div>
+
+<p>
+This is a sample <code>index</code> page written in org. You can export as HTML and show as the main content of our kiosk.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;Emacs Kiosk&lt;/title&gt;
+    &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+
+  &lt;body&gt;
+    &lt;img src="https://picsum.photos/1920/1080.jpg" class="w-screen h-screen"/&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-org">#+OPTIONS: toc:nil
+#+HTML_HEAD: &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+
+#+CAPTION: A random photo
+#+ATTR_HTML: :alt photo image :title Gallery
+[[https://picsum.photos/1920/1080.jpg]]
+</pre>
+</div>
+</div>
+</div>
+</div>
 <div id="postamble" class="status">
-<p class="date">Date: 2023-07-15 Sat 00:00</p>
 <p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

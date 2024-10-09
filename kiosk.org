@@ -1,0 +1,52 @@
+* Using Emacs as Kiosk using Midori
+
+Install midori.
+
+#+begin_src sh
+  sudo apt install midori
+#+end_src
+
+This is the shell script that will start midori in fullscrenn mode, showing our =~/tmp/index.html= page.
+
+#+begin_src sh :tangle ~/kiosk.sh
+#!/bin/bash
+
+DISPLAY=:0 midori -e fullscreen file:///tmp/index.html
+#+end_src
+
+This reload the browser page each 2 minutes.
+
+#+begin_src elisp
+(defun midori-reload ()
+  (shell-command "midori -e tab-reload"))
+
+(defun midori-start-reload-timer ()
+  (run-at-time 10 120 #'midori-reload))
+
+;; (midori-start-reload-timer)
+#+end_src
+
+This is a sample =index= page written in org. You can export as HTML and show as the main content of our kiosk.
+
+#+begin_src html :tangle /tmp/index.html
+  <html>
+    <head>
+      <title>Emacs Kiosk</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+
+    <body>
+      <img src="https://picsum.photos/1920/1080.jpg" class="w-screen h-screen"/>
+    </body>
+  </html>
+#+end_src
+
+#+begin_src org
+  ,#+OPTIONS: toc:nil
+  ,#+HTML_HEAD: <script src="https://cdn.tailwindcss.com"></script>
+
+  ,#+CAPTION: A random photo
+  ,#+ATTR_HTML: :alt photo image :title Gallery
+  [[https://picsum.photos/1920/1080.jpg]]
+#+end_src
+
