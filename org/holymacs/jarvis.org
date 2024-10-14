@@ -22,9 +22,9 @@ There's too silence here.. 😱 let's just play something! 🤘
    (nth (random (length items)) items))
 
   (defcustom holymacs-jarvis-youtube-sources
-    '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
+    '()
     "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
-    :type '(repeat :tag "URLs" (string)))
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
   (defun holymacs-jarvis-play-youtube (&optional url)
     "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
@@ -34,13 +34,13 @@ There's too silence here.. 😱 let's just play something! 🤘
       (async-shell-command command buffer-name)))
 
   (defun holymacs-jarvis-open-random-youtube ()
-    "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+    "Open in mpv one of the sources in `holymacs-jarvis-youtube-sources` and then open it."
     (interactive)
     (let ((url (holymacs-random holymacs-jarvis-youtube-sources)))
       (holymacs-jarvis-open-youtube url)))
 
   (defun holymacs-jarvis-open-youtube (&optional url)
-    "Pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+    "Open in browser one of the sources in `holymacs-jarvis-youtube-sources`."
     (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
     (browse-url-default-browser url))
 
