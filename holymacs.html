@@ -337,7 +337,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org266d7fe">
+<pre class="example" id="org6ae7a4c">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -648,7 +648,7 @@ Uses normal movements keys and <code>TAB</code> key to move through <code>isearc
 (global-set-key (kbd "s-3") (kbd "C-x 3"))
 (global-set-key (kbd "s-w") (kbd "C-x o"))
 (global-set-key (kbd "s-r") (kbd "C-x z"))
-(global-set-key (kbd "s-i") (kbd "C-M-i"))
+(global-set-key (kbd "s-i") (kbd "M-g i"))
 (global-set-key (kbd "s-N") (kbd "C-x C-j"))
 (global-set-key (kbd "s-[") (kbd "C-x &lt;left&gt;"))
 (global-set-key (kbd "s-]") (kbd "C-x &lt;right&gt;"))
@@ -888,7 +888,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <div id="outline-container-org53bb9fa" class="outline-4">
 <h4 id="org53bb9fa"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h4>
 <div class="outline-text-4" id="text-org53bb9fa">
-<pre class="example" id="orgedd4705">
+<pre class="example" id="orge155d39">
 #+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
   wc -w $filename
 #+END_SRC
@@ -924,7 +924,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org96fea68">
+<pre class="example" id="org8df219d">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -951,7 +951,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org7437090">
+<pre class="example" id="orge066871">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -963,7 +963,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgfba4733">
+<pre class="example" id="org75ad567">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -1073,7 +1073,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orge9b7135">
+<pre class="example" id="org71a01df">
 (run-at-time "11 min" t #'elfeed-update)
 </pre>
 
@@ -1090,7 +1090,7 @@ point.
 <div id="outline-container-org7173f83" class="outline-4">
 <h4 id="org7173f83">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-org7173f83">
-<pre class="example" id="orgffe7a8e">
+<pre class="example" id="org9e21c56">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1159,7 +1159,7 @@ Useful function if you want to quick inspect the face under cursor
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org36256b1">
+<pre class="example" id="org2a1ca38">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))

@@ -62,9 +62,9 @@ There's too silence here.. 😱 let's just play something! 🤘
  (nth (random (length items)) items))
 
 (defcustom holymacs-jarvis-youtube-sources
-  '("https://www.youtube.com/watch?v=6-HDYLJZWGs")
+  '()
   "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
-  :type '(repeat :tag "URLs" (string)))
+  :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
 (defun holymacs-jarvis-play-youtube (&amp;optional url)
   "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
@@ -74,13 +74,13 @@ There's too silence here.. 😱 let's just play something! 🤘
     (async-shell-command command buffer-name)))
 
 (defun holymacs-jarvis-open-random-youtube ()
-  "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+  "Open in mpv one of the sources in `holymacs-jarvis-youtube-sources` and then open it."
   (interactive)
   (let ((url (holymacs-random holymacs-jarvis-youtube-sources)))
     (holymacs-jarvis-open-youtube url)))
 
 (defun holymacs-jarvis-open-youtube (&amp;optional url)
-  "Pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then open it."
+  "Open in browser one of the sources in `holymacs-jarvis-youtube-sources`."
   (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
   (browse-url-default-browser url))
 
@@ -185,7 +185,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="orgfdf877f">
+<pre class="example" id="org7ddf399">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -217,7 +217,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="org6e034b3">
+<pre class="example" id="orgcabb519">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -245,7 +245,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="orgca01721">
+<pre class="example" id="org672694d">
 (setq mu4e-contexts
 	(list
 	 ;; Work account

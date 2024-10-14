@@ -279,7 +279,7 @@ Uses normal movements keys and =TAB= key to move through =isearch=.
   (global-set-key (kbd "s-3") (kbd "C-x 3"))
   (global-set-key (kbd "s-w") (kbd "C-x o"))
   (global-set-key (kbd "s-r") (kbd "C-x z"))
-  (global-set-key (kbd "s-i") (kbd "C-M-i"))
+  (global-set-key (kbd "s-i") (kbd "M-g i"))
   (global-set-key (kbd "s-N") (kbd "C-x C-j"))
   (global-set-key (kbd "s-[") (kbd "C-x <left>"))
   (global-set-key (kbd "s-]") (kbd "C-x <right>"))
