@@ -174,6 +174,12 @@ Toggle mute
   Exec=/usr/bin/python3 /home/pi/clock.py
 #+end_src
 
+** [[https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line][Handling screen saver / blank screen]]
+
+=xset s off= (turns off the screen saver)
+=xset s noblank= (turns off blanking)
+=xset -dpms= (disable the power management)
+
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
 If you need to write a crontab entry you can use https://crontab.guru/
@@ -332,7 +338,39 @@ If you need to write a crontab entry you can use https://crontab.guru/
   release:
   	MIX_ENV=prod mix release --path=~/${app}/
 #+end_src
-** Dockerize Phoenix webapp (my_app)
+** Phoenix
+*** Sample Makefile
+
+#+begin_src makefile
+  build:
+  	mix do deps.get, deps.compile, compile
+  start: build
+  	iex -S mix phx.server
+  assets:
+  	mix assets.setup
+  release:
+  	mix deps.get --only prod
+  	MIX_ENV=prod mix compile
+  	MIX_ENV=prod mix assets.deploy
+  	MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+  release-start:
+  	SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4020 ~/my-app/bin/my-app start
+#+end_src
+*** Example of app release generation and setup
+
+Generate a release.
+
+#+begin_src sh
+  MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+#+end_src
+
+Run for localhsot.
+
+#+begin_src sh
+  SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4040 ~/my-app/bin/my-app start
+#+end_src
+
+*** Dockerize Phoenix webapp (my_app)
 *** Dockerfile
 
 More info on [[Docker][Docker here]].
@@ -503,9 +541,7 @@ networks:
   outside:
 
 #+end_src
-** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
-** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
-** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
+*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
 ** Phoenix Livebooks
 
 - [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
@@ -533,11 +569,17 @@ Adding =livebook_cluster= as dependency in my livebooks I was able to make three
  Remember that this open a wide range of **security issues**.. uses it with responsibility!
 - Youtube 
 
+** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
+** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
 ** [[https://nerves-project.org/newsletter/][Nerves]]
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
 
 * Raspberry
+** Deal with I2C from CLI
+
+- https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
+
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
 #+begin_src sh
@@ -571,6 +613,10 @@ Epiphany: it has interesting options like =automation-mode= but didn't have the 
 *** TODO Other resources:
 
 - http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html
+
+** How to attach a cooler fan
+
+- https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv
 
 ** [[https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/][Magic Mirror]]
 * Systemd

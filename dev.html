@@ -223,6 +223,7 @@
 <li><a href="#org603e593">Linux desktop</a>
 <ul>
 <li><a href="#org5fbcd3b">Create a .desktop File</a></li>
+<li><a href="#org8760265">Handling screen saver / blank screen</a></li>
 </ul>
 </li>
 <li><a href="#org79320a6">Crontab</a></li>
@@ -234,25 +235,29 @@
 <li><a href="#org6f900ee">example KV server</a></li>
 <li><a href="#orgcb9b98c">Persisting layer: :dets</a></li>
 <li><a href="#org7ec988c">Development Tools: Makefile</a></li>
-<li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a>
+<li><a href="#orgda4b0cc">Phoenix</a>
 <ul>
+<li><a href="#orge32fb17">Sample Makefile</a></li>
+<li><a href="#org6fcbacd">Example of app release generation and setup</a></li>
+<li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
 <li><a href="#orgd4ec969">Dockerfile</a></li>
 <li><a href="#orgd4edd8f">Docker compose</a></li>
+<li><a href="#orgdc7dba9">Phoenix Pubsub comms across nodes</a></li>
 </ul>
 </li>
-<li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
-<li><a href="#orgeaad83f">Scale serverless with FLAME!</a></li>
-<li><a href="#orgdc7dba9">Phoenix Pubsub comms across nodes</a></li>
 <li><a href="#org99c3330">Phoenix Livebooks</a>
 <ul>
 <li><a href="#org8000c4a">Livebook Cluster</a></li>
 </ul>
 </li>
+<li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
+<li><a href="#orgeaad83f">Scale serverless with FLAME!</a></li>
 <li><a href="#orgc0dafaa">Nerves</a></li>
 </ul>
 </li>
 <li><a href="#orgc6eec79">Raspberry</a>
 <ul>
+<li><a href="#org3929028">Deal with I2C from CLI</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a>
 <ul>
@@ -261,12 +266,13 @@
 <li><a href="#org4842880"><span class="todo TODO">TODO</span> Other resources:</a></li>
 </ul>
 </li>
+<li><a href="#org04c6ae5">How to attach a cooler fan</a></li>
 <li><a href="#org8f1dd8f">Magic Mirror</a></li>
 </ul>
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#org3ad3958">MacOS</a>
+<li><a href="#org55177b9">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -568,6 +574,16 @@ Exec=/usr/bin/python3 /home/pi/clock.py
 </div>
 </div>
 </div>
+<div id="outline-container-org8760265" class="outline-3">
+<h3 id="org8760265"><a href="https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line">Handling screen saver / blank screen</a></h3>
+<div class="outline-text-3" id="text-org8760265">
+<p>
+<code>xset s off</code> (turns off the screen saver)
+<code>xset s noblank</code> (turns off blanking)
+<code>xset -dpms</code> (disable the power management)
+</p>
+</div>
+</div>
 </div>
 <div id="outline-container-org79320a6" class="outline-2">
 <h2 id="org79320a6"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
@@ -757,9 +773,55 @@ release:
 </div>
 </div>
 </div>
-<div id="outline-container-orgd1c6ccf" class="outline-3">
-<h3 id="orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</h3>
-<div class="outline-text-3" id="text-orgd1c6ccf">
+<div id="outline-container-orgda4b0cc" class="outline-3">
+<h3 id="orgda4b0cc">Phoenix</h3>
+<div class="outline-text-3" id="text-orgda4b0cc">
+</div>
+<div id="outline-container-orge32fb17" class="outline-4">
+<h4 id="orge32fb17">Sample Makefile</h4>
+<div class="outline-text-4" id="text-orge32fb17">
+<div class="org-src-container">
+<pre class="src src-makefile">build:
+        mix do deps.get, deps.compile, compile
+start: build
+        iex -S mix phx.server
+assets:
+        mix assets.setup
+release:
+        mix deps.get --only prod
+        MIX_ENV=prod mix compile
+        MIX_ENV=prod mix assets.deploy
+        MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+release-start:
+        SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4020 ~/my-app/bin/my-app start
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6fcbacd" class="outline-4">
+<h4 id="org6fcbacd">Example of app release generation and setup</h4>
+<div class="outline-text-4" id="text-org6fcbacd">
+<p>
+Generate a release.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+</pre>
+</div>
+
+<p>
+Run for localhsot.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4040 ~/my-app/bin/my-app start
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd1c6ccf" class="outline-4">
+<h4 id="orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</h4>
 </div>
 <div id="outline-container-orgd4ec969" class="outline-4">
 <h4 id="orgd4ec969">Dockerfile</h4>
@@ -940,15 +1002,9 @@ networks:
 </div>
 </div>
 </div>
+<div id="outline-container-orgdc7dba9" class="outline-4">
+<h4 id="orgdc7dba9"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h4>
 </div>
-<div id="outline-container-org57cdc16" class="outline-3">
-<h3 id="org57cdc16">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
-</div>
-<div id="outline-container-orgeaad83f" class="outline-3">
-<h3 id="orgeaad83f">Scale serverless with <a href="https://fly.io/blog/rethinking-serverless-with-flame/">FLAME</a>!</h3>
-</div>
-<div id="outline-container-orgdc7dba9" class="outline-3">
-<h3 id="orgdc7dba9"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h3>
 </div>
 <div id="outline-container-org99c3330" class="outline-3">
 <h3 id="org99c3330">Phoenix Livebooks</h3>
@@ -998,6 +1054,12 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 </div>
 </div>
 </div>
+<div id="outline-container-org57cdc16" class="outline-3">
+<h3 id="org57cdc16">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
+</div>
+<div id="outline-container-orgeaad83f" class="outline-3">
+<h3 id="orgeaad83f">Scale serverless with <a href="https://fly.io/blog/rethinking-serverless-with-flame/">FLAME</a>!</h3>
+</div>
 <div id="outline-container-orgc0dafaa" class="outline-3">
 <h3 id="orgc0dafaa"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
 <div class="outline-text-3" id="text-orgc0dafaa">
@@ -1010,6 +1072,14 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 <div id="outline-container-orgc6eec79" class="outline-2">
 <h2 id="orgc6eec79">Raspberry</h2>
 <div class="outline-text-2" id="text-orgc6eec79">
+</div>
+<div id="outline-container-org3929028" class="outline-3">
+<h3 id="org3929028">Deal with I2C from CLI</h3>
+<div class="outline-text-3" id="text-org3929028">
+<ul class="org-ul">
+<li><a href="https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/">https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/</a></li>
+</ul>
+</div>
 </div>
 <div id="outline-container-org3a0262a" class="outline-3">
 <h3 id="org3a0262a">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
@@ -1072,6 +1142,14 @@ Epiphany: it has interesting options like <code>automation-mode</code> but didn'
 </div>
 </div>
 </div>
+<div id="outline-container-org04c6ae5" class="outline-3">
+<h3 id="org04c6ae5">How to attach a cooler fan</h3>
+<div class="outline-text-3" id="text-org04c6ae5">
+<ul class="org-ul">
+<li><a href="https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv">https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org8f1dd8f" class="outline-3">
 <h3 id="org8f1dd8f"><a href="https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/">Magic Mirror</a></h3>
 </div>
@@ -1128,9 +1206,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org3ad3958" class="outline-2">
-<h2 id="org3ad3958">MacOS</h2>
-<div class="outline-text-2" id="text-org3ad3958">
+<div id="outline-container-org55177b9" class="outline-2">
+<h2 id="org55177b9">MacOS</h2>
+<div class="outline-text-2" id="text-org55177b9">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1190,7 +1268,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="orgb31d074">
+<pre class="example" id="orgc5f9aaf">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1202,7 +1280,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org6d5abf4">
+<pre class="example" id="org668dbd6">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1210,7 +1288,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="orgfe0abe3">
+<pre class="example" id="org6b31275">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1218,7 +1296,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org8c3e130">
+<pre class="example" id="org93ed0f3">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1226,7 +1304,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org249cea8">
+<pre class="example" id="org0be85bb">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1237,21 +1315,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orge22ce4f">
+<pre class="example" id="orgd90ff60">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgdc13598">
+<pre class="example" id="orgf5e4090">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org902450d">
+<pre class="example" id="org5e7b4d3">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1270,14 +1348,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgbfd48c7">
+<pre class="example" id="orgfb605ce">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org6c46ede">
+<pre class="example" id="orgdbbc0a4">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1294,7 +1372,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org197bb51">
+<pre class="example" id="org4c8203e">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1302,7 +1380,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org44fcd35">
+<pre class="example" id="org1919ca4">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1336,7 +1414,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org8484644">
+<pre class="example" id="org03ac801">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1347,7 +1425,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org346cb75">
+<pre class="example" id="orgd5dcd49">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1393,8 +1471,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org55177b9"></a>macOS<br />
-<div class="outline-text-6" id="text-org55177b9">
+<li><a id="orga681db9"></a>macOS<br />
+<div class="outline-text-6" id="text-orga681db9">
 <p>
 Use the avfoundation device:
 </p>
