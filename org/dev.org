@@ -174,6 +174,12 @@ Toggle mute
   Exec=/usr/bin/python3 /home/pi/clock.py
 #+end_src
 
+** [[https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line][Handling screen saver / blank screen]]
+
+=xset s off= (turns off the screen saver)
+=xset s noblank= (turns off blanking)
+=xset -dpms= (disable the power management)
+
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
 If you need to write a crontab entry you can use https://crontab.guru/
