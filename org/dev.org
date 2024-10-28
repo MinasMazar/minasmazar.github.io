@@ -574,11 +574,16 @@ Adding =livebook_cluster= as dependency in my livebooks I was able to make three
 ** [[https://nerves-project.org/newsletter/][Nerves]]
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
+- [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
 
 * Raspberry
 ** Deal with I2C from CLI
 
 - https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
+
+** Troubleshoot USB Capacitive Touch Screen Display
+- https://forums.raspberrypi.com/viewtopic.php?t=116174
+- https://github.com/bsteinsbo/rpi_touch_driver
 
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
@@ -594,26 +599,7 @@ or if you want to automate via =Makefile=
   	sudo apt install tmux emacs
   	sudo apt install erlang erlang-dev elixir
 #+end_src
-** [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
-
-*** Simulate keyboard events
-- Send keys to the graphic server
-  X ([[https://github.com/jordansissel/xdotool][xdotool]]): =xdotool key ctrl+l= or =xdotool type "Hello world"=
-  Wayland: =XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab=
-
-*** Use Browser in kiosk mode
-
-Use Chromium as browser (only on RPI > 1)
-- [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
-
-
-Midori: works well, but =-e= does not work as expected.
-Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
-
-*** TODO Other resources:
-
-- http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html
-
+** [[file:kiosk.org][Use Raspberry Pi in "Kiosk" mode]]
 ** How to attach a cooler fan
 
 - https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv
