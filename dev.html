@@ -260,20 +260,14 @@
 <li><a href="#org3929028">Deal with I2C from CLI</a></li>
 <li><a href="#org5338d90">Troubleshoot USB Capacitive Touch Screen Display</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#org5a95a00">Use Raspberry Pi in "Kiosk" mode</a>
-<ul>
-<li><a href="#orgd9547c0">Simulate keyboard events</a></li>
-<li><a href="#org06a108e">Use Browser in kiosk mode</a></li>
-<li><a href="#org4842880"><span class="todo TODO">TODO</span> Other resources:</a></li>
-</ul>
-</li>
+<li><a href="#org5a95a00">Use Raspberry Pi in "Kiosk" mode</a></li>
 <li><a href="#org04c6ae5">How to attach a cooler fan</a></li>
 <li><a href="#org8f1dd8f">Magic Mirror</a></li>
 </ul>
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#orga681db9">MacOS</a>
+<li><a href="#org77fde67">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -1115,43 +1109,6 @@ or if you want to automate via <code>Makefile</code>
 </div>
 <div id="outline-container-org5a95a00" class="outline-3">
 <h3 id="org5a95a00"><a href="kiosk.html">Use Raspberry Pi in "Kiosk" mode</a></h3>
-<div class="outline-text-3" id="text-org5a95a00">
-</div>
-<div id="outline-container-orgd9547c0" class="outline-4">
-<h4 id="orgd9547c0">Simulate keyboard events</h4>
-<div class="outline-text-4" id="text-orgd9547c0">
-<ul class="org-ul">
-<li>Send keys to the graphic server
-X (<a href="https://github.com/jordansissel/xdotool">xdotool</a>): <code>xdotool key ctrl+l</code> or <code>xdotool type "Hello world"</code>
-Wayland: <code>XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab</code></li>
-</ul>
-</div>
-</div>
-<div id="outline-container-org06a108e" class="outline-4">
-<h4 id="org06a108e">Use Browser in kiosk mode</h4>
-<div class="outline-text-4" id="text-org06a108e">
-<p>
-Use Chromium as browser (only on RPI &gt; 1)
-</p>
-<ul class="org-ul">
-<li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
-</ul>
-
-
-<p>
-Midori: works well, but <code>-e</code> does not work as expected.
-Epiphany: it has interesting options like <code>automation-mode</code> but didn't have the time to inspect more.
-</p>
-</div>
-</div>
-<div id="outline-container-org4842880" class="outline-4">
-<h4 id="org4842880"><span class="todo TODO">TODO</span> Other resources:</h4>
-<div class="outline-text-4" id="text-org4842880">
-<ul class="org-ul">
-<li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
-</ul>
-</div>
-</div>
 </div>
 <div id="outline-container-org04c6ae5" class="outline-3">
 <h3 id="org04c6ae5">How to attach a cooler fan</h3>
@@ -1217,9 +1174,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-orga681db9" class="outline-2">
-<h2 id="orga681db9">MacOS</h2>
-<div class="outline-text-2" id="text-orga681db9">
+<div id="outline-container-org77fde67" class="outline-2">
+<h2 id="org77fde67">MacOS</h2>
+<div class="outline-text-2" id="text-org77fde67">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1279,7 +1236,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org8f30c67">
+<pre class="example" id="org6ab684a">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1291,7 +1248,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orgf7da3f4">
+<pre class="example" id="org99a1f27">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1299,7 +1256,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="orgfe63c15">
+<pre class="example" id="org9337eba">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1307,7 +1264,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="orgb159e8a">
+<pre class="example" id="org14a747b">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1315,7 +1272,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="orgb6c0e42">
+<pre class="example" id="org6933b9c">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1326,21 +1283,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org000576a">
+<pre class="example" id="org7f4e843">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgb843511">
+<pre class="example" id="org21a5911">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgefb2865">
+<pre class="example" id="orgc7124aa">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1359,14 +1316,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgf3a8782">
+<pre class="example" id="org70c4b79">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgbebfcc5">
+<pre class="example" id="orgf6426c7">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1383,7 +1340,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org347a905">
+<pre class="example" id="orga1cb530">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1391,7 +1348,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgfa4019c">
+<pre class="example" id="org9839cdf">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1425,7 +1382,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org8aeea27">
+<pre class="example" id="org80a25d8">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1436,7 +1393,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org2834c0c">
+<pre class="example" id="org1825a4b">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1482,8 +1439,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org77fde67"></a>macOS<br />
-<div class="outline-text-6" id="text-org77fde67">
+<li><a id="org12b0921"></a>macOS<br />
+<div class="outline-text-6" id="text-org12b0921">
 <p>
 Use the avfoundation device:
 </p>
