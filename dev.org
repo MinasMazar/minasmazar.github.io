@@ -574,11 +574,16 @@ Adding =livebook_cluster= as dependency in my livebooks I was able to make three
 ** [[https://nerves-project.org/newsletter/][Nerves]]
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
+- [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
 
 * Raspberry
 ** Deal with I2C from CLI
 
 - https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
+
+** Troubleshoot USB Capacitive Touch Screen Display
+- https://forums.raspberrypi.com/viewtopic.php?t=116174
+- https://github.com/bsteinsbo/rpi_touch_driver
 
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
@@ -594,8 +599,7 @@ or if you want to automate via =Makefile=
   	sudo apt install tmux emacs
   	sudo apt install erlang erlang-dev elixir
 #+end_src
-** [[https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/][How to use a Raspberry Pi in /kiosk mode/]]
-
+** [[file:kiosk.org][Use Raspberry Pi in "Kiosk" mode]]
 *** Simulate keyboard events
 - Send keys to the graphic server
   X ([[https://github.com/jordansissel/xdotool][xdotool]]): =xdotool key ctrl+l= or =xdotool type "Hello world"=

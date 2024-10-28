@@ -258,8 +258,9 @@
 <li><a href="#orgc6eec79">Raspberry</a>
 <ul>
 <li><a href="#org3929028">Deal with I2C from CLI</a></li>
+<li><a href="#org5338d90">Troubleshoot USB Capacitive Touch Screen Display</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#org099239c">How to use a Raspberry Pi in <i>kiosk mode</i></a>
+<li><a href="#org5a95a00">Use Raspberry Pi in "Kiosk" mode</a>
 <ul>
 <li><a href="#orgd9547c0">Simulate keyboard events</a></li>
 <li><a href="#org06a108e">Use Browser in kiosk mode</a></li>
@@ -272,7 +273,7 @@
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#org55177b9">MacOS</a>
+<li><a href="#orga681db9">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -1065,6 +1066,7 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 <div class="outline-text-3" id="text-orgc0dafaa">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
+<li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
 </ul>
 </div>
 </div>
@@ -1078,6 +1080,15 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 <div class="outline-text-3" id="text-org3929028">
 <ul class="org-ul">
 <li><a href="https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/">https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5338d90" class="outline-3">
+<h3 id="org5338d90">Troubleshoot USB Capacitive Touch Screen Display</h3>
+<div class="outline-text-3" id="text-org5338d90">
+<ul class="org-ul">
+<li><a href="https://forums.raspberrypi.com/viewtopic.php?t=116174">https://forums.raspberrypi.com/viewtopic.php?t=116174</a></li>
+<li><a href="https://github.com/bsteinsbo/rpi_touch_driver">https://github.com/bsteinsbo/rpi_touch_driver</a></li>
 </ul>
 </div>
 </div>
@@ -1102,9 +1113,9 @@ or if you want to automate via <code>Makefile</code>
 </div>
 </div>
 </div>
-<div id="outline-container-org099239c" class="outline-3">
-<h3 id="org099239c"><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">How to use a Raspberry Pi in <i>kiosk mode</i></a></h3>
-<div class="outline-text-3" id="text-org099239c">
+<div id="outline-container-org5a95a00" class="outline-3">
+<h3 id="org5a95a00"><a href="kiosk.html">Use Raspberry Pi in "Kiosk" mode</a></h3>
+<div class="outline-text-3" id="text-org5a95a00">
 </div>
 <div id="outline-container-orgd9547c0" class="outline-4">
 <h4 id="orgd9547c0">Simulate keyboard events</h4>
@@ -1206,9 +1217,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org55177b9" class="outline-2">
-<h2 id="org55177b9">MacOS</h2>
-<div class="outline-text-2" id="text-org55177b9">
+<div id="outline-container-orga681db9" class="outline-2">
+<h2 id="orga681db9">MacOS</h2>
+<div class="outline-text-2" id="text-orga681db9">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1268,7 +1279,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="orgc5f9aaf">
+<pre class="example" id="org8f30c67">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1280,7 +1291,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org668dbd6">
+<pre class="example" id="orgf7da3f4">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1288,7 +1299,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org6b31275">
+<pre class="example" id="orgfe63c15">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1296,7 +1307,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org93ed0f3">
+<pre class="example" id="orgb159e8a">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1304,7 +1315,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org0be85bb">
+<pre class="example" id="orgb6c0e42">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1315,21 +1326,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orgd90ff60">
+<pre class="example" id="org000576a">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgf5e4090">
+<pre class="example" id="orgb843511">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org5e7b4d3">
+<pre class="example" id="orgefb2865">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1348,14 +1359,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgfb605ce">
+<pre class="example" id="orgf3a8782">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgdbbc0a4">
+<pre class="example" id="orgbebfcc5">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1372,7 +1383,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org4c8203e">
+<pre class="example" id="org347a905">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1380,7 +1391,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org1919ca4">
+<pre class="example" id="orgfa4019c">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1414,7 +1425,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org03ac801">
+<pre class="example" id="org8aeea27">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1425,7 +1436,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="orgd5dcd49">
+<pre class="example" id="org2834c0c">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1471,8 +1482,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orga681db9"></a>macOS<br />
-<div class="outline-text-6" id="text-orga681db9">
+<li><a id="org77fde67"></a>macOS<br />
+<div class="outline-text-6" id="text-org77fde67">
 <p>
 Use the avfoundation device:
 </p>
