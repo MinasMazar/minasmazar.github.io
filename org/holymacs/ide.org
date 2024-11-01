@@ -4,6 +4,7 @@
 #+DATE: <2024-04-20 Sat>
 #+PROPERTY: header-args :tangle ~/.emacs.d/modules/ide.el :mkdirp yes
 #+SETUPFILE: ../../templates/_header.org
+#+STARTUP: show2levels
 #+HTML_LINK_UP: ../holymacs.html
 
 * Versioning
@@ -106,6 +107,14 @@ Code stolen from [[https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/][this blo
   	   (default-directory project))
          (async-shell-command (format "cd %s && %s" project command) buffer-name)))
      minemacs-projects))
+#+end_src
+
+* Focusing
+
+#+begin_src elisp
+  (use-package golden-ratio
+    :bind
+    (("M-o W" . #'golden-ratio-mode)))
 #+end_src
 
 * Terminal emulator
