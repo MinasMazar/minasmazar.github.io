@@ -9,9 +9,11 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 </head>
 <body>
@@ -30,7 +32,7 @@
 <li><a href="#org407eb8a">Workspaces</a></li>
 <li><a href="#org07faf93">Programming languages</a>
 <ul>
-<li><a href="#org7122a64">Elixir</a></li>
+<li><a href="#orgee5a15f">Elixir</a></li>
 <li><a href="#org7b6b240">LSP</a></li>
 </ul>
 </li>
@@ -44,6 +46,7 @@
 <li><a href="#org48d8bd5">Run make on list of projects</a></li>
 </ul>
 </li>
+<li><a href="#org170aca9">Focusing</a></li>
 <li><a href="#orgc96dabe">Terminal emulator</a>
 <ul>
 <li><a href="#org75f3d49">Vterm</a></li>
@@ -104,9 +107,9 @@
 <h2 id="org07faf93">Programming languages</h2>
 <div class="outline-text-2" id="text-org07faf93">
 </div>
-<div id="outline-container-org7122a64" class="outline-3">
-<h3 id="org7122a64">Elixir</h3>
-<div class="outline-text-3" id="text-org7122a64">
+<div id="outline-container-orgee5a15f" class="outline-3">
+<h3 id="orgee5a15f">Elixir</h3>
+<div class="outline-text-3" id="text-orgee5a15f">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package elixir-mode)
 (use-package exunit
@@ -139,9 +142,9 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
 </pre>
 </div>
 </div>
-<div id="outline-container-orgee5a15f" class="outline-4">
-<h4 id="orgee5a15f">Elixir</h4>
-<div class="outline-text-4" id="text-orgee5a15f">
+<div id="outline-container-orga328cb4" class="outline-4">
+<h4 id="orga328cb4">Elixir</h4>
+<div class="outline-text-4" id="text-orga328cb4">
 <p>
 Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
 </p>
@@ -192,6 +195,17 @@ mix elixir_ls.release
    minemacs-projects))
 </pre>
 </div>
+</div>
+</div>
+</div>
+<div id="outline-container-org170aca9" class="outline-2">
+<h2 id="org170aca9">Focusing</h2>
+<div class="outline-text-2" id="text-org170aca9">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package golden-ratio
+  :bind
+  (("M-o W" . #'golden-ratio-mode)))
+</pre>
 </div>
 </div>
 </div>

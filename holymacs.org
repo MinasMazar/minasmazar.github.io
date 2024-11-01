@@ -605,6 +605,7 @@ You can run specified function at specified time and with a specific timeout. Ch
 
 #+BEGIN_EXAMPLE elisp
 (run-at-time "11 min" t #'elfeed-update)
+(run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 #+END_EXAMPLE
 
 #+BEGIN_QUOTE
@@ -654,6 +655,11 @@ Useful function if you want to quick inspect the face under cursor
       (if face (message "Face: %s" face) (message "No face at %d" pos))))
 #+end_src
 
+Get the list of font families =(font-family-list)=; here's the code to set a random font family in the current frame.
+
+#+begin_src elisp
+  (set-face-font 'default (seq-random-elt (font-family-list)))
+#+end_src
 *** Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]

@@ -257,6 +257,7 @@
 </li>
 <li><a href="#orgc6eec79">Raspberry</a>
 <ul>
+<li><a href="#org0c4e94f">Detect Raspberry model</a></li>
 <li><a href="#org3929028">Deal with I2C from CLI</a></li>
 <li><a href="#org5338d90">Troubleshoot USB Capacitive Touch Screen Display</a></li>
 <li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
@@ -267,7 +268,7 @@
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#org77fde67">MacOS</a>
+<li><a href="#org12b0921">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -1069,6 +1070,15 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 <h2 id="orgc6eec79">Raspberry</h2>
 <div class="outline-text-2" id="text-orgc6eec79">
 </div>
+<div id="outline-container-org0c4e94f" class="outline-3">
+<h3 id="org0c4e94f">Detect Raspberry model</h3>
+<div class="outline-text-3" id="text-org0c4e94f">
+<div class="org-src-container">
+<pre class="src src-sh">cat /proc/device-tree/model
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org3929028" class="outline-3">
 <h3 id="org3929028">Deal with I2C from CLI</h3>
 <div class="outline-text-3" id="text-org3929028">
@@ -1174,9 +1184,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org77fde67" class="outline-2">
-<h2 id="org77fde67">MacOS</h2>
-<div class="outline-text-2" id="text-org77fde67">
+<div id="outline-container-org12b0921" class="outline-2">
+<h2 id="org12b0921">MacOS</h2>
+<div class="outline-text-2" id="text-org12b0921">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1236,7 +1246,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org6ab684a">
+<pre class="example" id="org33f89ea">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1248,7 +1258,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org99a1f27">
+<pre class="example" id="orgeb56add">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1256,7 +1266,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org9337eba">
+<pre class="example" id="org6972d17">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1264,7 +1274,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org14a747b">
+<pre class="example" id="orgff97c20">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1272,7 +1282,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org6933b9c">
+<pre class="example" id="org64b7da3">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1283,21 +1293,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org7f4e843">
+<pre class="example" id="orgbe67ffe">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org21a5911">
+<pre class="example" id="org8bef293">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgc7124aa">
+<pre class="example" id="orgd25d879">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1316,14 +1326,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org70c4b79">
+<pre class="example" id="org0420380">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgf6426c7">
+<pre class="example" id="orge980911">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1340,7 +1350,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="orga1cb530">
+<pre class="example" id="org07aa8f1">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1348,7 +1358,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org9839cdf">
+<pre class="example" id="org2579c5c">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1382,7 +1392,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org80a25d8">
+<pre class="example" id="orgc19ae45">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1393,7 +1403,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org1825a4b">
+<pre class="example" id="org2c9763a">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1439,8 +1449,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org12b0921"></a>macOS<br />
-<div class="outline-text-6" id="text-org12b0921">
+<li><a id="orge23ce33"></a>macOS<br />
+<div class="outline-text-6" id="text-orge23ce33">
 <p>
 Use the avfoundation device:
 </p>

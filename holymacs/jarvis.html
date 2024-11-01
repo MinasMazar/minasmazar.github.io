@@ -9,9 +9,11 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 </head>
 <body>
@@ -26,7 +28,6 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#org0f505f6">Jarvis</a></li>
-<li><a href="#org59f11c2">Focus current window</a></li>
 <li><a href="#orgc5d5e2a">Alarm!</a></li>
 <li><a href="#org1ed2f02">News and Mail</a>
 <ul>
@@ -43,15 +44,6 @@
 <div id="outline-container-org0f505f6" class="outline-2">
 <h2 id="org0f505f6">Jarvis</h2>
 <div class="outline-text-2" id="text-org0f505f6">
-<p>
-Preview the HTML exported buffer you see when exporting an org file in a preview using some built-in Emacs function.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(advice-add #'org-html-export-as-html :filter-return #'browse-url-of-buffer)
-</pre>
-</div>
-
 <p>
 There's too silence here.. 😱 let's just play something! 🤘
 </p>
@@ -85,17 +77,6 @@ There's too silence here.. 😱 let's just play something! 🤘
   (browse-url-default-browser url))
 
 
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-org59f11c2" class="outline-2">
-<h2 id="org59f11c2">Focus current window</h2>
-<div class="outline-text-2" id="text-org59f11c2">
-<div class="org-src-container">
-<pre class="src src-elisp">(use-package golden-ratio
-  :bind
-  (("M-o W" . #'golden-ratio-mode)))
 </pre>
 </div>
 </div>
@@ -185,7 +166,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="org7ddf399">
+<pre class="example" id="org2dd30cb">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -217,7 +198,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="orgcabb519">
+<pre class="example" id="orgc15e13a">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -245,7 +226,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org672694d">
+<pre class="example" id="orgefe3b22">
 (setq mu4e-contexts
 	(list
 	 ;; Work account

@@ -577,6 +577,12 @@ Adding =livebook_cluster= as dependency in my livebooks I was able to make three
 - [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
 
 * Raspberry
+** Detect Raspberry model
+
+#+begin_src sh
+  cat /proc/device-tree/model
+#+end_src
+
 ** Deal with I2C from CLI
 
 - https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/

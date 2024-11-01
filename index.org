@@ -5,7 +5,8 @@
 
 Hello dudes, welcome to my cave 👋
 
-- [[file:about.org][about me]]
-- [[file:emacs.org][emacs]]
+- [[file:about.org][about me]] 🏠
+- [[file:emacs.org][emacs]] 🚀
 - [[file:dev.org][dev stuff]] 🤓
-- [[file:bookmarks.org][bookmarks]]
+- [[file:gaming.org][gaming]] 🏎️
+- [[file:bookmarks.org][bookmarks]] 🔖
