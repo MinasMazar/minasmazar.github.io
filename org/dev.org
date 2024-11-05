@@ -122,6 +122,18 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
 - https://remixicon.com/
 - https://yaml.org/css/screen.css
 
+* Blog and publishing
+
+** Static site generators
+
+- [[https://orgmode.org/manual/Publishing.html][Org-mode publishing]]
+
+** Hosting
+
+- https://srht.site/
+- [[https://pages.github.com/][Github pages]]
+- [[https://www.netlify.com/][Netlify]]
+
 * Git
 
 How do I change the author and committer name/email for multiple commits?
@@ -140,6 +152,12 @@ Apply the patch
 
 #+begin_src sh
   git apply patch_file.patch 
+#+end_src
+
+How to add chmod permissions to file in Git ([[https://git-scm.com/docs/git-update-index#Documentation/git-update-index.txt---chmod-x][official doc]])
+
+#+begin_src sh
+  git update-index --chmod=+x path/to/file
 #+end_src
 * Pulseaudio
 
@@ -308,6 +326,9 @@ If you need to write a crontab entry you can use https://crontab.guru/
 #+end_src
 
 ** Development Tools: Makefile
+
+Example Makefile for a thin elixir app.
+
 #+begin_src makefile
   app := $$APP
 
@@ -338,10 +359,31 @@ If you need to write a crontab entry you can use https://crontab.guru/
   release:
   	MIX_ENV=prod mix release --path=~/${app}/
 #+end_src
+
 ** Phoenix
 *** Sample Makefile
 
 #+begin_src makefile
+  port := 4030
+  prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/magma MIX_ENV=prod SECRET_KEY_BASE=8kX3vyc0qLs38OFTa4C+ZTx6Q9h0KXyfh8UgU/Yt4InSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
+  cmd := $$MAKE_CMD
+
+  default: start-prod
+  cmd:
+  	echo ${cmd}
+  # Example usage
+  #
+  # MAKE_CMD="mix ecto.create" make -s prod-exec
+  #
+
+  # Start in production env
+  prod-exec:
+  	${prod-env} ${cmd}
+
+  start-prod:
+  	${prod-env} iex -S mix phx.server
+
+  # Development
   build:
   	mix do deps.get, deps.compile, compile
   start: build
@@ -354,7 +396,8 @@ If you need to write a crontab entry you can use https://crontab.guru/
   	MIX_ENV=prod mix assets.deploy
   	MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
   release-start:
-  	SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4020 ~/my-app/bin/my-app start
+  	${prod-env} ~/my-app/bin/my-app start
+
 #+end_src
 *** Example of app release generation and setup
 
