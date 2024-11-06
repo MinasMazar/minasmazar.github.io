@@ -330,38 +330,24 @@ If you need to write a crontab entry you can use https://crontab.guru/
 Example Makefile for a thin elixir app.
 
 #+begin_src makefile
-  app := $$APP
+  app := next
 
   default: s
-
-  c: compile
-  compile:
-  	iex -S mix
-
-  t: test
-  test:
-  	mix test
-
-  tl: test-loopback
-  test-loopback:
-  	mix test --listen-on-stdin
-
-  b: build
-  build:
+  b:
   	mix do deps.get, deps.compile, compile
-  	make c
-
-  s: start
-  start:
+  s:
   	iex -S mix
-
-  r: release
-  release:
+  t:
+  	mix test
+  tl:
+  	mix test --listen-on-stdin
+  u:
+  	cat Makefile
+  r:
   	MIX_ENV=prod mix release --path=~/${app}/
 #+end_src
 
-** Phoenix
-*** Sample Makefile
+Example Makefile for an Elixir/Phoenix webapp
 
 #+begin_src makefile
   port := 4030
@@ -399,6 +385,8 @@ Example Makefile for a thin elixir app.
   	${prod-env} ~/my-app/bin/my-app start
 
 #+end_src
+
+** Phoenix
 *** Example of app release generation and setup
 
 Generate a release.
