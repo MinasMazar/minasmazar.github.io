@@ -39,6 +39,7 @@
   			       (local-set-key (kbd "C-n") #'switch-to-completions)
   			       (local-set-key (kbd "C-c") #'switch-to-completions))))
     :custom
+    (completion-auto-help nil)
     (use-short-answers t)
     (enable-recursive-minibuffers t)
     (shr-inhibit-images t)
