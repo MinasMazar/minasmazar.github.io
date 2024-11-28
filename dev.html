@@ -217,6 +217,12 @@
 </li>
 <li><a href="#org18110e1">Tmux</a></li>
 <li><a href="#org980fc60">HTML &amp; CSS</a></li>
+<li><a href="#orgaf87161">Blog and publishing</a>
+<ul>
+<li><a href="#orgd136bfb">Static site generators</a></li>
+<li><a href="#org0829252">Hosting</a></li>
+</ul>
+</li>
 <li><a href="#org431f702">Git</a></li>
 <li><a href="#orgfeec70c">Pulseaudio</a></li>
 <li><a href="#orgca4d479">Alsamixer</a></li>
@@ -237,7 +243,6 @@
 <li><a href="#org7ec988c">Development Tools: Makefile</a></li>
 <li><a href="#orgda4b0cc">Phoenix</a>
 <ul>
-<li><a href="#orge32fb17">Sample Makefile</a></li>
 <li><a href="#org6fcbacd">Example of app release generation and setup</a></li>
 <li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
 <li><a href="#orgd4ec969">Dockerfile</a></li>
@@ -268,7 +273,7 @@
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#org12b0921">MacOS</a>
+<li><a href="#orge23ce33">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -489,6 +494,29 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 </ul>
 </div>
 </div>
+<div id="outline-container-orgaf87161" class="outline-2">
+<h2 id="orgaf87161">Blog and publishing</h2>
+<div class="outline-text-2" id="text-orgaf87161">
+</div>
+<div id="outline-container-orgd136bfb" class="outline-3">
+<h3 id="orgd136bfb">Static site generators</h3>
+<div class="outline-text-3" id="text-orgd136bfb">
+<ul class="org-ul">
+<li><a href="https://orgmode.org/manual/Publishing.html">Org-mode publishing</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org0829252" class="outline-3">
+<h3 id="org0829252">Hosting</h3>
+<div class="outline-text-3" id="text-org0829252">
+<ul class="org-ul">
+<li><a href="https://srht.site/">https://srht.site/</a></li>
+<li><a href="https://pages.github.com/">Github pages</a></li>
+<li><a href="https://www.netlify.com/">Netlify</a></li>
+</ul>
+</div>
+</div>
+</div>
 <div id="outline-container-org431f702" class="outline-2">
 <h2 id="org431f702">Git</h2>
 <div class="outline-text-2" id="text-org431f702">
@@ -516,6 +544,15 @@ Apply the patch
 
 <div class="org-src-container">
 <pre class="src src-sh">git apply patch_file.patch 
+</pre>
+</div>
+
+<p>
+How to add chmod permissions to file in Git (<a href="https://git-scm.com/docs/git-update-index#Documentation/git-update-index.txt---chmod-x">official doc</a>)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git update-index --chmod=+x path/to/file
 </pre>
 </div>
 </div>
@@ -736,48 +773,55 @@ end
 <div id="outline-container-org7ec988c" class="outline-3">
 <h3 id="org7ec988c">Development Tools: Makefile</h3>
 <div class="outline-text-3" id="text-org7ec988c">
+<p>
+Example Makefile for a thin elixir app.
+</p>
+
 <div class="org-src-container">
-<pre class="src src-makefile">app := $$APP
+<pre class="src src-makefile">app := next
 
 default: s
-
-c: compile
-compile:
-        iex -S mix
-
-t: test
-test:
-        mix test
-
-tl: test-loopback
-test-loopback:
-        mix test --listen-on-stdin
-
-b: build
-build:
+b:
         mix do deps.get, deps.compile, compile
-        make c
-
-s: start
-start:
+s:
         iex -S mix
-
-r: release
-release:
+t:
+        mix test
+tl:
+        mix test --listen-on-stdin
+u:
+        cat Makefile
+r:
         MIX_ENV=prod mix release --path=~/${app}/
 </pre>
 </div>
-</div>
-</div>
-<div id="outline-container-orgda4b0cc" class="outline-3">
-<h3 id="orgda4b0cc">Phoenix</h3>
-<div class="outline-text-3" id="text-orgda4b0cc">
-</div>
-<div id="outline-container-orge32fb17" class="outline-4">
-<h4 id="orge32fb17">Sample Makefile</h4>
-<div class="outline-text-4" id="text-orge32fb17">
+
+<p>
+Example Makefile for an Elixir/Phoenix webapp
+</p>
+
 <div class="org-src-container">
-<pre class="src src-makefile">build:
+<pre class="src src-makefile">port := 4030
+prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/magma MIX_ENV=prod SECRET_KEY_BASE=8kX3vyc0qLs38OFTa4C+ZTx6Q9h0KXyfh8UgU/Yt4InSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
+cmd := $$MAKE_CMD
+
+default: start-prod
+cmd:
+        echo ${cmd}
+# Example usage
+#
+# MAKE_CMD="mix ecto.create" make -s prod-exec
+#
+
+# Start in production env
+prod-exec:
+        ${prod-env} ${cmd}
+
+start-prod:
+        ${prod-env} iex -S mix phx.server
+
+# Development
+build:
         mix do deps.get, deps.compile, compile
 start: build
         iex -S mix phx.server
@@ -789,10 +833,15 @@ release:
         MIX_ENV=prod mix assets.deploy
         MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
 release-start:
-        SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4020 ~/my-app/bin/my-app start
+        ${prod-env} ~/my-app/bin/my-app start
+
 </pre>
 </div>
 </div>
+</div>
+<div id="outline-container-orgda4b0cc" class="outline-3">
+<h3 id="orgda4b0cc">Phoenix</h3>
+<div class="outline-text-3" id="text-orgda4b0cc">
 </div>
 <div id="outline-container-org6fcbacd" class="outline-4">
 <h4 id="org6fcbacd">Example of app release generation and setup</h4>
@@ -1184,9 +1233,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org12b0921" class="outline-2">
-<h2 id="org12b0921">MacOS</h2>
-<div class="outline-text-2" id="text-org12b0921">
+<div id="outline-container-orge23ce33" class="outline-2">
+<h2 id="orge23ce33">MacOS</h2>
+<div class="outline-text-2" id="text-orge23ce33">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1237,6 +1286,24 @@ Search for videos.
 <pre class="src src-sh">yt-dlp ytsearch10:lebron james --get-id --get-title
 </pre>
 </div>
+
+<p>
+Download a list of videos from a file.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">yt-dlp -a list.txt
+</pre>
+</div>
+
+<p>
+Download a video from services like FB, Instagram or others by using the cookies from our browser in order to access credentials.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">yt-dlp --cookies-from-browser opera https://www.instagram.com/reel/DBG9t4XCteu/?igsh=d3RpNWZxMnVhenVw
+</pre>
+</div>
 </div>
 </div>
 <div id="outline-container-org4d3bf7c" class="outline-2">
@@ -1246,7 +1313,7 @@ Search for videos.
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org33f89ea">
+<pre class="example" id="org92bf64d">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1258,7 +1325,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orgeb56add">
+<pre class="example" id="orgb06754e">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1266,7 +1333,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org6972d17">
+<pre class="example" id="org763b2dc">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1274,7 +1341,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="orgff97c20">
+<pre class="example" id="orgd4c840f">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1282,7 +1349,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org64b7da3">
+<pre class="example" id="orga524d40">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1293,21 +1360,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orgbe67ffe">
+<pre class="example" id="org1610c59">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org8bef293">
+<pre class="example" id="org9588b1d">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgd25d879">
+<pre class="example" id="org7219403">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1326,14 +1393,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org0420380">
+<pre class="example" id="org9ac386f">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orge980911">
+<pre class="example" id="orgfc701e0">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1350,7 +1417,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org07aa8f1">
+<pre class="example" id="org1844499">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1358,7 +1425,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org2579c5c">
+<pre class="example" id="org894ca35">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1392,7 +1459,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="orgc19ae45">
+<pre class="example" id="org8940d8b">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1403,7 +1470,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org2c9763a">
+<pre class="example" id="org65aab3e">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1449,8 +1516,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orge23ce33"></a>macOS<br />
-<div class="outline-text-6" id="text-orge23ce33">
+<li><a id="org82bcdd1"></a>macOS<br />
+<div class="outline-text-6" id="text-org82bcdd1">
 <p>
 Use the avfoundation device:
 </p>

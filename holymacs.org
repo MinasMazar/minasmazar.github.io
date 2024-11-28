@@ -178,6 +178,7 @@ No configuration till now. If you want to learn something about this topic there
     (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
     (add-hook 'completion-at-point-functions #'cape-line))
 #+end_src
+
 *** Embark
 
 #+begin_src elisp
@@ -447,6 +448,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =browse-url-of-buffer=
 - =command-switch-alist=
 - =completions-max-height=
+- =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
 - =format-time-string=

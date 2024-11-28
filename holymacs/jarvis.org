@@ -263,6 +263,10 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 #+end_example
 
+*** Tweaking
+
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
+
 ** COMMENT Gnus ⚠️ wip ⚠️
 
 To configure gnus in order to read your Gmail, you have to:
@@ -322,10 +326,15 @@ curl https://cht.sh
       "Display the results of the query."
       (interactive)
       (let ((browse-url-handlers nil)
-	    (browse-url-browser-function browser-function))
-	(browse-url
-	 (format-spec search-engine-url
-		      (format-spec-make ?s (url-hexify-string search-term))))))
+  	    (browse-url-browser-function browser-function))
+  	(browse-url
+  	 (format-spec search-engine-url
+  		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine dropbox
+      "https://www.dropbox.com/search/personal?query=%s"
+      :browser 'browse-url-firefox
+      :keybinding "D")
 
     (defengine duckduckgo
       "https://duckduckgo.com/?q=%s"

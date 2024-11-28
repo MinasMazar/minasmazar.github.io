@@ -166,7 +166,7 @@ Useful links:
 <div id="outline-container-orgff5baf2" class="outline-4">
 <h4 id="orgff5baf2">Configuration</h4>
 <div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="org2dd30cb">
+<pre class="example" id="org497fe35">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -198,7 +198,7 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="orgc15e13a">
+<pre class="example" id="orga93d4e8">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -226,7 +226,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="orgefe3b22">
+<pre class="example" id="org5fcb607">
 (setq mu4e-contexts
 	(list
 	 ;; Work account
@@ -257,6 +257,14 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
 		  (mu4e-refile-folder  . "/Yahoo/Archive")
 		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 </pre>
+</div>
+</div>
+<div id="outline-container-org54da1c6" class="outline-4">
+<h4 id="org54da1c6">Tweaking</h4>
+<div class="outline-text-4" id="text-org54da1c6">
+<p>
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like <code>Ivy</code> or use <code>Embark</code> to select all attachments from the minibuffer after invoking <code>mu4e-view-save-attachment</code>). For more details see <a href="https://github.com/djcb/mu/issues/1979">this issue on Github</a>.
+</p>
 </div>
 </div>
 </div>
@@ -312,6 +320,11 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
         (browse-url
          (format-spec search-engine-url
                       (format-spec-make ?s (url-hexify-string search-term))))))
+
+  (defengine dropbox
+    "https://www.dropbox.com/search/personal?query=%s"
+    :browser 'browse-url-firefox
+    :keybinding "D")
 
   (defengine duckduckgo
     "https://duckduckgo.com/?q=%s"

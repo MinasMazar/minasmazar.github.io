@@ -102,10 +102,17 @@ Code stolen from [[https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/][this blo
     (interactive (list (completing-read "Task: " '("dev" "run" "usage"))))
     (mapcar
      (lambda (project)
-       (let ((command (format "make %s" task))
+       (delete-other-windows)
+       (let ((split-dir :below)
+  	   (command (format "make %s" task))
   	   (buffer-name (format "Project: <%s>" project))
   	   (default-directory project))
-         (async-shell-command (format "cd %s && %s" project command) buffer-name)))
+         (async-shell-command (format "cd %s && %s" project command) buffer-name)
+         (pop-to-buffer buffer-name)
+         (if (eq split-dir :below)
+  	   (progn (split-window-below) (setq split-dir :right))
+  	 (progn (split-window-right) (setq split-dir :below)))
+         (balance-windows)))
      minemacs-projects))
 #+end_src
 

@@ -32,7 +32,7 @@
 <li><a href="#org407eb8a">Workspaces</a></li>
 <li><a href="#org07faf93">Programming languages</a>
 <ul>
-<li><a href="#orgee5a15f">Elixir</a></li>
+<li><a href="#orga328cb4">Elixir</a></li>
 <li><a href="#org7b6b240">LSP</a></li>
 </ul>
 </li>
@@ -107,9 +107,9 @@
 <h2 id="org07faf93">Programming languages</h2>
 <div class="outline-text-2" id="text-org07faf93">
 </div>
-<div id="outline-container-orgee5a15f" class="outline-3">
-<h3 id="orgee5a15f">Elixir</h3>
-<div class="outline-text-3" id="text-orgee5a15f">
+<div id="outline-container-orga328cb4" class="outline-3">
+<h3 id="orga328cb4">Elixir</h3>
+<div class="outline-text-3" id="text-orga328cb4">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package elixir-mode)
 (use-package exunit
@@ -142,9 +142,9 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
 </pre>
 </div>
 </div>
-<div id="outline-container-orga328cb4" class="outline-4">
-<h4 id="orga328cb4">Elixir</h4>
-<div class="outline-text-4" id="text-orga328cb4">
+<div id="outline-container-org42265a8" class="outline-4">
+<h4 id="org42265a8">Elixir</h4>
+<div class="outline-text-4" id="text-org42265a8">
 <p>
 Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
 </p>
@@ -188,10 +188,17 @@ mix elixir_ls.release
   (interactive (list (completing-read "Task: " '("dev" "run" "usage"))))
   (mapcar
    (lambda (project)
-     (let ((command (format "make %s" task))
+     (delete-other-windows)
+     (let ((split-dir :below)
+           (command (format "make %s" task))
            (buffer-name (format "Project: &lt;%s&gt;" project))
            (default-directory project))
-       (async-shell-command (format "cd %s &amp;&amp; %s" project command) buffer-name)))
+       (async-shell-command (format "cd %s &amp;&amp; %s" project command) buffer-name)
+       (pop-to-buffer buffer-name)
+       (if (eq split-dir :below)
+           (progn (split-window-below) (setq split-dir :right))
+         (progn (split-window-right) (setq split-dir :below)))
+       (balance-windows)))
    minemacs-projects))
 </pre>
 </div>
