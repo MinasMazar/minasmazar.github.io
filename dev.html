@@ -273,7 +273,7 @@
 </li>
 <li><a href="#org91dcd0c">Systemd</a></li>
 <li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#orge23ce33">MacOS</a>
+<li><a href="#org82bcdd1">MacOS</a>
 <ul>
 <li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
 <li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
@@ -281,6 +281,7 @@
 </ul>
 </li>
 <li><a href="#org641c0df">Youtube downloader (yt-dlp)</a></li>
+<li><a href="#org7683d57">Spritely institute - distributed web technology</a></li>
 <li><a href="#org4d3bf7c">FFMPEG</a>
 <ul>
 <li><a href="#orga1bece2">Extract audio from video</a></li>
@@ -1233,9 +1234,9 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-orge23ce33" class="outline-2">
-<h2 id="orge23ce33">MacOS</h2>
-<div class="outline-text-2" id="text-orge23ce33">
+<div id="outline-container-org82bcdd1" class="outline-2">
+<h2 id="org82bcdd1">MacOS</h2>
+<div class="outline-text-2" id="text-org82bcdd1">
 </div>
 <div id="outline-container-org41af74b" class="outline-3">
 <h3 id="org41af74b">Reset DNS cache on Macos</h3>
@@ -1306,6 +1307,9 @@ Download a video from services like FB, Instagram or others by using the cookies
 </div>
 </div>
 </div>
+<div id="outline-container-org7683d57" class="outline-2">
+<h2 id="org7683d57"><a href="https://spritely.institute/">Spritely institute</a> - distributed web technology</h2>
+</div>
 <div id="outline-container-org4d3bf7c" class="outline-2">
 <h2 id="org4d3bf7c">FFMPEG</h2>
 <div class="outline-text-2" id="text-org4d3bf7c">
@@ -1313,7 +1317,7 @@ Download a video from services like FB, Instagram or others by using the cookies
 <div id="outline-container-orga1bece2" class="outline-3">
 <h3 id="orga1bece2">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org92bf64d">
+<pre class="example" id="org370f5e9">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1325,7 +1329,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orgb06754e">
+<pre class="example" id="org5631f38">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1333,7 +1337,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org763b2dc">
+<pre class="example" id="orgd0267a8">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 </div>
@@ -1341,7 +1345,7 @@ ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 <div id="outline-container-org25a8628" class="outline-3">
 <h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="orgd4c840f">
+<pre class="example" id="orgea8e843">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1349,7 +1353,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="orga524d40">
+<pre class="example" id="orgfda7a0e">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1360,21 +1364,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org1610c59">
+<pre class="example" id="org3b022f1">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org9588b1d">
+<pre class="example" id="orgbbea8a4">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org7219403">
+<pre class="example" id="org62c11bc">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1393,14 +1397,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org9ac386f">
+<pre class="example" id="orge6522dd">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgfc701e0">
+<pre class="example" id="orgcfcaee5">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1417,7 +1421,7 @@ For audio I found this
 <div id="outline-container-org3887ff6" class="outline-3">
 <h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org1844499">
+<pre class="example" id="orgdabf726">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1425,7 +1429,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org894ca35">
+<pre class="example" id="orgf89828d">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1459,7 +1463,7 @@ Extract scenes! You'll receive an output with some lines starting with <code>Par
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org8940d8b">
+<pre class="example" id="orgd08f602">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1470,7 +1474,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org65aab3e">
+<pre class="example" id="orgfeb7211">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1516,8 +1520,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="org82bcdd1"></a>macOS<br />
-<div class="outline-text-6" id="text-org82bcdd1">
+<li><a id="orge4b95df"></a>macOS<br />
+<div class="outline-text-6" id="text-orge4b95df">
 <p>
 Use the avfoundation device:
 </p>
@@ -1875,8 +1879,8 @@ For GnuPG 2.1 and below edit user configuration file at <code>~/.gnupg/gpg-agent
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">default-cache-ttl 10800
-max-cache-ttl 10800
+<pre class="src src-sh">default-cache-ttl 18000
+max-cache-ttl 18000
 </pre>
 </div>
 

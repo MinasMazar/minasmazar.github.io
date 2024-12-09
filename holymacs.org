@@ -207,8 +207,30 @@ No configuration till now. If you want to learn something about this topic there
 
 #+begin_src elisp :tangle no
   (add-to-list 'org-babel-load-languages '(eshell . t))
-  (add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
 #+end_src
+
+An example of [[info:eshell#Aliases][eshell aliases]].
+
+#+begin_example txt
+alias clear clear -1
+alias vsnap ffmpeg -i $1 -ss 10 -frames:v 1 $2
+alias econf view-file "~/minasmazar.github.io/org/holymacs.org"
+alias t holymacs-tmux/open
+alias q bury-buffer
+alias g magit-status
+alias customize (find-file custom-file)
+alias o view-file $1
+alias d dired-jump t $1
+alias aliases (view-file eshell-aliases-file)
+alias agenda (org-agenda "t")
+alias x async-shell-command $1
+alias l ls -lh $*
+alias $* what $*
+alias yt (elfeed-search "@6-months-ago +unread +news")
+alias reload eshell-read-aliases-list
+alias v eshell-exec-visual $1
+alias www eww $1
+#+end_example
 
 *** Projects
 

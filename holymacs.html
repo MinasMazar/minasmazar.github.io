@@ -337,7 +337,7 @@ It's a literate configuration but I'm not good at writing, this means that it wi
 Remember to set your name and email address! Place here your real data, or use the standard Emacs customization <code>(customize-variable 'user-full-name)</code>.
 </p>
 
-<pre class="example" id="org11cab42">
+<pre class="example" id="org49670f0">
 (setq user-full-name "Your username"
       user-mail-address "username@domain.net")
 </pre>
@@ -554,9 +554,33 @@ No configuration till now. If you want to learn something about this topic there
 <div class="outline-text-4" id="text-org1614478">
 <div class="org-src-container">
 <pre class="src src-elisp">(add-to-list 'org-babel-load-languages '(eshell . t))
-(add-hook 'eshell-mode-hook (lambda () (define-key eshell-mode-map (kbd "C-o") #'kill-this-buffer)))
 </pre>
 </div>
+
+<p>
+An example of <a href="https://www.gnu.org/software/emacs/manual/html_mono/eshell.html#Aliases">eshell aliases</a>.
+</p>
+
+<pre class="example" id="org6218120">
+alias clear clear -1
+alias vsnap ffmpeg -i $1 -ss 10 -frames:v 1 $2
+alias econf view-file "~/minasmazar.github.io/org/holymacs.org"
+alias t holymacs-tmux/open
+alias q bury-buffer
+alias g magit-status
+alias customize (find-file custom-file)
+alias o view-file $1
+alias d dired-jump t $1
+alias aliases (view-file eshell-aliases-file)
+alias agenda (org-agenda "t")
+alias x async-shell-command $1
+alias l ls -lh $*
+alias $* what $*
+alias yt (elfeed-search "@6-months-ago +unread +news")
+alias reload eshell-read-aliases-list
+alias v eshell-exec-visual $1
+alias www eww $1
+</pre>
 </div>
 </div>
 <div id="outline-container-orgab39b29" class="outline-4">
@@ -889,7 +913,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <div id="outline-container-org53bb9fa" class="outline-4">
 <h4 id="org53bb9fa"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h4>
 <div class="outline-text-4" id="text-org53bb9fa">
-<pre class="example" id="org722a8ed">
+<pre class="example" id="org3e83ca1">
 #+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
   wc -w $filename
 #+END_SRC
@@ -925,7 +949,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org370a122">
+<pre class="example" id="org501ca94">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -952,7 +976,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org22a10a2">
+<pre class="example" id="org64d8b55">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -964,7 +988,7 @@ To find an element
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgbcac120">
+<pre class="example" id="org080f0c8">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -1074,7 +1098,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orge1f2a23">
+<pre class="example" id="orgfdcc51f">
 (run-at-time "11 min" t #'elfeed-update)
 (run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 </pre>
@@ -1092,7 +1116,7 @@ point.
 <div id="outline-container-org7173f83" class="outline-4">
 <h4 id="org7173f83">Insert colorize text programmatically</h4>
 <div class="outline-text-4" id="text-org7173f83">
-<pre class="example" id="org0640c75">
+<pre class="example" id="org2f6dff5">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -1170,7 +1194,7 @@ Get the list of font families <code>(font-family-list)</code>; here's the code t
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="orgff0ab2d">
+<pre class="example" id="orgc18ba9a">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
