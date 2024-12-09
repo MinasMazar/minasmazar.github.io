@@ -722,6 +722,14 @@ Download a video from services like FB, Instagram or others by using the cookies
 #+end_src
 
 * [[https://spritely.institute/][Spritely institute]] - distributed web technology
+* How to set environment variables from .env file
+
+#+begin_src sh
+  set -a # automatically export all variables
+  source .env
+  set +a
+#+end_src
+
 * FFMPEG
 ** Extract audio from video
 #+begin_example shell

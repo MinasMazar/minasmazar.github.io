@@ -7,19 +7,21 @@
 #+STARTUP: show2levels
 #+HTML_LINK_UP: ../holymacs.html
 
-* Jarvis
-
-There's too silence here.. 😱 let's just play something! 🤘
-
-** Helpers
+* Helpers
 
 #+begin_src elisp
   (defun holymacs-random (items)
-   "Pick a random element from a list"
-   (nth (random (length items)) items))
+    "Pick a random element from a list"
+    (nth (random (length items)) items))
+
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
 #+end_src
 
-** Youtube
+* Youtube
 
 #+begin_src elisp
 
@@ -45,11 +47,12 @@ There's too silence here.. 😱 let's just play something! 🤘
     (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
     (browse-url-default-browser url))
 
-  (use-package password-store)
+  (use-package password-store) ;;  (password-store-get "youtube-api")
   (use-package request
     :after password-store
     :config
-    (defvar jarvis/youtube-api-key (password-store-get "youtube-api") "Youtube API key")
+    (defcustom jarvis/youtube-api-key "" "Youtube API key")
+    (defvar jarvis/youtube-api-key "" "Youtube API key")
     (defun jarvis/channel-vids (url)
       "Get a list of videos given a Youtube channel (url)"
       (request "https://www.googleapis.com/youtube/v3/search"
