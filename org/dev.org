@@ -709,6 +709,19 @@ Search for videos.
   yt-dlp ytsearch10:lebron james --get-id --get-title
 #+end_src
 
+Download a list of videos from a file.
+
+#+begin_src sh
+  yt-dlp -a list.txt
+#+end_src
+
+Download a video from services like FB, Instagram or others by using the cookies from our browser in order to access credentials.
+
+#+begin_src sh
+  yt-dlp --cookies-from-browser opera https://www.instagram.com/reel/DBG9t4XCteu/?igsh=d3RpNWZxMnVhenVw
+#+end_src
+
+* [[https://spritely.institute/][Spritely institute]] - distributed web technology
 * FFMPEG
 ** Extract audio from video
 #+begin_example shell
@@ -1068,8 +1081,8 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 For GnuPG 2.1 and below edit user configuration file at =~/.gnupg/gpg-agent.conf=. In the example below the TTL is set to 3h.
 
 #+begin_src sh :tangle ~/.gnupg/gpg-agent.conf
-default-cache-ttl 10800
-max-cache-ttl 10800
+default-cache-ttl 18000
+max-cache-ttl 18000
 #+end_src
 
 Then restart the agent
