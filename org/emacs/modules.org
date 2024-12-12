@@ -1,0 +1,647 @@
+#+TITLE: Minemacs modules
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-12-10 Tue>
+#+STARTUP: overview
+
+* Patches
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/patches.el") :mkdirp yes
+:END:
+
+Here add a custom bookmark handler relying on =browse-url= and =browse-url-handlers=, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
+
+#+begin_src emacs-lisp
+  (require 'eww)
+  (require 'bookmark)
+  (defun browse-url-bookmark-jump (bookmark)
+    "Bookmark jump handler: relies on =browse-url-handler= to pick the right browser.
+    Define a custom jumper avoid to open always on EWW in case the bookmark was placed with it"
+    (browse-url (bookmark-prop-get bookmark 'location)))
+  (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
+#+end_src
+
+* Hail Hydra! 🐍                                                    :disable:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (use-package hydra
+    :bind
+    ("s-o" . #'hydra-kommand/body)
+    :config
+    (defhydra hydra-kommand (:color blue)
+      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _q_uit"
+      ("a" #'org-agenda "agenda 📆")
+      ("e" #'eshell "eshell 🐚")
+      ("c" #'org-capture "capture 📘")
+      ("8" #'emoji-search "emoji 🙂")
+      ("q" nil)))
+#+end_src
+
+* IDE 🖥️
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/ide.el") :mkdirp yes
+:END:
+** Markup languages
+*** Markdown
+
+#+begin_src elisp
+  (use-package markdown-mode)
+#+end_src
+
+** Programming languages
+*** Elixir
+
+#+begin_src elisp
+  (use-package elixir-mode)
+  (use-package exunit
+    :hook
+    (elixir-mode . exunit-mode))
+  ;; Alchemist seems to be outdated and not more maintained
+  ;; (use-package alchemist
+  ;;   :config
+  ;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+#+end_src
+
+Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
+
+#+begin_src elisp
+  (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
+#+end_src
+
+** Versioning
+
+#+begin_src elisp
+  (use-package magit
+  :bind
+  (("C-x g" . #'magit-status)))
+#+end_src
+
+** Docker
+
+#+begin_src elisp
+  (use-package docker)
+  (use-package dockerfile-mode)
+  (use-package docker-compose-mode)
+#+end_src
+
+** Workspaces
+
+#+begin_src elisp
+  (use-package tabspaces
+    :hook (after-init . tabspaces-mode)
+    :commands (tabspaces-switch-or-create-workspace
+  	     tabspaces-open-or-create-project-and-workspace)
+    :bind
+    (("s-q" . #'tab-switch)
+     ("s-{" . tab-previous)
+     ("s-}" . tab-next))
+    :custom
+    (tabspaces-keymap-prefix "M-o w")
+    (tabspaces-use-filtered-buffers-as-default t)
+    (tabspaces-default-tab "Default")
+    (tabspaces-remove-to-default t)
+    (tabspaces-initialize-project-with-todo t)
+    (tabspaces-todo-file-name "project-todo.org")
+    ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+    ;; (tabspaces-session t)
+    ;; (tabspaces-session-auto-restore t))
+    )
+#+end_src
+
+** Terminal
+
+Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
+
+#+begin_src elisp
+  (use-package vterm
+    :after god-mode
+    :config
+    (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+    (defun minemacs-vterm-exec (command)
+      (interactive "sCommand: ")
+      (let ((buffer-name (format "*vterm <%s>*" command)))
+        (with-current-buffer (vterm buffer-name)
+  	(vterm-send-string (format "%s && exit\n" command)))))
+
+    (defun minemacs-tmux/open ()
+      (interactive)
+      (minemacs-vterm-exec "tmux attach || tmux")))
+#+end_src
+
+** [[https://cht.sh/][cht.sh]]
+
+#+begin_src sh :tangle no
+curl https://cht.sh 
+#+end_src
+
+#+begin_src elisp
+  (defun cht.sh-help (helpable)
+    (interactive "sHelp: ")
+    (cht.sh-query "/:help"))
+
+  (defun cht.sh-list ()
+    (interactive)
+    (cht.sh-query "/:list"))
+
+  (defun cht.sh-query (query)
+    (interactive "sQuery: ")
+    (let ((cmd (format "curl https://cht.sh/%s" query))
+  	(buffer-name (format "*cht-sh* <%s>" query)))
+      (async-shell-command cmd buffer-name)))
+#+end_src
+
+* Jarvis 🤖
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/jarvis.el") :mkdirp yes
+:END:
+
+Jarvis is a module that enables some high-level/automation features.
+
+** Helpers
+
+#+begin_src elisp
+  (defun minemacs-random (items)
+    "Pick a random element from a list"
+    (nth (random (length items)) items))
+
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+#+end_src
+
+** Youtube 🎥
+
+#+begin_src elisp
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth entry )) jarvis/youtube-sources))))
+    (let ((command (format "mpv \"%s\"" url))
+  	(buffer-name (format "mpv: %s" url)))
+      (async-shell-command command buffer-name)))
+
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+    (interactive)
+    (let ((url (minemacs-random jarvis/youtube-sources)))
+      (jarvis/open-youtube url)))
+
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (browse-url-default-browser url))
+#+end_src
+
+Check [[https://developers.google.com/apis-explorer?hl=it][documentation about Google APIs]].
+
+#+begin_src elisp
+  (use-package request)
+
+  (defcustom jarvis/youtube-api-key "" "Youtube API key")
+  (cl-defstruct (youtube-video (:constructor youtube-video-create)
+                             (:copier nil))
+    id title desc)
+
+  (defun jarvis/youtube-search (query)
+    "Returns a list of youtube vidoes given a search term."
+    (interactive "sSearch: ")
+    (request "https://www.googleapis.com/youtube/v3/search"
+      :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
+      :parser 'json-read
+      :success (cl-function
+  	      (lambda (&key data &allow-other-keys)
+                  (when data
+                    (with-current-buffer (get-buffer-create "*youtube-vids*")
+                      (erase-buffer)
+                      (insert (prin1-to-string data))
+                      (pop-to-buffer (current-buffer))))))))
+
+  (defun jarvis/youtube-video (url)
+    "Returns details about a Youtube video given an URL"
+    (interactive "sURL: ")
+    (let ((id (jarvis/youtube--extract-id url)))
+      (request "https://www.googleapis.com/youtube/v3/videos"
+        :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
+        :parser 'json-read
+        :success (cl-function
+  		(lambda (&key data &allow-other-keys)
+                    (when data
+                      (with-current-buffer (get-buffer-create "*youtube-vid*")
+                        (erase-buffer)
+  		      (let* ((items (alist-get 'items data))
+  			     (video-data (elt items 0))
+  			     (video (let-alist video-data
+  				      (youtube-video-create
+  				       :title .snippet.title
+  				       :desc .snippet.title))))
+  			(insert (prin1-to-string video))
+  			(beginning-of-buffer))
+                        (pop-to-buffer (current-buffer)))))))))
+
+  (defun jarvis/youtube--extract-id (string)
+    "Extract the id from a Youtube video URL"
+    (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
+      (match-string 1 string)))
+#+end_src
+
+** Speak 🗣️
+
+#+begin_src elisp
+  (defun jarvis/speak (text)
+    "Speak text using `espeak`."
+    (interactive (list
+  		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
+    (save-window-excursion
+      (async-shell-command (format "espeak -v it \"%s\"" text) nil)))
+#+end_src
+
+* Look and feel 🎨
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/look_n_feel.el") :mkdirp yes
+:END:
+** Icons
+
+#+begin_src elisp
+  (use-package all-the-icons)
+  (use-package all-the-icons-gnus
+    :config
+    (all-the-icons-gnus-setup))
+  (use-package all-the-icons-dired
+    :hook
+    (dired-mode . all-the-icons-dired-mode))
+  (use-package all-the-icons-ibuffer
+    :hook
+    (ibuffer-mode . all-the-icons-ibuffer-mode))
+#+end_src
+
+** Dashboard
+
+#+begin_src elisp
+  (use-package dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    :bind
+    (:map dashboard-mode-map
+  	("n" . #'widget-forward)
+  	("p" . #'widget-backward))
+    :custom
+    (dashboard-week-agenda t)
+    (dashboard-icon-type 'all-the-icons)
+    (dashboard-set-file-icons t)
+    (dashboard-set-heading-icons t)
+    (dashboard-navigation-cycle t)
+    (dashboard-items '((recents   . 5)
+                       (bookmarks . 5)
+                       (projects  . 5)
+                       (agenda    . 5)
+                       (registers . 5)))
+    (dashboard-item-shortcuts '((recents   . "r")
+                                (bookmarks . "m")
+                                (projects  . "p")
+                                (agenda    . "a")
+                                (registers . "e"))))
+#+end_src
+** Beautify
+
+#+begin_src elisp :tangle no
+  (use-package org-modern
+    :config
+    (global-org-modern-mode))
+#+end_src
+
+** Highlight line
+
+#+begin_src elisp
+  (use-package beacon
+    :config
+    (beacon-mode 1))
+#+end_src
+
+** Themes
+
+#+begin_src elisp
+  (use-package ef-themes
+    :config
+    (defun get-season (month)
+      (cond
+       ((and (>= month 3) (< month 6)) 'spring)
+       ((and (>= month 6) (< month 9)) 'summer)
+       ((and (>= month 10) (< month 12)) 'autumn)
+       ((or (>= month 12) (< month 3) 'winter))))
+
+    (defun set-season-theme ()
+      (interactive)
+      (let* ((month (car (calendar-current-date)))
+  	   (season (get-season month))
+  	   (theme-name (format "ef-%s" season)))
+        (load-theme (intern theme-name)))))
+#+end_src
+
+** Modeline
+
+Install the =doom-modeline=.
+
+#+begin_src elisp
+  (use-package doom-modeline
+    :hook (after-init . doom-modeline-mode))
+#+end_src
+
+** Headline
+
+#+begin_src elisp
+  (defcustom minemacs-headline-content ""
+    "Content of the headline."
+    :type 'string)
+  (setq header-line-format '((:eval minemacs-headline-content)))
+#+end_src
+
+* Multimedia 🎶
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/media.el") :mkdirp yes
+:END:
+#+begin_src elisp
+  (use-package bongo)
+#+end_src
+
+* News 📰 and Mail 📬
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/news-mail.el") :mkdirp yes
+:END:
+** RSS
+
+#+begin_src elisp
+  (use-package elfeed
+    :after 'god-mode
+    :bind
+    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
+    :init
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+#+end_src
+
+Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]! ❤️ Thanks a lot to [[https://github.com/karthink][karthink]] 🙏
+
+#+begin_src elisp
+  (use-package elfeed-tube
+    :after elfeed
+    :demand t
+    :config
+    ;; (setq elfeed-tube-auto-save-p nil) ; default value
+    ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+    (elfeed-tube-setup)
+
+    :bind (:map elfeed-show-mode-map
+		("F" . elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)
+		:map elfeed-search-mode-map
+		("F" . elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)))
+
+  (use-package elfeed-tube-mpv
+    :after elfeed-tube
+    :bind (:map elfeed-show-mode-map
+		("C-c C-f" . elfeed-tube-mpv-follow-mode)
+		("C-c C-w" . elfeed-tube-mpv-where)))
+#+end_src
+
+** Mail
+*** Mu4e
+**** Dependencies
+
+Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
+
+Useful links:
+- http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+- https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
+- https://isync.sourceforge.io/mbsync.html
+
+**** Configuration
+
+#+begin_example toml
+  IMAPAccount gmail-imaps
+  Host imap.gmail.com
+  Port 993
+  #UseIMAPS yes
+  #RequireSSl yes
+  SSLType IMAPS
+  SSLVersions TLSv1.2
+  AuthMechs PLAIN
+  User your-email@gmail.com
+  #Pass supercomplicatedpassword
+  PassCmd "pass gmail/imaps"
+
+  IMAPStore gmail-remote
+  Account gmail-imaps
+
+  MaildirStore gmail-local
+  Path ~/MailDir/gmail/
+  Inbox ~/MailDir/gmail/INBOX
+  Subfolders Verbatim
+
+  Channel gmail
+  #Master :gmail-remote:
+  #Slave :gmail-local:
+  Far :gmail-remote:
+  Near :gmail-local:
+  Create Both
+  Expunge Both
+  Patterns *
+  SyncState *
+#+end_example
+
+#+begin_example emacs-lisp
+  (require 'mu4e)
+  (setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+  (auth-source-pass-enable)
+  (setq smtpmail-debug-info t)
+#+end_example
+
+To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= variable. An interesting screencast/article from System Crafters about that can be found [[https://systemcrafters.net/emacs-mail/managing-multiple-accounts/][here]].
+
+#+begin_example elisp
+  (setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+#+end_example
+
+**** Tweaking
+
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
+
+*** COMMENT Gnus ⚠️ wip ⚠️
+
+To configure gnus in order to read your Gmail, you have to:
+
+- create a password token on the Gmail account
+- enter an authentication line in your =authinfo=
+
+#+begin_export ascii
+  machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
+#+end_export
+
+Then configure the =gnus-select-method=
+
+#+begin_example elisp
+  (setq gnus-select-method
+	'(nnimap "gmail"
+		 (nnimap-address "imap.gmail.com")
+		 (nnimap-server-port "imaps")
+		 (nnimap-stream ssl)))
+#+end_example
+
+* Utils ⚒️
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/utils.el") :mkdirp yes
+:END:
+** Password management
+
+To retrieve passwords use =(password-store-get "youtube-api")=.
+
+#+begin_src elisp
+  (use-package password-store)
+#+end_src
+
+** Alarms and clock
+
+#+begin_src elisp
+  (use-package alarm-clock)
+#+end_src
+
+** Web search
+
+#+begin_src elisp
+  (use-package engine-mode
+    :init
+    (setq engine/browser-function #'browse-url-firefox)
+    :config
+    (defun engine/execute-search (search-engine-url browser-function search-term)
+      "Display the results of the query."
+      (interactive)
+      (let ((browse-url-handlers nil)
+  	    (browse-url-browser-function browser-function))
+  	(browse-url
+  	 (format-spec search-engine-url
+  		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine dropbox
+      "https://www.dropbox.com/search/personal?query=%s"
+      :browser 'browse-url-firefox
+      :keybinding "D")
+
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :browser 'eww-browse-url
+      :keybinding "d")
+
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "h")
+
+    (defengine google
+      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :browser 'browse-url-firefox
+      :keybinding "g")
+
+    (defengine google-images
+      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      :keybinding "i")
+
+    (defengine google-maps
+      "https://maps.google.com/maps?q=%s"
+      :docstring "Google Maps"
+      :keybinding "m")
+
+    (defengine google-maps
+      "https://www.openstreetmap.org/search?query=%s"
+      :docstring "OpenStreetMap"
+      :keybinding "M")
+
+    (defengine google-translate-to-it
+      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      :docstring "Translate to IT"
+      :keybinding "t")
+
+    (defengine google-translate-to-en
+      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      :docstring "Translate from IT to English"
+      :browser 'browse-url-firefox
+      :keybinding "T")
+
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+
+    (defengine wikipedia
+      "https://www.wikipedia.org/search-redirect.php?language=it&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."
+      :browser 'eww-browse-url)
+
+    (defengine youtube
+      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y")
+
+    (defengine amazon
+      "https://www.amazon.it/s/ref=nb_sb_noss?&field-keywords=%s"
+      :browser 'browse-url-firefox
+      :keybinding "a")
+
+    (defengine cap
+      "https://www.nonsolocap.it/cap?k=%s&c=pescara"
+      :browser 'browse-url-firefox
+      :keybinding "C")
+
+    (engine-mode t))
+#+end_src
+

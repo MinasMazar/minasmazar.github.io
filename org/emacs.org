@@ -12,6 +12,6 @@
 Here's some resources:
 - [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
 - [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
+- ⚠️ work-in-progress ⚠️ [[file:emacs/minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
 - [[file:holymacs.org][Holymacs]] ([[eww:/holymacs.org][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
-- ⚠️ work-in-progress ⚠️ [[file:minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
 - [[/init.el][init.el]] (real minimal configuration adding only =god-mode= as /modal editing/ layer)
