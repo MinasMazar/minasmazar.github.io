@@ -738,7 +738,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 
 #+RESULTS:
 
-** Extract single frame
+** Extract frames
 
 Extract a single frame at time 10s (also consider using ~accurate_seek~ argument).
 
@@ -751,6 +751,12 @@ Extract a frame each minute.
 #+begin_example shell
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 #+end_example
+
+Using FFMPEG's scene detection to generate a [[https://blog.gdeltproject.org/using-ffmpegs-scene-detection-to-generate-a-visual-shot-summary-of-television-news/][visual shot summary of Television News]].
+
+#+begin_src shell
+time ./ffmpeg -i ./VIDEO.mp4 -vf "select=gt(scene\,0.4),scale=160:-1,tile=6x80" -frames:v 1 -qscale:v 3 preview.jpg  
+#+end_src
 
 ** Cut audio/videos starting from 10s from the beginning for 20s.
 
@@ -823,13 +829,22 @@ file './infile.wav'
 
 **N.B.** you could see the error 'Unsafe filename..Operation not permitted'; as reported in [[https://stackoverflow.com/questions/38996925/ffmpeg-concat-unsafe-file-name][this SO thread]] you could solve this issue by using single quotes in the list of filenames, avoiding any ~~~ or other /"strange"/ chars.
 
-** Extract scenes
+** Scene detection
 
-Extract scenes! You'll receive an output with some lines starting with ~Parsed_showinfo~.
+Basic ffmpeg scene detection:
 
 #+begin_src sh
-  ffmpeg -i source.mp4 -filter:v "select='gt(scene,0.4)',showinfo" -f null - 2>&1
+  ffmpeg -i input.flv -filter:v "select='gt(scene,0.4)',showinfo" -f null -
+  # or
+  ffmpeg -i in.mp4 -vf "select='gte(scene,0.4)',metadata=print:file=scenescores.txt" -an -f null -
 #+end_src
+
+scene (video only) value between 0 and 1 to indicate a new scene; a low value reflects a low probability for the current frame to introduce a new scene, while a higher value means the current frame is more likely to be one (see the example below) https://ffmpeg.org/ffmpeg-filters.html#select_002c-aselect. Set the scene change detection threshold as a percentage of maximum change on the luma plane. Good values are in the [8.0, 14.0] range. Scene change detection is only relevant in case combmatch=sc. The range for scthresh is [0.0, 100.0]. https://ffmpeg.org/ffmpeg-filters.html
+
+- [[https://github.com/slhck/scenecut-extractor][Scenecut Extractor (python)]]
+- [[https://pyscenedetect.readthedocs.io][PySceneDetect]]
+- [[https://trac.ffmpeg.org/ticket/442][FFMPEG Ticket]]
+- [[https://publik.tuwien.ac.at/files/pub-et_9739.pdf][SCENE CHANGE DETECTION FOR H.264 USING DYNAMIC THRESHOLD TECHNIQUES]]
 
 ** Change sample rate
 
@@ -928,7 +943,7 @@ My =.zprofile= on my Mackbook.
   eval "$(fzf --bash)"
   . "$HOME/.asdf/asdf.sh"
   . "$HOME/.asdf/completions/asdf.bash"
-
+  export PATH=~/.local/bin:$PATH
   alias e='emacs -nw --init-directory=~/.emacs.d.minemacs'
   alias t='tmux attach'
 #+end_src
