@@ -111,6 +111,19 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
     )
 #+end_src
 
+** Templating
+
+#+begin_src elisp
+  (use-package yasnippet
+    :custom
+    (yas-snippet-dirs '("~/Dropbox/minemacs/snippets"))
+    :config
+    (yas-global-mode 1))
+
+  (use-package yasnippet-snippets
+    :after yasnippet)
+#+end_src
+
 ** Terminal
 
 Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
@@ -177,6 +190,8 @@ Jarvis is a module that enables some high-level/automation features.
 
 ** Youtube 🎥
 
+Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
+
 #+begin_src elisp
   (defcustom jarvis/youtube-sources '()
     "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
@@ -201,7 +216,7 @@ Jarvis is a module that enables some high-level/automation features.
     (browse-url-default-browser url))
 #+end_src
 
-Check [[https://developers.google.com/apis-explorer?hl=it][documentation about Google APIs]].
+Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
 
 #+begin_src elisp
   (use-package request)
@@ -328,6 +343,8 @@ Check [[https://developers.google.com/apis-explorer?hl=it][documentation about G
 
 ** Themes
 
+- [[https://emacsthemes.com][Emacs Themes]]
+
 #+begin_src elisp
   (use-package ef-themes
     :config
@@ -336,7 +353,7 @@ Check [[https://developers.google.com/apis-explorer?hl=it][documentation about G
        ((and (>= month 3) (< month 6)) 'spring)
        ((and (>= month 6) (< month 9)) 'summer)
        ((and (>= month 10) (< month 12)) 'autumn)
-       ((or (>= month 12) (< month 3) 'winter))))
+       ((or (>= month 12) (< month 3)) 'winter)))
 
     (defun set-season-theme ()
       (interactive)
@@ -381,10 +398,11 @@ Install the =doom-modeline=.
 #+begin_src elisp
   (use-package elfeed
     :after 'god-mode
-    :bind
+    :bind*
     (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
     :init
-    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map)
+    (add-to-list 'god-exempt-major-modes 'elfeed-show-mode-map))
 #+end_src
 
 Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]! ❤️ Thanks a lot to [[https://github.com/karthink][karthink]] 🙏
