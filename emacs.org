@@ -7,11 +7,10 @@
 #+PROPERTY: header-args :tangle ~/.emacs.d.minemacs/init.el :mkdirp true
 #+OPTIONS: toc:nil
 
-⛪ I'm a fervent Emacs evangelist!
+I'm a fervent Emacs evangelist! ⛪
 
-Here's some resources:
+Here's some resources and websites:
 - [[https://www.gnu.org/software/emacs/][The Emacs editor]] and his *guru* [[https://stallman.org/][Richard Stallman]].
 - [[https://www.gnu.org/software/emacs/manual/pdf/emacs-lisp.pdf][The Elisp documentation]]
-- [[file:holymacs.org][Holymacs]] ([[eww:/holymacs.org][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
-- ⚠️ work-in-progress ⚠️ [[file:minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
-- [[/init.el][init.el]] (real minimal configuration adding only =god-mode= as /modal editing/ layer)
+- [[file:emacs/minemacs.org][minemacs]]: my personal Emacs configuration + additional [[file:emacs/modules.org][modules]]
+- [[file:~/minasmazar.github.io/assets/init.el][init.el]]: real minimal configuration adding only =god-mode= as /modal editing/ layer
