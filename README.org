@@ -21,6 +21,7 @@ If you're interested in the Emacs configuration needed to generate my website pa
 - [[https://orgmode.org/][org-mode]]
 - [[https://github.com/fniessen/org-html-themes]]
 - https://pavpanchekha.com/blog/org-mode-publish.html
+- [[https://github.com/isamert/isamert.github.io][Isa Mert Gurbuz website]]
 - https://thibaultmarin.github.io/blog/posts/2016-11-13-Personal_website_in_org.html#coderef-html-foreword
 
 ** Blorg

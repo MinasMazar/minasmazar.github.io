@@ -673,7 +673,10 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Emacs as Window Manager                                           :disable:
+* Emacs as Window Manager
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
+:END:
 
 #+begin_src elisp
   (use-package exwm

@@ -1221,6 +1221,10 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
 #+end_example
 
+* Suspend the system via command line
+
+Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest versions) or =pmi action suspend|hibernate= (old method).
+
 * MacOS
 ** Install [[https://brew.sh/][Homebrew]]
 
