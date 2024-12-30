@@ -1752,6 +1752,27 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
 
+* Userscripts
+** How to store data on a file using Greasemonkey
+
+More details in this [[https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313][StackOverflow thread]] showing different approaches, here I'm reporting just one.
+
+#+begin_example javascript
+  // @grant        GM_download
+
+  function saveData(data, filename) {
+      const blob = new Blob([data], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      GM_download({
+	  url: url,
+	  name: filename,
+	  saveAs: false,
+      });
+  }
+
+  saveData("hello world", "hello.txt");
+#+end_example
+
 * Youtube downloader (yt-dlp)
 
 Search for videos.
