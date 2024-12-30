@@ -29,7 +29,7 @@
   (use-package emacs
     :ensure nil
     :defer
-    :hook ((after-init . toggle-frame-maximized))
+    :hook ((after-init . toggle-frame-fullscreen))
     :custom
     (dired-dwim-target t)
     (dired-listing-switches "-alth")
@@ -42,6 +42,8 @@
     (use-short-answers t)
     :config
     (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
     (savehist-mode 1)
     (recentf-mode 1)
     (ffap-bindings)
@@ -50,32 +52,31 @@
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
-        (setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-    	    eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-    	    custom-file "~/Dropbox/minemacs/custom.el"))
-
+	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
+	      custom-file "~/Dropbox/minemacs/custom.el"))
     ;; Helpers
     (defun minemacs-files-in-emacs-subdir (subdir)
       (message "Scan files in emacs subdir %s" subdir)
       (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
-        (message "Scan files in dir %s" scan-dir)
-        (if (file-exists-p scan-dir)
-    	  (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+	(message "Scan files in dir %s" scan-dir)
+	(if (file-exists-p scan-dir)
+	  (directory-files scan-dir t directory-files-no-dot-files-regexp))))
 
     ;; Modules
     (defun minemacs-tangle-if-not-disabled (tangle)
       (if (member-ignore-case "disable" (org-get-tags))
-          "no"
-        tangle))
+	  "no"
+	tangle))
 
     (defun minemacs-modules-load ()
       "Load all modules '*.el' files in './.emacs.d/modules/'"
       (interactive)
       ;; TODO: locate-dominating-file
       (let ((modules (minemacs-files-in-emacs-subdir "modules")))
-        (if modules (mapcar (lambda (module)
-    			    (load  module 'noerror))
-    			  modules))))
+	(if modules (mapcar (lambda (module)
+			    (load  module 'noerror))
+			  modules))))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -104,17 +105,16 @@
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
     (:map key-translation-map
-  	("s-m" . "\C-x")
-  	("s-M" . "\C-c"))
+	("s-m" . "\C-x")
+	("s-M" . "\C-c"))
     (:map isearch-mode-map
-  	("C-p" . #'isearch-repeat-backward)
-  	("C-n" . #'isearch-repeat-forward)
-  	("<tab>" . #'isearch-repeat-forward)
-  	("<S-tab>" . #'isearch-repeat-backward))
+	("C-p" . #'isearch-repeat-backward)
+	("C-n" . #'isearch-repeat-forward)
+	("<tab>" . #'isearch-repeat-forward)
+	("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
-  	("e" . #'switch-to-minibuffer)))
+	("e" . #'switch-to-minibuffer)))
 
-  (load custom-file 'noerror)
   (minemacs-modules-load)
 #+end_src
 
@@ -154,7 +154,7 @@
      ("[" . #'backward-paragraph)
      ("]" . #'forward-paragraph))
     :config
-    (god-mode-all 1))
+    (god-local-mode))
 #+end_src
 
 * Auto-completion
@@ -219,6 +219,12 @@
   	   ("p" . project-find-file)
   	   ("b" . project-switch-to-buffer)
   	   ("," . append-to-previous-buffer)))
+#+end_src
+
+* Load custom configurations
+
+#+begin_src elisp
+  (if custom-file (load custom-file 'noerror))
 #+end_src
 
 * On hand documentation

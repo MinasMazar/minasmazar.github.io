@@ -132,13 +132,14 @@ Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
   (use-package vterm
     :after god-mode
     :config
+    (require 'god-mode)
     (add-to-list 'god-exempt-major-modes 'vterm-mode)
 
     (defun minemacs-vterm-exec (command)
       (interactive "sCommand: ")
       (let ((buffer-name (format "*vterm <%s>*" command)))
-        (with-current-buffer (vterm buffer-name)
-  	(vterm-send-string (format "%s && exit\n" command)))))
+	(with-current-buffer (vterm buffer-name)
+	(vterm-send-string (format "%s && exit\n" command)))))
 
     (defun minemacs-tmux/open ()
       (interactive)
@@ -193,27 +194,28 @@ Jarvis is a module that enables some high-level/automation features.
 Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
 
 #+begin_src elisp
-  (defcustom jarvis/youtube-sources '()
-    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
-    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+    (defcustom jarvis/youtube-sources '()
+      "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+      :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
-  (defun jarvis/play-youtube (&optional url)
-    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
-    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth entry )) jarvis/youtube-sources))))
-    (let ((command (format "mpv \"%s\"" url))
-  	(buffer-name (format "mpv: %s" url)))
-      (async-shell-command command buffer-name)))
+    (defun jarvis/play-youtube (&optional url)
+      "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+      (let ((command (format "mpv \"%s\"" url))
+	  (buffer-name (format "mpv: %s" url)))
+	(async-shell-command command buffer-name)))
 
-  (defun jarvis/open-random-youtube ()
-    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
-    (interactive)
-    (let ((url (minemacs-random jarvis/youtube-sources)))
-      (jarvis/open-youtube url)))
+    (defun jarvis/open-random-youtube ()
+      "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+      (interactive)
+      (let ((entry (minemacs-random jarvis/youtube-sources))
+	    (url (nth 1 entry)))
+	(jarvis/open-youtube url)))
 
-  (defun jarvis/open-youtube (&optional url)
-    "Open in browser one of the sources in `jarvis/youtube-sources`."
-    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
-    (browse-url-default-browser url))
+    (defun jarvis/open-youtube (&optional url)
+      "Open in browser one of the sources in `jarvis/youtube-sources`."
+      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+      (browse-url-default-browser url))
 #+end_src
 
 Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
@@ -436,12 +438,20 @@ Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][e
 
 Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
 
+On /deb based linux systems/ you can install those via
+
+#+begin_example sh
+  $ sudo apt install mu isync pass
+#+end_example
+
 Useful links:
 - http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
 - https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
 - https://isync.sourceforge.io/mbsync.html
 
 **** Configuration
+
+Configure =mbsync= via =~/.mbsyncrc= with a content similar to this:
 
 #+begin_example toml
   IMAPAccount gmail-imaps
@@ -663,3 +673,24 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
+* Emacs as Window Manager                                           :disable:
+
+#+begin_src elisp
+  (use-package exwm
+    :config
+    (server-mode 1)
+    ;; (require 'exwm-config)
+    (exwm-config-example)
+    ;; (require 'exwm-randr)
+    ;; (exwm-randr-enable)
+    ;; (setq exwm-workspace-number 2
+    ;; 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
+    ;; (defun holymacs/xrandr-set-monitors ()
+    ;;   (start-process-shell-command "xrandr" nil
+    ;; 				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+    ;; 				   "xrandr --output eDP-1 --primary --mode 1920x1080"
+    ;; 				   ))
+    ;; (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable))
+#+end_src
