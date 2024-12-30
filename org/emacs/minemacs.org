@@ -87,6 +87,8 @@
     ("M-o a" . #'org-agenda)
     ("M-o k" . #'org-capture)
     ("M-o e" . #'eshell)
+    ("M-o w j" . #'webjump)
+    ("M-o w w" . #'eww)
     ("M-o 8" . #'emoji-search)
     ("s-k" . #'execute-extended-command)
     ("s-n" . #'god-local-mode)
@@ -201,24 +203,25 @@
 #+begin_src elisp
   (use-package embark
     :after god-mode
+    :demand
     :config
     (add-to-list 'god-exempt-major-modes 'embark-mode)
     :bind*
     ("C-," . embark-act)
     (:map embark-general-map
-  	  ("C-w" . browse-url))
+	  ("C-w" . browse-url))
     (:map embark-identifier-map
-  	  ("R" . query-replace)
-  	  ("O" . multi-occur-in-matching-buffers)
-  	  ("c" . browse-url-chrome)
-  	  ("f" . browse-url-firefox))
+	  ("R" . query-replace)
+	  ("O" . multi-occur-in-matching-buffers)
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
     (:map embark-url-map
-  	  ("c" . browse-url-chrome)
-  	  ("f" . browse-url-firefox))
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
     (:map  embark-file-map
-  	   ("p" . project-find-file)
-  	   ("b" . project-switch-to-buffer)
-  	   ("," . append-to-previous-buffer)))
+	   ("p" . project-find-file)
+	   ("b" . project-switch-to-buffer)
+	   ("," . append-to-previous-buffer)))
 #+end_src
 
 * Load custom configurations
@@ -244,6 +247,8 @@ Just press ~C-h o~ to get help on those symbols.
 - =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
+- =display-time-day-and-date=
+- =display-time-mode=
 - =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer

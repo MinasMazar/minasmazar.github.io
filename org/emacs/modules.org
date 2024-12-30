@@ -31,12 +31,18 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     :bind
     ("s-o" . #'hydra-kommand/body)
     :config
+    (defhydra hydra-media (:color blue)
+	      "Media"
+	      ("y s" #'yeetube-search "youtube search")
+	      ("q" nil))
+
     (defhydra hydra-kommand (:color blue)
-      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _q_uit"
+      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _m_edia _q_uit"
       ("a" #'org-agenda "agenda 📆")
       ("e" #'eshell "eshell 🐚")
       ("c" #'org-capture "capture 📘")
       ("8" #'emoji-search "emoji 🙂")
+      ("m" #'hydra-media/body "media 🎵")
       ("q" nil)))
 #+end_src
 
@@ -99,7 +105,7 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
      ("s-{" . tab-previous)
      ("s-}" . tab-next))
     :custom
-    (tabspaces-keymap-prefix "M-o w")
+    (tabspaces-keymap-prefix "M-o s")
     (tabspaces-use-filtered-buffers-as-default t)
     (tabspaces-default-tab "Default")
     (tabspaces-remove-to-default t)
@@ -387,8 +393,19 @@ Install the =doom-modeline=.
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/media.el") :mkdirp yes
 :END:
+
+** Bongo
 #+begin_src elisp
   (use-package bongo)
+#+end_src
+
+** yeetube
+
+#+begin_src elisp
+  (use-package yeetube
+    :bind
+    ("M-o m y" . #'yeetube-search)
+    ("M-o m s" . #'empv-youtube))
 #+end_src
 
 * News 📰 and Mail 📬
@@ -433,6 +450,10 @@ Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][e
 #+end_src
 
 ** Mail
+*** Resources
+
+- https://f-santos.gitlab.io/2020-04-24-mu4e.html
+
 *** Mu4e
 **** Dependencies
 
@@ -449,7 +470,7 @@ Useful links:
 - https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
 - https://isync.sourceforge.io/mbsync.html
 
-**** Configuration
+**** mbsync configuration
 
 Configure =mbsync= via =~/.mbsyncrc= with a content similar to this:
 
@@ -484,6 +505,8 @@ Configure =mbsync= via =~/.mbsyncrc= with a content similar to this:
   Patterns *
   SyncState *
 #+end_example
+
+**** mu4e configuration
 
 #+begin_example emacs-lisp
   (require 'mu4e)
@@ -543,7 +566,7 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 #+end_example
 
-**** Tweaking
+**** Tweaking & Troubleshooting
 
 Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
 
@@ -617,31 +640,31 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :keybinding "h")
 
     (defengine google
-      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
       :browser 'browse-url-firefox
       :keybinding "g")
 
     (defengine google-images
-      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
       :keybinding "i")
 
     (defengine google-maps
-      "https://maps.google.com/maps?q=%s"
+      "http://maps.google.com/maps?q=%s"
       :docstring "Google Maps"
       :keybinding "m")
 
-    (defengine google-maps
+    (defengine openstreet-maps
       "https://www.openstreetmap.org/search?query=%s"
       :docstring "OpenStreetMap"
       :keybinding "M")
 
     (defengine google-translate-to-it
-      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      "http://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
       :docstring "Translate to IT"
       :keybinding "t")
 
     (defengine google-translate-to-en
-      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      "http://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
       :docstring "Translate from IT to English"
       :browser 'browse-url-firefox
       :keybinding "T")
@@ -657,7 +680,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :browser 'eww-browse-url)
 
     (defengine youtube
-      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
       :keybinding "y")
 
     (defengine amazon
@@ -673,7 +696,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Emacs as Window Manager
+* Emacs as Window Manager                                           :disable:
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
 :END:
