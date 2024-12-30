@@ -27,63 +27,99 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0f505f6">Jarvis</a></li>
-<li><a href="#orgc5d5e2a">Alarm!</a></li>
-<li><a href="#org1ed2f02">News and Mail</a>
+<li><a href="#org5d0fcae">Helpers</a></li>
+<li><a href="#orgacc0977">Youtube</a></li>
+<li><a href="#orgec6c865">Alarm!</a></li>
+<li><a href="#orgc8d3e65">News and Mail</a>
 <ul>
-<li><a href="#orgfc22f64">RSS Reader (elfeed)</a></li>
-<li><a href="#orgb159cb8">Mu4e</a></li>
+<li><a href="#org6c1848d">RSS Reader (elfeed)</a></li>
+<li><a href="#org519078b">Mu4e</a></li>
 </ul>
 </li>
-<li><a href="#orgaf3b9b0">Media</a></li>
-<li><a href="#org7ba2cff">cht.sh</a></li>
-<li><a href="#org655028b">Search on the web: engine-mode</a></li>
+<li><a href="#org1c5f09c">Media</a></li>
+<li><a href="#org8ec329a">cht.sh</a></li>
+<li><a href="#org35fce9e">Search on the web: engine-mode</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0f505f6" class="outline-2">
-<h2 id="org0f505f6">Jarvis</h2>
-<div class="outline-text-2" id="text-org0f505f6">
-<p>
-There's too silence here.. 😱 let's just play something! 🤘
-</p>
 
+<div id="outline-container-org5d0fcae" class="outline-2">
+<h2 id="org5d0fcae">Helpers</h2>
+<div class="outline-text-2" id="text-org5d0fcae">
 <div class="org-src-container">
 <pre class="src src-elisp">(defun holymacs-random (items)
- "Pick a random element from a list"
- (nth (random (length items)) items))
+  "Pick a random element from a list"
+  (nth (random (length items)) items))
 
-(defcustom holymacs-jarvis-youtube-sources
-  '()
-  "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
-  :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
-
-(defun holymacs-jarvis-play-youtube (&amp;optional url)
-  "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
-  (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
-  (let ((command (format "mpv \"%s\"" url))
-        (buffer-name (format "mpv: %s" url)))
-    (async-shell-command command buffer-name)))
-
-(defun holymacs-jarvis-open-random-youtube ()
-  "Open in mpv one of the sources in `holymacs-jarvis-youtube-sources` and then open it."
+(defun eval-replace-last-sexp ()
   (interactive)
-  (let ((url (holymacs-random holymacs-jarvis-youtube-sources)))
-    (holymacs-jarvis-open-youtube url)))
-
-(defun holymacs-jarvis-open-youtube (&amp;optional url)
-  "Open in browser one of the sources in `holymacs-jarvis-youtube-sources`."
-  (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
-  (browse-url-default-browser url))
-
-
+  (let ((value (eval (preceding-sexp))))
+    (kill-sexp -1)
+    (insert (format "%S" value))))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5d5e2a" class="outline-2">
-<h2 id="orgc5d5e2a">Alarm!</h2>
-<div class="outline-text-2" id="text-orgc5d5e2a">
+
+<div id="outline-container-orgacc0977" class="outline-2">
+<h2 id="orgacc0977">Youtube</h2>
+<div class="outline-text-2" id="text-orgacc0977">
+<div class="org-src-container">
+<pre class="src src-elisp">(defcustom jarvis/youtube-sources '()
+  "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+  :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+
+(defun jarvis/play-youtube (&amp;optional url)
+  "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+  (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+  (let ((command (format "mpv \"%s\"" url))
+      (buffer-name (format "mpv: %s" url)))
+    (async-shell-command command buffer-name)))
+
+(defun jarvis/open-random-youtube ()
+  "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+  (interactive)
+  (let ((url (holymacs-random jarvis/youtube-sources)))
+    (jarvis/open-youtube url)))
+
+(defun jarvis/open-youtube (&amp;optional url)
+  "Open in browser one of the sources in `jarvis/youtube-sources`."
+  (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+  (browse-url-default-browser url))
+</pre>
+</div>
+
+<p>
+Check <a href="https://developers.google.com/apis-explorer?hl=it">documentation about Google APIs</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package password-store) ;;  (password-store-get "youtube-api")
+(use-package request
+  :after password-store
+  :config
+  (defcustom jarvis/youtube-api-key "" "Youtube API key")
+  (defvar jarvis/youtube-api-key "" "Youtube API key")
+  (defun jarvis/channel-vids (url)
+    "Get a list of videos given a Youtube channel (url)"
+    (request "https://www.googleapis.com/youtube/v3/search"
+      :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 2))
+      :parser 'json-read
+      :success (cl-function
+              (lambda (&amp;key data &amp;allow-other-keys)
+                  (when data
+                    (with-current-buffer (get-buffer-create "*youtube-vids*")
+                      (erase-buffer)
+                      (insert (prin1-to-string data))
+                      (pop-to-buffer (current-buffer)))))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgec6c865" class="outline-2">
+<h2 id="orgec6c865">Alarm!</h2>
+<div class="outline-text-2" id="text-orgec6c865">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package alarm-clock
   :config
@@ -96,13 +132,14 @@ There's too silence here.. 😱 let's just play something! 🤘
 </div>
 </div>
 </div>
-<div id="outline-container-org1ed2f02" class="outline-2">
-<h2 id="org1ed2f02">News and Mail</h2>
-<div class="outline-text-2" id="text-org1ed2f02">
+
+<div id="outline-container-orgc8d3e65" class="outline-2">
+<h2 id="orgc8d3e65">News and Mail</h2>
+<div class="outline-text-2" id="text-orgc8d3e65">
 </div>
-<div id="outline-container-orgfc22f64" class="outline-3">
-<h3 id="orgfc22f64">RSS Reader (elfeed)</h3>
-<div class="outline-text-3" id="text-orgfc22f64">
+<div id="outline-container-org6c1848d" class="outline-3">
+<h3 id="org6c1848d">RSS Reader (elfeed)</h3>
+<div class="outline-text-3" id="text-org6c1848d">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package elfeed
   :after 'god-mode
@@ -127,28 +164,29 @@ Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-
   (elfeed-tube-setup)
 
   :bind (:map elfeed-show-mode-map
-                ("F" . elfeed-tube-fetch)
-                ([remap save-buffer] . elfeed-tube-save)
-                :map elfeed-search-mode-map
-                ("F" . elfeed-tube-fetch)
-                ([remap save-buffer] . elfeed-tube-save)))
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)
+              :map elfeed-search-mode-map
+              ("F" . elfeed-tube-fetch)
+              ([remap save-buffer] . elfeed-tube-save)))
 
 (use-package elfeed-tube-mpv
   :after elfeed-tube
   :bind (:map elfeed-show-mode-map
-                ("C-c C-f" . elfeed-tube-mpv-follow-mode)
-                ("C-c C-w" . elfeed-tube-mpv-where)))
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb159cb8" class="outline-3">
-<h3 id="orgb159cb8">Mu4e</h3>
-<div class="outline-text-3" id="text-orgb159cb8">
+
+<div id="outline-container-org519078b" class="outline-3">
+<h3 id="org519078b">Mu4e</h3>
+<div class="outline-text-3" id="text-org519078b">
 </div>
-<div id="outline-container-orgbc64213" class="outline-4">
-<h4 id="orgbc64213">Dependencies</h4>
-<div class="outline-text-4" id="text-orgbc64213">
+<div id="outline-container-org67a6933" class="outline-4">
+<h4 id="org67a6933">Dependencies</h4>
+<div class="outline-text-4" id="text-org67a6933">
 <p>
 Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like <code>mbsync</code>. You should also rely on <code>pass</code>, the <a href="https://www.passwordstore.org/">the standard unix password manager</a>, in order to store and fetch your passwords in a secure way.
 </p>
@@ -163,10 +201,11 @@ Useful links:
 </ul>
 </div>
 </div>
-<div id="outline-container-orgff5baf2" class="outline-4">
-<h4 id="orgff5baf2">Configuration</h4>
-<div class="outline-text-4" id="text-orgff5baf2">
-<pre class="example" id="org497fe35">
+
+<div id="outline-container-org0e6f67b" class="outline-4">
+<h4 id="org0e6f67b">Configuration</h4>
+<div class="outline-text-4" id="text-org0e6f67b">
+<pre class="example" id="org09cbbbe">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -198,25 +237,25 @@ Patterns *
 SyncState *
 </pre>
 
-<pre class="example" id="orga93d4e8">
+<pre class="example" id="org244d5e2">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
-	message-send-mail-function 'smtpmail-send-it
-	mu4e-get-mail-command "mbsync -a"
-	;;mu4e-maildir "~/Mail"
-	mu4e-update-interval (* 60 10)
-	smtpmail-default-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-server "smtp.gmail.com"
-	;;smtpmail-stream-type 'ssl
-	;;smtpmail-smtp-service 465
-	smtpmail-stream-type 'starttls
-	smtpmail-smtp-service 587
-	;;smtpmail-use-gnutls t
-	mu4e-drafts-folder "/[Gmail].Drafts"
-	mu4e-sent-folder   "/[Gmail].Sent Mail"
-	mu4e-trash-folder  "/[Gmail].Trash"
-	mm-discouraged-alternatives '("text/html")
-	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+      message-send-mail-function 'smtpmail-send-it
+      mu4e-get-mail-command "mbsync -a"
+      ;;mu4e-maildir "~/Mail"
+      mu4e-update-interval (* 60 10)
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      ;;smtpmail-stream-type 'ssl
+      ;;smtpmail-smtp-service 465
+      smtpmail-stream-type 'starttls
+      smtpmail-smtp-service 587
+      ;;smtpmail-use-gnutls t
+      mu4e-drafts-folder "/[Gmail].Drafts"
+      mu4e-sent-folder   "/[Gmail].Sent Mail"
+      mu4e-trash-folder  "/[Gmail].Trash"
+      mm-discouraged-alternatives '("text/html")
+      mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
 (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
 (auth-source-pass-enable)
 (setq smtpmail-debug-info t)
@@ -226,42 +265,43 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org5fcb607">
+<pre class="example" id="orgad0af3c">
 (setq mu4e-contexts
-	(list
-	 ;; Work account
-	 (make-mu4e-context
-	  :name "GMail"
-	  :match-func
-	  (lambda (msg)
-	    (when msg
-	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-	  :vars '((user-mail-address . "my-email@gmail.com")
-		  (user-full-name    . "My-Email (Gmail)")
-		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
-		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
-		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
-		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+      (list
+       ;; Work account
+       (make-mu4e-context
+	:name "GMail"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "my-email@gmail.com")
+		(user-full-name    . "My-Email (Gmail)")
+		(mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		(mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		(mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		(mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
 
-	 ;; Personal account
-	 (make-mu4e-context
-	  :name "Yahoo"
-	  :match-func
-	  (lambda (msg)
-	    (when msg
-	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
-	  :vars '((user-mail-address . "my-email@yahoo.com")
-		  (user-full-name    . "My-Email (Yahoo)")
-		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
-		  (mu4e-sent-folder  . "/Yahoo/Sent")
-		  (mu4e-refile-folder  . "/Yahoo/Archive")
-		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+       ;; Personal account
+       (make-mu4e-context
+	:name "Yahoo"
+	:match-func
+	(lambda (msg)
+	  (when msg
+	    (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	:vars '((user-mail-address . "my-email@yahoo.com")
+		(user-full-name    . "My-Email (Yahoo)")
+		(mu4e-drafts-folder  . "/Yahoo/Drafts")
+		(mu4e-sent-folder  . "/Yahoo/Sent")
+		(mu4e-refile-folder  . "/Yahoo/Archive")
+		(mu4e-trash-folder  . "/Yahoo/Trash")))))
 </pre>
 </div>
 </div>
-<div id="outline-container-org54da1c6" class="outline-4">
-<h4 id="org54da1c6">Tweaking</h4>
-<div class="outline-text-4" id="text-org54da1c6">
+
+<div id="outline-container-orgdda2464" class="outline-4">
+<h4 id="orgdda2464">Tweaking</h4>
+<div class="outline-text-4" id="text-orgdda2464">
 <p>
 Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like <code>Ivy</code> or use <code>Embark</code> to select all attachments from the minibuffer after invoking <code>mu4e-view-save-attachment</code>). For more details see <a href="https://github.com/djcb/mu/issues/1979">this issue on Github</a>.
 </p>
@@ -269,18 +309,20 @@ Mu4e does not allow to save all attachments in one shot (some workarounds to ach
 </div>
 </div>
 </div>
-<div id="outline-container-orgaf3b9b0" class="outline-2">
-<h2 id="orgaf3b9b0">Media</h2>
-<div class="outline-text-2" id="text-orgaf3b9b0">
+
+<div id="outline-container-org1c5f09c" class="outline-2">
+<h2 id="org1c5f09c">Media</h2>
+<div class="outline-text-2" id="text-org1c5f09c">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package bongo)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org7ba2cff" class="outline-2">
-<h2 id="org7ba2cff"><a href="https://cht.sh/">cht.sh</a></h2>
-<div class="outline-text-2" id="text-org7ba2cff">
+
+<div id="outline-container-org8ec329a" class="outline-2">
+<h2 id="org8ec329a"><a href="https://cht.sh/">cht.sh</a></h2>
+<div class="outline-text-2" id="text-org8ec329a">
 <div class="org-src-container">
 <pre class="src src-sh">curl https://cht.sh 
 </pre>
@@ -298,15 +340,16 @@ Mu4e does not allow to save all attachments in one shot (some workarounds to ach
 (defun cht.sh-query (query)
   (interactive "sQuery: ")
   (let ((cmd (format "curl https://cht.sh/%s" query))
-        (buffer-name (format "*cht-sh* &lt;%s&gt;" query)))
+      (buffer-name (format "*cht-sh* &lt;%s&gt;" query)))
     (async-shell-command cmd buffer-name)))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org655028b" class="outline-2">
-<h2 id="org655028b">Search on the web: engine-mode</h2>
-<div class="outline-text-2" id="text-org655028b">
+
+<div id="outline-container-org35fce9e" class="outline-2">
+<h2 id="org35fce9e">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org35fce9e">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package engine-mode
   :init
@@ -316,10 +359,10 @@ Mu4e does not allow to save all attachments in one shot (some workarounds to ach
     "Display the results of the query."
     (interactive)
     (let ((browse-url-handlers nil)
-            (browse-url-browser-function browser-function))
-        (browse-url
-         (format-spec search-engine-url
-                      (format-spec-make ?s (url-hexify-string search-term))))))
+          (browse-url-browser-function browser-function))
+      (browse-url
+       (format-spec search-engine-url
+                    (format-spec-make ?s (url-hexify-string search-term))))))
 
   (defengine dropbox
     "https://www.dropbox.com/search/personal?query=%s"
@@ -397,7 +440,7 @@ Mu4e does not allow to save all attachments in one shot (some workarounds to ach
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

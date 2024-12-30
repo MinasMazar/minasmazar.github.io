@@ -7,39 +7,67 @@
 #+STARTUP: show2levels
 #+HTML_LINK_UP: ../holymacs.html
 
-* Jarvis
-
-There's too silence here.. 😱 let's just play something! 🤘
+* Helpers
 
 #+begin_src elisp
   (defun holymacs-random (items)
-   "Pick a random element from a list"
-   (nth (random (length items)) items))
+    "Pick a random element from a list"
+    (nth (random (length items)) items))
 
-  (defcustom holymacs-jarvis-youtube-sources
-    '()
-    "List of some Youtube videos; `holymacs-jarvis-play-youtube` will pick one of them, randomly, and open it"
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+#+end_src
+
+* Youtube
+
+#+begin_src elisp
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
     :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
-  (defun holymacs-jarvis-play-youtube (&optional url)
-    "Randomly pick one of the videos defined in `holymacs-jarvis-youtube-sources` and then play it."
-    (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
     (let ((command (format "mpv \"%s\"" url))
   	(buffer-name (format "mpv: %s" url)))
       (async-shell-command command buffer-name)))
 
-  (defun holymacs-jarvis-open-random-youtube ()
-    "Open in mpv one of the sources in `holymacs-jarvis-youtube-sources` and then open it."
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
     (interactive)
-    (let ((url (holymacs-random holymacs-jarvis-youtube-sources)))
-      (holymacs-jarvis-open-youtube url)))
+    (let ((url (holymacs-random jarvis/youtube-sources)))
+      (jarvis/open-youtube url)))
 
-  (defun holymacs-jarvis-open-youtube (&optional url)
-    "Open in browser one of the sources in `holymacs-jarvis-youtube-sources`."
-    (interactive (list (completing-read "URL: " holymacs-jarvis-youtube-sources)))
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
     (browse-url-default-browser url))
+#+end_src
 
+Check [[https://developers.google.com/apis-explorer?hl=it][documentation about Google APIs]].
 
+#+begin_src elisp
+  (use-package password-store) ;;  (password-store-get "youtube-api")
+  (use-package request
+    :after password-store
+    :config
+    (defcustom jarvis/youtube-api-key "" "Youtube API key")
+    (defvar jarvis/youtube-api-key "" "Youtube API key")
+    (defun jarvis/channel-vids (url)
+      "Get a list of videos given a Youtube channel (url)"
+      (request "https://www.googleapis.com/youtube/v3/search"
+        :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 2))
+        :parser 'json-read
+        :success (cl-function
+  		(lambda (&key data &allow-other-keys)
+                    (when data
+                      (with-current-buffer (get-buffer-create "*youtube-vids*")
+                        (erase-buffer)
+                        (insert (prin1-to-string data))
+                        (pop-to-buffer (current-buffer)))))))))
 #+end_src
 
 * COMMENT Pop terminal ⚠️ wip ⚠️
@@ -60,23 +88,6 @@ There's too silence here.. 😱 let's just play something! 🤘
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
-* COMMENT HTTP Client
-
-#+begin_src elisp
-(use-package request)
-#+end_src
-
-Example usage
-
-#+begin_example
-(request "http://httpbin.org/get"
-  :params '(("key" . "value") ("key2" . "value2"))
-  :parser 'json-read
-  :success (cl-function
-            (lambda (&key data &allow-other-keys)
-              (message "I sent: %S" (assoc-default 'args data)))))
-#+end_example
-
 * COMMENT Emacs Async
 
 #+begin_src elisp

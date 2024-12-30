@@ -1397,6 +1397,7 @@ or if you want to automate via =Makefile=
 
 https://raspberrytips.com/access-point-setup-raspberry-pi/
 
+* [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
 * Shell
 
 My =.zprofile= on my Mackbook.
@@ -1448,6 +1449,25 @@ CDN installation:
 Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+
+* Userscripts
+** How to store data on a file using Greasemonkey
+
+#+begin_example javascript
+  // @grant        GM_download
+
+  function saveData(data, filename) {
+      const blob = new Blob([data], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      GM_download({
+	  url: url,
+	  name: filename,
+	  saveAs: false,
+      });
+  }
+
+  saveData("hello world", "hello.txt");
+#+end_example
 
 * Youtube downloader (yt-dlp)
 

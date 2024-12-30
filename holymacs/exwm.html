@@ -9,9 +9,11 @@
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 </head>
 <body>
@@ -25,7 +27,7 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org088dc9c">Autostart applications</a></li>
+<li><a href="#orgc59ccb5">Autostart applications</a></li>
 </ul>
 </div>
 </div>
@@ -37,21 +39,22 @@
   (require 'exwm-randr)
   (exwm-randr-enable)
   (setq exwm-workspace-number 2
-          exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
+        exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
   (defun holymacs/xrandr-set-monitors ()
     (start-process-shell-command "xrandr" nil
-                                   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
-                                   "xrandr --output eDP-1 --primary --mode 1920x1080"
-                                   ))
+                                 ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+                                 "xrandr --output eDP-1 --primary --mode 1920x1080"
+                                 ))
   (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
   (require 'exwm-systemtray)
   (exwm-systemtray-enable))
 </pre>
 </div>
-<div id="outline-container-org088dc9c" class="outline-2">
-<h2 id="org088dc9c">Autostart applications</h2>
-<div class="outline-text-2" id="text-org088dc9c">
-<pre class="example" id="org804c797">
+
+<div id="outline-container-orgc59ccb5" class="outline-2">
+<h2 id="orgc59ccb5">Autostart applications</h2>
+<div class="outline-text-2" id="text-orgc59ccb5">
+<pre class="example" id="org691785b">
 nm-applet &amp;
 blueman-applet &amp;
 </pre>
@@ -60,7 +63,7 @@ blueman-applet &amp;
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

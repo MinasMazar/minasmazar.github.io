@@ -6,10 +6,6 @@
 #+PROPERTY: header-args :tangle ~/.emacs.d/init.el
 #+SETUPFILE: ../../../templates/_header.org
 
-* Introduction
-
-This is my Emacs configuration that aims to be as lightweight as possible. It includes a bunch of variables overrieds, a couple of keybindings mostly related to the use of the ~super~ key (~Cmd~ on MacOS) and the setup of minibuffer and autocompletion. For every other additional feature (i.e IDE stuff) I rely on the [[file:emacs/modules.org][modules file]] that can be /tangled/ manually and loaded via =(minemacs-modules-load)=.
-
 * Package initialization
 
 #+begin_src elisp

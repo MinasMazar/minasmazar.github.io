@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MinasMazar's blog ~ dev stuff</title>
 <meta name="generator" content="Org Mode" />
-<style type="text/css">
+<style>
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -203,152 +203,159 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgca4d479">Alsamixer</a></li>
-<li><a href="#orgaf87161">Blog and publishing</a>
+<li><a href="#org0d7251b">Alsamixer</a></li>
+<li><a href="#org1d5fa82">Blog and publishing</a>
 <ul>
-<li><a href="#orgd136bfb">Static site generators</a></li>
-<li><a href="#org0829252">Hosting</a></li>
+<li><a href="#org635fd7f">Static site generators</a></li>
+<li><a href="#org0ef9da8">Hosting</a></li>
 </ul>
 </li>
-<li><a href="#org79320a6">Crontab</a></li>
-<li><a href="#org217d12f">Docker</a>
+<li><a href="#org3af3703">Crontab</a></li>
+<li><a href="#orga492a8a">Docker</a>
 <ul>
-<li><a href="#org108a1fd">Backup and port Postgres databases across images</a></li>
-<li><a href="#orgcb4af55">Disable/enable autostart of a docker container.</a></li>
-<li><a href="#org8cd9270">Playing Sound in Docker Containers (here the source article)</a></li>
-<li><a href="#orgb8586c2">Rename a docker image</a></li>
-<li><a href="#orga186ea9">Rename a docker container</a></li>
-<li><a href="#org37e471e">Installing Docker on Raspberry PI</a></li>
-<li><a href="#orgc343bb5">Usefull links for troubleshooting</a></li>
-<li><a href="#org86fae33">Dockerize Phoenix webapp (my_app)</a></li>
+<li><a href="#org730566a">Backup and port Postgres databases across images</a></li>
+<li><a href="#org9bc4b2a">Disable/enable autostart of a docker container.</a></li>
+<li><a href="#orgbe855af">Playing Sound in Docker Containers (here the source article)</a></li>
+<li><a href="#orgca679ca">Rename a docker image</a></li>
+<li><a href="#org597edbf">Rename a docker container</a></li>
+<li><a href="#orgae19567">Installing Docker on Raspberry PI</a></li>
+<li><a href="#org1ed34df">Usefull links for troubleshooting</a></li>
+<li><a href="#orga72cbb4">Dockerize Phoenix webapp (my_app)</a></li>
 </ul>
 </li>
-<li><a href="#orgfc39bd0">Elixir</a>
+<li><a href="#orgeb74c3a">Elixir</a>
 <ul>
-<li><a href="#org4d57604">Resources</a></li>
-<li><a href="#org740510e">GenServer template</a></li>
-<li><a href="#org9fae9e3">DynamicSupervsior template</a></li>
-<li><a href="#org6f900ee">example KV server</a></li>
-<li><a href="#orgcb9b98c">Persisting layer: :dets</a></li>
-<li><a href="#org7ec988c">Development Tools: Makefile</a></li>
-<li><a href="#orgda4b0cc">Phoenix</a>
+<li><a href="#orgf250de9">Resources</a></li>
+<li><a href="#org995c8ed">GenServer template</a></li>
+<li><a href="#org1224edd">DynamicSupervsior template</a></li>
+<li><a href="#orgb4bccb9">example KV server</a></li>
+<li><a href="#org418483f">Persisting layer: :dets</a></li>
+<li><a href="#orgb2bdc8c">Development Tools: Makefile</a></li>
+<li><a href="#orgb06cf54">Phoenix</a>
 <ul>
-<li><a href="#org6fcbacd">Example of app release generation and setup</a></li>
-<li><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
-<li><a href="#orgd4ec969">Dockerfile</a></li>
-<li><a href="#orgd4edd8f">Docker compose</a></li>
-<li><a href="#orgdc7dba9">Phoenix Pubsub comms across nodes</a></li>
+<li><a href="#orga3264c5">Example of app release generation and setup</a></li>
+<li><a href="#orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
+<li><a href="#orge41ecb6">Dockerfile</a></li>
+<li><a href="#org53020e3">Docker compose</a></li>
+<li><a href="#org7bd4c99">Phoenix Pubsub comms across nodes</a></li>
 </ul>
 </li>
-<li><a href="#org99c3330">Phoenix Livebooks</a>
+<li><a href="#org13060ef">Phoenix Livebooks</a>
 <ul>
-<li><a href="#org8000c4a">Livebook Cluster</a></li>
+<li><a href="#orgbbfa7e4">Livebook Cluster</a></li>
 </ul>
 </li>
-<li><a href="#org57cdc16">Mocking (a blogpost from José Valim)</a></li>
-<li><a href="#orgeaad83f">Scale serverless with FLAME!</a></li>
-<li><a href="#orgc0dafaa">Nerves</a></li>
+<li><a href="#org31adc32">Mocking (a blogpost from José Valim)</a></li>
+<li><a href="#orgd001c7f">Scale serverless with FLAME!</a></li>
+<li><a href="#orgda07b9c">Nerves</a></li>
 </ul>
 </li>
-<li><a href="#orgc5daf11">FFmpeg</a>
+<li><a href="#orgae8c2d1">FFmpeg</a>
 <ul>
-<li><a href="#orga1bece2">Extract audio from video</a></li>
-<li><a href="#orgb29ea94">Extract frames</a></li>
-<li><a href="#org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</a></li>
-<li><a href="#orga4d26eb">Adjust volume</a></li>
-<li><a href="#org8bd4941">Fade in/out</a></li>
-<li><a href="#org22e94ab">Speeding up/slowing down video:</a></li>
-<li><a href="#org3887ff6">Concat audio/videos starting from a list of files</a></li>
-<li><a href="#orgdfaedde">Scene detection</a></li>
-<li><a href="#orge76fcc2">Change sample rate</a></li>
-<li><a href="#orge5f508c">Edit ID3 Tags</a></li>
-<li><a href="#orga091ba4">Capture audio</a></li>
+<li><a href="#orgcc4b6fd">Extract audio from video</a></li>
+<li><a href="#org97ff0fa">Extract frames</a></li>
+<li><a href="#orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</a></li>
+<li><a href="#orgc1952f8">Adjust volume</a></li>
+<li><a href="#org9dbd568">Fade in/out</a></li>
+<li><a href="#orga4187d0">Speeding up/slowing down video:</a></li>
+<li><a href="#orgb64a055">Concat audio/videos starting from a list of files</a></li>
+<li><a href="#org7eb8cf0">Scene detection</a></li>
+<li><a href="#org2bf4ce9">Change sample rate</a></li>
+<li><a href="#org39efc88">Edit ID3 Tags</a></li>
+<li><a href="#orgd8105d3">Capture audio</a></li>
 </ul>
 </li>
-<li><a href="#org431f702">Git</a></li>
-<li><a href="#org4b54590">Google Chrome &amp; chromedriver</a></li>
-<li><a href="#org7567c99">GPG and SSH</a>
+<li><a href="#org95e876c">Git</a></li>
+<li><a href="#org07951a8">Google Chrome &amp; chromedriver</a></li>
+<li><a href="#org5749b0a">GPG and SSH</a>
 <ul>
-<li><a href="#orgb3ec84e">Generate key</a></li>
-<li><a href="#org95c7f0a">List the key</a></li>
-<li><a href="#orgf44a5e1">Get the armored key text</a></li>
-<li><a href="#orge5db3da">Upload to Github</a></li>
-<li><a href="#org6f008bb">Tell Git to use GPG key</a></li>
-<li><a href="#orge0567a8">Export key pair</a>
+<li><a href="#orge044416">Generate key</a></li>
+<li><a href="#org5512e1c">List the key</a></li>
+<li><a href="#orgf19a438">Get the armored key text</a></li>
+<li><a href="#orgd198916">Upload to Github</a></li>
+<li><a href="#orge1542fc">Tell Git to use GPG key</a></li>
+<li><a href="#orgb3269c3">Export key pair</a>
 <ul>
-<li><a href="#orgfc5c93d">Export Public Key</a></li>
-<li><a href="#orgcbaed11">Export Secret Key</a></li>
-<li><a href="#orgb5c230c">Security Concerns, Backup, and Storage</a></li>
+<li><a href="#orgce1017f">Export Public Key</a></li>
+<li><a href="#orga06a87b">Export Secret Key</a></li>
+<li><a href="#org88ab072">Security Concerns, Backup, and Storage</a></li>
 </ul>
 </li>
-<li><a href="#org9148f00">Import a key</a></li>
-<li><a href="#org0a2f04f">Troubleshooting</a></li>
-<li><a href="#orgedf5ccb">Generate SSH keys</a></li>
-<li><a href="#orgb0056f5">GPG Agent: cache and timeouts</a></li>
+<li><a href="#org3d8da1c">Import a key</a></li>
+<li><a href="#org32e0859">Troubleshooting</a></li>
+<li><a href="#org3526b6b">Generate SSH keys</a></li>
+<li><a href="#org918b960">GPG Agent: cache and timeouts</a></li>
 </ul>
 </li>
-<li><a href="#orga943538">How to set environment variables from .env file</a></li>
-<li><a href="#org980fc60">HTML &amp; CSS</a></li>
-<li><a href="#orgbfaa1e6">Imagemagick</a>
+<li><a href="#orgf9d5b10">How to set environment variables from .env file</a></li>
+<li><a href="#org13185cc">HTML &amp; CSS</a></li>
+<li><a href="#org156631c">Imagemagick</a>
 <ul>
-<li><a href="#org0d8658b">Compare two images</a></li>
-<li><a href="#orgf8697cb">Resize image</a></li>
-<li><a href="#org55ad535">Annotating image</a></li>
+<li><a href="#orgd11275d">Compare two images</a></li>
+<li><a href="#org510d32f">Resize image</a></li>
+<li><a href="#org6c95657">Annotating image</a></li>
 </ul>
 </li>
-<li><a href="#orgc221107">Journalctl</a></li>
-<li><a href="#org603e593">Linux desktop</a>
+<li><a href="#orga541047">Journalctl</a></li>
+<li><a href="#org84a2d5a">Linux desktop</a>
 <ul>
-<li><a href="#org5fbcd3b">Create a .desktop File</a></li>
-<li><a href="#org8760265">Handling screen saver / blank screen</a></li>
+<li><a href="#orge728db0">Create a .desktop File</a></li>
+<li><a href="#orgbc54bca">Handling screen saver / blank screen</a></li>
 </ul>
 </li>
-<li><a href="#orgc641ed7">MacOS</a>
+<li><a href="#org839ba71">MacOS</a>
 <ul>
-<li><a href="#org6bd95b8">Install Homebrew</a></li>
-<li><a href="#org10478c3">Install asdf and languages</a></li>
-<li><a href="#org5868286">Emacs</a></li>
-<li><a href="#org41af74b">Reset DNS cache on Macos</a></li>
-<li><a href="#org5d1ab28">Let QuickPlayer to autoplay on open</a></li>
-<li><a href="#orgd462d54">Get my IP address</a></li>
-<li><a href="#orgc4d9006">Installing Linux on MacBook Pro</a>
+<li><a href="#org84577de">Install Homebrew</a></li>
+<li><a href="#org38b70c9">Install asdf and languages</a></li>
+<li><a href="#orgdb6d0d1">Emacs</a></li>
+<li><a href="#orgd24d8aa">Reset DNS cache on Macos</a></li>
+<li><a href="#orga5ae4f4">Let QuickPlayer to autoplay on open</a></li>
+<li><a href="#orge83a22f">Get my IP address</a></li>
+<li><a href="#orga0061de">Installing Linux on MacBook Pro</a>
 <ul>
-<li><a href="#org4961901">Bluetooh issues</a></li>
-<li><a href="#org78d3d96">Sound issues</a></li>
-<li><a href="#orgd193dbe">Remap keys with xmodmap</a></li>
-<li><a href="#org009f324">Set keyboard layout</a></li>
-<li><a href="#orgef3832e">I3 window manager</a></li>
+<li><a href="#org81cb78a">Bluetooh issues</a></li>
+<li><a href="#orga3e97f7">Sound issues</a></li>
+<li><a href="#orgc1316cf">Remap keys with xmodmap</a></li>
+<li><a href="#org04771c5">Set keyboard layout</a></li>
+<li><a href="#orgb563981">I3 window manager</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgee02000">Makefile</a></li>
-<li><a href="#org560a257">Postgres</a></li>
-<li><a href="#orgfeec70c">Pulseaudio</a></li>
-<li><a href="#orgc6eec79">Raspberry</a>
+<li><a href="#org1ddc9d0">Makefile</a></li>
+<li><a href="#orgcdb0c75">Postgres</a></li>
+<li><a href="#orga4460d5">Pulseaudio</a></li>
+<li><a href="#orgc48033c">Raspberry</a>
 <ul>
-<li><a href="#org0c4e94f">Detect Raspberry model</a></li>
-<li><a href="#org3929028">Deal with I2C from CLI</a></li>
-<li><a href="#org5338d90">Troubleshoot USB Capacitive Touch Screen Display</a></li>
-<li><a href="#org3a0262a">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#org5a95a00">Use Raspberry Pi in "Kiosk" mode</a></li>
-<li><a href="#org04c6ae5">How to attach a cooler fan</a></li>
-<li><a href="#org8f1dd8f">Magic Mirror</a></li>
-<li><a href="#orgfdaa9dc">Turn Your Raspberry Pi into an Access Point</a></li>
+<li><a href="#org211fd21">Detect Raspberry model</a></li>
+<li><a href="#orgabc5293">Deal with I2C from CLI</a></li>
+<li><a href="#orga875f4e">Troubleshoot USB Capacitive Touch Screen Display</a></li>
+<li><a href="#org1d4e263">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
+<li><a href="#orgcc038c7">Use Raspberry Pi in "Kiosk" mode</a></li>
+<li><a href="#orgc9eb77e">How to attach a cooler fan</a></li>
+<li><a href="#orgc8a2f2c">Magic Mirror</a></li>
+<li><a href="#org1398176">Turn Your Raspberry Pi into an Access Point</a></li>
 </ul>
 </li>
-<li><a href="#org8906ea7">Shell</a></li>
-<li><a href="#org7683d57">Spritely institute - distributed web technology</a></li>
-<li><a href="#org91dcd0c">Systemd</a></li>
-<li><a href="#orgc9424eb">Tailwind</a></li>
-<li><a href="#org18110e1">Tmux</a></li>
-<li><a href="#org641c0df">Youtube downloader (yt-dlp)</a></li>
+<li><a href="#orgbb0254a">Run make on list of projects</a></li>
+<li><a href="#org912a6c0">Shell</a></li>
+<li><a href="#orgdd5c364">Spritely institute - distributed web technology</a></li>
+<li><a href="#orgfa73228">Systemd</a></li>
+<li><a href="#org879b7fe">Tailwind</a></li>
+<li><a href="#orge79eef7">Tmux</a></li>
+<li><a href="#org37bb5ce">Userscripts</a>
+<ul>
+<li><a href="#orgdf3b06a">How to store data on a file using Greasemonkey</a></li>
+</ul>
+</li>
+<li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgca4d479" class="outline-2">
-<h2 id="orgca4d479">Alsamixer</h2>
-<div class="outline-text-2" id="text-orgca4d479">
+
+<div id="outline-container-org0d7251b" class="outline-2">
+<h2 id="org0d7251b">Alsamixer</h2>
+<div class="outline-text-2" id="text-org0d7251b">
 <p>
 Toggle mute
 </p>
@@ -359,21 +366,23 @@ Toggle mute
 </div>
 </div>
 </div>
-<div id="outline-container-orgaf87161" class="outline-2">
-<h2 id="orgaf87161">Blog and publishing</h2>
-<div class="outline-text-2" id="text-orgaf87161">
+
+<div id="outline-container-org1d5fa82" class="outline-2">
+<h2 id="org1d5fa82">Blog and publishing</h2>
+<div class="outline-text-2" id="text-org1d5fa82">
 </div>
-<div id="outline-container-orgd136bfb" class="outline-3">
-<h3 id="orgd136bfb">Static site generators</h3>
-<div class="outline-text-3" id="text-orgd136bfb">
+<div id="outline-container-org635fd7f" class="outline-3">
+<h3 id="org635fd7f">Static site generators</h3>
+<div class="outline-text-3" id="text-org635fd7f">
 <ul class="org-ul">
 <li><a href="https://orgmode.org/manual/Publishing.html">Org-mode publishing</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org0829252" class="outline-3">
-<h3 id="org0829252">Hosting</h3>
-<div class="outline-text-3" id="text-org0829252">
+
+<div id="outline-container-org0ef9da8" class="outline-3">
+<h3 id="org0ef9da8">Hosting</h3>
+<div class="outline-text-3" id="text-org0ef9da8">
 <ul class="org-ul">
 <li><a href="https://srht.site/">https://srht.site/</a></li>
 <li><a href="https://pages.github.com/">Github pages</a></li>
@@ -382,21 +391,23 @@ Toggle mute
 </div>
 </div>
 </div>
-<div id="outline-container-org79320a6" class="outline-2">
-<h2 id="org79320a6"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
-<div class="outline-text-2" id="text-org79320a6">
+
+<div id="outline-container-org3af3703" class="outline-2">
+<h2 id="org3af3703"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
+<div class="outline-text-2" id="text-org3af3703">
 <p>
 If you need to write a crontab entry you can use <a href="https://crontab.guru/">https://crontab.guru/</a>
 </p>
 </div>
 </div>
-<div id="outline-container-org217d12f" class="outline-2">
-<h2 id="org217d12f">Docker</h2>
-<div class="outline-text-2" id="text-org217d12f">
+
+<div id="outline-container-orga492a8a" class="outline-2">
+<h2 id="orga492a8a">Docker</h2>
+<div class="outline-text-2" id="text-orga492a8a">
 </div>
-<div id="outline-container-org108a1fd" class="outline-3">
-<h3 id="org108a1fd">Backup and port Postgres databases across images</h3>
-<div class="outline-text-3" id="text-org108a1fd">
+<div id="outline-container-org730566a" class="outline-3">
+<h3 id="org730566a">Backup and port Postgres databases across images</h3>
+<div class="outline-text-3" id="text-org730566a">
 <p>
 Bind to
 </p>
@@ -415,45 +426,50 @@ Backup volume with
 </div>
 </div>
 </div>
-<div id="outline-container-orgcb4af55" class="outline-3">
-<h3 id="orgcb4af55">Disable/enable autostart of a docker container.</h3>
-<div class="outline-text-3" id="text-orgcb4af55">
+
+<div id="outline-container-org9bc4b2a" class="outline-3">
+<h3 id="org9bc4b2a">Disable/enable autostart of a docker container.</h3>
+<div class="outline-text-3" id="text-org9bc4b2a">
 <div class="org-src-container">
 <pre class="src src-sh">docker update --restart [no|unless-stopped] &lt;docker-container&gt;
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8cd9270" class="outline-3">
-<h3 id="org8cd9270">Playing Sound in Docker Containers (<a href="https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35">here the source article</a>)</h3>
-<div class="outline-text-3" id="text-org8cd9270">
+
+<div id="outline-container-orgbe855af" class="outline-3">
+<h3 id="orgbe855af">Playing Sound in Docker Containers (<a href="https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35">here the source article</a>)</h3>
+<div class="outline-text-3" id="text-orgbe855af">
 <div class="org-src-container">
 <pre class="src src-sh">docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb8586c2" class="outline-3">
-<h3 id="orgb8586c2">Rename a docker image</h3>
-<div class="outline-text-3" id="text-orgb8586c2">
+
+<div id="outline-container-orgca679ca" class="outline-3">
+<h3 id="orgca679ca">Rename a docker image</h3>
+<div class="outline-text-3" id="text-orgca679ca">
 <div class="org-src-container">
 <pre class="src src-sh">docker tag OldName:tag NewName:tag
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orga186ea9" class="outline-3">
-<h3 id="orga186ea9">Rename a docker container</h3>
-<div class="outline-text-3" id="text-orga186ea9">
+
+<div id="outline-container-org597edbf" class="outline-3">
+<h3 id="org597edbf">Rename a docker container</h3>
+<div class="outline-text-3" id="text-org597edbf">
 <div class="org-src-container">
 <pre class="src src-sh">sudo docker rename oldname_app newname_app
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org37e471e" class="outline-3">
-<h3 id="org37e471e">Installing Docker on Raspberry PI</h3>
-<div class="outline-text-3" id="text-org37e471e">
+
+<div id="outline-container-orgae19567" class="outline-3">
+<h3 id="orgae19567">Installing Docker on Raspberry PI</h3>
+<div class="outline-text-3" id="text-orgae19567">
 <p>
 Follow <a href="https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository">the instructions in the Docker documentation</a>. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
 </p>
@@ -528,25 +544,27 @@ It seems there's a problem with <a href="https://github.com/moby/moby/issues/407
 </p>
 </div>
 </div>
-<div id="outline-container-orgc343bb5" class="outline-3">
-<h3 id="orgc343bb5">Usefull links for troubleshooting</h3>
-<div class="outline-text-3" id="text-orgc343bb5">
+
+<div id="outline-container-org1ed34df" class="outline-3">
+<h3 id="org1ed34df">Usefull links for troubleshooting</h3>
+<div class="outline-text-3" id="text-org1ed34df">
 <ul class="org-ul">
 <li><a href="https://github.com/teslamate-org/teslamate/issues/3691">https://github.com/teslamate-org/teslamate/issues/3691</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org86fae33" class="outline-3">
-<h3 id="org86fae33"><a href="#orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</a></h3>
+
+<div id="outline-container-orga72cbb4" class="outline-3">
+<h3 id="orga72cbb4"><a href="#orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></h3>
 </div>
 </div>
-<div id="outline-container-orgfc39bd0" class="outline-2">
-<h2 id="orgfc39bd0"><a href="https://elixir-lang.org/">Elixir</a></h2>
-<div class="outline-text-2" id="text-orgfc39bd0">
+<div id="outline-container-orgeb74c3a" class="outline-2">
+<h2 id="orgeb74c3a"><a href="https://elixir-lang.org/">Elixir</a></h2>
+<div class="outline-text-2" id="text-orgeb74c3a">
 </div>
-<div id="outline-container-org4d57604" class="outline-3">
-<h3 id="org4d57604">Resources</h3>
-<div class="outline-text-3" id="text-org4d57604">
+<div id="outline-container-orgf250de9" class="outline-3">
+<h3 id="orgf250de9">Resources</h3>
+<div class="outline-text-3" id="text-orgf250de9">
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
@@ -555,9 +573,10 @@ It seems there's a problem with <a href="https://github.com/moby/moby/issues/407
 </ul>
 </div>
 </div>
-<div id="outline-container-org740510e" class="outline-3">
-<h3 id="org740510e">GenServer template</h3>
-<div class="outline-text-3" id="text-org740510e">
+
+<div id="outline-container-org995c8ed" class="outline-3">
+<h3 id="org995c8ed">GenServer template</h3>
+<div class="outline-text-3" id="text-org995c8ed">
 <div class="org-src-container">
 <pre class="src src-elixir">defmodule MyApp.Server do
   use GenServer
@@ -585,9 +604,10 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-org9fae9e3" class="outline-3">
-<h3 id="org9fae9e3">DynamicSupervsior template</h3>
-<div class="outline-text-3" id="text-org9fae9e3">
+
+<div id="outline-container-org1224edd" class="outline-3">
+<h3 id="org1224edd">DynamicSupervsior template</h3>
+<div class="outline-text-3" id="text-org1224edd">
 <div class="org-src-container">
 <pre class="src src-elixir">defmodule MySupervisor do
   use DynamicSupervisor
@@ -615,9 +635,10 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-org6f900ee" class="outline-3">
-<h3 id="org6f900ee">example KV server</h3>
-<div class="outline-text-3" id="text-org6f900ee">
+
+<div id="outline-container-orgb4bccb9" class="outline-3">
+<h3 id="orgb4bccb9">example KV server</h3>
+<div class="outline-text-3" id="text-orgb4bccb9">
 <div class="org-src-container">
 <pre class="src src-elixir">defmodule Darbula.KV do
   use Agent
@@ -644,9 +665,10 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-orgcb9b98c" class="outline-3">
-<h3 id="orgcb9b98c">Persisting layer: :dets</h3>
-<div class="outline-text-3" id="text-orgcb9b98c">
+
+<div id="outline-container-org418483f" class="outline-3">
+<h3 id="org418483f">Persisting layer: :dets</h3>
+<div class="outline-text-3" id="text-org418483f">
 <ul class="org-ul">
 <li><a href="https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets">https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets</a></li>
 </ul>
@@ -684,9 +706,10 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-org7ec988c" class="outline-3">
-<h3 id="org7ec988c">Development Tools: Makefile</h3>
-<div class="outline-text-3" id="text-org7ec988c">
+
+<div id="outline-container-orgb2bdc8c" class="outline-3">
+<h3 id="orgb2bdc8c">Development Tools: Makefile</h3>
+<div class="outline-text-3" id="text-orgb2bdc8c">
 <p>
 Example Makefile for a thin elixir app.
 </p>
@@ -696,17 +719,17 @@ Example Makefile for a thin elixir app.
 
 default: s
 b:
-        mix do deps.get, deps.compile, compile
+      mix do deps.get, deps.compile, compile
 s:
-        iex -S mix
+      iex -S mix
 t:
-        mix test
+      mix test
 tl:
-        mix test --listen-on-stdin
+      mix test --listen-on-stdin
 u:
-        cat Makefile
+      cat Makefile
 r:
-        MIX_ENV=prod mix release --path=~/${app}/
+      MIX_ENV=prod mix release --path=~/${app}/
 </pre>
 </div>
 
@@ -721,7 +744,7 @@ cmd := $$MAKE_CMD
 
 default: start-prod
 cmd:
-        echo ${cmd}
+      echo ${cmd}
 # Example usage
 #
 # MAKE_CMD="mix ecto.create" make -s prod-exec
@@ -729,37 +752,38 @@ cmd:
 
 # Start in production env
 prod-exec:
-        ${prod-env} ${cmd}
+      ${prod-env} ${cmd}
 
 start-prod:
-        ${prod-env} iex -S mix phx.server
+      ${prod-env} iex -S mix phx.server
 
 # Development
 build:
-        mix do deps.get, deps.compile, compile
+      mix do deps.get, deps.compile, compile
 start: build
-        iex -S mix phx.server
+      iex -S mix phx.server
 assets:
-        mix assets.setup
+      mix assets.setup
 release:
-        mix deps.get --only prod
-        MIX_ENV=prod mix compile
-        MIX_ENV=prod mix assets.deploy
-        MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+      mix deps.get --only prod
+      MIX_ENV=prod mix compile
+      MIX_ENV=prod mix assets.deploy
+      MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
 release-start:
-        ${prod-env} ~/my-app/bin/my-app start
+      ${prod-env} ~/my-app/bin/my-app start
 
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgda4b0cc" class="outline-3">
-<h3 id="orgda4b0cc">Phoenix</h3>
-<div class="outline-text-3" id="text-orgda4b0cc">
+
+<div id="outline-container-orgb06cf54" class="outline-3">
+<h3 id="orgb06cf54">Phoenix</h3>
+<div class="outline-text-3" id="text-orgb06cf54">
 </div>
-<div id="outline-container-org6fcbacd" class="outline-4">
-<h4 id="org6fcbacd">Example of app release generation and setup</h4>
-<div class="outline-text-4" id="text-org6fcbacd">
+<div id="outline-container-orga3264c5" class="outline-4">
+<h4 id="orga3264c5">Example of app release generation and setup</h4>
+<div class="outline-text-4" id="text-orga3264c5">
 <p>
 Generate a release.
 </p>
@@ -779,14 +803,15 @@ Run for localhsot.
 </div>
 </div>
 </div>
-<div id="outline-container-orgd1c6ccf" class="outline-4">
-<h4 id="orgd1c6ccf">Dockerize Phoenix webapp (my<sub>app</sub>)</h4>
+
+<div id="outline-container-orgdcdd65a" class="outline-4">
+<h4 id="orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</h4>
 </div>
-<div id="outline-container-orgd4ec969" class="outline-4">
-<h4 id="orgd4ec969">Dockerfile</h4>
-<div class="outline-text-4" id="text-orgd4ec969">
+<div id="outline-container-orge41ecb6" class="outline-4">
+<h4 id="orge41ecb6">Dockerfile</h4>
+<div class="outline-text-4" id="text-orge41ecb6">
 <p>
-More info on <a href="#org217d12f">Docker here</a>.
+More info on <a href="#orga492a8a">Docker here</a>.
 </p>
 
 <div class="org-src-container">
@@ -891,9 +916,10 @@ CMD ["/app/bin/server"]
 </div>
 </div>
 </div>
-<div id="outline-container-orgd4edd8f" class="outline-4">
-<h4 id="orgd4edd8f">Docker compose</h4>
-<div class="outline-text-4" id="text-orgd4edd8f">
+
+<div id="outline-container-org53020e3" class="outline-4">
+<h4 id="org53020e3">Docker compose</h4>
+<div class="outline-text-4" id="text-org53020e3">
 <div class="org-src-container">
 <pre class="src src-yml"># Version of docker-compose.
 version: '3'
@@ -961,13 +987,13 @@ networks:
 </div>
 </div>
 </div>
-<div id="outline-container-orgdc7dba9" class="outline-4">
-<h4 id="orgdc7dba9"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h4>
+<div id="outline-container-org7bd4c99" class="outline-4">
+<h4 id="org7bd4c99"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h4>
 </div>
 </div>
-<div id="outline-container-org99c3330" class="outline-3">
-<h3 id="org99c3330">Phoenix Livebooks</h3>
-<div class="outline-text-3" id="text-org99c3330">
+<div id="outline-container-org13060ef" class="outline-3">
+<h3 id="org13060ef">Phoenix Livebooks</h3>
+<div class="outline-text-3" id="text-org13060ef">
 <ul class="org-ul">
 <li><a href="https://notes.club/">Discover Livebook notebooks (Elixir)</a></li>
 <li><a href="https://github.com/aslakjohansen/livebook-demos">https://github.com/aslakjohansen/livebook-demos</a></li>
@@ -975,9 +1001,10 @@ networks:
 <li><a href="https://github.com/whatyouhide/guide_async_processing_in_elixir">https://github.com/whatyouhide/guide_async_processing_in_elixir</a></li>
 </ul>
 </div>
-<div id="outline-container-org8000c4a" class="outline-4">
-<h4 id="org8000c4a">Livebook Cluster</h4>
-<div class="outline-text-4" id="text-org8000c4a">
+
+<div id="outline-container-orgbbfa7e4" class="outline-4">
+<h4 id="orgbbfa7e4">Livebook Cluster</h4>
+<div class="outline-text-4" id="text-orgbbfa7e4">
 <p>
 I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using <a href="https://github.com/bitwalker/libcluster">libcluster</a> should be enough to make nodes to cluster together by using the <code>LocalEpmd</code> strategy. But it seems <code>PubSub</code> is not able to spot all nodes out (that's because , more info in <a href="https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3">this thread</a>).
 </p>
@@ -1013,15 +1040,16 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 </div>
 </div>
 </div>
-<div id="outline-container-org57cdc16" class="outline-3">
-<h3 id="org57cdc16">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
+
+<div id="outline-container-org31adc32" class="outline-3">
+<h3 id="org31adc32">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
 </div>
-<div id="outline-container-orgeaad83f" class="outline-3">
-<h3 id="orgeaad83f">Scale serverless with <a href="https://fly.io/blog/rethinking-serverless-with-flame/">FLAME</a>!</h3>
+<div id="outline-container-orgd001c7f" class="outline-3">
+<h3 id="orgd001c7f">Scale serverless with <a href="https://fly.io/blog/rethinking-serverless-with-flame/">FLAME</a>!</h3>
 </div>
-<div id="outline-container-orgc0dafaa" class="outline-3">
-<h3 id="orgc0dafaa"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
-<div class="outline-text-3" id="text-orgc0dafaa">
+<div id="outline-container-orgda07b9c" class="outline-3">
+<h3 id="orgda07b9c"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
+<div class="outline-text-3" id="text-orgda07b9c">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
 <li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
@@ -1029,29 +1057,32 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 </div>
 </div>
 </div>
-<div id="outline-container-orgc5daf11" class="outline-2">
-<h2 id="orgc5daf11"><a href="https://www.ffmpeg.org">FFmpeg</a></h2>
-<div class="outline-text-2" id="text-orgc5daf11">
+
+<div id="outline-container-orgae8c2d1" class="outline-2">
+<h2 id="orgae8c2d1"><a href="https://www.ffmpeg.org">FFmpeg</a></h2>
+<div class="outline-text-2" id="text-orgae8c2d1">
 <p>
 A complete, cross-platform solution to record, convert and stream audio and video.
 </p>
 </div>
-<div id="outline-container-orga1bece2" class="outline-3">
-<h3 id="orga1bece2">Extract audio from video</h3>
-<div class="outline-text-3" id="text-orga1bece2">
-<pre class="example" id="org3b58545">
+
+<div id="outline-container-orgcc4b6fd" class="outline-3">
+<h3 id="orgcc4b6fd">Extract audio from video</h3>
+<div class="outline-text-3" id="text-orgcc4b6fd">
+<pre class="example" id="org6647386">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
 </div>
-<div id="outline-container-orgb29ea94" class="outline-3">
-<h3 id="orgb29ea94">Extract frames</h3>
-<div class="outline-text-3" id="text-orgb29ea94">
+
+<div id="outline-container-org97ff0fa" class="outline-3">
+<h3 id="org97ff0fa">Extract frames</h3>
+<div class="outline-text-3" id="text-org97ff0fa">
 <p>
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org7968bd9">
+<pre class="example" id="org1aedc60">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1059,7 +1090,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org8e9d118">
+<pre class="example" id="org89cd332">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1073,10 +1104,11 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 </div>
 </div>
 </div>
-<div id="outline-container-org25a8628" class="outline-3">
-<h3 id="org25a8628">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
-<div class="outline-text-3" id="text-org25a8628">
-<pre class="example" id="org84a90df">
+
+<div id="outline-container-orgd664cfc" class="outline-3">
+<h3 id="orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
+<div class="outline-text-3" id="text-orgd664cfc">
+<pre class="example" id="org731f8b3">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1084,39 +1116,41 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org45d9357">
+<pre class="example" id="org1662665">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
 </div>
-<div id="outline-container-orga4d26eb" class="outline-3">
-<h3 id="orga4d26eb">Adjust volume</h3>
-<div class="outline-text-3" id="text-orga4d26eb">
+
+<div id="outline-container-orgc1952f8" class="outline-3">
+<h3 id="orgc1952f8">Adjust volume</h3>
+<div class="outline-text-3" id="text-orgc1952f8">
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org7032e8e">
+<pre class="example" id="org3aaf582">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org1293d21">
+<pre class="example" id="org5068c42">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgb1b17c3">
+<pre class="example" id="orgb53407f">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
 </div>
-<div id="outline-container-org8bd4941" class="outline-3">
-<h3 id="org8bd4941">Fade in/out</h3>
-<div class="outline-text-3" id="text-org8bd4941">
+
+<div id="outline-container-org9dbd568" class="outline-3">
+<h3 id="org9dbd568">Fade in/out</h3>
+<div class="outline-text-3" id="text-org9dbd568">
 <p>
 For more details refer this <a href="https://video.stackexchange.com/questions/28269/how-do-i-fade-in-and-out-in-ffmpeg">StackOverlow thread</a>.
 </p>
@@ -1125,14 +1159,15 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="orgfd58853">
+<pre class="example" id="org3b62d99">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
 </div>
-<div id="outline-container-org22e94ab" class="outline-3">
-<h3 id="org22e94ab">Speeding up/slowing down video:</h3>
-<div class="outline-text-3" id="text-org22e94ab">
+
+<div id="outline-container-orga4187d0" class="outline-3">
+<h3 id="orga4187d0">Speeding up/slowing down video:</h3>
+<div class="outline-text-3" id="text-orga4187d0">
 <p>
 The filter works by changing the presentation timestamp (PTS) of each
 video frame. For example, if there are two succesive frames shown at
@@ -1144,14 +1179,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org7149351">
+<pre class="example" id="org135d8bb">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org4bcea29">
+<pre class="example" id="orgffa2332">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1165,10 +1200,10 @@ For audio I found this
 </div>
 </div>
 </div>
-<div id="outline-container-org3887ff6" class="outline-3">
-<h3 id="org3887ff6">Concat audio/videos starting from a list of files</h3>
-<div class="outline-text-3" id="text-org3887ff6">
-<pre class="example" id="org37952f5">
+<div id="outline-container-orgb64a055" class="outline-3">
+<h3 id="orgb64a055">Concat audio/videos starting from a list of files</h3>
+<div class="outline-text-3" id="text-orgb64a055">
+<pre class="example" id="org7ec86a9">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1176,7 +1211,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org0ae85d2">
+<pre class="example" id="orgaef723b">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1190,9 +1225,10 @@ file './infile.wav'
 </p>
 </div>
 </div>
-<div id="outline-container-orgdfaedde" class="outline-3">
-<h3 id="orgdfaedde">Scene detection</h3>
-<div class="outline-text-3" id="text-orgdfaedde">
+
+<div id="outline-container-org7eb8cf0" class="outline-3">
+<h3 id="org7eb8cf0">Scene detection</h3>
+<div class="outline-text-3" id="text-org7eb8cf0">
 <p>
 Basic ffmpeg scene detection:
 </p>
@@ -1216,39 +1252,41 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 </ul>
 </div>
 </div>
-<div id="outline-container-orge76fcc2" class="outline-3">
-<h3 id="orge76fcc2">Change sample rate</h3>
-<div class="outline-text-3" id="text-orge76fcc2">
+
+<div id="outline-container-org2bf4ce9" class="outline-3">
+<h3 id="org2bf4ce9">Change sample rate</h3>
+<div class="outline-text-3" id="text-org2bf4ce9">
 <p>
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org6e0c88e">
+<pre class="example" id="orgd3fb7dc">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
 </div>
-<div id="outline-container-orge5f508c" class="outline-3">
-<h3 id="orge5f508c">Edit ID3 Tags</h3>
-<div class="outline-text-3" id="text-orge5f508c">
+<div id="outline-container-org39efc88" class="outline-3">
+<h3 id="org39efc88">Edit ID3 Tags</h3>
+<div class="outline-text-3" id="text-org39efc88">
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org9b661e6">
+<pre class="example" id="org43f8ea3">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
 </div>
-<div id="outline-container-orga091ba4" class="outline-3">
-<h3 id="orga091ba4">Capture audio</h3>
-<div class="outline-text-3" id="text-orga091ba4">
+<div id="outline-container-orgd8105d3" class="outline-3">
+<h3 id="orgd8105d3">Capture audio</h3>
+<div class="outline-text-3" id="text-orgd8105d3">
 <p>
 Taken from <a href="https://trac.ffmpeg.org/wiki/Capture/Desktop">FFMPEG doc</a>
 </p>
 </div>
+
 <ul class="org-ul">
-<li><a id="orgdf016ff"></a>Linux<br />
-<div class="outline-text-5" id="text-orgdf016ff">
+<li><a id="org7284a12"></a>Linux<br />
+<div class="outline-text-5" id="text-org7284a12">
 <p>
 Use the x11grab device:
 </p>
@@ -1279,9 +1317,10 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </pre>
 </div>
 </div>
+
 <ul class="org-ul">
-<li><a id="org630d238"></a>macOS<br />
-<div class="outline-text-6" id="text-org630d238">
+<li><a id="org00829b7"></a>macOS<br />
+<div class="outline-text-6" id="text-org00829b7">
 <p>
 Use the avfoundation device:
 </p>
@@ -1323,9 +1362,10 @@ To capture only audio, something like this:
 </ul>
 </div>
 </div>
-<div id="outline-container-org431f702" class="outline-2">
-<h2 id="org431f702">Git</h2>
-<div class="outline-text-2" id="text-org431f702">
+
+<div id="outline-container-org95e876c" class="outline-2">
+<h2 id="org95e876c">Git</h2>
+<div class="outline-text-2" id="text-org95e876c">
 <p>
 How do I change the author and committer name/email for multiple commits?
 </p>
@@ -1363,9 +1403,9 @@ How to add chmod permissions to file in Git (<a href="https://git-scm.com/docs/g
 </div>
 </div>
 </div>
-<div id="outline-container-org4b54590" class="outline-2">
-<h2 id="org4b54590">Google Chrome &amp; chromedriver</h2>
-<div class="outline-text-2" id="text-org4b54590">
+<div id="outline-container-org07951a8" class="outline-2">
+<h2 id="org07951a8">Google Chrome &amp; chromedriver</h2>
+<div class="outline-text-2" id="text-org07951a8">
 <p>
 Download chromedriver version according to the version of Google Chrome installed.
 </p>
@@ -1383,13 +1423,14 @@ How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium
 </div>
 </div>
 </div>
-<div id="outline-container-org7567c99" class="outline-2">
-<h2 id="org7567c99">GPG and SSH</h2>
-<div class="outline-text-2" id="text-org7567c99">
+
+<div id="outline-container-org5749b0a" class="outline-2">
+<h2 id="org5749b0a">GPG and SSH</h2>
+<div class="outline-text-2" id="text-org5749b0a">
 </div>
-<div id="outline-container-orgb3ec84e" class="outline-3">
-<h3 id="orgb3ec84e">Generate key</h3>
-<div class="outline-text-3" id="text-orgb3ec84e">
+<div id="outline-container-orge044416" class="outline-3">
+<h3 id="orge044416">Generate key</h3>
+<div class="outline-text-3" id="text-orge044416">
 <p>
 Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key</a>
 </p>
@@ -1404,27 +1445,30 @@ Remember to execute in a terminal capable of reading password via ncurses-like i
 </div>
 </div>
 </div>
-<div id="outline-container-org95c7f0a" class="outline-3">
-<h3 id="org95c7f0a">List the key</h3>
-<div class="outline-text-3" id="text-org95c7f0a">
+
+<div id="outline-container-org5512e1c" class="outline-3">
+<h3 id="org5512e1c">List the key</h3>
+<div class="outline-text-3" id="text-org5512e1c">
 <div class="org-src-container">
 <pre class="src src-sh">gpg --list-secret-keys --keyid-format=long
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf44a5e1" class="outline-3">
-<h3 id="orgf44a5e1">Get the armored key text</h3>
-<div class="outline-text-3" id="text-orgf44a5e1">
+
+<div id="outline-container-orgf19a438" class="outline-3">
+<h3 id="orgf19a438">Get the armored key text</h3>
+<div class="outline-text-3" id="text-orgf19a438">
 <div class="org-src-container">
 <pre class="src src-sh">gpg --armor --export KEYID
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge5db3da" class="outline-3">
-<h3 id="orge5db3da">Upload to Github</h3>
-<div class="outline-text-3" id="text-orge5db3da">
+
+<div id="outline-container-orgd198916" class="outline-3">
+<h3 id="orgd198916">Upload to Github</h3>
+<div class="outline-text-3" id="text-orgd198916">
 <p>
 Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account">https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account</a>
 </p>
@@ -1442,14 +1486,13 @@ From the list of GPG keys, copy the long form of the GPG key ID you'd like to us
 This will output something like
 </p>
 
-<div class="org-src-container">
-<pre class="src src-nil">/Users/hubot/.gnupg/secring.gpg
+<pre class="example">
+/Users/hubot/.gnupg/secring.gpg
 ------------------------------------
 sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
 uid                          Hubot
 ssb   4096R/42B317FD4BA89E7A 2016-03-10
 </pre>
-</div>
 
 <p>
 Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is <code>3AA5C34371567BD2</code>:
@@ -1465,9 +1508,10 @@ Copy your GPG key, beginning with &#x2013;&#x2014;BEGIN PGP PUBLIC KEY BLOCK&#x2
 </p>
 </div>
 </div>
-<div id="outline-container-org6f008bb" class="outline-3">
-<h3 id="org6f008bb">Tell Git to use GPG key</h3>
-<div class="outline-text-3" id="text-org6f008bb">
+
+<div id="outline-container-orge1542fc" class="outline-3">
+<h3 id="orge1542fc">Tell Git to use GPG key</h3>
+<div class="outline-text-3" id="text-orge1542fc">
 <p>
 Ref. <a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key</a>
 </p>
@@ -1482,16 +1526,18 @@ Use the <code>gpg --list-secret-keys --keyid-format=long</code> command to list 
 </div>
 </div>
 </div>
-<div id="outline-container-orge0567a8" class="outline-3">
-<h3 id="orge0567a8">Export key pair</h3>
-<div class="outline-text-3" id="text-orge0567a8">
+
+<div id="outline-container-orgb3269c3" class="outline-3">
+<h3 id="orgb3269c3">Export key pair</h3>
+<div class="outline-text-3" id="text-orgb3269c3">
 <p>
 Ref. <a href="https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file">https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file</a>
 </p>
 </div>
-<div id="outline-container-orgfc5c93d" class="outline-4">
-<h4 id="orgfc5c93d">Export Public Key</h4>
-<div class="outline-text-4" id="text-orgfc5c93d">
+
+<div id="outline-container-orgce1017f" class="outline-4">
+<h4 id="orgce1017f">Export Public Key</h4>
+<div class="outline-text-4" id="text-orgce1017f">
 <p>
 This command will export an ascii armored version of the public key:
 </p>
@@ -1506,9 +1552,10 @@ N.B. when using <code>--armor</code> maybe the file extension name should be <co
 </p>
 </div>
 </div>
-<div id="outline-container-orgcbaed11" class="outline-4">
-<h4 id="orgcbaed11">Export Secret Key</h4>
-<div class="outline-text-4" id="text-orgcbaed11">
+
+<div id="outline-container-orga06a87b" class="outline-4">
+<h4 id="orga06a87b">Export Secret Key</h4>
+<div class="outline-text-4" id="text-orga06a87b">
 <p>
 This command will export an ascii armored version of the secret key:
 </p>
@@ -1532,9 +1579,10 @@ Or <a href="https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-
 </div>
 </div>
 </div>
-<div id="outline-container-orgb5c230c" class="outline-4">
-<h4 id="orgb5c230c">Security Concerns, Backup, and Storage</h4>
-<div class="outline-text-4" id="text-orgb5c230c">
+
+<div id="outline-container-org88ab072" class="outline-4">
+<h4 id="org88ab072">Security Concerns, Backup, and Storage</h4>
+<div class="outline-text-4" id="text-org88ab072">
 <p>
 A PGP public key contains information about one's email address. This is generally acceptable since the public key is used to encrypt email to your address. However, in some cases, this is undesirable.
 </p>
@@ -1550,9 +1598,10 @@ For most use cases, the secret key need not be exported and should not be distri
 </div>
 </div>
 </div>
-<div id="outline-container-org9148f00" class="outline-3">
-<h3 id="org9148f00">Import a key</h3>
-<div class="outline-text-3" id="text-org9148f00">
+
+<div id="outline-container-org3d8da1c" class="outline-3">
+<h3 id="org3d8da1c">Import a key</h3>
+<div class="outline-text-3" id="text-org3d8da1c">
 <div class="org-src-container">
 <pre class="src src-shell">gpg --import my-key.asc
 gpg --import --allow-secret-key-import private.key
@@ -1560,9 +1609,10 @@ gpg --import --allow-secret-key-import private.key
 </div>
 </div>
 </div>
-<div id="outline-container-org0a2f04f" class="outline-3">
-<h3 id="org0a2f04f">Troubleshooting</h3>
-<div class="outline-text-3" id="text-org0a2f04f">
+
+<div id="outline-container-org32e0859" class="outline-3">
+<h3 id="org32e0859">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org32e0859">
 <p>
 Interesting resources if you encounter problems:
 </p>
@@ -1581,9 +1631,10 @@ rm -rf ~/.gnupg/public-keys.d/*.lock
 </div>
 </div>
 </div>
-<div id="outline-container-orgedf5ccb" class="outline-3">
-<h3 id="orgedf5ccb">Generate SSH keys</h3>
-<div class="outline-text-3" id="text-orgedf5ccb">
+
+<div id="outline-container-org3526b6b" class="outline-3">
+<h3 id="org3526b6b">Generate SSH keys</h3>
+<div class="outline-text-3" id="text-org3526b6b">
 <p>
 From <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent">GitHub docs</a>:
 </p>
@@ -1594,13 +1645,14 @@ From <a href="https://docs.github.com/en/authentication/connecting-to-github-wit
 </div>
 </div>
 </div>
-<div id="outline-container-orgb0056f5" class="outline-3">
-<h3 id="orgb0056f5">GPG Agent: cache and timeouts</h3>
-<div class="outline-text-3" id="text-orgb0056f5">
+
+<div id="outline-container-org918b960" class="outline-3">
+<h3 id="org918b960">GPG Agent: cache and timeouts</h3>
+<div class="outline-text-3" id="text-org918b960">
 </div>
 <ul class="org-ul">
-<li><a id="orgde6e32b"></a>Keep GnuPG credentials cached for entire user session<br />
-<div class="outline-text-5" id="text-orgde6e32b">
+<li><a id="orge4f315e"></a>Keep GnuPG credentials cached for entire user session<br />
+<div class="outline-text-5" id="text-orge4f315e">
 <p>
 For GnuPG 2.1 and below edit user configuration file at <code>~/.gnupg/gpg-agent.conf</code>. In the example below the TTL is set to 3h.
 </p>
@@ -1622,8 +1674,9 @@ gpg-agent --daemon --use-standard-socket
 </div>
 </div>
 </li>
-<li><a id="org93c0ef4"></a>Cache SSH keys<br />
-<div class="outline-text-5" id="text-org93c0ef4">
+
+<li><a id="orged4f13e"></a>Cache SSH keys<br />
+<div class="outline-text-5" id="text-orged4f13e">
 <p>
 If you want to use SSH but tired of insert SSH key on every (for instance) git operation
 </p>
@@ -1652,9 +1705,9 @@ More info in this <a href="https://stackoverflow.com/questions/17846529/could-no
 </ul>
 </div>
 </div>
-<div id="outline-container-orga943538" class="outline-2">
-<h2 id="orga943538">How to set environment variables from .env file</h2>
-<div class="outline-text-2" id="text-orga943538">
+<div id="outline-container-orgf9d5b10" class="outline-2">
+<h2 id="orgf9d5b10">How to set environment variables from .env file</h2>
+<div class="outline-text-2" id="text-orgf9d5b10">
 <div class="org-src-container">
 <pre class="src src-sh">set -a # automatically export all variables
 source .env
@@ -1663,40 +1716,44 @@ set +a
 </div>
 </div>
 </div>
-<div id="outline-container-org980fc60" class="outline-2">
-<h2 id="org980fc60">HTML &amp; CSS</h2>
-<div class="outline-text-2" id="text-org980fc60">
+
+<div id="outline-container-org13185cc" class="outline-2">
+<h2 id="org13185cc">HTML &amp; CSS</h2>
+<div class="outline-text-2" id="text-org13185cc">
 <ul class="org-ul">
 <li><a href="https://remixicon.com/">https://remixicon.com/</a></li>
 <li><a href="https://yaml.org/css/screen.css">https://yaml.org/css/screen.css</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbfaa1e6" class="outline-2">
-<h2 id="orgbfaa1e6"><a href="https://imagemagick.org/index.php">Imagemagick</a></h2>
-<div class="outline-text-2" id="text-orgbfaa1e6">
+
+<div id="outline-container-org156631c" class="outline-2">
+<h2 id="org156631c"><a href="https://imagemagick.org/index.php">Imagemagick</a></h2>
+<div class="outline-text-2" id="text-org156631c">
 </div>
-<div id="outline-container-org0d8658b" class="outline-3">
-<h3 id="org0d8658b"><a href="https://imagemagick.org/script/compare.php">Compare two images</a></h3>
-<div class="outline-text-3" id="text-org0d8658b">
+<div id="outline-container-orgd11275d" class="outline-3">
+<h3 id="orgd11275d"><a href="https://imagemagick.org/script/compare.php">Compare two images</a></h3>
+<div class="outline-text-3" id="text-orgd11275d">
 <div class="org-src-container">
 <pre class="src src-sh">magick compare -metric NCC -subimage-search logo.png hat.png similarity.png
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf8697cb" class="outline-3">
-<h3 id="orgf8697cb">Resize image</h3>
-<div class="outline-text-3" id="text-orgf8697cb">
+
+<div id="outline-container-org510d32f" class="outline-3">
+<h3 id="org510d32f">Resize image</h3>
+<div class="outline-text-3" id="text-org510d32f">
 <div class="org-src-container">
 <pre class="src src-sh">convert dragon_sm.gif -resize 64x64 resize_dragon.gif
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org55ad535" class="outline-3">
-<h3 id="org55ad535">Annotating image</h3>
-<div class="outline-text-3" id="text-org55ad535">
+
+<div id="outline-container-org6c95657" class="outline-3">
+<h3 id="org6c95657">Annotating image</h3>
+<div class="outline-text-3" id="text-org6c95657">
 <p>
 Most of info taken from <a href="https://legacy.imagemagick.org/Usage/annotating/">this page</a>.
 </p>
@@ -1712,9 +1769,10 @@ If you want to add a text stripe under the image
 </div>
 </div>
 </div>
-<div id="outline-container-orgc221107" class="outline-2">
-<h2 id="orgc221107">Journalctl</h2>
-<div class="outline-text-2" id="text-orgc221107">
+
+<div id="outline-container-orga541047" class="outline-2">
+<h2 id="orga541047">Journalctl</h2>
+<div class="outline-text-2" id="text-orga541047">
 <p>
 Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
 </p>
@@ -1734,13 +1792,14 @@ or retain only the past 500 MB
 </div>
 </div>
 </div>
-<div id="outline-container-org603e593" class="outline-2">
-<h2 id="org603e593">Linux desktop</h2>
-<div class="outline-text-2" id="text-org603e593">
+
+<div id="outline-container-org84a2d5a" class="outline-2">
+<h2 id="org84a2d5a">Linux desktop</h2>
+<div class="outline-text-2" id="text-org84a2d5a">
 </div>
-<div id="outline-container-org5fbcd3b" class="outline-3">
-<h3 id="org5fbcd3b">Create a .desktop File</h3>
-<div class="outline-text-3" id="text-org5fbcd3b">
+<div id="outline-container-orge728db0" class="outline-3">
+<h3 id="orge728db0">Create a .desktop File</h3>
+<div class="outline-text-3" id="text-orge728db0">
 <div class="org-src-container">
 <pre class="src src-sh">mkdir /home/pi/.config/autostart
 nano /home/pi/.config/autostart/clock.desktop
@@ -1756,9 +1815,10 @@ Exec=/usr/bin/python3 /home/pi/clock.py
 </div>
 </div>
 </div>
-<div id="outline-container-org8760265" class="outline-3">
-<h3 id="org8760265"><a href="https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line">Handling screen saver / blank screen</a></h3>
-<div class="outline-text-3" id="text-org8760265">
+
+<div id="outline-container-orgbc54bca" class="outline-3">
+<h3 id="orgbc54bca"><a href="https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line">Handling screen saver / blank screen</a></h3>
+<div class="outline-text-3" id="text-orgbc54bca">
 <p>
 <code>xset s off</code> (turns off the screen saver)
 <code>xset s noblank</code> (turns off blanking)
@@ -1767,22 +1827,24 @@ Exec=/usr/bin/python3 /home/pi/clock.py
 </div>
 </div>
 </div>
-<div id="outline-container-orgc641ed7" class="outline-2">
-<h2 id="orgc641ed7">MacOS</h2>
-<div class="outline-text-2" id="text-orgc641ed7">
+
+<div id="outline-container-org839ba71" class="outline-2">
+<h2 id="org839ba71">MacOS</h2>
+<div class="outline-text-2" id="text-org839ba71">
 </div>
-<div id="outline-container-org6bd95b8" class="outline-3">
-<h3 id="org6bd95b8">Install <a href="https://brew.sh/">Homebrew</a></h3>
-<div class="outline-text-3" id="text-org6bd95b8">
+<div id="outline-container-org84577de" class="outline-3">
+<h3 id="org84577de">Install <a href="https://brew.sh/">Homebrew</a></h3>
+<div class="outline-text-3" id="text-org84577de">
 <div class="org-src-container">
 <pre class="src src-sh">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org10478c3" class="outline-3">
-<h3 id="org10478c3">Install <a href="https://github.com/asdf-vm/asdf">asdf</a> and languages</h3>
-<div class="outline-text-3" id="text-org10478c3">
+
+<div id="outline-container-org38b70c9" class="outline-3">
+<h3 id="org38b70c9">Install <a href="https://github.com/asdf-vm/asdf">asdf</a> and languages</h3>
+<div class="outline-text-3" id="text-org38b70c9">
 <div class="org-src-container">
 <pre class="src src-sh">git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
 </pre>
@@ -1812,9 +1874,10 @@ asdf install python 3.12.0
 </div>
 </div>
 </div>
-<div id="outline-container-org5868286" class="outline-3">
-<h3 id="org5868286">Emacs</h3>
-<div class="outline-text-3" id="text-org5868286">
+
+<div id="outline-container-orgdb6d0d1" class="outline-3">
+<h3 id="orgdb6d0d1">Emacs</h3>
+<div class="outline-text-3" id="text-orgdb6d0d1">
 <p>
 There are many options.
 </p>
@@ -1833,9 +1896,10 @@ brew install emacs-plus@29
 </div>
 </div>
 </div>
-<div id="outline-container-org41af74b" class="outline-3">
-<h3 id="org41af74b">Reset DNS cache on Macos</h3>
-<div class="outline-text-3" id="text-org41af74b">
+
+<div id="outline-container-orgd24d8aa" class="outline-3">
+<h3 id="orgd24d8aa">Reset DNS cache on Macos</h3>
+<div class="outline-text-3" id="text-orgd24d8aa">
 <p>
 Taken from <a href="https://www.lifewire.com/flush-dns-cache-on-a-mac-5209298">this article</a>.
 </p>
@@ -1847,9 +1911,10 @@ sudo killall -HUP mDNSResponder
 </div>
 </div>
 </div>
-<div id="outline-container-org5d1ab28" class="outline-3">
-<h3 id="org5d1ab28">Let QuickPlayer to autoplay on open</h3>
-<div class="outline-text-3" id="text-org5d1ab28">
+
+<div id="outline-container-orga5ae4f4" class="outline-3">
+<h3 id="orga5ae4f4">Let QuickPlayer to autoplay on open</h3>
+<div class="outline-text-3" id="text-orga5ae4f4">
 <p>
 Taken from this <a href="https://osxdaily.com/2009/09/03/autoplay-quicktime-movies-on-open-and-5-other-useful-quicktime-x-hacks/">Osx Daily post</a>. ⚠️ <i>it seems not working on my Mac</i> 🤔 
 </p>
@@ -1860,9 +1925,10 @@ Taken from this <a href="https://osxdaily.com/2009/09/03/autoplay-quicktime-movi
 </div>
 </div>
 </div>
-<div id="outline-container-orgd462d54" class="outline-3">
-<h3 id="orgd462d54">Get my IP address</h3>
-<div class="outline-text-3" id="text-orgd462d54">
+
+<div id="outline-container-orge83a22f" class="outline-3">
+<h3 id="orge83a22f">Get my IP address</h3>
+<div class="outline-text-3" id="text-orge83a22f">
 <p>
 For wireless: Use <code>ipconfig getifaddr en1</code>.
 For ethernet: Useipconfig <code>ipconfig getifaddr en0</code>.
@@ -1870,13 +1936,14 @@ For public IP address: <code>dig -4 TXT +short o-o.myaddr.l.google.com @ns1.goog
 </p>
 </div>
 </div>
-<div id="outline-container-orgc4d9006" class="outline-3">
-<h3 id="orgc4d9006">Installing Linux on MacBook Pro</h3>
-<div class="outline-text-3" id="text-orgc4d9006">
+
+<div id="outline-container-orga0061de" class="outline-3">
+<h3 id="orga0061de">Installing Linux on MacBook Pro</h3>
+<div class="outline-text-3" id="text-orga0061de">
 </div>
-<div id="outline-container-org4961901" class="outline-4">
-<h4 id="org4961901">Bluetooh issues</h4>
-<div class="outline-text-4" id="text-org4961901">
+<div id="outline-container-org81cb78a" class="outline-4">
+<h4 id="org81cb78a">Bluetooh issues</h4>
+<div class="outline-text-4" id="text-org81cb78a">
 <p>
 Installed this seems to fix.
 </p>
@@ -1889,9 +1956,10 @@ Bluetooth is not still completely relyable and sometimes I have problems to pair
 </p>
 </div>
 </div>
-<div id="outline-container-org78d3d96" class="outline-4">
-<h4 id="org78d3d96">Sound issues</h4>
-<div class="outline-text-4" id="text-org78d3d96">
+
+<div id="outline-container-orga3e97f7" class="outline-4">
+<h4 id="orga3e97f7">Sound issues</h4>
+<div class="outline-text-4" id="text-orga3e97f7">
 <p>
 After the install I've noticed the laptop speakers weren't usable. I've googled and and found these repo that seems to fix the issue.
 </p>
@@ -1900,9 +1968,10 @@ After the install I've noticed the laptop speakers weren't usable. I've googled 
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd193dbe" class="outline-4">
-<h4 id="orgd193dbe">Remap keys with xmodmap</h4>
-<div class="outline-text-4" id="text-orgd193dbe">
+
+<div id="outline-container-orgc1316cf" class="outline-4">
+<h4 id="orgc1316cf">Remap keys with xmodmap</h4>
+<div class="outline-text-4" id="text-orgc1316cf">
 <p>
 at .Xmodmap
 </p>
@@ -1922,9 +1991,10 @@ add Control = Control<sub>L</sub>
 </p>
 </div>
 </div>
-<div id="outline-container-org009f324" class="outline-4">
-<h4 id="org009f324">Set keyboard layout</h4>
-<div class="outline-text-4" id="text-org009f324">
+
+<div id="outline-container-org04771c5" class="outline-4">
+<h4 id="org04771c5">Set keyboard layout</h4>
+<div class="outline-text-4" id="text-org04771c5">
 <p>
 From <a href="https://www.baeldung.com/linux/console-change-keyboard-layout">https://www.baeldung.com/linux/console-change-keyboard-layout</a>
 </p>
@@ -1940,9 +2010,10 @@ To permanently configure edit the <code>/etc/default/keyboard</code> file, if pr
 </p>
 </div>
 </div>
-<div id="outline-container-orgef3832e" class="outline-4">
-<h4 id="orgef3832e">I3 window manager</h4>
-<div class="outline-text-4" id="text-orgef3832e">
+
+<div id="outline-container-orgb563981" class="outline-4">
+<h4 id="orgb563981">I3 window manager</h4>
+<div class="outline-text-4" id="text-orgb563981">
 <p>
 I don't want wm keybindings to interfere with Emacs, so I'll wrap all i3 keybindings into ad-hoc "i3" mode at <code>s-space</code> keybinding.
 </p>
@@ -2146,9 +2217,10 @@ exec --no-startup-id emacs
 </div>
 </div>
 </div>
-<div id="outline-container-orgee02000" class="outline-2">
-<h2 id="orgee02000">Makefile</h2>
-<div class="outline-text-2" id="text-orgee02000">
+
+<div id="outline-container-org1ddc9d0" class="outline-2">
+<h2 id="org1ddc9d0">Makefile</h2>
+<div class="outline-text-2" id="text-org1ddc9d0">
 <ul class="org-ul">
 <li><a href="https://makefiletutorial.com/">https://makefiletutorial.com/</a></li>
 </ul>
@@ -2162,8 +2234,8 @@ A sample of makefile usefull for <i>day-to-day</i> development: fetch the remote
         git fetch
         git pull origin master
 sshadd:
-        eval `ssh-agent -s`
-        ssh-add
+      eval `ssh-agent -s`
+      ssh-add
 </pre>
 </div>
 
@@ -2177,14 +2249,15 @@ Simple example on how to use <code>make</code> variables and shell environment v
 default: .elixir.phoenix.new.live
 
 .elixir.phoenix.new.live:
-        new ${app} --live
+      new ${app} --live
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org560a257" class="outline-2">
-<h2 id="org560a257">Postgres</h2>
-<div class="outline-text-2" id="text-org560a257">
+
+<div id="outline-container-orgcdb0c75" class="outline-2">
+<h2 id="orgcdb0c75">Postgres</h2>
+<div class="outline-text-2" id="text-orgcdb0c75">
 <p>
 How to create an user on Postgres (<a href="https://www.postgresql.org/docs/current/sql-createuser.html">https://www.postgresql.org/docs/current/sql-createuser.html</a>)
 </p>
@@ -2204,9 +2277,10 @@ Rename a database (<a href="https://www.postgresqltutorial.com/postgresql-admini
 </div>
 </div>
 </div>
-<div id="outline-container-orgfeec70c" class="outline-2">
-<h2 id="orgfeec70c">Pulseaudio</h2>
-<div class="outline-text-2" id="text-orgfeec70c">
+
+<div id="outline-container-orga4460d5" class="outline-2">
+<h2 id="orga4460d5">Pulseaudio</h2>
+<div class="outline-text-2" id="text-orga4460d5">
 <p>
 You can refer this interesting <a href="https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback">SO thread</a>.
 </p>
@@ -2219,39 +2293,43 @@ pacmd move-sink-input 5 1
 </div>
 </div>
 </div>
-<div id="outline-container-orgc6eec79" class="outline-2">
-<h2 id="orgc6eec79">Raspberry</h2>
-<div class="outline-text-2" id="text-orgc6eec79">
+
+<div id="outline-container-orgc48033c" class="outline-2">
+<h2 id="orgc48033c">Raspberry</h2>
+<div class="outline-text-2" id="text-orgc48033c">
 </div>
-<div id="outline-container-org0c4e94f" class="outline-3">
-<h3 id="org0c4e94f">Detect Raspberry model</h3>
-<div class="outline-text-3" id="text-org0c4e94f">
+<div id="outline-container-org211fd21" class="outline-3">
+<h3 id="org211fd21">Detect Raspberry model</h3>
+<div class="outline-text-3" id="text-org211fd21">
 <div class="org-src-container">
 <pre class="src src-sh">cat /proc/device-tree/model
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org3929028" class="outline-3">
-<h3 id="org3929028">Deal with I2C from CLI</h3>
-<div class="outline-text-3" id="text-org3929028">
+
+<div id="outline-container-orgabc5293" class="outline-3">
+<h3 id="orgabc5293">Deal with I2C from CLI</h3>
+<div class="outline-text-3" id="text-orgabc5293">
 <ul class="org-ul">
 <li><a href="https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/">https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org5338d90" class="outline-3">
-<h3 id="org5338d90">Troubleshoot USB Capacitive Touch Screen Display</h3>
-<div class="outline-text-3" id="text-org5338d90">
+
+<div id="outline-container-orga875f4e" class="outline-3">
+<h3 id="orga875f4e">Troubleshoot USB Capacitive Touch Screen Display</h3>
+<div class="outline-text-3" id="text-orga875f4e">
 <ul class="org-ul">
 <li><a href="https://forums.raspberrypi.com/viewtopic.php?t=116174">https://forums.raspberrypi.com/viewtopic.php?t=116174</a></li>
 <li><a href="https://github.com/bsteinsbo/rpi_touch_driver">https://github.com/bsteinsbo/rpi_touch_driver</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org3a0262a" class="outline-3">
-<h3 id="org3a0262a">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-org3a0262a">
+
+<div id="outline-container-org1d4e263" class="outline-3">
+<h3 id="org1d4e263">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
+<div class="outline-text-3" id="text-org1d4e263">
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
@@ -2263,39 +2341,44 @@ or if you want to automate via <code>Makefile</code>
 
 <div class="org-src-container">
 <pre class="src src-makefile">raspi-setup:
-        sudo apt update
-        sudo apt install tmux emacs
-        sudo apt install erlang erlang-dev elixir
+      sudo apt update
+      sudo apt install tmux emacs
+      sudo apt install erlang erlang-dev elixir
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org5a95a00" class="outline-3">
-<h3 id="org5a95a00"><a href="kiosk.html">Use Raspberry Pi in "Kiosk" mode</a></h3>
+<div id="outline-container-orgcc038c7" class="outline-3">
+<h3 id="orgcc038c7"><a href="kiosk.html">Use Raspberry Pi in "Kiosk" mode</a></h3>
 </div>
-<div id="outline-container-org04c6ae5" class="outline-3">
-<h3 id="org04c6ae5">How to attach a cooler fan</h3>
-<div class="outline-text-3" id="text-org04c6ae5">
+<div id="outline-container-orgc9eb77e" class="outline-3">
+<h3 id="orgc9eb77e">How to attach a cooler fan</h3>
+<div class="outline-text-3" id="text-orgc9eb77e">
 <ul class="org-ul">
 <li><a href="https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv">https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org8f1dd8f" class="outline-3">
-<h3 id="org8f1dd8f"><a href="https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/">Magic Mirror</a></h3>
+
+<div id="outline-container-orgc8a2f2c" class="outline-3">
+<h3 id="orgc8a2f2c"><a href="https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/">Magic Mirror</a></h3>
 </div>
-<div id="outline-container-orgfdaa9dc" class="outline-3">
-<h3 id="orgfdaa9dc">Turn Your Raspberry Pi into an Access Point</h3>
-<div class="outline-text-3" id="text-orgfdaa9dc">
+<div id="outline-container-org1398176" class="outline-3">
+<h3 id="org1398176">Turn Your Raspberry Pi into an Access Point</h3>
+<div class="outline-text-3" id="text-org1398176">
 <p>
 <a href="https://raspberrytips.com/access-point-setup-raspberry-pi/">https://raspberrytips.com/access-point-setup-raspberry-pi/</a>
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org8906ea7" class="outline-2">
-<h2 id="org8906ea7">Shell</h2>
-<div class="outline-text-2" id="text-org8906ea7">
+
+<div id="outline-container-orgbb0254a" class="outline-2">
+<h2 id="orgbb0254a"><a href="holymacs/ide.html#orga97ae4b">Run make on list of projects</a></h2>
+</div>
+<div id="outline-container-org912a6c0" class="outline-2">
+<h2 id="org912a6c0">Shell</h2>
+<div class="outline-text-2" id="text-org912a6c0">
 <p>
 My <code>.zprofile</code> on my Mackbook.
 </p>
@@ -2312,12 +2395,13 @@ alias t='tmux attach'
 </div>
 </div>
 </div>
-<div id="outline-container-org7683d57" class="outline-2">
-<h2 id="org7683d57"><a href="https://spritely.institute/">Spritely institute</a> - distributed web technology</h2>
+
+<div id="outline-container-orgdd5c364" class="outline-2">
+<h2 id="orgdd5c364"><a href="https://spritely.institute/">Spritely institute</a> - distributed web technology</h2>
 </div>
-<div id="outline-container-org91dcd0c" class="outline-2">
-<h2 id="org91dcd0c">Systemd</h2>
-<div class="outline-text-2" id="text-org91dcd0c">
+<div id="outline-container-orgfa73228" class="outline-2">
+<h2 id="orgfa73228">Systemd</h2>
+<div class="outline-text-2" id="text-orgfa73228">
 <p>
 Add a service to systemd (more info <a href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all">here</a>, while here's an article on how to create and manage <a href="https://www.baeldung.com/linux/systemd-create-user-services">user’s services With systemd</a>).
 </p>
@@ -2345,9 +2429,10 @@ Then start with <code>systemctl [--user] (enable|restart|start|stop) blink</code
 </p>
 </div>
 </div>
-<div id="outline-container-orgc9424eb" class="outline-2">
-<h2 id="orgc9424eb">Tailwind</h2>
-<div class="outline-text-2" id="text-orgc9424eb">
+
+<div id="outline-container-org879b7fe" class="outline-2">
+<h2 id="org879b7fe">Tailwind</h2>
+<div class="outline-text-2" id="text-org879b7fe">
 <p>
 CDN installation:
 </p>
@@ -2360,9 +2445,10 @@ CDN installation:
 </div>
 </div>
 </div>
-<div id="outline-container-org18110e1" class="outline-2">
-<h2 id="org18110e1">Tmux</h2>
-<div class="outline-text-2" id="text-org18110e1">
+
+<div id="outline-container-orge79eef7" class="outline-2">
+<h2 id="orge79eef7">Tmux</h2>
+<div class="outline-text-2" id="text-orge79eef7">
 <p>
 Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 </p>
@@ -2372,9 +2458,36 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 </ul>
 </div>
 </div>
-<div id="outline-container-org641c0df" class="outline-2">
-<h2 id="org641c0df">Youtube downloader (yt-dlp)</h2>
-<div class="outline-text-2" id="text-org641c0df">
+
+<div id="outline-container-org37bb5ce" class="outline-2">
+<h2 id="org37bb5ce">Userscripts</h2>
+<div class="outline-text-2" id="text-org37bb5ce">
+</div>
+<div id="outline-container-orgdf3b06a" class="outline-3">
+<h3 id="orgdf3b06a">How to store data on a file using Greasemonkey</h3>
+<div class="outline-text-3" id="text-orgdf3b06a">
+<pre class="example" id="orgfa0f979">
+// @grant        GM_download
+
+function saveData(data, filename) {
+    const blob = new Blob([data], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    GM_download({
+	url: url,
+	name: filename,
+	saveAs: false,
+    });
+}
+
+saveData("hello world", "hello.txt");
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4a19e75" class="outline-2">
+<h2 id="org4a19e75">Youtube downloader (yt-dlp)</h2>
+<div class="outline-text-2" id="text-org4a19e75">
 <p>
 Search for videos.
 </p>
@@ -2424,7 +2537,7 @@ Download and convert to best audio format
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-01-31 Wed 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

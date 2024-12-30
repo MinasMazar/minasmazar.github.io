@@ -27,14 +27,15 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org317767d">org-mode configuration</a></li>
-<li><a href="#orga6740f7">Org and Second Brain (Org-roam)</a></li>
+<li><a href="#org8022c8c">org-mode configuration</a></li>
+<li><a href="#orgb5317f1">Org and Second Brain (Org-roam)</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org317767d" class="outline-2">
-<h2 id="org317767d">org-mode configuration</h2>
-<div class="outline-text-2" id="text-org317767d">
+
+<div id="outline-container-org8022c8c" class="outline-2">
+<h2 id="org8022c8c">org-mode configuration</h2>
+<div class="outline-text-2" id="text-org8022c8c">
 <p>
 Add a capture template to store notes in <code>inbox</code>
 </p>
@@ -44,14 +45,14 @@ Add a capture template to store notes in <code>inbox</code>
   :config
   (require 'org-capture)
   (add-to-list 'org-capture-templates
-                 '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
-                    "* TODO %?\n %i\n  %a"))
+               '("i" "Inbox" entry (file+headline "~/Dropbox/org/inbox.org" "Inbox")
+                  "* TODO %?\n %i\n  %a"))
   :custom
   (org-todo-keywords . '((sequence "TODO(t)" "IN PROGRESS(p)" "|" "DONE(d!)")))
   :bind
   (:map org-mode-map
-          ("M-p" . #'org-move-subtree-up)
-          ("M-n" . #'org-move-subtree-down)))
+        ("M-p" . #'org-move-subtree-up)
+        ("M-n" . #'org-move-subtree-down)))
 </pre>
 </div>
 
@@ -65,9 +66,10 @@ Preview the HTML exported buffer you see when exporting an org file in a preview
 </div>
 </div>
 </div>
-<div id="outline-container-orga6740f7" class="outline-2">
-<h2 id="orga6740f7">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
-<div class="outline-text-2" id="text-orga6740f7">
+
+<div id="outline-container-orgb5317f1" class="outline-2">
+<h2 id="orgb5317f1">Org and Second Brain (<a href="https://www.orgroam.com/">Org-roam</a>)</h2>
+<div class="outline-text-2" id="text-orgb5317f1">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package org-roam
   :bind
@@ -79,7 +81,7 @@ Preview the HTML exported buffer you see when exporting an org file in a preview
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-04-20 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

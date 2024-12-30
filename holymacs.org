@@ -558,7 +558,12 @@ Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-functio
 
 *** Regular Expression Syntax (regexp)
 
-You can use the wonderful tool =regexp-builder=.
+You can use the wonderful tool =regexp-builder=. Use =string-match= to run a regexp and =match-string= to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
+
+#+begin_example elisp
+(let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
+  (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
+#+end_example
 
 #+begin_quote
 Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.

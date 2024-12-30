@@ -216,23 +216,6 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     (browse-url-default-browser url))
 #+end_src
 
-Fetch general info from plain Youtube web pages.
-
-#+begin_src elisp
-  (defun jarvis/youtube-get-channel-rss-from-url (url)
-    "Returns the channel RSS endpoint from the URL of a youtube channel."
-    (interactive "sChannel URL: ")
-    (let* ((channel-id (jarvis/youtube--get-channel-id-from-url url))
-           (channel-rss-url (format "https://www.youtube.com/feeds/videos.xml?channel_id=%s" channel-id)))
-      (if channel-id (message channel-rss-url))))
-
-  (defun jarvis/youtube--get-channel-id-from-url (url)
-    (let* ((data (request-response-data (request url :parser #'buffer-string :sync t)))
-  	 (match (string-match "<link itemprop=\"url\" href=\"https://www.youtube.com/channel/\\(.+?\\)\">" data))
-  	 (channel-id (match-string 1 data)))
-      (if (and data match) channel-id)))
-#+end_src
-
 Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
 
 #+begin_src elisp

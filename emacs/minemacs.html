@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Minemacs</title>
 <meta name="generator" content="Org Mode" />
-<style type="text/css">
+<style>
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -235,58 +235,50 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orge60b564">Introduction</a></li>
-<li><a href="#org3064aae">Package initialization</a></li>
-<li><a href="#orgc785d60">Emacs configuration</a></li>
-<li><a href="#org32c4eee">Minibuffer</a></li>
-<li><a href="#org0302857">Modal editing</a></li>
-<li><a href="#org920ea0a">Auto-completion</a></li>
-<li><a href="#org3f30aa6">Org</a></li>
-<li><a href="#orgfcb977c">Embark</a></li>
-<li><a href="#org6b2acfb">On hand documentation</a>
+<li><a href="#orga883027">Package initialization</a></li>
+<li><a href="#orgf953f79">Emacs configuration</a></li>
+<li><a href="#orgaba4432">Minibuffer</a></li>
+<li><a href="#orgf0d653e">Modal editing</a></li>
+<li><a href="#orgcdca935">Auto-completion</a></li>
+<li><a href="#orgebae542">Org</a></li>
+<li><a href="#orgeed96b0">Embark</a></li>
+<li><a href="#org4371aa9">On hand documentation</a>
 <ul>
 <li>
 <ul>
-<li><a href="#org778685e">Other Commands, functions, variables, keybindings</a></li>
-<li><a href="#orgaabf7bf">Org code-blocks</a></li>
-<li><a href="#org4903e30">String and Symbols</a></li>
-<li><a href="#org4273004">Macros</a></li>
-<li><a href="#org2675e99">Vectors</a></li>
-<li><a href="#org8d7283b">Handle List</a></li>
-<li><a href="#orgd77b5f1">(interactive) functions</a></li>
-<li><a href="#org7b50b2c">Regular Expression Syntax (regexp)</a></li>
-<li><a href="#org5efbfc8">Timers</a></li>
-<li><a href="#org35c7bf7">Insert colorize text programmatically</a></li>
-<li><a href="#org6ec3adc">Buffer management</a></li>
-<li><a href="#org6976091">Faces and fonts</a></li>
-<li><a href="#orgaeb0b8e">Libaries</a></li>
-<li><a href="#org2bf6c7a">Useful topics</a></li>
+<li><a href="#org7df5334">Other Commands, functions, variables, keybindings</a></li>
+<li><a href="#org0b0ab66">Org code-blocks</a></li>
+<li><a href="#org64d5e2a">String and Symbols</a></li>
+<li><a href="#org5e6b3e8">Macros</a></li>
+<li><a href="#orgf7aefb5">Vectors</a></li>
+<li><a href="#org9648a37">Handle List</a></li>
+<li><a href="#orgdd85394">(interactive) functions</a></li>
+<li><a href="#org44c812a">Regular Expression Syntax (regexp)</a></li>
+<li><a href="#org0ce608f">Timers</a></li>
+<li><a href="#org69f0929">Insert colorize text programmatically</a></li>
+<li><a href="#orgfdbcc32">Buffer management</a></li>
+<li><a href="#org4eb9e47">Faces and fonts</a></li>
+<li><a href="#orgc621ac5">Libaries</a></li>
+<li><a href="#orgb64f2f7">Useful topics</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org1abd334">Credits</a></li>
+<li><a href="#org82c391f">Credits</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orge60b564" class="outline-2">
-<h2 id="orge60b564">Introduction</h2>
-<div class="outline-text-2" id="text-orge60b564">
-<p>
-This is my Emacs configuration that aims to be as lightweight as possible. It includes a bunch of variables overrieds, a couple of keybindings mostly related to the use of the <code>super</code> key (<code>Cmd</code> on MacOS) and the setup of minibuffer and autocompletion. For every other additional feature (i.e IDE stuff) I rely on the <a href="emacs/modules.html">modules file</a> that can be <i>tangled</i> manually and loaded via <code>(minemacs-modules-load)</code>.
-</p>
-</div>
-</div>
-<div id="outline-container-org3064aae" class="outline-2">
-<h2 id="org3064aae">Package initialization</h2>
-<div class="outline-text-2" id="text-org3064aae">
+
+<div id="outline-container-orga883027" class="outline-2">
+<h2 id="orga883027">Package initialization</h2>
+<div class="outline-text-2" id="text-orga883027">
 <div class="org-src-container">
 <pre class="src src-elisp">(add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+                       ("elpa" . "https://elpa.gnu.org/packages/")
+                       ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
 (require 'use-package)
 (require 'use-package-ensure)
@@ -297,9 +289,10 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-orgc785d60" class="outline-2">
-<h2 id="orgc785d60">Emacs configuration</h2>
-<div class="outline-text-2" id="text-orgc785d60">
+
+<div id="outline-container-orgf953f79" class="outline-2">
+<h2 id="orgf953f79">Emacs configuration</h2>
+<div class="outline-text-2" id="text-orgf953f79">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package emacs
   :ensure nil
@@ -326,8 +319,8 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
   ;; Shared configuration
   (if (file-exists-p "~/Dropbox/minemacs/")
       (setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-            eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-            custom-file "~/Dropbox/minemacs/custom.el"))
+          eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
+          custom-file "~/Dropbox/minemacs/custom.el"))
 
   ;; Helpers
   (defun minemacs-files-in-emacs-subdir (subdir)
@@ -335,7 +328,7 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
     (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
       (message "Scan files in dir %s" scan-dir)
       (if (file-exists-p scan-dir)
-          (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+        (directory-files scan-dir t directory-files-no-dot-files-regexp))))
 
   ;; Modules
   (defun minemacs-tangle-if-not-disabled (tangle)
@@ -349,8 +342,8 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
     ;; TODO: locate-dominating-file
     (let ((modules (minemacs-files-in-emacs-subdir "modules")))
       (if modules (mapcar (lambda (module)
-                            (load  module 'noerror))
-                          modules))))
+                          (load  module 'noerror))
+                        modules))))
 
   (global-set-key (kbd "s-0") (kbd "C-x 0"))
   (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -379,15 +372,15 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
   ("s-t" . #'rgrep)
   ("s--" . #'bookmark-jump)
   (:map key-translation-map
-        ("s-m" . "\C-x")
-        ("s-M" . "\C-c"))
+      ("s-m" . "\C-x")
+      ("s-M" . "\C-c"))
   (:map isearch-mode-map
-        ("C-p" . #'isearch-repeat-backward)
-        ("C-n" . #'isearch-repeat-forward)
-        ("&lt;tab&gt;" . #'isearch-repeat-forward)
-        ("&lt;S-tab&gt;" . #'isearch-repeat-backward))
+      ("C-p" . #'isearch-repeat-backward)
+      ("C-n" . #'isearch-repeat-forward)
+      ("&lt;tab&gt;" . #'isearch-repeat-forward)
+      ("&lt;S-tab&gt;" . #'isearch-repeat-backward))
   (:map completion-list-mode-map
-        ("e" . #'switch-to-minibuffer)))
+      ("e" . #'switch-to-minibuffer)))
 
 (load custom-file 'noerror)
 (minemacs-modules-load)
@@ -395,9 +388,10 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-org32c4eee" class="outline-2">
-<h2 id="org32c4eee">Minibuffer</h2>
-<div class="outline-text-2" id="text-org32c4eee">
+
+<div id="outline-container-orgaba4432" class="outline-2">
+<h2 id="orgaba4432">Minibuffer</h2>
+<div class="outline-text-2" id="text-orgaba4432">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package orderless :custom (completion-styles '(orderless)))
 (use-package vertico :config (vertico-mode 1))
@@ -405,9 +399,10 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-org0302857" class="outline-2">
-<h2 id="org0302857">Modal editing</h2>
-<div class="outline-text-2" id="text-org0302857">
+
+<div id="outline-container-orgf0d653e" class="outline-2">
+<h2 id="orgf0d653e">Modal editing</h2>
+<div class="outline-text-2" id="text-orgf0d653e">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package god-mode
   :after emacs
@@ -422,7 +417,7 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
     (setq cursor-type 'box))
 
   :hook ((god-mode-enabled . minemacs-god-mode-enabled)
-         (god-mode-disabled . minemacs-god-mode-disabled))
+       (god-mode-disabled . minemacs-god-mode-disabled))
   :bind
   ("s-n" . #'god-local-mode)
   (:map god-local-mode-map
@@ -440,15 +435,16 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-org920ea0a" class="outline-2">
-<h2 id="org920ea0a">Auto-completion</h2>
-<div class="outline-text-2" id="text-org920ea0a">
+
+<div id="outline-container-orgcdca935" class="outline-2">
+<h2 id="orgcdca935">Auto-completion</h2>
+<div class="outline-text-2" id="text-orgcdca935">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package corfu
   :hook
   (eshell-mode . (lambda ()
-                     (setq-local corfu-auto nil)
-                     (corfu-mode)))
+                   (setq-local corfu-auto nil)
+                   (corfu-mode)))
   :custom
   (corfu-cycle t)
   :config
@@ -475,9 +471,10 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-org3f30aa6" class="outline-2">
-<h2 id="org3f30aa6">Org</h2>
-<div class="outline-text-2" id="text-org3f30aa6">
+
+<div id="outline-container-orgebae542" class="outline-2">
+<h2 id="orgebae542">Org</h2>
+<div class="outline-text-2" id="text-orgebae542">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package org
   :bind
@@ -488,9 +485,9 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
 </div>
 </div>
 </div>
-<div id="outline-container-orgfcb977c" class="outline-2">
-<h2 id="orgfcb977c">Embark</h2>
-<div class="outline-text-2" id="text-orgfcb977c">
+<div id="outline-container-orgeed96b0" class="outline-2">
+<h2 id="orgeed96b0">Embark</h2>
+<div class="outline-text-2" id="text-orgeed96b0">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package embark
   :after god-mode
@@ -499,30 +496,31 @@ This is my Emacs configuration that aims to be as lightweight as possible. It in
   :bind*
   ("C-," . embark-act)
   (:map embark-general-map
-          ("C-w" . browse-url))
+        ("C-w" . browse-url))
   (:map embark-identifier-map
-          ("R" . query-replace)
-          ("O" . multi-occur-in-matching-buffers)
-          ("c" . browse-url-chrome)
-          ("f" . browse-url-firefox))
+        ("R" . query-replace)
+        ("O" . multi-occur-in-matching-buffers)
+        ("c" . browse-url-chrome)
+        ("f" . browse-url-firefox))
   (:map embark-url-map
-          ("c" . browse-url-chrome)
-          ("f" . browse-url-firefox))
+        ("c" . browse-url-chrome)
+        ("f" . browse-url-firefox))
   (:map  embark-file-map
-           ("p" . project-find-file)
-           ("b" . project-switch-to-buffer)
-           ("," . append-to-previous-buffer)))
+         ("p" . project-find-file)
+         ("b" . project-switch-to-buffer)
+         ("," . append-to-previous-buffer)))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org6b2acfb" class="outline-2">
-<h2 id="org6b2acfb">On hand documentation</h2>
-<div class="outline-text-2" id="text-org6b2acfb">
+
+<div id="outline-container-org4371aa9" class="outline-2">
+<h2 id="org4371aa9">On hand documentation</h2>
+<div class="outline-text-2" id="text-org4371aa9">
 </div>
-<div id="outline-container-org778685e" class="outline-4">
-<h4 id="org778685e">Other Commands, functions, variables, keybindings</h4>
-<div class="outline-text-4" id="text-org778685e">
+<div id="outline-container-org7df5334" class="outline-4">
+<h4 id="org7df5334">Other Commands, functions, variables, keybindings</h4>
+<div class="outline-text-4" id="text-org7df5334">
 <p>
 Just press <code>C-h o</code> to get help on those symbols.
 </p>
@@ -558,19 +556,21 @@ Just press <code>C-h o</code> to get help on those symbols.
 </ul>
 </div>
 </div>
-<div id="outline-container-orgaabf7bf" class="outline-4">
-<h4 id="orgaabf7bf"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h4>
-<div class="outline-text-4" id="text-orgaabf7bf">
-<pre class="example" id="org1032090">
+
+<div id="outline-container-org0b0ab66" class="outline-4">
+<h4 id="org0b0ab66"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h4>
+<div class="outline-text-4" id="text-org0b0ab66">
+<pre class="example" id="org38cfa95">
 #+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
   wc -w $filename
 #+END_SRC
 </pre>
 </div>
 </div>
-<div id="outline-container-org4903e30" class="outline-4">
-<h4 id="org4903e30">String and Symbols</h4>
-<div class="outline-text-4" id="text-org4903e30">
+
+<div id="outline-container-org64d5e2a" class="outline-4">
+<h4 id="org64d5e2a">String and Symbols</h4>
+<div class="outline-text-4" id="text-org64d5e2a">
 <div class="org-src-container">
 <pre class="src src-elisp">(symbol-name 'some-symbol)
 ; =&gt; "some-symbol"
@@ -580,9 +580,10 @@ Just press <code>C-h o</code> to get help on those symbols.
 </div>
 </div>
 </div>
-<div id="outline-container-org4273004" class="outline-4">
-<h4 id="org4273004">Macros</h4>
-<div class="outline-text-4" id="text-org4273004">
+
+<div id="outline-container-org5e6b3e8" class="outline-4">
+<h4 id="org5e6b3e8">Macros</h4>
+<div class="outline-text-4" id="text-org5e6b3e8">
 <div class="org-src-container">
 <pre class="src src-elisp">(defmacro ++ (x)
   (list 'setq x (list '1+ x)))
@@ -590,14 +591,15 @@ Just press <code>C-h o</code> to get help on those symbols.
 </div>
 </div>
 </div>
-<div id="outline-container-org2675e99" class="outline-4">
-<h4 id="org2675e99">Vectors</h4>
-<div class="outline-text-4" id="text-org2675e99">
+
+<div id="outline-container-orgf7aefb5" class="outline-4">
+<h4 id="orgf7aefb5">Vectors</h4>
+<div class="outline-text-4" id="text-orgf7aefb5">
 <p>
 Get an element from a vector
 </p>
 
-<pre class="example" id="org07d2206">
+<pre class="example" id="org1d99ee7">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -611,9 +613,10 @@ it's vector, you should use <code>aref</code>, because it's precise and faster.
 </p>
 </div>
 </div>
-<div id="outline-container-org8d7283b" class="outline-4">
-<h4 id="org8d7283b">Handle List</h4>
-<div class="outline-text-4" id="text-org8d7283b">
+
+<div id="outline-container-org9648a37" class="outline-4">
+<h4 id="org9648a37">Handle List</h4>
+<div class="outline-text-4" id="text-org9648a37">
 <p>
 To find an element
 </p>
@@ -624,36 +627,38 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="orga91077e">
+<pre class="example" id="orga385334">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
 </div>
-<div id="outline-container-orgd77b5f1" class="outline-4">
-<h4 id="orgd77b5f1">(interactive) functions</h4>
-<div class="outline-text-4" id="text-orgd77b5f1">
+
+<div id="outline-container-orgdd85394" class="outline-4">
+<h4 id="orgdd85394">(interactive) functions</h4>
+<div class="outline-text-4" id="text-orgdd85394">
 <p>
-Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
+Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="orgae88b60">
+<pre class="example" id="orge30d725">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
-		  (read-from-minibuffer "URL: ")
-		  (completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
+		(read-from-minibuffer "URL: ")
+		(completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
    (message (format "url: %s, handler: %s" url handler )))
 </pre>
 </div>
 </div>
-<div id="outline-container-org7b50b2c" class="outline-4">
-<h4 id="org7b50b2c">Regular Expression Syntax (regexp)</h4>
-<div class="outline-text-4" id="text-org7b50b2c">
+
+<div id="outline-container-org44c812a" class="outline-4">
+<h4 id="org44c812a">Regular Expression Syntax (regexp)</h4>
+<div class="outline-text-4" id="text-org44c812a">
 <p>
 You can use the wonderful tool <code>regexp-builder</code>. Use <code>string-match</code> to run a regexp and <code>match-string</code> to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
 </p>
 
-<pre class="example" id="orgee42179">
+<pre class="example" id="org33a72f0">
 (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
   (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
 </pre>
@@ -744,14 +749,15 @@ Syntax classes:
 </blockquote>
 </div>
 </div>
-<div id="outline-container-org5efbfc8" class="outline-4">
-<h4 id="org5efbfc8">Timers</h4>
-<div class="outline-text-4" id="text-org5efbfc8">
+
+<div id="outline-container-org0ce608f" class="outline-4">
+<h4 id="org0ce608f">Timers</h4>
+<div class="outline-text-4" id="text-org0ce608f">
 <p>
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="org4cf7245">
+<pre class="example" id="orga0e3119">
 (run-at-time "11 min" t #'elfeed-update)
 (run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 </pre>
@@ -766,17 +772,19 @@ point.
 </blockquote>
 </div>
 </div>
-<div id="outline-container-org35c7bf7" class="outline-4">
-<h4 id="org35c7bf7">Insert colorize text programmatically</h4>
-<div class="outline-text-4" id="text-org35c7bf7">
-<pre class="example" id="org4214a94">
+
+<div id="outline-container-org69f0929" class="outline-4">
+<h4 id="org69f0929">Insert colorize text programmatically</h4>
+<div class="outline-text-4" id="text-org69f0929">
+<pre class="example" id="org6eaf90d">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
 </div>
-<div id="outline-container-org6ec3adc" class="outline-4">
-<h4 id="org6ec3adc">Buffer management</h4>
-<div class="outline-text-4" id="text-org6ec3adc">
+
+<div id="outline-container-orgfdbcc32" class="outline-4">
+<h4 id="orgfdbcc32">Buffer management</h4>
+<div class="outline-text-4" id="text-orgfdbcc32">
 <p>
 Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer">stackoverflow</a>.
 </p>
@@ -795,9 +803,10 @@ Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what
 </div>
 </div>
 </div>
-<div id="outline-container-org6976091" class="outline-4">
-<h4 id="org6976091">Faces and fonts</h4>
-<div class="outline-text-4" id="text-org6976091">
+
+<div id="outline-container-org4eb9e47" class="outline-4">
+<h4 id="org4eb9e47">Faces and fonts</h4>
+<div class="outline-text-4" id="text-org4eb9e47">
 <p>
 If you'd like to have a smaller font on compialtion buffers
 </p>
@@ -830,35 +839,36 @@ Get the list of font families <code>(font-family-list)</code>; here's the code t
 </div>
 </div>
 </div>
-<div id="outline-container-orgaeb0b8e" class="outline-4">
-<h4 id="orgaeb0b8e">Libaries</h4>
-<div class="outline-text-4" id="text-orgaeb0b8e">
+<div id="outline-container-orgc621ac5" class="outline-4">
+<h4 id="orgc621ac5">Libaries</h4>
+<div class="outline-text-4" id="text-orgc621ac5">
 <ul class="org-ul">
 <li><a href="https://tkf.github.io/emacs-request/">request.el</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org2bf6c7a" class="outline-4">
-<h4 id="org2bf6c7a">Useful topics</h4>
-<div class="outline-text-4" id="text-org2bf6c7a">
+
+<div id="outline-container-orgb64f2f7" class="outline-4">
+<h4 id="orgb64f2f7">Useful topics</h4>
+<div class="outline-text-4" id="text-orgb64f2f7">
 <ul class="org-ul">
 <li><a href="https://orgmode.org/manual/Results-of-Evaluation.html">Results of Evaluation</a></li>
 <li><p>
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="orgb8733e6">
+<pre class="example" id="org2ec5291">
 (let ((start (point-min))
-	  (end (point-max)))
+      (end (point-max)))
   (buffer-substring start end))
 </pre></li>
 </ul>
 </div>
 </div>
 </div>
-<div id="outline-container-org1abd334" class="outline-2">
-<h2 id="org1abd334">Credits</h2>
-<div class="outline-text-2" id="text-org1abd334">
+<div id="outline-container-org82c391f" class="outline-2">
+<h2 id="org82c391f">Credits</h2>
+<div class="outline-text-2" id="text-org82c391f">
 <p>
 I would like to thanks:
 </p>
@@ -879,7 +889,7 @@ I would like to thanks:
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-08-08 Thu 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MinasMazar's blog ~ Project Kiosk</title>
 <meta name="generator" content="Org Mode" />
-<style type="text/css">
+<style>
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -203,34 +203,36 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org625fcbf">Using Elixir as Kiosk</a>
+<li><a href="#org016acc6">Using Elixir as Kiosk</a>
 <ul>
-<li><a href="#org18e0afc">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#org16c179d">Simulate keyboard events</a></li>
-<li><a href="#orgd09339e">Use Browser in kiosk mode</a></li>
-<li><a href="#org72d50b4">Other resources</a></li>
+<li><a href="#orgd7bd4b3">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
+<li><a href="#orgeb0e4f2">Simulate keyboard events</a></li>
+<li><a href="#orga689106">Use Browser in kiosk mode</a></li>
+<li><a href="#orga4ec46a">Other resources</a></li>
 </ul>
 </li>
-<li><a href="#org80ec441">Using Emacs and Org as Kiosk (Midori)</a></li>
+<li><a href="#org1cacce5">Using Emacs and Org as Kiosk (Midori)</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org625fcbf" class="outline-2">
-<h2 id="org625fcbf">Using Elixir as Kiosk</h2>
-<div class="outline-text-2" id="text-org625fcbf">
+
+<div id="outline-container-org016acc6" class="outline-2">
+<h2 id="org016acc6">Using Elixir as Kiosk</h2>
+<div class="outline-text-2" id="text-org016acc6">
 </div>
-<div id="outline-container-org18e0afc" class="outline-3">
-<h3 id="org18e0afc">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-org18e0afc">
+<div id="outline-container-orgd7bd4b3" class="outline-3">
+<h3 id="orgd7bd4b3">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
+<div class="outline-text-3" id="text-orgd7bd4b3">
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org16c179d" class="outline-3">
-<h3 id="org16c179d">Simulate keyboard events</h3>
-<div class="outline-text-3" id="text-org16c179d">
+
+<div id="outline-container-orgeb0e4f2" class="outline-3">
+<h3 id="orgeb0e4f2">Simulate keyboard events</h3>
+<div class="outline-text-3" id="text-orgeb0e4f2">
 <ul class="org-ul">
 <li>Send keys to the graphic server
 X (<a href="https://github.com/jordansissel/xdotool">xdotool</a>): <code>xdotool key ctrl+l</code> or <code>xdotool type "Hello world"</code>
@@ -238,9 +240,10 @@ Wayland: <code>XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Ta
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd09339e" class="outline-3">
-<h3 id="orgd09339e">Use Browser in kiosk mode</h3>
-<div class="outline-text-3" id="text-orgd09339e">
+
+<div id="outline-container-orga689106" class="outline-3">
+<h3 id="orga689106">Use Browser in kiosk mode</h3>
+<div class="outline-text-3" id="text-orga689106">
 <p>
 Use Chromium/Firefox as browser works well only on RPi &gt; 1
 </p>
@@ -266,9 +269,10 @@ P.S. Epiphany: it has interesting options like <code>automation-mode</code> but 
 </p>
 </div>
 </div>
-<div id="outline-container-org72d50b4" class="outline-3">
-<h3 id="org72d50b4">Other resources</h3>
-<div class="outline-text-3" id="text-org72d50b4">
+
+<div id="outline-container-orga4ec46a" class="outline-3">
+<h3 id="orga4ec46a">Other resources</h3>
+<div class="outline-text-3" id="text-orga4ec46a">
 <ul class="org-ul">
 <li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
 <li><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/</a></li>
@@ -276,9 +280,10 @@ P.S. Epiphany: it has interesting options like <code>automation-mode</code> but 
 </div>
 </div>
 </div>
-<div id="outline-container-org80ec441" class="outline-2">
-<h2 id="org80ec441">Using Emacs and Org as Kiosk (Midori)</h2>
-<div class="outline-text-2" id="text-org80ec441">
+
+<div id="outline-container-org1cacce5" class="outline-2">
+<h2 id="org1cacce5">Using Emacs and Org as Kiosk (Midori)</h2>
+<div class="outline-text-2" id="text-org1cacce5">
 <p>
 Install midori.
 </p>
@@ -350,7 +355,7 @@ Or you can just write yout ouwn HTML.
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-10-28 Mon 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.7)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
