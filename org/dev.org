@@ -284,12 +284,12 @@ Example Makefile for an Elixir/Phoenix webapp
 
 #+begin_src makefile
   port := 4030
-  prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/magma MIX_ENV=prod SECRET_KEY_BASE=8kX3vyc0qLs38OFTa4C+ZTx6Q9h0KXyfh8UgU/Yt4InSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
+  prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/my-app MIX_ENV=prod SECRET_KEY_BASE=8X3vyc0qkLs38OFTa4C+ZTx6Q9h0KXyfh8Ug/Yt4IUnSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
   cmd := $$MAKE_CMD
 
   default: start-prod
   cmd:
-  	echo ${cmd}
+	echo ${cmd}
   # Example usage
   #
   # MAKE_CMD="mix ecto.create" make -s prod-exec
@@ -297,25 +297,25 @@ Example Makefile for an Elixir/Phoenix webapp
 
   # Start in production env
   prod-exec:
-  	${prod-env} ${cmd}
+	${prod-env} ${cmd}
 
   start-prod:
-  	${prod-env} iex -S mix phx.server
+	${prod-env} iex -S mix phx.server
 
   # Development
   build:
-  	mix do deps.get, deps.compile, compile
+	mix do deps.get, deps.compile, compile
   start: build
-  	iex -S mix phx.server
+	iex -S mix phx.server
   assets:
-  	mix assets.setup
+	mix assets.setup
   release:
-  	mix deps.get --only prod
-  	MIX_ENV=prod mix compile
-  	MIX_ENV=prod mix assets.deploy
-  	MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+	mix deps.get --only prod
+	MIX_ENV=prod mix compile
+	MIX_ENV=prod mix assets.deploy
+	MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
   release-start:
-  	${prod-env} ~/my-app/bin/my-app start
+	${prod-env} ~/my-app/bin/my-app start
 
 #+end_src
 
@@ -1020,6 +1020,26 @@ Keywords=tiling;wm;windowmanager;window;manager;
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
 
+** Screen managing (xrandr)
+
+#+begin_quote
+I use this command to mirror my desktop with my external VGA:
+
+$ xrandr --output LVDS-1 --mode 1366x768 --scale 1x1 --output VGA-1 --same-as LVDS-1 --mode 1920x1080 --scale 0.711x0.711
+
+LVDS-1 is the laptop screen , natively working in 1366x768.
+
+VGA-1 is my external VGA monitor, with native resolution of 1920x1080, scaled to 0.711 which equals close to 1366x768 (laptop resolution).
+
+Results are good for me. You can experiment with those options.
+
+Similarly, I use this one for extended desktop:
+
+$ xrandr --output VGA-1 --mode 1920x1080 --scale 1x1 --output LVDS-1 --mode 1366x768 --scale 1x1 --left-of VGA-1
+
+You can detect the names of your screens by just running xrandr
+#+end_quote
+
 * [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
 
 A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
@@ -1656,6 +1676,7 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
 #+end_src
 
 * Raspberry
+** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
 ** Detect Raspberry model
 
 #+begin_src sh
@@ -1773,7 +1794,26 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
   saveData("hello world", "hello.txt");
 #+end_example
 
-* Youtube downloader (yt-dlp)
+* Youtube
+** Export your /watch later/ list from the browser
+
+Go the your "Watch later" page on the browser, open the console and execute
+
+#+begin_src javascript
+  var els = document.querySelectorAll('a.ytd-playlist-video-renderer'));
+  var elsExp = [];
+  els.forEach(function(el) { elsExp.push([el.innerText, el.getAttribute("href")]) });
+  console.log(JSON.stringify(elsExp));
+#+end_src
+
+** Get RSS feed of a channel or playlist
+
+Having the channel ID ([[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explainging how to do that), construct as follow:
+
+=https://youtube.com/watch?v=CHANNEL-ID= to =https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID=
+
+** Youtube downloader (yt-dlp)
+*** Usage examples
 
 Search for videos.
 
@@ -1805,7 +1845,13 @@ Download and convert to best audio format
   youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 "https://www.youtube.com/watch?v=hAMaCxw9Utw"
 #+end_src
 
-** Troubleshooting
+Get the channel ID from a channel URL
+
+#+begin_src shell
+  yt-dlp "https://www.youtube.com/@nicolabizzihistoriae" --print channel_url --playlist-end 1
+#+end_src
+
+*** Troubleshooting
 
 If you have issues with an error like ~WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)~.
 
