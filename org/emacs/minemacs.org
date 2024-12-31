@@ -61,7 +61,7 @@
       (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
 	(message "Scan files in dir %s" scan-dir)
 	(if (file-exists-p scan-dir)
-	  (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+	    (directory-files scan-dir t directory-files-no-dot-files-regexp))))
 
     ;; Modules
     (defun minemacs-tangle-if-not-disabled (tangle)
@@ -75,21 +75,28 @@
       ;; TODO: locate-dominating-file
       (let ((modules (minemacs-files-in-emacs-subdir "modules")))
 	(if modules (mapcar (lambda (module)
-			    (load  module 'noerror))
-			  modules))))
+			      (load  module 'noerror))
+			    modules))))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
     (global-set-key (kbd "s-2") (kbd "C-x 2"))
     (global-set-key (kbd "s-3") (kbd "C-x 3"))
-    (define-key key-translation-map (kbd "s-o") (kbd "M-o"))
+
+    (defvar minemacs-map
+      (let ((map (make-sparse-keymap)))
+	(define-key map (kbd "a") #'org-agenda)
+	(define-key map (kbd "k") #'org-capture)
+	(define-key map (kbd "e") #'eshell)
+	(define-key map (kbd "8") #'emoji-search)
+	(define-key map (kbd "w j") #'webjump)
+	(define-key map (kbd "w w") #'eww)
+	map)
+      "Minemacs map.")
+
+    :bind-keymap
+    ("s-o" . minemacs-map)
     :bind
-    ("M-o a" . #'org-agenda)
-    ("M-o k" . #'org-capture)
-    ("M-o e" . #'eshell)
-    ("M-o w j" . #'webjump)
-    ("M-o w w" . #'eww)
-    ("M-o 8" . #'emoji-search)
     ("s-k" . #'execute-extended-command)
     ("s-n" . #'god-local-mode)
     ("s-w" . #'other-window)
@@ -107,15 +114,15 @@
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
     (:map key-translation-map
-	("s-m" . "\C-x")
-	("s-M" . "\C-c"))
+	  ("s-m" . "\C-x")
+	  ("s-M" . "\C-c"))
     (:map isearch-mode-map
-	("C-p" . #'isearch-repeat-backward)
-	("C-n" . #'isearch-repeat-forward)
-	("<tab>" . #'isearch-repeat-forward)
-	("<S-tab>" . #'isearch-repeat-backward))
+	  ("C-p" . #'isearch-repeat-backward)
+	  ("C-n" . #'isearch-repeat-forward)
+	  ("<tab>" . #'isearch-repeat-forward)
+	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
-	("e" . #'switch-to-minibuffer)))
+	  ("e" . #'switch-to-minibuffer)))
 
   (minemacs-modules-load)
 #+end_src
@@ -470,7 +477,7 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 - [[https://tkf.github.io/emacs-request/][request.el]]
 
 *** Useful topics
-
+- [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key-Bindings in Emacs]]
 - [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
 - [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]
 

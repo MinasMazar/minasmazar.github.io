@@ -21,20 +21,30 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* Hail Hydra! 🐍                                                    :disable:
+* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                            :disable:
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
 :END:
 
+Simple hydra.
+
 #+begin_src elisp
   (use-package hydra
     :bind
-    ("s-o" . #'hydra-kommand/body)
+    ("M-o h" . #'hydra-modal/body)
     :config
     (defhydra hydra-media (:color blue)
 	      "Media"
 	      ("y s" #'yeetube-search "youtube search")
 	      ("q" nil))
+
+    (defhydra hydra-modal (:color pink)
+      "Main Modal Mode."
+      ("n" #'next-line "_n_ext")
+      ("p" #'previous-line "_p_rev")
+      ("k" #'hydra-kommand/body "_k_ommand")
+      ("i" nil)
+      ("q" nil))
 
     (defhydra hydra-kommand (:color blue)
       ;; "Easily access most used commands: _a_genda _e_shell _c_apture _m_edia _q_uit"
@@ -44,6 +54,63 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
       ("8" #'emoji-search "emoji 🙂")
       ("m" #'hydra-media/body "media 🎵")
       ("q" nil)))
+#+end_src
+
+Advanced hydra.
+
+#+begin_src elisp
+  (use-package hydra
+    :ensure t
+    :init
+
+    (defun send-key(key)
+      (setq unread-command-events (listify-key-sequence key)))
+
+    :config
+    (defhydra hydra-nav (:color pink
+			     :pre (setq cursor-type 'box)
+			     :post (setq cursor-type 'bar))
+	    "hydra-nav:"
+	    ("w" #'kill-ring-save "w")
+	    ("n" #'next-line "n")
+	    ("p" #'previous-line "p")
+	    ("a" #'beginning-of-line "a")
+	    ("e" #'end-of-line "e")
+	    ("k" #'kill-buffer "k")
+	    ("K" #'kill-line "K")
+	    ("]" #'scroll-up-command "]")
+	    ("[" #'scroll-down-command "[")
+	    ("<" #'beginning-of-buffer "<")
+	    ("o" #'other-window "o")
+	    ("b" #'switch-to-buffer "b")
+	    (">" #'end-of-buffer ">")
+	    ("u" #'undo "undo")
+	    ("2" #'split-window-below "2")
+	    ("3" #'split-window-right "3")
+	    ("0" #'delete-window "0")
+	    ("1" #'delete-other-windows "1")
+	    ("i" nil "quit"))
+
+    (defhydra hydra-kommand (:color teal
+				    :pre (setq cursor-type 'box)
+				    :post (setq cursor-type 'bar))
+	    "hydra-kommand"
+	    ("k" #'execute-extended-command "🚀 Kommand")
+	    ("m" #'hydra-nav/body "modal")
+	    ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+	    ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
+	    ("e" #'eval-defun "Λ eval-defun")
+	    ("l" #'god-mode "👼 god")
+	    ("r" #'repeat "repeat")
+	    ("x" #'dabbrev-expand "expand")
+	    ("b" #'ibuffer "🧰 ibuffer")
+	    ("j" #'bookmark-jump "🔖 bookmark")
+	    ("a" #'org-agenda)
+	    ("q" nil "_q_uit"))
+    :bind
+    (("s-o" . #'hydra-kommand/body)
+     ("s-l" . #'hydra-nav/body)))
+
 #+end_src
 
 * IDE 🖥️
@@ -102,10 +169,10 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   	     tabspaces-open-or-create-project-and-workspace)
     :bind
     (("s-q" . #'tab-switch)
-     ("s-{" . tab-previous)
-     ("s-}" . tab-next))
+     ("s-{" . #'tab-previous)
+     ("s-}" . #'tab-next))
     :custom
-    (tabspaces-keymap-prefix "M-o s")
+    (tabspaces-keymap-prefix "C-x t w")
     (tabspaces-use-filtered-buffers-as-default t)
     (tabspaces-default-tab "Default")
     (tabspaces-remove-to-default t)
@@ -399,13 +466,21 @@ Install the =doom-modeline=.
   (use-package bongo)
 #+end_src
 
+The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
+
+#+begin_example elisp
+(setq bongo-custom-backend-matchers
+       '((mpv ("https:") . t)))
+#+end_example
+
 ** yeetube
 
 #+begin_src elisp
   (use-package yeetube
     :bind
-    ("M-o m y" . #'yeetube-search)
-    ("M-o m s" . #'empv-youtube))
+    (:map minemacs-map
+	  ("m y" . #'yeetube-search)
+	  ("m s" . #'empv-youtube)))
 #+end_src
 
 * News 📰 and Mail 📬
@@ -469,6 +544,14 @@ Useful links:
 - http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
 - https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
 - https://isync.sourceforge.io/mbsync.html
+
+**** Mail Account info
+
+Create a file =~/.authinfo= directly in the root of your home directory.
+
+#+begin_example authinfo
+machine smtp.example.com login myname port 587 password mypassword
+#+end_example
 
 **** mbsync configuration
 
@@ -570,14 +653,14 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 
 Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
 
-*** COMMENT Gnus ⚠️ wip ⚠️
+*** Gnus
 
 To configure gnus in order to read your Gmail, you have to:
 
 - create a password token on the Gmail account
 - enter an authentication line in your =authinfo=
 
-#+begin_export ascii
+#+begin_export authinfo
   machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
 #+end_export
 
