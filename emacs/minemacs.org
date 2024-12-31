@@ -29,7 +29,7 @@
   (use-package emacs
     :ensure nil
     :defer
-    :hook ((after-init . toggle-frame-maximized))
+    :hook ((after-init . toggle-frame-fullscreen))
     :custom
     (dired-dwim-target t)
     (dired-listing-switches "-alth")
@@ -42,6 +42,8 @@
     (use-short-answers t)
     :config
     (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
     (savehist-mode 1)
     (recentf-mode 1)
     (ffap-bindings)
@@ -50,43 +52,51 @@
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
-        (setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-    	    eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-    	    custom-file "~/Dropbox/minemacs/custom.el"))
-
+	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
+	      custom-file "~/Dropbox/minemacs/custom.el"))
     ;; Helpers
     (defun minemacs-files-in-emacs-subdir (subdir)
       (message "Scan files in emacs subdir %s" subdir)
       (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
-        (message "Scan files in dir %s" scan-dir)
-        (if (file-exists-p scan-dir)
-    	  (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+	(message "Scan files in dir %s" scan-dir)
+	(if (file-exists-p scan-dir)
+	    (directory-files scan-dir t directory-files-no-dot-files-regexp))))
 
     ;; Modules
     (defun minemacs-tangle-if-not-disabled (tangle)
       (if (member-ignore-case "disable" (org-get-tags))
-          "no"
-        tangle))
+	  "no"
+	tangle))
 
     (defun minemacs-modules-load ()
       "Load all modules '*.el' files in './.emacs.d/modules/'"
       (interactive)
       ;; TODO: locate-dominating-file
       (let ((modules (minemacs-files-in-emacs-subdir "modules")))
-        (if modules (mapcar (lambda (module)
-    			    (load  module 'noerror))
-    			  modules))))
+	(if modules (mapcar (lambda (module)
+			      (load  module 'noerror))
+			    modules))))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
     (global-set-key (kbd "s-2") (kbd "C-x 2"))
     (global-set-key (kbd "s-3") (kbd "C-x 3"))
-    (define-key key-translation-map (kbd "s-o") (kbd "M-o"))
+
+    (defvar minemacs-map
+      (let ((map (make-sparse-keymap)))
+	(define-key map (kbd "a") #'org-agenda)
+	(define-key map (kbd "k") #'org-capture)
+	(define-key map (kbd "e") #'eshell)
+	(define-key map (kbd "8") #'emoji-search)
+	(define-key map (kbd "w j") #'webjump)
+	(define-key map (kbd "w w") #'eww)
+	map)
+      "Minemacs map.")
+
+    :bind-keymap
+    ("s-o" . minemacs-map)
     :bind
-    ("M-o a" . #'org-agenda)
-    ("M-o k" . #'org-capture)
-    ("M-o e" . #'eshell)
-    ("M-o 8" . #'emoji-search)
     ("s-k" . #'execute-extended-command)
     ("s-n" . #'god-local-mode)
     ("s-w" . #'other-window)
@@ -104,17 +114,16 @@
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
     (:map key-translation-map
-  	("s-m" . "\C-x")
-  	("s-M" . "\C-c"))
+	  ("s-m" . "\C-x")
+	  ("s-M" . "\C-c"))
     (:map isearch-mode-map
-  	("C-p" . #'isearch-repeat-backward)
-  	("C-n" . #'isearch-repeat-forward)
-  	("<tab>" . #'isearch-repeat-forward)
-  	("<S-tab>" . #'isearch-repeat-backward))
+	  ("C-p" . #'isearch-repeat-backward)
+	  ("C-n" . #'isearch-repeat-forward)
+	  ("<tab>" . #'isearch-repeat-forward)
+	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
-  	("e" . #'switch-to-minibuffer)))
+	  ("e" . #'switch-to-minibuffer)))
 
-  (load custom-file 'noerror)
   (minemacs-modules-load)
 #+end_src
 
@@ -154,7 +163,7 @@
      ("[" . #'backward-paragraph)
      ("]" . #'forward-paragraph))
     :config
-    (god-mode-all 1))
+    (god-local-mode))
 #+end_src
 
 * Auto-completion
@@ -201,24 +210,31 @@
 #+begin_src elisp
   (use-package embark
     :after god-mode
+    :demand
     :config
     (add-to-list 'god-exempt-major-modes 'embark-mode)
     :bind*
     ("C-," . embark-act)
     (:map embark-general-map
-  	  ("C-w" . browse-url))
+	  ("C-w" . browse-url))
     (:map embark-identifier-map
-  	  ("R" . query-replace)
-  	  ("O" . multi-occur-in-matching-buffers)
-  	  ("c" . browse-url-chrome)
-  	  ("f" . browse-url-firefox))
+	  ("R" . query-replace)
+	  ("O" . multi-occur-in-matching-buffers)
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
     (:map embark-url-map
-  	  ("c" . browse-url-chrome)
-  	  ("f" . browse-url-firefox))
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
     (:map  embark-file-map
-  	   ("p" . project-find-file)
-  	   ("b" . project-switch-to-buffer)
-  	   ("," . append-to-previous-buffer)))
+	   ("p" . project-find-file)
+	   ("b" . project-switch-to-buffer)
+	   ("," . append-to-previous-buffer)))
+#+end_src
+
+* Load custom configurations
+
+#+begin_src elisp
+  (if custom-file (load custom-file 'noerror))
 #+end_src
 
 * On hand documentation
@@ -238,6 +254,8 @@ Just press ~C-h o~ to get help on those symbols.
 - =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
+- =display-time-day-and-date=
+- =display-time-mode=
 - =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
@@ -459,7 +477,7 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 - [[https://tkf.github.io/emacs-request/][request.el]]
 
 *** Useful topics
-
+- [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key-Bindings in Emacs]]
 - [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
 - [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]
 

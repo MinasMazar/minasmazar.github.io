@@ -299,10 +299,15 @@
 <li><a href="#orga541047">Journalctl</a></li>
 <li><a href="#org84a2d5a">Linux desktop</a>
 <ul>
+<li><a href="#org9b1d2f0">Add a custom window manager entry for LightDM</a></li>
 <li><a href="#orge728db0">Create a .desktop File</a></li>
 <li><a href="#orgbc54bca">Handling screen saver / blank screen</a></li>
+<li><a href="#org3832863">Read battery status from command line</a></li>
+<li><a href="#org2465bee">Screen managing (xrandr)</a></li>
 </ul>
 </li>
+<li><a href="#org43c8c46">i3 (Window Manager)</a></li>
+<li><a href="#orgdbafc33">Suspend the system via command line</a></li>
 <li><a href="#org839ba71">MacOS</a>
 <ul>
 <li><a href="#org84577de">Install Homebrew</a></li>
@@ -327,6 +332,7 @@
 <li><a href="#orga4460d5">Pulseaudio</a></li>
 <li><a href="#orgc48033c">Raspberry</a>
 <ul>
+<li><a href="#orge7a8cdb">Overscan</a></li>
 <li><a href="#org211fd21">Detect Raspberry model</a></li>
 <li><a href="#orgabc5293">Deal with I2C from CLI</a></li>
 <li><a href="#orga875f4e">Troubleshoot USB Capacitive Touch Screen Display</a></li>
@@ -334,7 +340,8 @@
 <li><a href="#orgcc038c7">Use Raspberry Pi in "Kiosk" mode</a></li>
 <li><a href="#orgc9eb77e">How to attach a cooler fan</a></li>
 <li><a href="#orgc8a2f2c">Magic Mirror</a></li>
-<li><a href="#org1398176">Turn Your Raspberry Pi into an Access Point</a></li>
+<li><a href="#org5b30a0a">Turn your RPi into an Access Point</a></li>
+<li><a href="#org7b8964c">Turn your RPi into a Spy</a></li>
 </ul>
 </li>
 <li><a href="#orgbb0254a">Run make on list of projects</a></li>
@@ -348,7 +355,18 @@
 <li><a href="#orgdf3b06a">How to store data on a file using Greasemonkey</a></li>
 </ul>
 </li>
-<li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a></li>
+<li><a href="#org46a230e">Youtube</a>
+<ul>
+<li><a href="#org67e7c34">Export your <i>watch later</i> list from the browser</a></li>
+<li><a href="#org73458cb">Get RSS feed of a channel or playlist</a></li>
+<li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a>
+<ul>
+<li><a href="#org624bb26">Usage examples</a></li>
+<li><a href="#orgada3e2a">Troubleshooting</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -739,7 +757,7 @@ Example Makefile for an Elixir/Phoenix webapp
 
 <div class="org-src-container">
 <pre class="src src-makefile">port := 4030
-prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/magma MIX_ENV=prod SECRET_KEY_BASE=8kX3vyc0qLs38OFTa4C+ZTx6Q9h0KXyfh8UgU/Yt4InSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
+prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/my-app MIX_ENV=prod SECRET_KEY_BASE=8X3vyc0qkLs38OFTa4C+ZTx6Q9h0KXyfh8Ug/Yt4IUnSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
 cmd := $$MAKE_CMD
 
 default: start-prod
@@ -1069,7 +1087,7 @@ A complete, cross-platform solution to record, convert and stream audio and vide
 <div id="outline-container-orgcc4b6fd" class="outline-3">
 <h3 id="orgcc4b6fd">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orgcc4b6fd">
-<pre class="example" id="org6647386">
+<pre class="example" id="orgd04d529">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1082,7 +1100,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org1aedc60">
+<pre class="example" id="orge656574">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1090,7 +1108,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org89cd332">
+<pre class="example" id="org16d33f9">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1108,7 +1126,7 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 <div id="outline-container-orgd664cfc" class="outline-3">
 <h3 id="orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-orgd664cfc">
-<pre class="example" id="org731f8b3">
+<pre class="example" id="orge1d1c09">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1116,7 +1134,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org1662665">
+<pre class="example" id="orge699604">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1128,21 +1146,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org3aaf582">
+<pre class="example" id="orgb9cd40e">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org5068c42">
+<pre class="example" id="org9a101c3">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgb53407f">
+<pre class="example" id="orgc01342a">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1159,7 +1177,7 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="org3b62d99">
+<pre class="example" id="orgc7aa81b">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
@@ -1179,14 +1197,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org135d8bb">
+<pre class="example" id="orgca73859">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgffa2332">
+<pre class="example" id="org45264b0">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1203,7 +1221,7 @@ For audio I found this
 <div id="outline-container-orgb64a055" class="outline-3">
 <h3 id="orgb64a055">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-orgb64a055">
-<pre class="example" id="org7ec86a9">
+<pre class="example" id="org4ea727c">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1211,7 +1229,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgaef723b">
+<pre class="example" id="org07b2de4">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1260,7 +1278,7 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="orgd3fb7dc">
+<pre class="example" id="orgdcea1bc">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1271,7 +1289,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org43f8ea3">
+<pre class="example" id="org8034aed">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1797,6 +1815,28 @@ or retain only the past 500 MB
 <h2 id="org84a2d5a">Linux desktop</h2>
 <div class="outline-text-2" id="text-org84a2d5a">
 </div>
+<div id="outline-container-org9b1d2f0" class="outline-3">
+<h3 id="org9b1d2f0">Add a custom window manager entry for <a href="https://wiki.ubuntu.com/LightDM">LightDM</a></h3>
+<div class="outline-text-3" id="text-org9b1d2f0">
+<p>
+Add a file in <code>/usr/share/xsessions/</code> with something like this (example for <code>i3</code>)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-toml">[Desktop Entry]
+Name=i3
+Comment=improved dynamic tiling window manager
+Exec=i3
+TryExec=i3
+Type=Application
+X-LightDM-DesktopName=i3
+DesktopNames=i3
+Keywords=tiling;wm;windowmanager;window;manager;
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orge728db0" class="outline-3">
 <h3 id="orge728db0">Create a .desktop File</h3>
 <div class="outline-text-3" id="text-orge728db0">
@@ -1825,6 +1865,343 @@ Exec=/usr/bin/python3 /home/pi/clock.py
 <code>xset -dpms</code> (disable the power management)
 </p>
 </div>
+</div>
+
+<div id="outline-container-org3832863" class="outline-3">
+<h3 id="org3832863">Read battery status from command line</h3>
+<div class="outline-text-3" id="text-org3832863">
+<p>
+Here's a <a href="https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal">StackOverlow thread</a>: from Linux 4.20 <code>cat /sys/class/power_supply/BAT1/status</code>; check the link for old methods.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2465bee" class="outline-3">
+<h3 id="org2465bee">Screen managing (xrandr)</h3>
+<div class="outline-text-3" id="text-org2465bee">
+<blockquote>
+<p>
+I use this command to mirror my desktop with my external VGA:
+</p>
+
+<p>
+$ xrandr &#x2013;output LVDS-1 &#x2013;mode 1366x768 &#x2013;scale 1x1 &#x2013;output VGA-1 &#x2013;same-as LVDS-1 &#x2013;mode 1920x1080 &#x2013;scale 0.711x0.711
+</p>
+
+<p>
+LVDS-1 is the laptop screen , natively working in 1366x768.
+</p>
+
+<p>
+VGA-1 is my external VGA monitor, with native resolution of 1920x1080, scaled to 0.711 which equals close to 1366x768 (laptop resolution).
+</p>
+
+<p>
+Results are good for me. You can experiment with those options.
+</p>
+
+<p>
+Similarly, I use this one for extended desktop:
+</p>
+
+<p>
+$ xrandr &#x2013;output VGA-1 &#x2013;mode 1920x1080 &#x2013;scale 1x1 &#x2013;output LVDS-1 &#x2013;mode 1366x768 &#x2013;scale 1x1 &#x2013;left-of VGA-1
+</p>
+
+<p>
+You can detect the names of your screens by just running xrandr
+</p>
+</blockquote>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org43c8c46" class="outline-2">
+<h2 id="org43c8c46"><a href="https://en.wikipedia.org/wiki/I3_(window_manager)">i3</a> (Window Manager)</h2>
+<div class="outline-text-2" id="text-org43c8c46">
+<p>
+A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit <code>$mod+Return</code> to access the <b><b>i3</b></b> mode, and <code>alt+Tab</code> to cycle across windows; all other keybidings will go straight to Emacs.
+</p>
+
+<pre class="example" id="orge5584d5">
+# This file has been auto-generated by i3-config-wizard(1).
+# It will not be overwritten, so edit it as you like.
+#
+# Should you change your keyboard layout some time, delete
+# this file and re-run i3-config-wizard(1).
+#
+
+# i3 config file (v4)
+#
+# Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
+font pango:monospace 8
+
+# This font is widely installed, provides lots of unicode glyphs, right-to-left
+# text rendering and scalability on retina/hidpi displays (thanks to pango).
+#font pango:DejaVu Sans Mono 8
+
+# Start XDG autostart .desktop files using dex. See also
+# https://wiki.archlinux.org/index.php/XDG_Autostart
+exec --no-startup-id dex --autostart --environment i3
+
+# The combination of xss-lock, nm-applet and pactl is a popular choice, so
+# they are included here as an example. Modify as you see fit.
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager is the most popular way to manage wireless networks on Linux,
+# and nm-applet is a desktop environment-independent system tray GUI for it.
+exec --no-startup-id nm-applet
+
+# Use pactl to adjust volume in PulseAudio.
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# move tiling windows via drag &amp; drop by left-clicking into the title bar,
+# or left-clicking anywhere into the window while holding the floating modifier.
+tiling_drag modifier titlebar
+
+# start a terminal
+# bindsym $mod+Return exec i3-sensible-terminal
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# change focus
+bindsym alt+Tab focus left
+bindsym alt+Shift+Tab focus down
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+mode "i3" {
+  # start dmenu (a program launcher)
+  bindsym d exec --no-startup-id dmenu_run
+  # A more modern dmenu replacement is rofi:
+  # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
+  # There also is i3-dmenu-desktop which only displays applications shipping a
+  # .desktop file. It is a wrapper around dmenu, so you need that installed.
+  # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+
+  # bindsym $mod+l focus up
+  # bindsym $mod+semicolon focus right
+
+  # alternatively, you can use the cursor keys:
+  bindsym Left focus left
+  bindsym Down focus down
+  bindsym Up focus up
+  bindsym Right focus right
+
+  # move focused window
+  bindsym Shift+j move left
+  bindsym Shift+k move down
+  bindsym Shift+l move up
+  bindsym Shift+semicolon move right
+
+  # split in horizontal orientation
+  bindsym h split h
+
+  # split in vertical orientation
+  bindsym v split v
+
+  # enter fullscreen mode for the focused container
+  bindsym f fullscreen toggle
+
+  # change container layout (stacked, tabbed, toggle split)
+  bindsym s layout stacking
+  bindsym w layout tabbed
+  bindsym e layout toggle split
+
+  # toggle tiling / floating
+  bindsym $mod+Shift+space floating toggle
+
+  # change focus between tiling / floating windows
+  bindsym space focus mode_toggle
+
+  # focus the parent container
+  bindsym a focus parent
+
+  # focus the child container
+  #bindsym $mod+d focus child
+
+  # switch to workspace
+  bindsym 1 workspace number $ws1
+  bindsym 2 workspace number $ws2
+  bindsym 3 workspace number $ws3
+  bindsym 4 workspace number $ws4
+  bindsym 5 workspace number $ws5
+  bindsym 6 workspace number $ws6
+  bindsym 7 workspace number $ws7
+  bindsym 8 workspace number $ws8
+  bindsym 9 workspace number $ws9
+  bindsym 0 workspace number $ws10
+
+  # move focused container to workspace
+  bindsym Shift+1 move container to workspace number $ws1
+  bindsym Shift+2 move container to workspace number $ws2
+  bindsym Shift+3 move container to workspace number $ws3
+  bindsym Shift+4 move container to workspace number $ws4
+  bindsym Shift+5 move container to workspace number $ws5
+  bindsym Shift+6 move container to workspace number $ws6
+  bindsym Shift+7 move container to workspace number $ws7
+  bindsym Shift+8 move container to workspace number $ws8
+  bindsym Shift+9 move container to workspace number $ws9
+  bindsym Shift+0 move container to workspace number $ws10
+
+  # reload the configuration file
+  bindsym Shift+c reload
+  # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+  bindsym Shift+r restart
+  # exit i3 (logs you out of your X session)
+  bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+  bindsym r mode "resize"
+  bindsym $mod+Return mode "default"
+}
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+	# These bindings trigger as soon as you enter the resize mode
+
+	# Pressing left will shrink the window’s width.
+	# Pressing right will grow the window’s width.
+	# Pressing up will shrink the window’s height.
+	# Pressing down will grow the window’s height.
+	bindsym j resize shrink width 10 px or 10 ppt
+	bindsym k resize grow height 10 px or 10 ppt
+	bindsym l resize shrink height 10 px or 10 ppt
+	bindsym semicolon resize grow width 10 px or 10 ppt
+
+	# same bindings, but for the arrow keys
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
+
+	# back to normal: Enter or Escape or $mod+r
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym r mode "resize"
+}
+
+bindsym $mod+Return mode "i3"
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+	mode hide
+	hidden_state hide
+	modifier $mod
+
+	font pango:monospace 14
+	status_command i3status
+}
+
+</pre>
+
+<p>
+And this is a sample configuration of <code>i3status</code> at <code>~/.config/i3status/config</code>.
+</p>
+
+<pre class="example" id="org67c4b1a">
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+	colors = true
+	interval = 5
+}
+
+order += "ipv6"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "battery all"
+order += "disk /"
+order += "load"
+order += "memory"
+order += "volume master"
+order += "tztime local"
+
+wireless _first_ {
+	format_up = "W: (%quality at %essid) %ip"
+	format_down = "W: down"
+}
+
+ethernet _first_ {
+	format_up = "E: %ip (%speed)"
+	format_down = "E: down"
+}
+
+battery all {
+	format = "%status %percentage %remaining"
+}
+
+disk "/" {
+	format = "%avail"
+}
+
+load {
+	format = "%1min"
+}
+
+memory {
+	format = "%used | %available"
+	threshold_degraded = "1G"
+	format_degraded = "MEMORY &lt; %available"
+}
+
+tztime local {
+	format = "%Y-%m-%d %H:%M:%S"
+}
+
+volume master {
+	format = "♪: %volume"
+	format_muted = "♪: muted (%volume)"
+	device = "default"
+	mixer = "Master"
+	mixer_idx = 0
+}
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgdbafc33" class="outline-2">
+<h2 id="orgdbafc33">Suspend the system via command line</h2>
+<div class="outline-text-2" id="text-orgdbafc33">
+<p>
+Here's a <a href="https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line">StackOverflow thread</a>: <code>systemctl suspend|hibernate</code> (for newest distros) or <code>pmi action suspend|hibernate</code> (old method).
+</p>
 </div>
 </div>
 
@@ -2298,6 +2675,9 @@ pacmd move-sink-input 5 1
 <h2 id="orgc48033c">Raspberry</h2>
 <div class="outline-text-2" id="text-orgc48033c">
 </div>
+<div id="outline-container-orge7a8cdb" class="outline-3">
+<h3 id="orge7a8cdb"><a href="https://retropie.org.uk/docs/Overscan/">Overscan</a></h3>
+</div>
 <div id="outline-container-org211fd21" class="outline-3">
 <h3 id="org211fd21">Detect Raspberry model</h3>
 <div class="outline-text-3" id="text-org211fd21">
@@ -2363,12 +2743,22 @@ or if you want to automate via <code>Makefile</code>
 <div id="outline-container-orgc8a2f2c" class="outline-3">
 <h3 id="orgc8a2f2c"><a href="https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/">Magic Mirror</a></h3>
 </div>
-<div id="outline-container-org1398176" class="outline-3">
-<h3 id="org1398176">Turn Your Raspberry Pi into an Access Point</h3>
-<div class="outline-text-3" id="text-org1398176">
+<div id="outline-container-org5b30a0a" class="outline-3">
+<h3 id="org5b30a0a">Turn your RPi into an Access Point</h3>
+<div class="outline-text-3" id="text-org5b30a0a">
 <p>
 <a href="https://raspberrytips.com/access-point-setup-raspberry-pi/">https://raspberrytips.com/access-point-setup-raspberry-pi/</a>
 </p>
+</div>
+</div>
+
+<div id="outline-container-org7b8964c" class="outline-3">
+<h3 id="org7b8964c">Turn your RPi into a Spy</h3>
+<div class="outline-text-3" id="text-org7b8964c">
+<ul class="org-ul">
+<li><a href="https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1">https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1</a></li>
+<li><a href="https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e">https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e</a></li>
+</ul>
 </div>
 </div>
 </div>
@@ -2466,7 +2856,11 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 <div id="outline-container-orgdf3b06a" class="outline-3">
 <h3 id="orgdf3b06a">How to store data on a file using Greasemonkey</h3>
 <div class="outline-text-3" id="text-orgdf3b06a">
-<pre class="example" id="orgfa0f979">
+<p>
+More details in this <a href="https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313">StackOverflow thread</a> showing different approaches, here I'm reporting just one.
+</p>
+
+<pre class="example" id="org8ac0494">
 // @grant        GM_download
 
 function saveData(data, filename) {
@@ -2485,9 +2879,47 @@ saveData("hello world", "hello.txt");
 </div>
 </div>
 
-<div id="outline-container-org4a19e75" class="outline-2">
-<h2 id="org4a19e75">Youtube downloader (yt-dlp)</h2>
-<div class="outline-text-2" id="text-org4a19e75">
+<div id="outline-container-org46a230e" class="outline-2">
+<h2 id="org46a230e">Youtube</h2>
+<div class="outline-text-2" id="text-org46a230e">
+</div>
+<div id="outline-container-org67e7c34" class="outline-3">
+<h3 id="org67e7c34">Export your <i>watch later</i> list from the browser</h3>
+<div class="outline-text-3" id="text-org67e7c34">
+<p>
+Go the your "Watch later" page on the browser, open the console and execute
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">var els = document.querySelectorAll('a.ytd-playlist-video-renderer'));
+var elsExp = [];
+els.forEach(function(el) { elsExp.push([el.innerText, el.getAttribute("href")]) });
+console.log(JSON.stringify(elsExp));
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org73458cb" class="outline-3">
+<h3 id="org73458cb">Get RSS feed of a channel or playlist</h3>
+<div class="outline-text-3" id="text-org73458cb">
+<p>
+Having the channel ID (<a href="https://www.youtube.com/watch?v=zNABOcxGkt8&amp;t=0s">here</a> a video explainging how to do that), construct as follow:
+</p>
+
+<p>
+<code>https://youtube.com/watch?v=CHANNEL-ID</code> to <code>https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID</code>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4a19e75" class="outline-3">
+<h3 id="org4a19e75">Youtube downloader (yt-dlp)</h3>
+<div class="outline-text-3" id="text-org4a19e75">
+</div>
+<div id="outline-container-org624bb26" class="outline-4">
+<h4 id="org624bb26">Usage examples</h4>
+<div class="outline-text-4" id="text-org624bb26">
 <p>
 Search for videos.
 </p>
@@ -2531,6 +2963,31 @@ Download and convert to best audio format
 <div class="org-src-container">
 <pre class="src src-shell">youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 "https://www.youtube.com/watch?v=hAMaCxw9Utw"
 </pre>
+</div>
+
+<p>
+Get the channel ID from a channel URL
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">yt-dlp "https://www.youtube.com/@nicolabizzihistoriae" --print channel_url --playlist-end 1
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgada3e2a" class="outline-4">
+<h4 id="orgada3e2a">Troubleshooting</h4>
+<div class="outline-text-4" id="text-orgada3e2a">
+<p>
+If you have issues with an error like <code>WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pip3 install --upgrade certifi
+</pre>
+</div>
+</div>
 </div>
 </div>
 </div>

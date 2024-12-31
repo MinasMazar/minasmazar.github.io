@@ -204,9 +204,9 @@
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#orgbad95e4">Patches</a></li>
-<li><a href="#org1e8d9cd">Hail Hydra! 🐍&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
 <li><a href="#org2edee99">IDE 🖥️</a>
 <ul>
+<li><a href="#org0142e62">MacOS compatibility</a></li>
 <li><a href="#orgb932f18">Markup languages</a>
 <ul>
 <li><a href="#orgb8a181e">Markdown</a></li>
@@ -243,13 +243,29 @@
 <li><a href="#org04c35c6">Headline</a></li>
 </ul>
 </li>
-<li><a href="#org40d5f0d">Multimedia 🎶</a></li>
+<li><a href="#org40d5f0d">Multimedia 🎶</a>
+<ul>
+<li><a href="#org7b424f4">Bongo</a></li>
+<li><a href="#orgd095358">yeetube</a></li>
+</ul>
+</li>
 <li><a href="#org799949a">News 📰 and Mail 📬</a>
 <ul>
 <li><a href="#org366019b">RSS</a></li>
 <li><a href="#orgda846f2">Mail</a>
 <ul>
+<li><a href="#orgb96f97b">Resources</a></li>
 <li><a href="#orga8b9a1c">Mu4e</a></li>
+<li><a href="#org720c96d">Gnus</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org7976ab7">Web browsing</a>
+<ul>
+<li><a href="#org063d11e">EWW</a>
+<ul>
+<li><a href="#org381cc47">Experimenting with <code>eww-retrieve-command</code></a></li>
 </ul>
 </li>
 </ul>
@@ -261,6 +277,7 @@
 <li><a href="#org2ae18ea">Web search</a></li>
 </ul>
 </li>
+<li><a href="#org3d27cae">Emacs as Window Manager&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
 </ul>
 </div>
 </div>
@@ -285,30 +302,22 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 </div>
 </div>
 
-<div id="outline-container-org1e8d9cd" class="outline-2">
-<h2 id="org1e8d9cd">Hail Hydra! 🐍&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h2>
-<div class="outline-text-2" id="text-org1e8d9cd">
+<div id="outline-container-org2edee99" class="outline-2">
+<h2 id="org2edee99">IDE 🖥️</h2>
+<div class="outline-text-2" id="text-org2edee99">
+</div>
+<div id="outline-container-org0142e62" class="outline-3">
+<h3 id="org0142e62">MacOS compatibility</h3>
+<div class="outline-text-3" id="text-org0142e62">
 <div class="org-src-container">
-<pre class="src src-elisp">(use-package hydra
-  :bind
-  ("s-o" . #'hydra-kommand/body)
+<pre class="src src-elisp">(use-package exec-path-from-shell
   :config
-  (defhydra hydra-kommand (:color blue)
-    ;; "Easily access most used commands: _a_genda _e_shell _c_apture _q_uit"
-    ("a" #'org-agenda "agenda 📆")
-    ("e" #'eshell "eshell 🐚")
-    ("c" #'org-capture "capture 📘")
-    ("8" #'emoji-search "emoji 🙂")
-    ("q" nil)))
+  (exec-path-from-shell-initialize))
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org2edee99" class="outline-2">
-<h2 id="org2edee99">IDE 🖥️</h2>
-<div class="outline-text-2" id="text-org2edee99">
-</div>
 <div id="outline-container-orgb932f18" class="outline-3">
 <h3 id="orgb932f18">Markup languages</h3>
 <div class="outline-text-3" id="text-orgb932f18">
@@ -389,10 +398,10 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
            tabspaces-open-or-create-project-and-workspace)
   :bind
   (("s-q" . #'tab-switch)
-   ("s-{" . tab-previous)
-   ("s-}" . tab-next))
+   ("s-{" . #'tab-previous)
+   ("s-}" . #'tab-next))
   :custom
-  (tabspaces-keymap-prefix "M-o w")
+  (tabspaces-keymap-prefix "C-x t w")
   (tabspaces-use-filtered-buffers-as-default t)
   (tabspaces-default-tab "Default")
   (tabspaces-remove-to-default t)
@@ -435,6 +444,7 @@ Here install <code>vterm</code> and some  useful functions to ease interaction w
 <pre class="src src-elisp">(use-package vterm
   :after god-mode
   :config
+  (require 'god-mode)
   (add-to-list 'god-exempt-major-modes 'vterm-mode)
 
   (defun minemacs-vterm-exec (command)
@@ -519,7 +529,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
 (defun jarvis/play-youtube (&amp;optional url)
   "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
-  (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth entry )) jarvis/youtube-sources))))
+  (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
   (let ((command (format "mpv \"%s\"" url))
       (buffer-name (format "mpv: %s" url)))
     (async-shell-command command buffer-name)))
@@ -527,12 +537,13 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 (defun jarvis/open-random-youtube ()
   "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
   (interactive)
-  (let ((url (minemacs-random jarvis/youtube-sources)))
+  (let ((entry (minemacs-random jarvis/youtube-sources))
+        (url (nth 1 entry)))
     (jarvis/open-youtube url)))
 
 (defun jarvis/open-youtube (&amp;optional url)
   "Open in browser one of the sources in `jarvis/youtube-sources`."
-  (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+  (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
   (browse-url-default-browser url))
 </pre>
 </div>
@@ -566,7 +577,7 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
 (defun jarvis/youtube-video (url)
   "Returns details about a Youtube video given an URL"
   (interactive "sURL: ")
-  (let ((id (jarvis/youtube--extract-id url)))
+  (let ((id (jarvis/youtube--extract-video-id url)))
     (request "https://www.googleapis.com/youtube/v3/videos"
       :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
       :parser 'json-read
@@ -585,7 +596,7 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
                       (beginning-of-buffer))
                       (pop-to-buffer (current-buffer)))))))))
 
-(defun jarvis/youtube--extract-id (string)
+(defun jarvis/youtube--extract-video-id (string)
   "Extract the id from a Youtube video URL"
   (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
     (match-string 1 string)))
@@ -748,9 +759,38 @@ Install the <code>doom-modeline</code>.
 <div id="outline-container-org40d5f0d" class="outline-2">
 <h2 id="org40d5f0d">Multimedia 🎶</h2>
 <div class="outline-text-2" id="text-org40d5f0d">
+</div>
+
+<div id="outline-container-org7b424f4" class="outline-3">
+<h3 id="org7b424f4">Bongo</h3>
+<div class="outline-text-3" id="text-org7b424f4">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package bongo)
 </pre>
+</div>
+
+<p>
+The <b><b>MPV</b></b> backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with <code>bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......</code>. In order to allow <code>mpv</code> to play "https" URIs change the <code>bongo-custom-backend-matchers</code> variable.
+</p>
+
+<pre class="example" id="org64f3ae3">
+(setq bongo-custom-backend-matchers
+       '((mpv ("https:") . t)))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd095358" class="outline-3">
+<h3 id="orgd095358">yeetube</h3>
+<div class="outline-text-3" id="text-orgd095358">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package yeetube
+  :bind
+  (:map minemacs-map
+        ("m y" . #'yeetube-search)
+        ("m s" . #'empv-youtube)))
+</pre>
+</div>
 </div>
 </div>
 </div>
@@ -807,6 +847,15 @@ Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-
 <h3 id="orgda846f2">Mail</h3>
 <div class="outline-text-3" id="text-orgda846f2">
 </div>
+<div id="outline-container-orgb96f97b" class="outline-4">
+<h4 id="orgb96f97b">Resources</h4>
+<div class="outline-text-4" id="text-orgb96f97b">
+<ul class="org-ul">
+<li><a href="https://f-santos.gitlab.io/2020-04-24-mu4e.html">https://f-santos.gitlab.io/2020-04-24-mu4e.html</a></li>
+</ul>
+</div>
+</div>
+
 <div id="outline-container-orga8b9a1c" class="outline-4">
 <h4 id="orga8b9a1c">Mu4e</h4>
 <div class="outline-text-4" id="text-orga8b9a1c">
@@ -819,6 +868,14 @@ Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like 
 </p>
 
 <p>
+On <i>deb based linux systems</i> you can install those via
+</p>
+
+<pre class="example" id="org971d8f1">
+$ sudo apt install mu isync pass
+</pre>
+
+<p>
 Useful links:
 </p>
 <ul class="org-ul">
@@ -829,9 +886,25 @@ Useful links:
 </div>
 </li>
 
-<li><a id="org39ac755"></a>Configuration<br />
-<div class="outline-text-5" id="text-org39ac755">
-<pre class="example" id="orgebf676e">
+<li><a id="orgc8345c0"></a>Mail Account info<br />
+<div class="outline-text-5" id="text-orgc8345c0">
+<p>
+Create a file <code>~/.authinfo</code> directly in the root of your home directory.
+</p>
+
+<pre class="example" id="org7f21fd2">
+machine smtp.example.com login myname port 587 password mypassword
+</pre>
+</div>
+</li>
+
+<li><a id="org3950c67"></a>mbsync configuration<br />
+<div class="outline-text-5" id="text-org3950c67">
+<p>
+Configure <code>mbsync</code> via <code>~/.mbsyncrc</code> with a content similar to this:
+</p>
+
+<pre class="example" id="orgb0d1d1d">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -862,8 +935,12 @@ Expunge Both
 Patterns *
 SyncState *
 </pre>
+</div>
+</li>
 
-<pre class="example" id="orgf654905">
+<li><a id="orgf4f4e6b"></a>mu4e configuration<br />
+<div class="outline-text-5" id="text-orgf4f4e6b">
+<pre class="example" id="org645617a">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
@@ -891,7 +968,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org1abf6c9">
+<pre class="example" id="org99b3d98">
 (setq mu4e-contexts
       (list
        ;; Work account
@@ -925,14 +1002,60 @@ To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e
 </div>
 </li>
 
-<li><a id="orgc48b462"></a>Tweaking<br />
-<div class="outline-text-5" id="text-orgc48b462">
+<li><a id="orgeee50ee"></a>Tweaking &amp; Troubleshooting<br />
+<div class="outline-text-5" id="text-orgeee50ee">
 <p>
 Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like <code>Ivy</code> or use <code>Embark</code> to select all attachments from the minibuffer after invoking <code>mu4e-view-save-attachment</code>). For more details see <a href="https://github.com/djcb/mu/issues/1979">this issue on Github</a>.
 </p>
 </div>
 </li>
 </ul>
+</div>
+
+<div id="outline-container-org720c96d" class="outline-4">
+<h4 id="org720c96d">Gnus</h4>
+<div class="outline-text-4" id="text-org720c96d">
+<p>
+To configure gnus in order to read your Gmail, you have to:
+</p>
+
+<ul class="org-ul">
+<li>create a password token on the Gmail account</li>
+<li>enter an authentication line in your <code>authinfo</code></li>
+</ul>
+
+<p>
+Then configure the <code>gnus-select-method</code>
+</p>
+
+<pre class="example" id="orgb6fe111">
+(setq gnus-select-method
+      '(nnimap "gmail"
+	       (nnimap-address "imap.gmail.com")
+	       (nnimap-server-port "imaps")
+	       (nnimap-stream ssl)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7976ab7" class="outline-2">
+<h2 id="org7976ab7">Web browsing</h2>
+<div class="outline-text-2" id="text-org7976ab7">
+</div>
+<div id="outline-container-org063d11e" class="outline-3">
+<h3 id="org063d11e">EWW</h3>
+<div class="outline-text-3" id="text-org063d11e">
+</div>
+<div id="outline-container-org381cc47" class="outline-4">
+<h4 id="org381cc47">Experimenting with <code>eww-retrieve-command</code></h4>
+<div class="outline-text-4" id="text-org381cc47">
+<p>
+Possible values for this variable could be
+<code>chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/</code>
+</p>
+</div>
 </div>
 </div>
 </div>
@@ -997,31 +1120,31 @@ To retrieve passwords use <code>(password-store-get "youtube-api")</code>.
     :keybinding "h")
 
   (defengine google
-    "https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"
+    "http://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"
     :browser 'browse-url-firefox
     :keybinding "g")
 
   (defengine google-images
-    "https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"
+    "http://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"
     :keybinding "i")
 
   (defengine google-maps
-    "https://maps.google.com/maps?q=%s"
+    "http://maps.google.com/maps?q=%s"
     :docstring "Google Maps"
     :keybinding "m")
 
-  (defengine google-maps
+  (defengine openstreet-maps
     "https://www.openstreetmap.org/search?query=%s"
     :docstring "OpenStreetMap"
     :keybinding "M")
 
   (defengine google-translate-to-it
-    "https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"
+    "http://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"
     :docstring "Translate to IT"
     :keybinding "t")
 
   (defengine google-translate-to-en
-    "https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"
+    "http://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"
     :docstring "Translate from IT to English"
     :browser 'browse-url-firefox
     :keybinding "T")
@@ -1037,7 +1160,7 @@ To retrieve passwords use <code>(password-store-get "youtube-api")</code>.
     :browser 'eww-browse-url)
 
   (defengine youtube
-    "https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"
+    "http://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"
     :keybinding "y")
 
   (defengine amazon
@@ -1053,6 +1176,32 @@ To retrieve passwords use <code>(password-store-get "youtube-api")</code>.
   (engine-mode t))
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3d27cae" class="outline-2">
+<h2 id="org3d27cae">Emacs as Window Manager&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h2>
+<div class="outline-text-2" id="text-org3d27cae">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package exwm
+  :config
+  (server-mode 1)
+  ;; (require 'exwm-config)
+  (exwm-config-example)
+  ;; (require 'exwm-randr)
+  ;; (exwm-randr-enable)
+  ;; (setq exwm-workspace-number 2
+  ;; 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
+  ;; (defun holymacs/xrandr-set-monitors ()
+  ;;   (start-process-shell-command "xrandr" nil
+  ;; 				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+  ;; 				   "xrandr --output eDP-1 --primary --mode 1920x1080"
+  ;; 				   ))
+  ;; (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable))
+</pre>
 </div>
 </div>
 </div>

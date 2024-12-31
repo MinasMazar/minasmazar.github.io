@@ -21,29 +21,110 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* Hail Hydra! 🐍                                                    :disable:
+* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                            :disable:
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
 :END:
 
+Simple hydra.
+
 #+begin_src elisp
   (use-package hydra
     :bind
-    ("s-o" . #'hydra-kommand/body)
+    ("M-o h" . #'hydra-modal/body)
     :config
+    (defhydra hydra-media (:color blue)
+	      "Media"
+	      ("y s" #'yeetube-search "youtube search")
+	      ("q" nil))
+
+    (defhydra hydra-modal (:color pink)
+      "Main Modal Mode."
+      ("n" #'next-line "_n_ext")
+      ("p" #'previous-line "_p_rev")
+      ("k" #'hydra-kommand/body "_k_ommand")
+      ("i" nil)
+      ("q" nil))
+
     (defhydra hydra-kommand (:color blue)
-      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _q_uit"
+      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _m_edia _q_uit"
       ("a" #'org-agenda "agenda 📆")
       ("e" #'eshell "eshell 🐚")
       ("c" #'org-capture "capture 📘")
       ("8" #'emoji-search "emoji 🙂")
+      ("m" #'hydra-media/body "media 🎵")
       ("q" nil)))
+#+end_src
+
+Advanced hydra.
+
+#+begin_src elisp
+  (use-package hydra
+    :ensure t
+    :init
+
+    (defun send-key(key)
+      (setq unread-command-events (listify-key-sequence key)))
+
+    :config
+    (defhydra hydra-nav (:color pink
+			     :pre (setq cursor-type 'box)
+			     :post (setq cursor-type 'bar))
+	    "hydra-nav:"
+	    ("w" #'kill-ring-save "w")
+	    ("n" #'next-line "n")
+	    ("p" #'previous-line "p")
+	    ("a" #'beginning-of-line "a")
+	    ("e" #'end-of-line "e")
+	    ("k" #'kill-buffer "k")
+	    ("K" #'kill-line "K")
+	    ("]" #'scroll-up-command "]")
+	    ("[" #'scroll-down-command "[")
+	    ("<" #'beginning-of-buffer "<")
+	    ("o" #'other-window "o")
+	    ("b" #'switch-to-buffer "b")
+	    (">" #'end-of-buffer ">")
+	    ("u" #'undo "undo")
+	    ("2" #'split-window-below "2")
+	    ("3" #'split-window-right "3")
+	    ("0" #'delete-window "0")
+	    ("1" #'delete-other-windows "1")
+	    ("i" nil "quit"))
+
+    (defhydra hydra-kommand (:color teal
+				    :pre (setq cursor-type 'box)
+				    :post (setq cursor-type 'bar))
+	    "hydra-kommand"
+	    ("k" #'execute-extended-command "🚀 Kommand")
+	    ("m" #'hydra-nav/body "modal")
+	    ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+	    ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
+	    ("e" #'eval-defun "Λ eval-defun")
+	    ("l" #'god-mode "👼 god")
+	    ("r" #'repeat "repeat")
+	    ("x" #'dabbrev-expand "expand")
+	    ("b" #'ibuffer "🧰 ibuffer")
+	    ("j" #'bookmark-jump "🔖 bookmark")
+	    ("a" #'org-agenda)
+	    ("q" nil "_q_uit"))
+    :bind
+    (("s-o" . #'hydra-kommand/body)
+     ("s-l" . #'hydra-nav/body)))
+
 #+end_src
 
 * IDE 🖥️
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/ide.el") :mkdirp yes
 :END:
+** MacOS compatibility
+
+#+begin_src elisp
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
+
 ** Markup languages
 *** Markdown
 
@@ -96,10 +177,10 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   	     tabspaces-open-or-create-project-and-workspace)
     :bind
     (("s-q" . #'tab-switch)
-     ("s-{" . tab-previous)
-     ("s-}" . tab-next))
+     ("s-{" . #'tab-previous)
+     ("s-}" . #'tab-next))
     :custom
-    (tabspaces-keymap-prefix "M-o w")
+    (tabspaces-keymap-prefix "C-x t w")
     (tabspaces-use-filtered-buffers-as-default t)
     (tabspaces-default-tab "Default")
     (tabspaces-remove-to-default t)
@@ -132,13 +213,14 @@ Here install =vterm= and some  useful functions to ease interaction with *Tmux*.
   (use-package vterm
     :after god-mode
     :config
+    (require 'god-mode)
     (add-to-list 'god-exempt-major-modes 'vterm-mode)
 
     (defun minemacs-vterm-exec (command)
       (interactive "sCommand: ")
       (let ((buffer-name (format "*vterm <%s>*" command)))
-        (with-current-buffer (vterm buffer-name)
-  	(vterm-send-string (format "%s && exit\n" command)))))
+	(with-current-buffer (vterm buffer-name)
+	(vterm-send-string (format "%s && exit\n" command)))))
 
     (defun minemacs-tmux/open ()
       (interactive)
@@ -199,20 +281,21 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun jarvis/play-youtube (&optional url)
     "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
-    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth entry )) jarvis/youtube-sources))))
+    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
     (let ((command (format "mpv \"%s\"" url))
-  	(buffer-name (format "mpv: %s" url)))
+	(buffer-name (format "mpv: %s" url)))
       (async-shell-command command buffer-name)))
 
   (defun jarvis/open-random-youtube ()
     "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
     (interactive)
-    (let ((url (minemacs-random jarvis/youtube-sources)))
+    (let ((entry (minemacs-random jarvis/youtube-sources))
+	  (url (nth 1 entry)))
       (jarvis/open-youtube url)))
 
   (defun jarvis/open-youtube (&optional url)
     "Open in browser one of the sources in `jarvis/youtube-sources`."
-    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
     (browse-url-default-browser url))
 #+end_src
 
@@ -223,7 +306,7 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
 
   (defcustom jarvis/youtube-api-key "" "Youtube API key")
   (cl-defstruct (youtube-video (:constructor youtube-video-create)
-                             (:copier nil))
+			     (:copier nil))
     id title desc)
 
   (defun jarvis/youtube-search (query)
@@ -233,36 +316,36 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
       :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
       :parser 'json-read
       :success (cl-function
-  	      (lambda (&key data &allow-other-keys)
-                  (when data
-                    (with-current-buffer (get-buffer-create "*youtube-vids*")
-                      (erase-buffer)
-                      (insert (prin1-to-string data))
-                      (pop-to-buffer (current-buffer))))))))
+	      (lambda (&key data &allow-other-keys)
+		  (when data
+		    (with-current-buffer (get-buffer-create "*youtube-vids*")
+		      (erase-buffer)
+		      (insert (prin1-to-string data))
+		      (pop-to-buffer (current-buffer))))))))
 
   (defun jarvis/youtube-video (url)
     "Returns details about a Youtube video given an URL"
     (interactive "sURL: ")
-    (let ((id (jarvis/youtube--extract-id url)))
+    (let ((id (jarvis/youtube--extract-video-id url)))
       (request "https://www.googleapis.com/youtube/v3/videos"
-        :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
-        :parser 'json-read
-        :success (cl-function
-  		(lambda (&key data &allow-other-keys)
-                    (when data
-                      (with-current-buffer (get-buffer-create "*youtube-vid*")
-                        (erase-buffer)
-  		      (let* ((items (alist-get 'items data))
-  			     (video-data (elt items 0))
-  			     (video (let-alist video-data
-  				      (youtube-video-create
-  				       :title .snippet.title
-  				       :desc .snippet.title))))
-  			(insert (prin1-to-string video))
-  			(beginning-of-buffer))
-                        (pop-to-buffer (current-buffer)))))))))
+	:params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
+	:parser 'json-read
+	:success (cl-function
+		(lambda (&key data &allow-other-keys)
+		    (when data
+		      (with-current-buffer (get-buffer-create "*youtube-vid*")
+			(erase-buffer)
+		      (let* ((items (alist-get 'items data))
+			     (video-data (elt items 0))
+			     (video (let-alist video-data
+				      (youtube-video-create
+				       :title .snippet.title
+				       :desc .snippet.title))))
+			(insert (prin1-to-string video))
+			(beginning-of-buffer))
+			(pop-to-buffer (current-buffer)))))))))
 
-  (defun jarvis/youtube--extract-id (string)
+  (defun jarvis/youtube--extract-video-id (string)
     "Extract the id from a Youtube video URL"
     (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
       (match-string 1 string)))
@@ -385,8 +468,27 @@ Install the =doom-modeline=.
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/media.el") :mkdirp yes
 :END:
+
+** Bongo
 #+begin_src elisp
   (use-package bongo)
+#+end_src
+
+The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
+
+#+begin_example elisp
+(setq bongo-custom-backend-matchers
+       '((mpv ("https:") . t)))
+#+end_example
+
+** yeetube
+
+#+begin_src elisp
+  (use-package yeetube
+    :bind
+    (:map minemacs-map
+	  ("m y" . #'yeetube-search)
+	  ("m s" . #'empv-youtube)))
 #+end_src
 
 * News 📰 and Mail 📬
@@ -431,17 +533,37 @@ Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][e
 #+end_src
 
 ** Mail
+*** Resources
+
+- https://f-santos.gitlab.io/2020-04-24-mu4e.html
+
 *** Mu4e
 **** Dependencies
 
 Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
+
+On /deb based linux systems/ you can install those via
+
+#+begin_example sh
+  $ sudo apt install mu isync pass
+#+end_example
 
 Useful links:
 - http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
 - https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
 - https://isync.sourceforge.io/mbsync.html
 
-**** Configuration
+**** Mail Account info
+
+Create a file =~/.authinfo= directly in the root of your home directory.
+
+#+begin_example authinfo
+machine smtp.example.com login myname port 587 password mypassword
+#+end_example
+
+**** mbsync configuration
+
+Configure =mbsync= via =~/.mbsyncrc= with a content similar to this:
 
 #+begin_example toml
   IMAPAccount gmail-imaps
@@ -474,6 +596,8 @@ Useful links:
   Patterns *
   SyncState *
 #+end_example
+
+**** mu4e configuration
 
 #+begin_example emacs-lisp
   (require 'mu4e)
@@ -533,18 +657,18 @@ To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= varia
 		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
 #+end_example
 
-**** Tweaking
+**** Tweaking & Troubleshooting
 
 Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
 
-*** COMMENT Gnus ⚠️ wip ⚠️
+*** Gnus
 
 To configure gnus in order to read your Gmail, you have to:
 
 - create a password token on the Gmail account
 - enter an authentication line in your =authinfo=
 
-#+begin_export ascii
+#+begin_export authinfo
   machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
 #+end_export
 
@@ -557,6 +681,16 @@ Then configure the =gnus-select-method=
 		 (nnimap-server-port "imaps")
 		 (nnimap-stream ssl)))
 #+end_example
+
+* Web browsing
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/web-browsing.el") :mkdirp yes
+:END:
+** EWW
+*** Experimenting with =eww-retrieve-command=
+
+Possible values for this variable could be
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
 
 * Utils ⚒️
 :PROPERTIES:
@@ -607,31 +741,31 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :keybinding "h")
 
     (defengine google
-      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      "http://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
       :browser 'browse-url-firefox
       :keybinding "g")
 
     (defengine google-images
-      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      "http://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
       :keybinding "i")
 
     (defengine google-maps
-      "https://maps.google.com/maps?q=%s"
+      "http://maps.google.com/maps?q=%s"
       :docstring "Google Maps"
       :keybinding "m")
 
-    (defengine google-maps
+    (defengine openstreet-maps
       "https://www.openstreetmap.org/search?query=%s"
       :docstring "OpenStreetMap"
       :keybinding "M")
 
     (defengine google-translate-to-it
-      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      "http://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
       :docstring "Translate to IT"
       :keybinding "t")
 
     (defengine google-translate-to-en
-      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      "http://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
       :docstring "Translate from IT to English"
       :browser 'browse-url-firefox
       :keybinding "T")
@@ -647,7 +781,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :browser 'eww-browse-url)
 
     (defengine youtube
-      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      "http://www.youtube.com/results?aq=f&oq=&search_query=%s"
       :keybinding "y")
 
     (defengine amazon
@@ -663,3 +797,27 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
+* Emacs as Window Manager                                           :disable:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (use-package exwm
+    :config
+    (server-mode 1)
+    ;; (require 'exwm-config)
+    (exwm-config-example)
+    ;; (require 'exwm-randr)
+    ;; (exwm-randr-enable)
+    ;; (setq exwm-workspace-number 2
+    ;; 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
+    ;; (defun holymacs/xrandr-set-monitors ()
+    ;;   (start-process-shell-command "xrandr" nil
+    ;; 				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
+    ;; 				   "xrandr --output eDP-1 --primary --mode 1920x1080"
+    ;; 				   ))
+    ;; (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-enable))
+#+end_src
