@@ -262,6 +262,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
+- =dired-guess-shell-alist-user=
 - =display-time-day-and-date=
 - =display-time-mode=
 - =epa-pinentry-mode=
@@ -285,7 +286,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =project-switch-commands=
 - =shr-inhibit-images=
 - =string-match=
-- ~C-x @~
+- ~C-x @~ prefix allow to reach/remap alt/super/Hyper keys
 
 ** [[info:org#Working with Source Code][Org code-blocks]]
 
