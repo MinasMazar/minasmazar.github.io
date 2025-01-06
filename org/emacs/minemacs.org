@@ -261,6 +261,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
 - =find-name-dired=
+- =frame-title-format=
 - =image-crop=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=

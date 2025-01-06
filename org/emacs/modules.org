@@ -408,6 +408,14 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
     (global-org-modern-mode))
 #+end_src
 
+** [[https://www.emacswiki.org/emacs/TransparentEmacs][Transparent Emacs]]
+
+Remember you need a compositing manager to handle transparency (compton, compiz or else).
+
+#+begin_src elisp
+  (set-frame-parameter nil 'alpha-background 90)
+#+end_src
+
 ** Highlight line
 
 #+begin_src elisp
