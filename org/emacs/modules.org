@@ -124,6 +124,14 @@ Advanced hydra.
   (use-package markdown-mode)
 #+end_src
 
+** Data serialization
+
+#+begin_src elisp
+  (use-package csv)
+  (use-package csv-mode)
+  (use-package yaml-mode)
+#+end_src
+
 ** Programming languages
 *** Elixir
 
