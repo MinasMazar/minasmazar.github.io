@@ -1,0 +1,111 @@
+#+TITLE: Holymacs
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2025-01-07 Tue>
+#+STARTUP: show2levels
+#+PROPERTY: header-args :tangle ~/.emacs.d.holymacs/init.el
+#+SETUPFILE: ../../../templates/_header.org
+
+* Package initialization
+
+#+begin_src elisp
+  (add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  			 ("elpa" . "https://elpa.gnu.org/packages/")
+  			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+  (require 'use-package)
+  (require 'use-package-ensure)
+  (setq use-package-always-ensure t
+        package-enable-at-startup t)
+  (package-initialize)
+#+end_src
+
+* Emacs configuration
+
+#+begin_src elisp
+  (use-package emacs
+    :ensure nil
+    :defer
+    :hook ((after-init . toggle-frame-maximized))
+    :custom
+    (dired-dwim-target t)
+    (dired-listing-switches "-alth")
+    ;; (completion-auto-help nil)
+    (enable-recursive-minibuffers t)
+    (initial-buffer-choice #'eshell)
+    (make-backup-files nil)
+    (shr-inhibit-images t)
+    (tab-always-indent 'complete)
+    (use-short-answers t)
+    (custom-file "~/.emacs.d.holymacs/custom.el")
+    (completion-styles '(basic flex))
+    :config
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+    (savehist-mode 1)
+    (recentf-mode 1)
+    (ffap-bindings)
+    (repeat-mode 1)
+    :bind
+    ("s-k" . #'execute-extended-command)
+    ("s-j" . #'switch-to-buffer)
+    ("s-0" . #'delete-window)
+    ("s-1" . #'delete-other-windows)
+    ("s-2" . #'split-window-below)
+    ("s-3" . #'split-window-right)
+    ("<XF86AudioLowerVolume>" . #'pulseaudio-control-decrease-sink-volume)
+    ("<XF86AudioRaiseVolume>" . #'pulseaudio-control-increase-sink-volume)
+    ("<XF86AudioMute>" . #'pulseaudio-control-toggle-current-sink-mute))
+
+  (if (file-exists-p custom-file) (load-file custom-file))
+#+end_src
+
+* System
+
+#+begin_src elisp
+  (use-package dmenu)
+  (use-package pulseaudio-control)
+#+end_src
+
+* Exwm
+
+#+begin_src elisp
+  (use-package hydra
+    :bind
+    ("s-j" . #'holymacs-mode/body)
+    :config
+    (defhydra holymacs-mode (:color amaranth)
+      "Holymacs"
+      ("n" #'next-line "⬇️")
+      ("p" #'previous-line "⬆️")
+      ("R" #'exwm-reset "🌀 Exwm reset")
+      ("s-n" nil)
+      ("i" nil)
+      ("q" nil)))
+#+end_src
+
+#+begin_src elisp
+  (use-package exwm
+    :init
+    (async-shell-command "dex -a -d -e exwm" nil nil);"*dex-errors*")
+    :config
+    (server-mode 1)
+    (require 'exwm)
+    (setq exwm-workspace-number 4)
+    ;; Make class name the buffer name.
+    (add-hook 'exwm-update-class-hook
+	      (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Global keybindings.
+    (setq exwm-systemtray-height 30
+	  exwm-input-global-keys
+	  `(([?\s-k] . execute-extended-command)
+	    ([?\s-j] . switch-to-buffer)
+	    ([?\s-n] . holymacs-mode/body)))
+    (exwm-enable)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-mode 1))
+#+end_src
