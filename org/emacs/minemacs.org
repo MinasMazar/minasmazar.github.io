@@ -113,6 +113,7 @@
     ("s-j" . #'switch-to-buffer)
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
+    ("s-_" . #'bookmark-set)
     (:map key-translation-map
 	  ("s-m" . "\C-x")
 	  ("s-M" . "\C-c"))
@@ -257,6 +258,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =current-time-string=
 - =display-time-day-and-date=
 - =display-time-mode=
+- =epa-pinentry-mode=
 - =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
@@ -265,6 +267,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =image-crop=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=
+- =make-list= and =number-sequence=
 - =mm-discouraged-alternatives=
 - =org-agenda-include-diary=
 - =org-agenda-custom-commands=
@@ -273,6 +276,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =org-todo-keywords=
 - =pp-eval-expression=
 - =proced=
+- =project-switch-commands=
 - =shr-inhibit-images=
 - =string-match=
 - ~C-x @~
@@ -327,6 +331,14 @@ To find an element
 #+begin_example elisp
   (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 #+end_example
+
+** Eshell
+
+Download four random images from picsum using an index.
+
+#+begin_src elisp
+  for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
+#+end_src
 
 ** (interactive) functions
 

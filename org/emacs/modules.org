@@ -298,8 +298,8 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
 
   (defcustom jarvis/youtube-api-key "" "Youtube API key")
   (cl-defstruct (youtube-video (:constructor youtube-video-create)
-                             (:copier nil))
-    id title desc)
+			       (:copier nil))
+    id title desc url channel channel-url categories tags)
 
   (defun jarvis/youtube-search (query)
     "Returns a list of youtube vidoes given a search term."
@@ -308,34 +308,54 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
       :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
       :parser 'json-read
       :success (cl-function
-  	      (lambda (&key data &allow-other-keys)
-                  (when data
-                    (with-current-buffer (get-buffer-create "*youtube-vids*")
-                      (erase-buffer)
-                      (insert (prin1-to-string data))
-                      (pop-to-buffer (current-buffer))))))))
+		(lambda (&key data &allow-other-keys)
+		  (when data
+		    (with-current-buffer (get-buffer-create "*youtube-vids*")
+		      (erase-buffer)
+		      (insert (prin1-to-string data))
+		      (pop-to-buffer (current-buffer))))))))
 
   (defun jarvis/youtube-video (url)
     "Returns details about a Youtube video given an URL"
     (interactive "sURL: ")
     (let ((id (jarvis/youtube--extract-id url)))
       (request "https://www.googleapis.com/youtube/v3/videos"
-        :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
-        :parser 'json-read
-        :success (cl-function
-  		(lambda (&key data &allow-other-keys)
-                    (when data
-                      (with-current-buffer (get-buffer-create "*youtube-vid*")
-                        (erase-buffer)
-  		      (let* ((items (alist-get 'items data))
-  			     (video-data (elt items 0))
-  			     (video (let-alist video-data
-  				      (youtube-video-create
-  				       :title .snippet.title
-  				       :desc .snippet.title))))
-  			(insert (prin1-to-string video))
-  			(beginning-of-buffer))
-                        (pop-to-buffer (current-buffer)))))))))
+	:params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics,topicDetails,status,localizations"))
+	:parser 'json-read
+	:success (cl-function
+		  (lambda (&key data &allow-other-keys)
+		    (when data
+		      (let* ((items (alist-get 'items data))
+			     (video-data (elt items 0))
+			     (video (let-alist video-data
+				      (youtube-video-create
+				       :title .snippet.title
+				       :url .snippet.webpage-url
+				       :channel .snippet.channel
+				       :channel-url .snippet.channel-url
+				       :categories .snippet.categories
+				       :tags .snippet.tags
+				       :desc .snippet.description)))
+			     (buffer-name "*yt-vid*")) ; (normalize-string (youtube-video-title video))))
+			(with-current-buffer (get-buffer-create buffer-name)
+			  (erase-buffer)
+			  (insert (prin1-to-string video-data))
+			  ;; (insert (format "# [%s](%s)" (youtube-video-title video) (youtube-video-url video)))
+			  ;; (insert ?\n)
+			  ;; (insert (format "From [%s](%s)\n" (youtube-video-channel video) (youtube-video-channel-url video)))
+			  ;; (insert (youtube-video-desc video))
+			  (beginning-of-buffer)
+			  (pop-to-buffer (current-buffer))))))))))
+
+  (defun normalize-string (str)
+    (require 'cl-lib)
+    (require 'ucs-normalize)
+    (let* ((dstr (downcase str))
+	   (fstr (cl-remove-if
+		 (lambda (char)
+		   (> char 127))
+		 (ucs-normalize-NFKD-string dstr))))
+      fstr))
 
   (defun jarvis/youtube--extract-id (string)
     "Extract the id from a Youtube video URL"
@@ -790,53 +810,3 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Emacs as Window Manager                                           :disable:
-:PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
-:END:
-
-
-#+begin_src elisp
-  (use-package vertico-posframe
-    :config
-    (vertico-posframe-mode 1))
-  (use-package dmenu)
-  (use-package pulseaudio-control)
-#+end_src
-
-#+begin_src elisp
-  (use-package hydra
-    :bind
-    ("s-j" . #'hydra-exwm-main-menu/body)
-    :config
-    (defhydra hydra-exwm-main-menu (:color blue)
-      "Main Menu"
-      ("<XF86AudioLowerVolume>" #'pulseaudio-control-decrease-sink-volume "🔉dec")
-      ("<XF86AudioRaiseVolume>" #'pulseaudio-control-decrease-sink-volume "🔊inc")
-      ("<XF86AudioMute" #'pulseaudio-control-toggle-current-sink-mute "🔇mute")
-      ("j" #'switch-to-buffer "➡️switch buffer")
-      ("w" #'exwm-workspace-switch "↔️switch workspace")
-      ("R" #'exwm-reset "🌀Reset")
-      ("q" nil)))
-#+end_src
-
-#+begin_src elisp
-    (use-package exwm
-      :init
-      (async-shell-command "dex -a -d -e exwm" nil "*dex-errors*")
-      :config
-      (server-mode 1)
-      (require 'exwm)
-      (setq exwm-workspace-number 4)
-      ;; Make class name the buffer name.
-      (add-hook 'exwm-update-class-hook
-		(lambda () (exwm-workspace-rename-buffer exwm-class-name)))
-      ;; Global keybindings.
-      (setq exwm-systemtray-height 30
-	    exwm-input-global-keys
-	    `(([?\s-k] . execute-extended-command)
-	      ([?\s-j] . hydra-exwm-main-menu/body)))
-      (exwm-enable)
-      (require 'exwm-systemtray)
-      (exwm-systemtray-mode 1))
-#+end_src
