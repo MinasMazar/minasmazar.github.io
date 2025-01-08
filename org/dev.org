@@ -1046,6 +1046,10 @@ You can detect the names of your screens by just running xrandr
   feh --bg-fill ~/path/to/image.png
 #+end_src
 
+** Useful commands and snippets
+
+- =ls -1 | wc -l= determine how many files there are in a directory
+
 * [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
 
 A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
