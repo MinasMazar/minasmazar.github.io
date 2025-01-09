@@ -1763,8 +1763,31 @@ or if you want to automate via =Makefile=
 
 https://raspberrytips.com/access-point-setup-raspberry-pi/
 
-** Turn your RPi into a Spy
+** Turn your RPi into a Spy (camera)
 
+Use [[https://motion-project.github.io/][motion]] app.
+
+** Turn your RPi into a Spy (audio)
+
+I want to use the mic of the Raspberry to stream on the audio over the network.
+I've achieved by following the instructions in this blogpost: [[https://hobbylad.wordpress.com/2017/04/26/raspberry-pi-system-audio-redirection-over-network/][Stream audio over the network using VLC]].
+To detect the alsa card for recording use =arecord -l=
+
+#+begin_src sh
+card 3: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+#+end_src
+
+then stream using VLC
+
+#+begin_src sh
+ cvlc -vvv alsa://plughw:3 --sout '#transcode{acodec=mp3,ab=64,channels=1}:standard{access=http,dst=0.0.0.0:8888/out.mp3}'
+#+end_src
+
+Connect to the raspberry: if the IP address is, for instance, 192.168.1.44, go to http://192.168.1.44:8888/out.mp3.
+
+Other resources:
 - https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1
 - https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e
 
