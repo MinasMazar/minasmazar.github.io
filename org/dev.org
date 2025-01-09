@@ -1068,7 +1068,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   set $mod Mod4
   set $alt Mod1
-  set $wallpaper_file ~/Dropbox/Alpenfestung.jpg
+  set $wallpaper_file ~/Pictures/my-wallpaper.jpg
 
   # Font for window titles. Will also be used by the bar unless a different font
   # is used in the bar {} block below.
@@ -1083,7 +1083,8 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   exec --no-startup-id dex --autostart --environment i3
   # exec --no-startup-id dex xfsettingsd.desktop
   exec --no-startup-id xfsettingsd
-  exec --no-startup-id compton ; feh --bg-max $wallpaper_file
+  exec --no-startup-id compton
+  exec --no-startup-id feh --bg-max $wallpaper_file
   # exec --no-startup-id xmodmap ~/.Xmodmaprc
 
   # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -1169,6 +1170,9 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym Shift+Up move up
     bindsym Shift+Right move right
   
+    # toggle i3bar mode
+    bindsym i bar mode toggle ; mode "default"
+
     # split in horizontal orientation
     bindsym h split h
   
@@ -1275,6 +1279,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 	  hidden_state hide
 	  modifier $mod
 
+          position top
 	  font pango:monospace 14
 	  status_command i3status
   }
