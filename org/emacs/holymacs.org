@@ -13,13 +13,13 @@
   (require 'package)
 
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-  			 ("elpa" . "https://elpa.gnu.org/packages/")
-  			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+			   ("elpa" . "https://elpa.gnu.org/packages/")
+			   ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
   (require 'use-package)
   (require 'use-package-ensure)
   (setq use-package-always-ensure t
-        package-enable-at-startup t)
+	package-enable-at-startup t)
   (package-initialize)
 #+end_src
 
@@ -31,25 +31,32 @@
     :defer
     :hook ((after-init . toggle-frame-maximized))
     :custom
-    (dired-dwim-target t)
-    (dired-listing-switches "-alth")
-    ;; (completion-auto-help nil)
-    (enable-recursive-minibuffers t)
-    (initial-buffer-choice #'eshell)
-    (make-backup-files nil)
-    (shr-inhibit-images t)
-    (tab-always-indent 'complete)
-    (use-short-answers t)
+    (completion-auto-help nil)
     (custom-file "~/.emacs.d.holymacs/custom.el")
-    (completion-styles '(basic flex))
     :config
     (tool-bar-mode -1)
     (menu-bar-mode -1)
     (scroll-bar-mode -1)
-    (savehist-mode 1)
-    (recentf-mode 1)
-    (ffap-bindings)
     (repeat-mode 1)
+    (fido-vertical-mode)
+
+    ;; Helpers
+    (defun minemacs-files-in-emacs-subdir (subdir)
+      (message "Scan files in emacs subdir %s" subdir)
+      (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
+	(message "Scan files in dir %s" scan-dir)
+	(if (file-exists-p scan-dir)
+	    (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+
+    ;; Modules
+    (defun minemacs-modules-load ()
+      "Load all modules '*.el' files in 'modules/' under the 'user-emacs-directory'"
+      (interactive)
+      ;; TODO: locate-dominating-file
+      (let ((modules (minemacs-files-in-emacs-subdir "modules")))
+	(if modules (mapcar (lambda (module)
+			      (load  module 'noerror))
+			    modules))))
     :bind
     ("s-k" . #'execute-extended-command)
     ("s-j" . #'switch-to-buffer)
@@ -62,6 +69,7 @@
     ("<XF86AudioMute>" . #'pulseaudio-control-toggle-current-sink-mute))
 
   (if (file-exists-p custom-file) (load-file custom-file))
+  (minemacs-modules-load)
 #+end_src
 
 * System
@@ -73,6 +81,10 @@
 
 * Exwm
 
+Useful links:
+
+- [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
+
 #+begin_src elisp
   (use-package hydra
     :bind
@@ -80,18 +92,21 @@
     :config
     (defhydra holymacs-mode (:color amaranth)
       "Holymacs"
-      ("n" #'next-line "⬇️")
-      ("p" #'previous-line "⬆️")
-      ("R" #'exwm-reset "🌀 Exwm reset")
-      ("s-n" nil)
-      ("i" nil)
-      ("q" nil)))
+      ("n" #'tab-next "➡️" :color blue)
+      ("p" #'tab-previous "⬅️" :color blue)
+      ("N" #'tab-next "➡️*" :color red)
+      ("P" #'tab-previous "⬅️*" :color red)
+      ("s-n" nil "quit")
+      ("RET" nil "quit")))
 #+end_src
 
 #+begin_src elisp
   (use-package exwm
     :init
-    (async-shell-command "dex -a -d -e exwm" nil nil);"*dex-errors*")
+    (start-process "dex" nil "dex" "-a" "-e" "i3")
+    (start-process "power-manager" nil "xfce4-power-manager")
+    (start-process "xfce-settings" nil "xfsettingsd")
+    ;; (async-shell-command "dex -a -e i3" nil nil)
     :config
     (server-mode 1)
     (require 'exwm)
@@ -103,7 +118,11 @@
     (setq exwm-systemtray-height 30
 	  exwm-input-global-keys
 	  `(([?\s-k] . execute-extended-command)
-	    ([?\s-j] . switch-to-buffer)
+	    ([?\s-m] . exwm-reset)
+	    ([?\s-M] . exwm-input-release-keyboard)
+	    ([?\s-]] . next-buffer)
+	    ([?\s-[] . previous-buffer)
+	    ([?\s-o] . other-window)
 	    ([?\s-n] . holymacs-mode/body)))
     (exwm-enable)
     (require 'exwm-systemtray)

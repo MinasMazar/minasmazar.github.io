@@ -21,7 +21,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                            :disable:
+* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                           :disable:
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
 :END:
@@ -168,7 +168,7 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   (use-package docker-compose-mode)
 #+end_src
 
-** Workspaces
+** Workspaces                                                       :disable:
 
 #+begin_src elisp
   (use-package tabspaces
@@ -374,7 +374,7 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
 ** Speak 🗣️
 
 #+begin_src elisp
-  (defun jarvis/speak (text)
+  (defun jarvis/espeak (text)
     "Speak text using `espeak`."
     (interactive (list
   		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
@@ -480,8 +480,6 @@ Install the =doom-modeline=.
 
 #+begin_src elisp
   (use-package doom-modeline
-    :init
-    (display-battery-mode 1)
     :hook (after-init . doom-modeline-mode))
 #+end_src
 
@@ -771,7 +769,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :keybinding "i")
 
     (defengine google-maps
-      "http://maps.google.com/maps?q=%s"
+      "https://maps.google.com/maps?q=%s"
       :docstring "Google Maps"
       :keybinding "m")
 
@@ -818,3 +816,36 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
+* Exwm                                                              :disable:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
+:END:
+
+Useful links:
+
+- [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
+
+#+begin_src elisp
+  (use-package exwm
+    :bind
+    (:map key-translation-map
+	  ("s-m" . nil))
+    :config
+    (server-mode 1)
+    (require 'exwm)
+    (setq exwm-workspace-number 4)
+    ;; Make class name the buffer name.
+    (add-hook 'exwm-update-class-hook
+	      (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Global keybindings.
+    (setq exwm-systemtray-height 30
+	  exwm-input-global-keys
+	  `(([?\s-k] . execute-extended-command)
+	    ([?\s-m] . exwm-reset)
+	    ([?\s-M] . exwm-input-release-keyboard)
+	    ([?\s-]] . next-buffer)
+	    ([?\s-[] . previous-buffer)))
+    (exwm-enable)
+    (require 'exwm-systemtray)
+    (exwm-systemtray-mode 1))
+#+end_src

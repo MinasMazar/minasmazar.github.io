@@ -4,14 +4,6 @@
 #+DATE: <2024-01-31 Wed>
 #+STARTUP: overview
 
-* Alsamixer
-
-Toggle mute
-
-#+begin_src sh
-  amixer set Master toggle
-#+end_src
-
 * Blog and publishing
 
 ** Static site generators
@@ -23,6 +15,14 @@ Toggle mute
 - https://srht.site/
 - [[https://pages.github.com/][Github pages]]
 - [[https://www.netlify.com/][Netlify]]
+
+* Web browsing
+
+Get the DOM of a webpage using chrome via command-line.
+
+#+begin_src sh
+  chrome --headless --dump-dom https://developer.chrome.com/
+#+end_src
 
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
@@ -996,6 +996,14 @@ DesktopNames=i3
 Keywords=tiling;wm;windowmanager;window;manager;
 #+end_src
 
+** Alsamixer
+
+Toggle mute
+
+#+begin_src sh
+  amixer set Master toggle
+#+end_src
+
 ** Create a .desktop File
 
 #+begin_src sh
@@ -1015,6 +1023,16 @@ Keywords=tiling;wm;windowmanager;window;manager;
 =xset s off= (turns off the screen saver)
 =xset s noblank= (turns off blanking)
 =xset -dpms= (disable the power management)
+
+** Pulseaudio
+
+You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
+
+#+begin_src sh
+  pacmd help list-sinks
+  pacmd list-sink-inputs
+  pacmd move-sink-input 5 1
+#+end_src
 
 ** Read battery status from command line
 
@@ -1038,6 +1056,18 @@ Similarly, I use this one for extended desktop:
 $ xrandr --output VGA-1 --mode 1920x1080 --scale 1x1 --output LVDS-1 --mode 1366x768 --scale 1x1 --left-of VGA-1
 
 You can detect the names of your screens by just running xrandr
+#+end_quote
+
+Adjust brightness from command line:
+
+#+begin_src sh
+  xrandr --output monitor-name --brightness level
+#+end_src
+
+**Remember** as mentioned in =man xrandr=
+
+#+begin_quote
+ However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
 #+end_quote
 
 ** Set an image as wallpaper using feh
@@ -1713,16 +1743,6 @@ Rename a database ([[https://www.postgresqltutorial.com/postgresql-administratio
 ALTER DATABASE db RENAME TO newdb;
 #+end_src
 
-* Pulseaudio
-
-You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
-
-#+begin_src sh
-  pacmd help list-sinks
-  pacmd list-sink-inputs
-  pacmd move-sink-input 5 1
-#+end_src
-
 * Raspberry
 ** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
 ** Detect Raspberry model
@@ -1799,6 +1819,7 @@ My =.zprofile= on my Mackbook.
 #+begin_src sh
   eval "$(/usr/local/bin/brew shellenv)"
   eval "$(fzf --bash)"
+  export ASDF_DIR="$HOME/.asdf"
   . "$HOME/.asdf/asdf.sh"
   . "$HOME/.asdf/completions/asdf.bash"
   export PATH=~/.local/bin:$PATH
