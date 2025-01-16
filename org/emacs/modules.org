@@ -21,7 +21,17 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                           :disable:
+* Helpers
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/helpers.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (defun random-from-list (list)
+    (nth (random (length list)) list))
+#+end_src
+
+* Hail Hydra! 🐍
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
 :END:
@@ -29,34 +39,10 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 Simple hydra.
 
 #+begin_src elisp
-  (use-package hydra
-    :bind
-    ("M-o h" . #'hydra-modal/body)
-    :config
-    (defhydra hydra-media (:color blue)
-	      "Media"
-	      ("y s" #'yeetube-search "youtube search")
-	      ("q" nil))
-
-    (defhydra hydra-modal (:color pink)
-      "Main Modal Mode."
-      ("n" #'next-line "_n_ext")
-      ("p" #'previous-line "_p_rev")
-      ("k" #'hydra-kommand/body "_k_ommand")
-      ("i" nil)
-      ("q" nil))
-
-    (defhydra hydra-kommand (:color blue)
-      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _m_edia _q_uit"
-      ("a" #'org-agenda "agenda 📆")
-      ("e" #'eshell "eshell 🐚")
-      ("c" #'org-capture "capture 📘")
-      ("8" #'emoji-search "emoji 🙂")
-      ("m" #'hydra-media/body "media 🎵")
-      ("q" nil)))
+  (use-package hydra)
 #+end_src
 
-Advanced hydra.
+** Advanced hydra ⚠️ experimental ⚠️                                  :disable:
 
 #+begin_src elisp
   (use-package hydra
@@ -111,6 +97,26 @@ Advanced hydra.
     (("s-o" . #'hydra-kommand/body)
      ("s-l" . #'hydra-nav/body)))
 
+#+end_src
+
+* Eshell
+
+#+begin_src elisp :tangle ~/scripts/wallpaper-set.esh :mkdirp yes
+  set wallpaper ${random-from-list ${ls ~/Pictures/wallpapers/*}}
+  ln -sf $wallpaper  ~/Pictures/wallpaper
+  feh --bg-fill ~/Pictures/wallpaper
+#+end_src
+
+* imenu
+
+#+begin_src elisp
+  (use-package imenu
+    :init
+    (setq eww-imenu-heading-expression '((nil "^* +\\(.+\\)" 1))
+	  eshell-imenu-commands-expression '((nil "$ \\(\\w+\\)" 1)))
+    :hook
+    (eww-mode . (lambda () (setq imenu-generic-expression eww-imenu-heading-expression)))
+    (eshell-mode . (lambda () (setq imenu-generic-expression eshell-imenu-commands-expression))))
 #+end_src
 
 * IDE 🖥️
@@ -441,7 +447,7 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
 Remember you need a compositing manager to handle transparency (compton, compiz or else).
 
 #+begin_src elisp
-  (set-frame-parameter nil 'alpha-background 90)
+  (set-frame-parameter nil 'alpha-background 85)
 #+end_src
 
 ** Highlight line
@@ -518,6 +524,25 @@ The **MPV** backend by default is able to play "http" URIs, but when you add a "
     (:map minemacs-map
 	  ("m y" . #'yeetube-search)
 	  ("m s" . #'empv-youtube)))
+#+end_src
+
+** Pulseaudio interface
+
+#+begin_src elisp
+  (use-package pulseaudio-control
+    :after hydra
+    :defer t
+    :config
+    (defhydra hydra-pulseaudio-control (:color amaranth)
+      "
+Control audio (pulseaudio)
+🔊 [n] decrease  == 🔉 [_p_] decrease == ... == _q_uit
+"
+      ("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
+      ("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
+      ("q" nil nil))
+    :bind
+    (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
 #+end_src
 
 * News 📰 and Mail 📬
@@ -715,6 +740,14 @@ Then configure the =gnus-select-method=
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/utils.el") :mkdirp yes
 :END:
+** Show keybindings
+
+#+begin_src elisp
+  (use-package which-key
+    :config
+    (which-key-mode 1))
+#+end_src
+
 ** Password management
 
 To retrieve passwords use =(password-store-get "youtube-api")=.
@@ -816,7 +849,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Exwm                                                              :disable:
+* Exwm
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
 :END:
@@ -826,25 +859,36 @@ Useful links:
 - [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
 
 #+begin_src elisp
+  (use-package vertico-posframe
+    :if (getenv "EXWM")
+    :config
+    (vertico-posframe-mode 1))
+#+end_src
+
+#+begin_src elisp
   (use-package exwm
+    :if (getenv "EXWM")
     :bind
     (:map key-translation-map
 	  ("s-m" . nil))
+
     :config
     (server-mode 1)
+    (display-battery-mode 1)
     (require 'exwm)
-    (setq exwm-workspace-number 4)
+    (setq exwm-workspace-number 1)
     ;; Make class name the buffer name.
     (add-hook 'exwm-update-class-hook
 	      (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
     ;; Global keybindings.
-    (setq exwm-systemtray-height 30
+    (setq exwm-systemtray-height 25
 	  exwm-input-global-keys
 	  `(([?\s-k] . execute-extended-command)
 	    ([?\s-m] . exwm-reset)
 	    ([?\s-M] . exwm-input-release-keyboard)
-	    ([?\s-]] . next-buffer)
-	    ([?\s-[] . previous-buffer)))
+	    ([?\s-\]] . next-buffer)
+	    ([?\s-\[] . previous-buffer)
+	    ([?\s-`] . other-frame)))
     (exwm-enable)
     (require 'exwm-systemtray)
     (exwm-systemtray-mode 1))

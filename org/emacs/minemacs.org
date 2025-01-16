@@ -29,7 +29,9 @@
   (use-package emacs
     :ensure nil
     :defer
-    :hook ((after-init . toggle-frame-maximized))
+    :hook
+    (after-init . toggle-frame-maximized)
+    (dired-mode . dired-hide-details-mode)
     :custom
     (dired-dwim-target t)
     (dired-listing-switches "-alth")
@@ -48,6 +50,7 @@
     (recentf-mode 1)
     (ffap-bindings)
     (repeat-mode 1)
+    (server-start 1)
     ;; (fido-vertical-mode 1)
 
     ;; Shared configuration
@@ -81,17 +84,17 @@
     (global-set-key (kbd "s-2") (kbd "C-x 2"))
     (global-set-key (kbd "s-3") (kbd "C-x 3"))
 
-    (defvar minemacs-map
+    (setq minemacs-map
       (let ((map (make-sparse-keymap)))
 	(define-key map (kbd "a") #'org-agenda)
 	(define-key map (kbd "k") #'org-capture)
 	(define-key map (kbd "e") #'eshell)
-	(define-key map (kbd "E") #'eshell-command)
+	(define-key map (kbd "E") (lambda (command) (interactive "sEmacs eshell command: ") (eshell-command command t)))
+	(define-key map (kbd "r") #'recentf)
 	(define-key map (kbd "8") #'emoji-search)
 	(define-key map (kbd "w j") #'webjump)
 	(define-key map (kbd "w w") #'eww)
-	map)
-      "Minemacs map.")
+	map))
 
     :bind-keymap
     ("s-o" . minemacs-map)
@@ -100,7 +103,7 @@
     ("s-n" . #'god-local-mode)
     ("s-w" . #'other-window)
     ("s-)" . #'kill-current-buffer)
-    ("s-p" . #'project-switch-buffer)
+    ("s-p" . #'project-switch-to-buffer)
     ("s-P" . #'project-find-file)
     ("s-[" . #'previous-buffer)
     ("s-]" . #'next-buffer)

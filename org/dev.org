@@ -506,6 +506,13 @@ networks:
 
 #+end_src
 *** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
+*** [[https://felt.com/blog/startup-and-shutdown-for-phoenix-applications][Graceful startup and shutdown for Phoenix applications]]
+
+- if you started your server with =iex -S mix phx.server= (which is what I use 95% of the time) then you can run =System.stop()=
+- use =ps aux | grep 'mix phx.server'= to find the OS PID for the BEAM, then run =kill -s TERM <os_pid>=
+
+In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
+
 ** Phoenix Livebooks
 
 - [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
@@ -1006,10 +1013,7 @@ Toggle mute
 
 ** Create a .desktop File
 
-#+begin_src sh
-  mkdir /home/pi/.config/autostart
-  nano /home/pi/.config/autostart/clock.desktop
-#+end_src
+In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 
 #+begin_src toml
   [Desktop Entry]
@@ -1034,10 +1038,11 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
   pacmd move-sink-input 5 1
 #+end_src
 
-** Read battery status from command line
+** Read battery status from command-line
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
 
+** X
 ** Screen managing (xrandr)
 
 #+begin_quote
@@ -1069,6 +1074,12 @@ Adjust brightness from command line:
 #+begin_quote
  However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
 #+end_quote
+
+** Set keyboard layout from command-line
+
+#+begin_src sh
+  setxkbmap -layout us,it
+#+end_src
 
 ** Set an image as wallpaper using feh
 
