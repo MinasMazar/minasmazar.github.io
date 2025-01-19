@@ -16,13 +16,47 @@
 - [[https://pages.github.com/][Github pages]]
 - [[https://www.netlify.com/][Netlify]]
 
-* Web browsing
+* Web browsing/crawling
 
-Get the DOM of a webpage using chrome via command-line.
+** Get the DOM of a webpage using chrome via command-line.
 
 #+begin_src sh
   chrome --headless --dump-dom https://developer.chrome.com/
 #+end_src
+
+** Fetch a page via a nodejs app
+
+Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
+
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+
+1. setup a new nodejs project =mkdir html-fetch && node init --yes=
+2. add =node-fetch= dependency into the =package.json= and =npm install=
+3. create the =index.js= source file with the content as follow: 
+
+#+begin_src javascript
+  const fetch = require("node-fetch");
+  const fs = require("fs");
+  // you can update this to any website you want to download
+  const site = "https://www.youtube.com/@BorderNightsOfficial";
+  // you can update this if you want to save
+  const filename = "index.html";
+  // fetch url
+  fetch(site, {
+    headers: {
+      // some sites require a user-agent header to return the webpage
+      "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+  }).then((res) => {
+    // get text from Response stream
+    return res.text();
+  }).then((text) => {
+    // write html from response to index.html
+    fs.writeFile(filename, text, () => {});
+  });
+#+end_src
+
+Run it via =node index.js=. This will fetch the page into the =index.html= file.
 
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
@@ -142,6 +176,41 @@ docker run -it lukechilds/dockerpi
 - [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
 - [[https://joyofelixir.com/17-mix-dependencies][Mix dependencies]]
 - [[https://learn-elixir.dev/#hiring][Learn Elixir (learn-elixir.dev/#hiring)]]
+
+** Clustering Elixir applications
+- https://betterprogramming.pub/notes-on-clustering-elixir-applications-49707ed53910
+- https://hexdocs.pm/libcluster/readme.html
+
+** Distributed Elixir nodes
+
+Good readings about this topic:
+- https://medium.com/hackernoon/running-distributed-erlang-elixir-applications-on-docker-b211d95affbe
+- https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/
+
+Here's a talk I still have to watch https://www.youtube.com/watch?v=F_YUyd_Qdjs
+
+** Elixir Ecommerce platforms
+
+Follow this link to [[https://elixirforum.com/t/phoenix-frameworks-is-good-choice-for-e-commerce-web-apps/46772/3][Elixir forum post]].
+
+It will probably faster and for sure will cope a lot more under load, due to the
+BEAM, that is well exemplified [[https://video-hub.exadra37.com/watch/goto-2019-the-soul-of-erlang-and-elixir-sa%C5%A1a-juri%C4%87][here]] by [[https://elixirforum.com/u/sasajuric][@sasajuric]].
+
+We already have several projects in Elixir fore ecommerce:
+
+- [[https://github.com/amacgregor/crimson_commerce][Crimsom]] repo and [[https://dev.to/allanmacgregor/ecommerce-platform-prototype-with-elixir-and-phoenix-2d9g][article]].
+- [[https://github.com/nicolasblanco/shopix][Shopix]] repo and [[https://nicolasblan.co/blog/shopix-e-commerce-engine][aritcle]].
+- [[https://github.com/freshcom][Freshcom]] repos. They have separated it in several repos.
+- Many more [[https://github.com/search?q=elixir+ecommerce][here]].
+
+I don’t really know if any of them is being/continued to be used in production. I
+think Freshcom was being used in prod at some point or was about to launch.
+The author is here in the forum @rbao.
+
+If you search the forum you have more questions like yours:
+
+- Resources for building an e-commerce store in Phoenix?
+- Presenting Aviacommerce, open source e-commerce in Elixir
 
 ** GenServer template
 
@@ -334,9 +403,45 @@ Run for localhsot.
   SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4040 ~/my-app/bin/my-app start
 #+end_src
 
-*** Dockerize Phoenix webapp (my_app)
-*** Dockerfile
+*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
+*** [[https://felt.com/blog/startup-and-shutdown-for-phoenix-applications][Graceful startup and shutdown for Phoenix applications]]
 
+- if you started your server with =iex -S mix phx.server= (which is what I use 95% of the time) then you can run =System.stop()=
+- use =ps aux | grep 'mix phx.server'= to find the OS PID for the BEAM, then run =kill -s TERM <os_pid>=
+
+In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
+
+*** Dockerize Phoenix webapp (my_app)
+
+** Phoenix Livebooks
+
+- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
+- https://github.com/aslakjohansen/livebook-demos
+- https://github.com/Arp-G/async-elixir
+- https://github.com/whatyouhide/guide_async_processing_in_elixir
+
+*** Livebook Cluster
+
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
+
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
+
+I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+
+Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
+
+- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
+- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
+
+  #+begin_src text
+  livebook -> PubSub (broadcast in current node)
+  #+end_src
+
+ Remember that this open a wide range of **security issues**.. uses it with responsibility!
+- Youtube 
+
+** Dockerize
+*** Example Dockerfile for Elixir app 
 More info on [[Docker][Docker here]].
 
 #+begin_src yml
@@ -505,48 +610,22 @@ networks:
   outside:
 
 #+end_src
-*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
-*** [[https://felt.com/blog/startup-and-shutdown-for-phoenix-applications][Graceful startup and shutdown for Phoenix applications]]
-
-- if you started your server with =iex -S mix phx.server= (which is what I use 95% of the time) then you can run =System.stop()=
-- use =ps aux | grep 'mix phx.server'= to find the OS PID for the BEAM, then run =kill -s TERM <os_pid>=
-
-In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
-
-** Phoenix Livebooks
-
-- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
-- https://github.com/aslakjohansen/livebook-demos
-- https://github.com/Arp-G/async-elixir
-- https://github.com/whatyouhide/guide_async_processing_in_elixir
-
-*** Livebook Cluster
-
-I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
-
-The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
-
-I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
-
-Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
-
-- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
-- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
-
-  #+begin_src text
-  livebook -> PubSub (broadcast in current node)
-  #+end_src
-
- Remember that this open a wide range of **security issues**.. uses it with responsibility!
-- Youtube 
-
 ** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
 ** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
 ** [[https://nerves-project.org/newsletter/][Nerves]]
+*** Resources
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
 - [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
 
+*** Nerves + Livebook
+
+- https://github.com/nerves-livebook
+- https://hexdocs.pm/nerves_runtime/Nerves.Runtime.html
+
+#+begin_src elixir
+Nerves.Runtime.halt()
+#+end_src
 * [[https://www.ffmpeg.org][FFmpeg]]
 
 A complete, cross-platform solution to record, convert and stream audio and video.
@@ -1109,7 +1188,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   set $mod Mod4
   set $alt Mod1
-  set $wallpaper_file ~/Pictures/my-wallpaper.jpg
+  set $wallpaper_file ~/Pictures/wallpaper
 
   # Font for window titles. Will also be used by the bar unless a different font
   # is used in the bar {} block below.
@@ -1122,7 +1201,6 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   # Start XDG autostart .desktop files using dex. See also
   # https://wiki.archlinux.org/index.php/XDG_Autostart
   exec --no-startup-id dex --autostart --environment i3
-  # exec --no-startup-id dex xfsettingsd.desktop
   exec --no-startup-id xfsettingsd
   exec --no-startup-id compton
   exec --no-startup-id feh --bg-max $wallpaper_file
@@ -1133,17 +1211,19 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
   # screen before suspend. Use loginctl lock-session to lock your screen.
-  exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
 
   # NetworkManager is the most popular way to manage wireless networks on Linux,
   # and nm-applet is a desktop environment-independent system tray GUI for it.
   exec --no-startup-id nm-applet
-  exec --no-startup-id emacs && i3-msg exit
+  exec --no-startup-id emacs --daemon && emacsclient -r
 
   # Use pactl to adjust volume in PulseAudio.
+  set $volume_step 5%
   set $refresh_i3status killall -SIGUSR1 i3status
-  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step && $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step && $refresh_i3status
   bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
   bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
@@ -1154,24 +1234,26 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   # or left-clicking anywhere into the window while holding the floating modifier.
   tiling_drag modifier titlebar
 
-  # start a terminal
+  # start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
+  set $app_launcher i3-dmenu-desktop
   # bindsym $mod+Return exec i3-sensible-terminal
+  bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
 
   # kill focused window
   bindsym $mod+Shift+q kill
 
   # change focus
-  bindsym $alt+Tab focus left ; focus up
-  bindsym $alt+Shift+Tab focus right ; focus down
-  # cycle workspace
-  bindsym $mod+Tab workspace next
-  bindsym $mod+Shift+Tab workspace prev
+  bindsym $mod+Tab focus left ; focus up
+  bindsym $mod+Shift+Tab focus right ; focus down
+  # change workspace
+  bindsym $mod+braceright workspace next
+  bindsym $mod+braceleft workspace prev
 
   # Define names for default workspaces for which we configure key bindings later on.
   # We use variables to avoid repeating the names in multiple places.
   set $ws1 "1"
-  set $ws2 "2:web"
-  set $ws3 "3:media"
+  set $ws2 "2"
+  set $ws3 "3"
   set $ws4 "4"
   set $ws5 "5"
   set $ws6 "6"
@@ -1181,17 +1263,12 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   set $ws10 "10"
 
   # Window rules
-  for_window [class="^firefox$"] move container to workspace $ws2
+  # for_window [class="^firefox$"] move container to workspace $ws2
   for_window [class="^mpv$"] move container to workspace $ws3
 
   mode "i3" {
-    # start dmenu (a program launcher)
-    bindsym d exec --no-startup-id dmenu_run ; mode "default"
-    # A more modern dmenu replacement is rofi:
-    # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
-    # There also is i3-dmenu-desktop which only displays applications shipping a
-    # .desktop file. It is a wrapper around dmenu, so you need that installed.
-    # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+    # start program launcher
+    bindsym d exec --no-startup-id $app_launcher ; mode "default"
   
     # bindsym $mod+l focus up
     # bindsym $mod+semicolon focus right
@@ -1270,8 +1347,10 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
     bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+    # Emacs everywhere
+    bindsym Shift+m exec --no-startup-id emacsclient --eval "(emacs-everywhere)" && mode "default"
     # Kill current window
-    bindsym Shift-q kill
+    bindsym Shift+q kill
     # reload the configuration file
     bindsym Shift+c reload
     # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -1318,9 +1397,9 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   bar {
 	  mode hide
 	  hidden_state hide
-	  modifier $mod
+	  modifier none # $mod
 
-          position top
+	  position top
 	  font pango:monospace 14
 	  status_command i3status
   }
@@ -1876,6 +1955,19 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
 
+* Tor
+** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]
+
+#+begin_src sh
+sudo docker run -it -p 8118:8118 -p 9050:9050 -d dperson/torproxy
+#+end_src
+
+then verify you're using the tor proxy connecting to https://check.torproject.org/
+
+#+begin_src sh
+  curl -Lx http://localhost:8118 https://check.torproject.org/ | grep "Congratulations"
+#+end_src
+
 * Userscripts
 ** How to store data on a file using Greasemonkey
 
@@ -1898,7 +1990,7 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
 #+end_example
 
 * Youtube
-** Export your /watch later/ list from the browser
+** Get the list of subscriptions (followed channels)
 
 Go the your "Watch later" page on the browser, open the console and execute
 
@@ -1911,9 +2003,17 @@ Go the your "Watch later" page on the browser, open the console and execute
 
 ** Get RSS feed of a channel or playlist
 
-Having the channel ID ([[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explainging how to do that), construct as follow:
+Get the Channel ID of a Youtube channel (manual approach): [[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explaining how to do that. You can ease the process using by copy/pasting this snippet into the Dev console (if the browser allows you that)
+
+#+begin_src javascript
+  alert(document.querySelector("link[itemprop='url']").href);
+#+end_src
+
+then construct as follow:
 
 =https://youtube.com/watch?v=CHANNEL-ID= to =https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID=
+
+I've tried to automate this process by downloading the page via CURL, or using Emacs, but it seems that those methods downloads a page that does not have the data we need, maybe because the lack of JS support. A way to avoid that is by using NodeJS as described in [[*Fetch a page via a nodejs app][this section]].
 
 ** Youtube downloader (yt-dlp)
 *** Usage examples
