@@ -1269,51 +1269,50 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   mode "i3" {
     # start program launcher
     bindsym d exec --no-startup-id $app_launcher ; mode "default"
-  
     # bindsym $mod+l focus up
     # bindsym $mod+semicolon focus right
     bindsym p focus left ; focus up
     bindsym n focus right ; focus down
     bindsym Shift+p workspace prev
     bindsym Shift+n workspace next
-  
+
     # alternatively, you can use the cursor keys:
     bindsym Left focus left
     bindsym Down focus down
     bindsym Up focus up
     bindsym Right focus right
-  
+
     bindsym Shift+Left move left
     bindsym Shift+Down move down
     bindsym Shift+Up move up
     bindsym Shift+Right move right
-  
+
     # toggle i3bar mode
     bindsym i bar mode toggle ; mode "default"
 
     # split in horizontal orientation
     bindsym h split h
-  
+
     # split in vertical orientation
     bindsym v split v
-  
+
     # enter fullscreen mode for the focused container
     bindsym f fullscreen toggle
-  
+
     # change container layout (stacked, tabbed, toggle split)
     bindsym s layout stacking
     bindsym w layout tabbed
     bindsym e layout toggle split
-  
+
     # toggle tiling / floating
     bindsym space floating toggle
-  
+
     # change focus between tiling / floating windows
     bindsym space focus mode_toggle
-  
+
     # focus the parent container
     bindsym a focus parent
-  
+
     # focus the child container
     #bindsym $mod+d focus child
 
@@ -1328,7 +1327,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym 8 workspace number $ws8
     bindsym 9 workspace number $ws9
     bindsym 0 workspace number $ws10
-  
+
     # move focused container to workspace
     bindsym Shift+1 move container to workspace number $ws1
     bindsym Shift+2 move container to workspace number $ws2
@@ -1403,6 +1402,8 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 	  font pango:monospace 14
 	  status_command i3status
   }
+
+  workspace_layout tabbed
 #+end_example
 
 Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
