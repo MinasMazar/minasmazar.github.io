@@ -36,8 +36,6 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
 :END:
 
-Simple hydra.
-
 #+begin_src elisp
   (use-package hydra)
 #+end_src
@@ -100,6 +98,17 @@ Simple hydra.
 #+end_src
 
 * Eshell
+** Functions
+
+#+begin_src elisp
+  (defun eshell/ve (&rest args)
+    (let* ((cmd (car args))
+	   (argv (cdr args))
+	   (argl (string-join argv " ")))
+      (if argv (eshell-exec-visual cmd argl) (eshell-exec-visual cmd))))
+#+end_src
+
+** Scripts
 
 #+begin_src elisp :tangle ~/scripts/wallpaper-set.esh :mkdirp yes
   set wallpaper ${random-from-list ${ls ~/Pictures/wallpapers/*}}
@@ -113,7 +122,7 @@ Simple hydra.
   (use-package imenu
     :init
     (setq eww-imenu-heading-expression '((nil "^* +\\(.+\\)" 1))
-	  eshell-imenu-commands-expression '((nil "$ \\(\\w+\\)" 1)))
+	  eshell-imenu-commands-expression '((nil "\$ \\(\\w+\\)" 1)))
     :hook
     (eww-mode . (lambda () (setq imenu-generic-expression eww-imenu-heading-expression)))
     (eshell-mode . (lambda () (setq imenu-generic-expression eshell-imenu-commands-expression))))
@@ -305,7 +314,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (browse-url-default-browser url))
 #+end_src
 
-Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
+Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
 
 #+begin_src elisp
   (use-package request)
@@ -529,20 +538,21 @@ The **MPV** backend by default is able to play "http" URIs, but when you add a "
 ** Pulseaudio interface
 
 #+begin_src elisp
-  (use-package pulseaudio-control
-    :after hydra
-    :defer t
-    :config
-    (defhydra hydra-pulseaudio-control (:color amaranth)
-      "
-Control audio (pulseaudio)
-🔊 [n] decrease  == 🔉 [_p_] decrease == ... == _q_uit
-"
-      ("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
-      ("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
-      ("q" nil nil))
-    :bind
-    (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
+    (use-package pulseaudio-control
+      :after hydra
+      :defer t
+      :config
+      (defhydra hydra-pulseaudio-control (:color amaranth)
+	"
+  Control audio (pulseaudio)
+  🔊 [n] decrease | 🔉 [_p_] decrease | 🔇 _m_ute == _q_uit
+  "
+	("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
+	("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
+	("m" (lambda () (interactive) (pulseaudio-control-toggle-current-sink-mute)) nil)		       
+	("q" nil nil))
+      :bind
+      (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
 #+end_src
 
 * News 📰 and Mail 📬
@@ -849,11 +859,12 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Exwm
+* Emacs as Window Manager
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
 :END:
 
+** exwm
 Useful links:
 
 - [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
@@ -871,7 +882,10 @@ Useful links:
     :bind
     (:map key-translation-map
 	  ("s-m" . nil))
-
+    ;; ("<XF86AudioLowerVolume>" . #'pulseaudio-control-decrease-sink-volume)
+    ;; ("<XF86AudioRaiseVolume>" . #'pulseaudio-control-increase-sink-volume)
+    ;; ("<XF86AudioMute>" . #'pulseaudio-control-toggle-current-sink-mute)
+    ("<XF86AudioPlay>" . #'minemacs-media-toggle-pause)
     :config
     (server-mode 1)
     (display-battery-mode 1)
@@ -889,7 +903,64 @@ Useful links:
 	    ([?\s-\]] . next-buffer)
 	    ([?\s-\[] . previous-buffer)
 	    ([?\s-`] . other-frame)))
+
+    (setq exwm-input-simulation-keys
+	  '(([?\C-b] . [left])
+	    ([?\C-f] . [right])
+	    ([?\C-p] . [up])
+	    ([?\C-n] . [down])
+	    ([?\C-a] . [home])
+	    ([?\C-e] . [end])
+	    ([?\M-v] . [prior])
+	    ([?\C-v] . [next])
+	    ([?\C-d] . [delete])
+	    ([?\C-k] . [S-end delete])))
+
     (exwm-enable)
     (require 'exwm-systemtray)
     (exwm-systemtray-mode 1))
 #+end_src
+
+** System configuration (Linux Mint/Ubuntu)
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+
+Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at =/usr/local/bin/exwm.sh=.
+
+#+begin_example sh :tangle /usr/local/bin/exwm.sh
+  #!/bin/sh
+
+  ## Set capslock as ctrl
+  #
+  setxkbmap -layout us -option ctrl:nocaps
+
+  ## Programs to start upon startup
+  #
+
+  dbus-launch xfsettingsd &
+  dbus-launch xfce4-power-manager &
+  dbus-launch nm-applet &                     # Network Manager
+  dbus-launch pasystray &                     # Pulseaudio volume control from tray
+  dbus-launch dex -a -e i3 &
+
+  ## Start emacs
+  #
+  export EXWM=true
+  # exec dbus-launch --exit-with-session emacs
+  exec dbus-run-session emacs
+#+end_example
+
+In order to have the =EXWM= desktop environment available in the Login manager menu (i.e. LightDM) add this to =/usr/share/xsessions/exwm.desktop=
+
+#+begin_example conf :tangle /usr/share/xsessions/exwm.desktop
+[Desktop Entry]
+Name=Exwm
+Comment=Emacs as Window Manager
+Exec=/usr/local/bin/exwm.sh
+TryExec=emacs
+Type=Application
+X-LightDM-DesktopName=exwm
+DesktopNames=exwm
+Keywords=tiling;wm;windowmanager;window;manager;emacs;
+#+end_example
