@@ -413,6 +413,14 @@ In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= 
 
 *** Dockerize Phoenix webapp (my_app)
 
+** Inspecting data
+
+How to use IO.inspect on a long list without trimming it? See [[https://hexdocs.pm/elixir/Inspect.Opts.html][Inspect.Opts]] for a description of the available options, but in short:
+
+#+begin_src elixir
+  IO.inspect(list, limit: :infinity)
+#+end_src
+
 ** Phoenix Livebooks
 
 - [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
