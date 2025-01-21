@@ -386,6 +386,117 @@ Experimenting with the Google APIs ([[https://developers.google.com/apis-explore
       (match-string 1 string)))
 #+end_src
 
+** Collector 🗄️
+
+#+begin_src elisp
+  (defun minemacs-blank? (str)
+    (and str (s-blank? (s-trim str))))
+
+  (defun minemacs-jarvis-collector--insert-org-content (vid buffer)
+    (let* ((org-content-header (concat (minemacs-jarvis-collector--org-content-header vid)
+				       (minemacs-jarvis-collector--org-content-description vid)))
+	  (transcript-dom (plist-get vid :transcript-dom))
+	  (transcript-text (dom-texts transcript-dom)))
+      (with-current-buffer buffer
+	(erase-buffer)
+	(insert org-content-header)
+	(insert (format "
+  ,** Transcript
+
+  ,#+begin_quote
+  %s
+  ,#+end_quote
+  "
+			transcript-text)))))
+
+  (defun minemacs-jarvis-collector--org-content-header (vid)
+    (let ((title (plist-get vid :title))
+	  (webpage-url (plist-get vid :webpage-url))
+	  (channel (plist-get vid :channel))
+	  (channel-url (plist-get vid :channel-url))
+	  (channel-follower-count (plist-get vid :channel-follower-count))
+	  (humanized-duration (plist-get vid :duration))
+	  (like-count (plist-get vid :like-count))
+	  (view-count (plist-get vid :view-count)))
+      (format
+  "* [[%s][%s]]
+
+  📹 *From:* [[%s][%s]] (🧑 %s followers)
+  🕓 *Duration:* %s
+  ❤️ *Likes:* %s / 👀 *Views:* %s
+  " webpage-url title channel-url channel channel-follower-count humanized-duration like-count view-count)))
+
+  (defun minemacs-jarvis-collector--org-content-description (vid)
+    (let ((description (plist-get vid :description)))
+      (unless (minemacs-blank? description)
+	  (format
+	   "
+  ,** Description
+
+  %s
+  " description))))
+
+  (defun minemacs-jarvis-collect--find-transcript-format (json)
+    (let* ((auto-captions (gethash "automatic_captions" json))
+	   (langs (hash-table-keys auto-captions))
+	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
+	   (orig-lang (gethash orig-lang-key auto-captions))
+	   (ttml-format (seq-find
+			 (lambda (format)
+			   (let* ((ext (gethash "ext" format))
+				  (res (string= "ttml" ext)))
+			     (message (format "<%s> %s" ext res))
+			     res))
+			 orig-lang))
+	   (script-url (gethash "url" ttml-format)))
+      script-url))
+
+  (defun minemacs-jarvis-collect--fetch-info (url)
+    (with-temp-buffer
+      (insert (shell-command-to-string (format "yt-dlp -j %s" url)))
+      (goto-char 0)
+      (let* ((json (json-parse-buffer))
+	     ;; Video fields
+	     (id (gethash "id" json))
+	     (data (list
+		    :id id
+		    :title (gethash "title" json)
+		    :description (s-trim (gethash "description" json))
+		    :channel (gethash "channel" json)
+		    :channel-url (gethash "channel_url" json)
+		    :channel-follower-count (gethash "channel_follower_count" json)
+		    :duration (gethash "duration" json)
+		    :like-count (gethash "like_count" json)
+		    :view-count (gethash "view_count" json)
+		    :average-rating (gethash "average_rating" json)
+		    :webpage-url (gethash "webpage_url" json)
+		    :categories (gethash "categories" json)
+		    :tags (gethash "tags" json)
+		    :script-url (minemacs-jarvis-collect--find-transcript-format json))))
+	data)))
+
+  (defun minemacs-jarvis-collect--fetch-transcript (url)
+    (if url (with-current-buffer (url-retrieve-synchronously url)
+	      (let* ((dom (xml-parse-region))
+		     (body (car (dom-by-tag dom 'body)))
+		     (div (car (dom-by-tag body 'div))))
+		div))))
+
+  (defun minemacs-jarvis-collect (url)
+    (let* ((vid (minemacs-jarvis-collect--fetch-info url))
+	   (transcript (minemacs-jarvis-collect--fetch-transcript (plist-get vid :script-url)))
+	   (vid (plist-put vid :transcript-dom transcript))
+	   (id (plist-get vid :id))
+	   (buffer-name (format "*<youtube-vid-%s>*" id))
+	   (buffer (get-buffer-create buffer-name)))
+      (with-current-buffer buffer
+	(org-mode)
+	(minemacs-jarvis-collector--insert-org-content vid buffer))
+      (pop-to-buffer buffer)))
+
+  ;; (minemacs-jarvis-collect "https://www.youtube.com/watch?v=tOOOC_s5HZ4")
+#+end_src
+
 ** Speak 🗣️
 
 #+begin_src elisp
