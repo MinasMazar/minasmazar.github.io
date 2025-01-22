@@ -4,11 +4,12 @@
 #+DATE: <2024-12-10 Tue>
 #+STARTUP: overview
 
-* Patches
+* Built-in extensions
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/patches.el") :mkdirp yes
 :END:
 
+** Bookmarks + browse-url
 Here add a custom bookmark handler relying on =browse-url= and =browse-url-handlers=, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
 
 #+begin_src emacs-lisp
@@ -132,6 +133,15 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/ide.el") :mkdirp yes
 :END:
+
+** MacOS compatibility
+
+#+begin_src elisp
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
+
 ** Markup languages
 *** Markdown
 

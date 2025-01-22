@@ -352,6 +352,11 @@ Download four random images from picsum using an index.
   for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
 #+end_src
 
+** EWW ~ experimenting with =eww-retrieve-command=
+
+Possible values for this variable could be
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
+
 ** (interactive) functions
 
 Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
@@ -525,4 +530,4 @@ I would like to thanks:
 - [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
 - [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
 - [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
-
+- [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]]
