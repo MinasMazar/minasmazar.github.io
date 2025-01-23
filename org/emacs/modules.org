@@ -399,8 +399,29 @@ Experimenting with the Google APIs ([[https://developers.google.com/apis-explore
 ** Collector 🗄️
 
 #+begin_src elisp
+  (require 'cl-lib)
+  (require 'ucs-normalize)
+
   (defun minemacs-blank? (str)
     (and str (s-blank? (s-trim str))))
+
+  (defun minemacs-jarvis-dashitize-string (str)
+    (cl-remove-if
+     (lambda (char)
+       (> char 127))
+     (ucs-normalize-NFKD-string (s-dashed-words str))))
+
+  (defvar minemacs-jarvis-collector-directory "~/Public/collector"
+    "Base directory where to put the collected Youtube videos.")
+
+  (defun minemacs-jarvis-collector--build-filename (vid)
+    (minemacs-jarvis-dashitize-string (plist-get vid :title)))
+
+  (defun minemacs-jarvis-collector--build-pathname (vid)
+    (let* ((id (plist-get vid :id))
+	  (name (minemacs-jarvis-collector--build-filename vid))
+	  (filename (format "%s-%s.org" id name)))
+      (expand-file-name filename minemacs-jarvis-collector-directory)))
 
   (defun minemacs-jarvis-collector--insert-org-content (vid buffer)
     (let* ((org-content-header (concat (minemacs-jarvis-collector--org-content-header vid)
@@ -446,7 +467,7 @@ Experimenting with the Google APIs ([[https://developers.google.com/apis-explore
   %s
   " description))))
 
-  (defun minemacs-jarvis-collect--find-transcript-format (json)
+  (defun minemacs-jarvis-collector--find-transcript-format (json)
     (let* ((auto-captions (gethash "automatic_captions" json))
 	   (langs (hash-table-keys auto-captions))
 	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
@@ -461,7 +482,7 @@ Experimenting with the Google APIs ([[https://developers.google.com/apis-explore
 	   (script-url (gethash "url" ttml-format)))
       script-url))
 
-  (defun minemacs-jarvis-collect--fetch-info (url)
+  (defun minemacs-jarvis-collector-fetch-info (url)
     (with-temp-buffer
       (insert (shell-command-to-string (format "yt-dlp -j %s" url)))
       (goto-char 0)
@@ -482,27 +503,50 @@ Experimenting with the Google APIs ([[https://developers.google.com/apis-explore
 		    :webpage-url (gethash "webpage_url" json)
 		    :categories (gethash "categories" json)
 		    :tags (gethash "tags" json)
-		    :script-url (minemacs-jarvis-collect--find-transcript-format json))))
+		    :script-url (minemacs-jarvis-collector--find-transcript-format json))))
 	data)))
 
-  (defun minemacs-jarvis-collect--fetch-transcript (url)
+  (defun minemacs-jarvis-collector--fetch-transcript (url)
     (if url (with-current-buffer (url-retrieve-synchronously url)
 	      (let* ((dom (xml-parse-region))
 		     (body (car (dom-by-tag dom 'body)))
 		     (div (car (dom-by-tag body 'div))))
 		div))))
 
-  (defun minemacs-jarvis-collect (url)
-    (let* ((vid (minemacs-jarvis-collect--fetch-info url))
-	   (transcript (minemacs-jarvis-collect--fetch-transcript (plist-get vid :script-url)))
+  (defun minemacs-jarvis-collector--create-buffer (vid)
+    (let* ((transcript (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
 	   (vid (plist-put vid :transcript-dom transcript))
 	   (id (plist-get vid :id))
-	   (buffer-name (format "*<youtube-vid-%s>*" id))
-	   (buffer (get-buffer-create buffer-name)))
+	   (buff-name (minemacs-jarvis-collector--build-filename vid))
+	   (coding-system-for-write 'raw-text)
+	   (buffer (get-buffer-create buff-name)))
       (with-current-buffer buffer
+	(set-visited-file-name (minemacs-jarvis-collector--build-pathname vid))
+	(set-buffer-file-coding-system 'raw-text)
 	(org-mode)
-	(minemacs-jarvis-collector--insert-org-content vid buffer))
-      (pop-to-buffer buffer)))
+	(minemacs-jarvis-collector--insert-org-content vid buffer)
+	(read-only-mode 1)
+	(beginning-of-buffer))
+      buffer))
+
+  (defun minemacs-jarvis-collect (url)
+    (interactive "sYoutube video URL: ")
+    (let* ((vid (minemacs-jarvis-collector-fetch-info url))
+	   (buffer (minemacs-jarvis-collector--create-buffer vid)))
+      (pop-to-buffer buffer)
+      (with-current-buffer buffer
+	(save-buffer)
+	buffer)))
+
+  (defun minemacs-jarvis-collect-async (url)
+    (interactive "sYoutube video URL: ")
+    (async-start
+     (lambda () (minemacs-jarvis-collector-fetch-info url))
+     (lambda (vid)
+       (let ((buffer (minemacs-jarvis-collector--create-buffer vid)))
+	 (with-current-buffer buffer
+	   (pop-to-buffer buffer)
+	   (save-buffer))))))
 
   ;; (minemacs-jarvis-collect "https://www.youtube.com/watch?v=tOOOC_s5HZ4")
 #+end_src
