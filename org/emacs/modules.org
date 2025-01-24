@@ -4,9 +4,9 @@
 #+DATE: <2024-12-10 Tue>
 #+STARTUP: overview
 
-* Built-in extensions
+* Overrides
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/patches.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/overrides.el") :mkdirp yes
 :END:
 
 ** Bookmarks + browse-url
@@ -22,14 +22,54 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* Helpers
+* Custom Helpers
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/helpers.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/custom-helpers.el") :mkdirp yes
 :END:
 
 #+begin_src elisp
   (defun random-from-list (list)
     (nth (random (length list)) list))
+#+end_src
+
+* Info and Help
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/info-help.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+	   ("M-A" . marginalia-cycle))
+
+    ;; The :init section is always executed.
+    :init
+
+    ;; Marginalia must be activated in the :init section of use-package such that
+    ;; the mode gets enabled right away. Note that this forces loading the
+    ;; package.
+    (marginalia-mode))
+#+end_src
+
+#+begin_src elisp
+  (use-package helpful
+    :bind
+    ("C-h f" . #'helpful-callable)
+    ("C-h v" . #'helpful-variable)
+    ("C-h k" . #'helpful-key)
+    ("C-h x" . #'helpful-command))
+#+end_src
+
+** Show keybindings                                                 :disable:
+
+#+begin_src elisp
+  (use-package which-key
+    :config
+    (which-key-mode 1))
 #+end_src
 
 * Hail Hydra! 🐍
@@ -185,6 +225,11 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   (("C-x g" . #'magit-status)))
 #+end_src
 
+#+begin_src elisp
+  (use-package diff-hl
+    :config
+    (diff-hl-mode 1))
+#+end_src
 ** Docker
 
 #+begin_src elisp
@@ -296,7 +341,32 @@ Jarvis is a module that enables some high-level/automation features.
 #+end_src
 
 ** Youtube 🎥
+*** Helper functions
 
+Given a Youtuve channel URL, returns the channel ID. This is  useful in cases like when you want to get the RSS feed of a Youtube channel.
+
+#+begin_src elisp
+  (defun jarvis-youtube-get-channel-rss (url)
+    "Given a Youtuve channel URL, returns the channel ID. This is
+  useful in cases like when you want to get the RSS feed of a Youtube channel."
+    (interactive "sYoutube channel url: ")
+    (let* ((url-user-agent "curl/8.7.1")
+	   (url-request-extra-headers '(("Accept" . "*/*")))
+	   (buffer (url-retrieve-synchronously url)))
+      (with-current-buffer buffer
+	(let* ((dom (libxml-parse-html-region))
+	       (link (dom-search dom
+				 (lambda (el)
+				   (and (string= (dom-tag el) "link")
+					(string= (dom-attr el 'itemprop) "url")))))
+	       (channel-id-url (and link (dom-attr link 'href))))
+	  (if channel-id-url
+	      (let ((_ (string-match "/channel/\\(\\w+\\)" channel-id-url))
+		    (id (match-string 1 channel-id-url)))
+		(message "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
+#+end_src
+
+*** Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)
 Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
 
 #+begin_src elisp
@@ -324,7 +394,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (browse-url-default-browser url))
 #+end_src
 
-Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
+*** Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
 
 #+begin_src elisp
   (use-package request)
@@ -624,7 +694,7 @@ Remember you need a compositing manager to handle transparency (compton, compiz 
   (set-frame-parameter nil 'alpha-background 85)
 #+end_src
 
-** Highlight line
+** Highlight line                                                   :disable:
 
 #+begin_src elisp
   (use-package beacon
@@ -915,14 +985,6 @@ Then configure the =gnus-select-method=
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/utils.el") :mkdirp yes
 :END:
-** Show keybindings
-
-#+begin_src elisp
-  (use-package which-key
-    :config
-    (which-key-mode 1))
-#+end_src
-
 ** Password management
 
 To retrieve passwords use =(password-store-get "youtube-api")=.

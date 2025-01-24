@@ -2086,7 +2086,9 @@ then construct as follow:
 
 =https://youtube.com/watch?v=CHANNEL-ID= to =https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID=
 
-I've tried to automate this process by downloading the page via CURL, or using Emacs, but it seems that those methods downloads a page that does not have the data we need, maybe because the lack of JS support. A way to avoid that is by using NodeJS as described in [[*Fetch a page via a nodejs app][this section]].
+I made some experiments to automate this process:
+- a sample NodeJS project (see [[*Fetch a page via a nodejs app][this section]])
+- using [[file:emacs/modules.org::*Helper functions][ad-hoc Emacs function]]
 
 ** Youtube downloader (yt-dlp)
 *** Usage examples
