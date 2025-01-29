@@ -489,26 +489,26 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun minemacs-jarvis-collector--build-pathname (vid)
     (let* ((id (plist-get vid :id))
-	  (name (minemacs-jarvis-collector--build-filename vid))
-	  (filename (format "%s-%s.org" id name)))
+	   (name (minemacs-jarvis-collector--build-filename vid))
+	   (filename (format "%s-%s.org" id name)))
       (expand-file-name filename minemacs-jarvis-collector-directory)))
 
   (defun minemacs-jarvis-collector--insert-org-content (vid buffer)
     (let* ((org-content-header (concat (minemacs-jarvis-collector--org-content-header vid)
 				       (minemacs-jarvis-collector--org-content-description vid)))
-	  (transcript-dom (plist-get vid :transcript-dom))
-	  (transcript-text (dom-texts transcript-dom)))
+	   (transcript-dom (plist-get vid :transcript-dom))
+	   (transcript-text (dom-texts transcript-dom)))
       (with-current-buffer buffer
 	(erase-buffer)
 	(insert org-content-header)
-	(insert (format "
-  ,** Transcript
+	(if transcript-dom
+	    (insert (format "\n** Transcript
 
   ,#+begin_quote
   %s
   ,#+end_quote
   "
-			transcript-text)))))
+			    transcript-text))))))
 
   (defun minemacs-jarvis-collector--org-content-header (vid)
     (let ((title (plist-get vid :title))
@@ -520,7 +520,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (like-count (plist-get vid :like-count))
 	  (view-count (plist-get vid :view-count)))
       (format
-  "* [[%s][%s]]
+       "* [[%s][%s]]
 
   📹 *From:* [[%s][%s]] (🧑 %s followers)
   🕓 *Duration:* %s
@@ -530,9 +530,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   (defun minemacs-jarvis-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
       (unless (minemacs-blank? description)
-	  (format
-	   "
-  ,** Description
+	(format
+	 "\n** Description
 
   %s
   " description))))
@@ -549,32 +548,39 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 			     (message (format "<%s> %s" ext res))
 			     res))
 			 orig-lang))
-	   (script-url (gethash "url" ttml-format)))
+	   (script-url (and ttml-format (gethash "url" ttml-format))))
       script-url))
 
   (defun minemacs-jarvis-collector-fetch-info (url)
-    (with-temp-buffer
-      (insert (shell-command-to-string (format "yt-dlp -j %s" url)))
-      (goto-char 0)
-      (let* ((json (json-parse-buffer))
-	     ;; Video fields
-	     (id (gethash "id" json))
-	     (data (list
-		    :id id
-		    :title (gethash "title" json)
-		    :description (s-trim (gethash "description" json))
-		    :channel (gethash "channel" json)
-		    :channel-url (gethash "channel_url" json)
-		    :channel-follower-count (gethash "channel_follower_count" json)
-		    :duration (gethash "duration" json)
-		    :like-count (gethash "like_count" json)
-		    :view-count (gethash "view_count" json)
-		    :average-rating (gethash "average_rating" json)
-		    :webpage-url (gethash "webpage_url" json)
-		    :categories (gethash "categories" json)
-		    :tags (gethash "tags" json)
-		    :script-url (minemacs-jarvis-collector--find-transcript-format json))))
-	data)))
+    (let ((cache-value (minemacs-jarvis-collector--get-cache url)))
+      (if cache-value
+	  (minemacs-jarvis-collector--parse-info cache-value)
+	(with-temp-buffer
+	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	  ;;(insert-file "~/Desktop/vid.json") ; debug line
+	  (goto-char 0)
+	  (let ((json (json-parse-buffer)))
+	    (minemacs-jarvis-collector--set-cache url json)
+	    (minemacs-jarvis-collector--parse-info json))))))
+
+  (defun minemacs-jarvis-collector--parse-info (data)
+    (let* ((id (gethash "id" data))
+	  (vid (list
+		 :id id
+		 :title (gethash "title" data)
+		 :description (s-trim (gethash "description" data))
+		 :channel (gethash "channel" data)
+		 :channel-url (gethash "channel_url" data)
+		 :channel-follower-count (gethash "channel_follower_count" data)
+		 :duration (gethash "duration" data)
+		 :like-count (gethash "like_count" data)
+		 :view-count (gethash "view_count" data)
+		 :average-rating (gethash "average_rating" data)
+		 :webpage-url (gethash "webpage_url" data)
+		 :categories (gethash "categories" data)
+		 :tags (gethash "tags" data)
+		 :script-url (minemacs-jarvis-collector--find-transcript-format data))))
+	vid))
 
   (defun minemacs-jarvis-collector--fetch-transcript (url)
     (if url (with-current-buffer (url-retrieve-synchronously url)
@@ -598,6 +604,25 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	(read-only-mode 1)
 	(beginning-of-buffer))
       buffer))
+
+  (defun minemacs-jarvis-collector--get-cache-entry-name (url)
+    (file-name-concat minemacs-jarvis-collector-directory ".cache" (md5 url)))
+
+  (defun minemacs-jarvis-collector--get-cache (url)
+    (let* ((filename (minemacs-jarvis-collector--get-cache-entry-name url)))
+      (and
+       (file-readable-p filename)
+       (with-temp-buffer
+	 (insert-file-contents filename)
+	 (cl-assert (eq (point) (point-min)))
+	 (read (current-buffer))))))
+
+  (defun minemacs-jarvis-collector--set-cache (url data)
+    (let* ((name (md5 url))
+	   (filename (minemacs-jarvis-collector--get-cache-entry-name url))
+	   (base-dir (file-name-directory filename)))
+      (mkdir base-dir t)
+      (with-temp-file filename (prin1 data (current-buffer)))))
 
   (defun minemacs-jarvis-collect (url)
     (interactive "sYoutube video URL: ")
