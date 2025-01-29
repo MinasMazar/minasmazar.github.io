@@ -1121,8 +1121,9 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
 
-** X
 ** Screen managing (xrandr)
+
+Remember to set =DISPLAY= env in the console before using =xrandr= (usually ~export DISPLAY=:0~)
 
 #+begin_quote
 I use this command to mirror my desktop with my external VGA:
@@ -1153,6 +1154,11 @@ Adjust brightness from command line:
 #+begin_quote
  However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
 #+end_quote
+
+** Screen managing (wayland)
+
+Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~export WAYLAND_DISPLAY=wayland-1~)
+
 
 ** Set keyboard layout from command-line
 
