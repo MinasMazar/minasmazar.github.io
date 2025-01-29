@@ -8,7 +8,7 @@
 
 * Package initialization
 
-More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath
+More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this configuration is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
 
 #+begin_src elisp
   (add-to-list 'load-path "~/.emacs.d/vendor/")
@@ -16,16 +16,23 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath
     (normal-top-level-add-subdirs-to-load-path))
 
   (require 'package)
-
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")
-			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
-
-  (require 'use-package)
-  (require 'use-package-ensure)
-  (setq use-package-always-ensure t
-	package-enable-at-startup t)
   (package-initialize)
+  (setq package-archives '(
+			   ("melpa" . "https://melpa.org/packages/")
+			   ;;("elpa" . "https://elpa.gnu.org/packages/")
+			   ;;("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			   ))
+
+  (when (< emacs-major-version 29)
+    (unless (package-installed-p 'use-package)
+      (unless package-archive-contents
+	(package-refresh-contents))
+      (package-install 'use-package)))
+
+  ;;(require 'use-package)
+  ;;(require 'use-package-ensure)
+  ;;(setq use-package-always-ensure t
+  ;;      package-enable-at-startup t)
 #+end_src
 
 * Emacs configuration
@@ -134,8 +141,6 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath
 	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
 	  ("e" . #'switch-to-minibuffer)))
-
-  (minemacs-modules-load)
 #+end_src
 
 * Minibuffer
@@ -244,10 +249,11 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath
 	   ("," . append-to-previous-buffer)))
 #+end_src
 
-* Load custom configurations
+* Load modules and custom configurations
 
 #+begin_src elisp
-  (if custom-file (load custom-file 'noerror))
+  (minemacs-modules-load)
+  (load custom-file :no-error-if-file-is-missing)
 #+end_src
 
 * On hand documentation
