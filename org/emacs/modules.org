@@ -467,8 +467,11 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 #+end_src
 
 ** Collector 🗄️
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/jarvis-collector.el") :mkdirp yes :comments link
+:END:
 
-#+begin_src elisp
+#+begin_src emacs-lisp
   (require 'cl-lib)
   (require 'ucs-normalize)
 
@@ -511,21 +514,25 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 			    transcript-text))))))
 
   (defun minemacs-jarvis-collector--org-content-header (vid)
-    (let ((title (plist-get vid :title))
-	  (webpage-url (plist-get vid :webpage-url))
-	  (channel (plist-get vid :channel))
-	  (channel-url (plist-get vid :channel-url))
-	  (channel-follower-count (plist-get vid :channel-follower-count))
-	  (humanized-duration (plist-get vid :duration))
-	  (like-count (plist-get vid :like-count))
-	  (view-count (plist-get vid :view-count)))
+    (let* ((title (plist-get vid :title))
+	   (webpage-url (plist-get vid :webpage-url))
+	   (channel (plist-get vid :channel))
+	   (channel-url (plist-get vid :channel-url))
+	   (channel-follower-count (plist-get vid :channel-follower-count))
+	   (humanized-duration (plist-get vid :duration))
+	   (fetched-at (plist-get vid :fetched-at))
+	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
+	   (like-count (plist-get vid :like-count))
+	   (view-count (plist-get vid :view-count)))
       (format
        "* [[%s][%s]]
 
   📹 *From:* [[%s][%s]] (🧑 %s followers)
   🕓 *Duration:* %s
   ❤️ *Likes:* %s / 👀 *Views:* %s
-  " webpage-url title channel-url channel channel-follower-count humanized-duration like-count view-count)))
+
+  🔄 Last sync at %s
+  " webpage-url title channel-url channel channel-follower-count humanized-duration like-count view-count humanized-fetched-at)))
 
   (defun minemacs-jarvis-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
@@ -545,23 +552,10 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 			 (lambda (format)
 			   (let* ((ext (gethash "ext" format))
 				  (res (string= "ttml" ext)))
-			     (message (format "<%s> %s" ext res))
 			     res))
 			 orig-lang))
 	   (script-url (and ttml-format (gethash "url" ttml-format))))
       script-url))
-
-  (defun minemacs-jarvis-collector-fetch-info (url)
-    (let ((cache-value (minemacs-jarvis-collector--get-cache url)))
-      (if cache-value
-	  (minemacs-jarvis-collector--parse-info cache-value)
-	(with-temp-buffer
-	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
-	  ;;(insert-file "~/Desktop/vid.json") ; debug line
-	  (goto-char 0)
-	  (let ((json (json-parse-buffer)))
-	    (minemacs-jarvis-collector--set-cache url json)
-	    (minemacs-jarvis-collector--parse-info json))))))
 
   (defun minemacs-jarvis-collector--parse-info (data)
     (let* ((id (gethash "id" data))
@@ -579,8 +573,9 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		 :webpage-url (gethash "webpage_url" data)
 		 :categories (gethash "categories" data)
 		 :tags (gethash "tags" data)
+		 :fetched-at (gethash "fetched_at" data)
 		 :script-url (minemacs-jarvis-collector--find-transcript-format data))))
-	vid))
+      vid))
 
   (defun minemacs-jarvis-collector--fetch-transcript (url)
     (if url (with-current-buffer (url-retrieve-synchronously url)
@@ -589,24 +584,25 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		     (div (car (dom-by-tag body 'div))))
 		div))))
 
-  (defun minemacs-jarvis-collector--create-buffer (vid)
+  (defun minemacs-jarvis-collector--create-file (vid)
     (let* ((transcript (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
 	   (vid (plist-put vid :transcript-dom transcript))
 	   (id (plist-get vid :id))
-	   (buff-name (minemacs-jarvis-collector--build-filename vid))
-	   (coding-system-for-write 'raw-text)
-	   (buffer (get-buffer-create buff-name)))
-      (with-current-buffer buffer
-	(set-visited-file-name (minemacs-jarvis-collector--build-pathname vid))
+	   (pathname (minemacs-jarvis-collector--build-pathname vid))
+	   (coding-system-for-write 'raw-text))
+      (with-temp-file pathname
 	(set-buffer-file-coding-system 'raw-text)
-	(org-mode)
-	(minemacs-jarvis-collector--insert-org-content vid buffer)
-	(read-only-mode 1)
-	(beginning-of-buffer))
-      buffer))
+	(minemacs-jarvis-collector--insert-org-content vid (current-buffer)))
+      pathname))
 
   (defun minemacs-jarvis-collector--get-cache-entry-name (url)
-    (file-name-concat minemacs-jarvis-collector-directory ".cache" (md5 url)))
+    (file-name-concat
+     minemacs-jarvis-collector-directory
+     ".cache"
+     (concat
+      (minemacs-jarvis-collector--extract-id-from-url url)
+      "-"
+      (md5 url))))
 
   (defun minemacs-jarvis-collector--get-cache (url)
     (let* ((filename (minemacs-jarvis-collector--get-cache-entry-name url)))
@@ -614,7 +610,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
        (file-readable-p filename)
        (with-temp-buffer
 	 (insert-file-contents filename)
-	 (cl-assert (eq (point) (point-min)))
+	 ;;(cl-assert (eq (point) (point-min)))
 	 (read (current-buffer))))))
 
   (defun minemacs-jarvis-collector--set-cache (url data)
@@ -624,28 +620,49 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (mkdir base-dir t)
       (with-temp-file filename (prin1 data (current-buffer)))))
 
-  (defun minemacs-jarvis-collect (url)
-    (interactive "sYoutube video URL: ")
-    (let* ((vid (minemacs-jarvis-collector-fetch-info url))
-	   (buffer (minemacs-jarvis-collector--create-buffer vid)))
-      (pop-to-buffer buffer)
-      (with-current-buffer buffer
-	(save-buffer)
-	buffer)))
+  (defun minemacs-jarvis-collector--extract-id-from-collected-vid (file)
+    (let ((filename (file-name-base file)))
+      (and (string-match "\\(\\ca\\{11\\}\\)-" filename) (match-string 1 filename))))
 
-  (defun minemacs-jarvis-collect-async (url)
-    (interactive "sYoutube video URL: ")
-    (async-start
-     (lambda () (minemacs-jarvis-collector-fetch-info url))
-     (lambda (vid)
-       (let ((buffer (minemacs-jarvis-collector--create-buffer vid)))
-	 (with-current-buffer buffer
-	   (pop-to-buffer buffer)
-	   (save-buffer))))))
+  (defun minemacs-jarvis-collector--extract-id-from-url (url)
+    (or
+     (and (string-match "v=\\(\\ca\\{11\\}\\)" url) (match-string 1 url))
+     (and (string-match "/\\(\\ca\\{11\\}\\)$" url) (match-string 1 url))))
 
-  ;; (minemacs-jarvis-collect "https://www.youtube.com/watch?v=tOOOC_s5HZ4")
+  (defun minemacs-jarvis-collector--canonize-url (url)
+    (let ((id (minemacs-jarvis-collector--extract-id-from-url url)))
+      (and id (format "https://www.youtube.com/watch?v=%s" id))))
+
+  (defun minemacs-jarvis-collector-fetch-info (url &optional force)
+    (let ((cache-value (minemacs-jarvis-collector--get-cache url)))
+      (if (and cache-value (not force))
+	  (minemacs-jarvis-collector--parse-info cache-value)
+	(with-temp-buffer
+	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	  ;;(insert-file "~/Desktop/vid.json") ; debug line
+	  (goto-char 0)
+	  (let* ((json (json-parse-buffer)))
+	    (puthash "fetched_at" (current-time) json)
+	    (minemacs-jarvis-collector--set-cache url json)
+	    (minemacs-jarvis-collector--parse-info json))))))
+
+  (defun minemacs-jarvis-collected-vids ()
+    "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
+    (let ((files (directory-files minemacs-jarvis-collector-directory t "\\.org")))
+      (mapcar (lambda (file)
+		(let* ((id (minemacs-jarvis-collector--extract-id-from-collected-vid file))
+		      (url (minemacs-jarvis-collector--canonize-url (concat "/" id))))
+		  (cons url file)))
+	      files)))
+
+  (defun minemacs-jarvis-collect (url &optional force-fetch visit)
+    (interactive "sYoutube video URL: ")
+    (let* ((url (minemacs-jarvis-collector--canonize-url url))
+	   (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
+	   (pathname (minemacs-jarvis-collector--create-file vid)))
+      (and visit (find-file pathname))
+      pathname))
 #+end_src
-
 ** Speak 🗣️
 
 #+begin_src elisp
