@@ -17,17 +17,24 @@
   Wayland: =XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab=
 
 ** Use Browser in kiosk mode
-
+*** Chromium
 Use Chromium/Firefox as browser works well only on RPi > 1
 
-#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
-  sleep 11
+Start Chromium in Kiosk mode within Wayland.
 
-  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-featur\
-  es=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
+  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+end_src
+
+Start Chromium in Kiosk mode within X11.
+
+#+begin_src sh :tangle ~/kiosk.sh :sheband "#!/bin/bash"
+  DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
 #+end_src
 
 - [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
+
+*** Old RPi models
 
 For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
 

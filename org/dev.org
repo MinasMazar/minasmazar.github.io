@@ -1159,7 +1159,6 @@ Adjust brightness from command line:
 
 Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~export WAYLAND_DISPLAY=wayland-1~)
 
-
 ** Set keyboard layout from command-line
 
 #+begin_src sh
