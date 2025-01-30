@@ -1069,6 +1069,7 @@ If you want to add a text stripe under the image
 ** Brief list of useful commands, examples, snippets
 
 - =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
+- =ls -1 | wc -l= determine how many files there are in a directory
 
 ** How do I get a list of installed files from a package?
 
@@ -1197,9 +1198,6 @@ The commands are almost the same as =xrandr=; keep in mind the way the screens a
   feh --bg-fill ~/path/to/image.png
 #+end_src
 
-** Useful commands and snippets
-
-- =ls -1 | wc -l= determine how many files there are in a directory
 
 * [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
 
