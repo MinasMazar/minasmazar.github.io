@@ -1066,6 +1066,24 @@ If you want to add a text stripe under the image
 #+end_src
 
 * Linux desktop
+** Brief list of useful commands, examples, snippets
+
+- =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
+
+** How do I get a list of installed files from a package?
+
+To see all the files the package installed onto your system, do this:
+
+#+begin_src sh
+dpkg-query -L <package_name>
+#+end_src
+
+To see the files a .deb file will install
+
+#+begin_src sh
+dpkg-deb -c <package_name.deb>
+#+end_src
+
 ** Add a custom window manager entry for [[https://wiki.ubuntu.com/LightDM][LightDM]]
 
 Add a file in =/usr/share/xsessions/= with something like this (example for =i3=)
@@ -1121,7 +1139,13 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
 
-** Screen managing (xrandr)
+** Screen managing
+
+Here's [[https://pimylifeup.com/raspberry-pi-screen-resolution/][a good blogpost]] specific for Raspberry PI.
+
+If you're using the LightDM and you want to set monitor resolutions and layout at the startup, edit the =display-setup-script= option in =/etc/lightdm/lightdm.conf=.
+
+*** X11 / xrandr
 
 Remember to set =DISPLAY= env in the console before using =xrandr= (usually ~export DISPLAY=:0~)
 
@@ -1155,9 +1179,11 @@ Adjust brightness from command line:
  However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
 #+end_quote
 
-** Screen managing (wayland)
+*** Wayland / wlr-randr
 
 Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~export WAYLAND_DISPLAY=wayland-1~)
+
+The commands are almost the same as =xrandr=; keep in mind the way the screens are handled is different and =--same-as= option is not available.
 
 ** Set keyboard layout from command-line
 
