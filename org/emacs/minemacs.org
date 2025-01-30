@@ -6,7 +6,8 @@
 #+PROPERTY: header-args :tangle ~/.emacs.d/init.el
 #+SETUPFILE: ../../../templates/_header.org
 
-* Package initialization
+* Emacs configuration
+** Package initialization
 
 More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this configuration is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
 
@@ -35,7 +36,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
   ;;      package-enable-at-startup t)
 #+end_src
 
-* Emacs configuration
+** Basic settings
 
 #+begin_src elisp
   (use-package emacs
@@ -143,14 +144,14 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 	  ("e" . #'switch-to-minibuffer)))
 #+end_src
 
-* Minibuffer
+** Minibuffer
 
 #+begin_src elisp
   (use-package orderless :custom (completion-styles '(orderless)))
   (use-package vertico :config (vertico-mode 1))
 #+end_src
 
-* Modal editing
+** Modal editing
 
 #+begin_src elisp
   (use-package god-mode
@@ -183,7 +184,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     (god-mode))
 #+end_src
 
-* Auto-completion
+** Auto-completion
 
 #+begin_src elisp
   (use-package corfu
@@ -215,7 +216,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
 #+end_src
 
-* Org
+** Org
 #+begin_src elisp
   (use-package org
     :bind
@@ -223,7 +224,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
           ("M-p" . #'org-move-subtree-up)
           ("M-n" . #'org-move-subtree-down)))
 #+end_src
-* Embark
+** Embark
 
 #+begin_src elisp
   (use-package embark
@@ -249,7 +250,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 	   ("," . append-to-previous-buffer)))
 #+end_src
 
-* Load modules and custom configurations
+** Load modules and custom configurations
 
 #+begin_src elisp
   (minemacs-modules-load)
