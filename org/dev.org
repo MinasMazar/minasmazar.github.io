@@ -1101,13 +1101,29 @@ DesktopNames=i3
 Keywords=tiling;wm;windowmanager;window;manager;
 #+end_src
 
-** Alsamixer
+** Audio management
+*** Alsamixer
 
 Toggle mute
 
 #+begin_src sh
   amixer set Master toggle
 #+end_src
+
+*** Pulseaudio
+**** pacmd
+You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
+
+#+begin_src sh
+  pacmd help list-sinks
+  pacmd list-sink-inputs
+  pacmd move-sink-input 5 1
+#+end_src
+
+**** pactl
+
+- =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
+- =pactl get-sink-volume <INDEX>= get the volume of the given sink
 
 ** Create a .desktop File
 
@@ -1125,16 +1141,6 @@ In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 =xset s off= (turns off the screen saver)
 =xset s noblank= (turns off blanking)
 =xset -dpms= (disable the power management)
-
-** Pulseaudio
-
-You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
-
-#+begin_src sh
-  pacmd help list-sinks
-  pacmd list-sink-inputs
-  pacmd move-sink-input 5 1
-#+end_src
 
 ** Read battery status from command-line
 
@@ -1198,6 +1204,9 @@ The commands are almost the same as =xrandr=; keep in mind the way the screens a
   feh --bg-fill ~/path/to/image.png
 #+end_src
 
+** Set custom name/class to an application (window)
+
+If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[*\[\[https://en.wikipedia.org/wiki/I3_(window_manager)\]\[i3\]\] (Window Manager)][i3 rules configuration]].
 
 * [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
 
