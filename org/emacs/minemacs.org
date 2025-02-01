@@ -3,25 +3,55 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-08-08 Thu>
 #+STARTUP: show2levels
-#+PROPERTY: header-args :tangle ~/.emacs.d/init.el
+#+PROPERTY: header-args :tangle (file-name-concat user-emacs-directory "init.el")
 #+SETUPFILE: ../../../templates/_header.org
 
 * Emacs configuration
+** Helpers
+
+#+begin_src emacs-lisp
+  ;; Minemacs helpers
+  ;;
+
+  (defun minemacs-tangle-if-not-disabled (module)
+    (let ((dest-file (file-name-concat (minemacs-modules-directory) module)))
+      (if (member-ignore-case "disable" (org-get-tags)) "no" dest-file)))
+
+  (defun minemacs-subdir (path)
+    (file-name-concat user-emacs-directory path))
+
+  (defun minemacs-modules-directory ()
+    (minemacs-subdir "modules"))
+
+  (defun minemacs-custom-file ()
+    (file-name-concat user-emacs-directory "custom.el"))
+
+  (defun minemacs-modules-load ()
+    "Load all modules '*.el' files in 'minemacs-modules-directory'"
+    (interactive)
+    (if (file-readable-p (minemacs-modules-directory))
+	(mapcar (lambda (file)
+		  (load file 'noerror))
+		(directory-files (minemacs-modules-directory) t "\.el$"))))
+#+end_src
+
 ** Package initialization
 
-More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this configuration is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
+More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this initial setup is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
 
 #+begin_src elisp
-  (add-to-list 'load-path "~/.emacs.d/vendor/")
-  (let ((default-directory  "~/.emacs.d/vendor/"))
-    (normal-top-level-add-subdirs-to-load-path))
+  (let* ((vendor (minemacs-subdir "vendor"))
+	 (default-directory vendor))
+    (add-to-list 'load-path vendor)
+    (and (file-readable-p vendor) (normal-top-level-add-subdirs-to-load-path)))
 
   (require 'package)
   (package-initialize)
-  (setq package-archives '(
+  (setq use-package-always-ensure t
+	package-archives '(
 			   ("melpa" . "https://melpa.org/packages/")
-			   ;;("elpa" . "https://elpa.gnu.org/packages/")
-			   ;;("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")
+			   ("nongnu" . "https://elpa.nongnu.org/nongnu/")
 			   ))
 
   (when (< emacs-major-version 29)
@@ -29,11 +59,6 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
       (unless package-archive-contents
 	(package-refresh-contents))
       (package-install 'use-package)))
-
-  ;;(require 'use-package)
-  ;;(require 'use-package-ensure)
-  ;;(setq use-package-always-ensure t
-  ;;      package-enable-at-startup t)
 #+end_src
 
 ** Basic settings
@@ -70,27 +95,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     (if (file-exists-p "~/Dropbox/minemacs/")
 	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
 	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-	      custom-file "~/.emacs.d/custom.el"))
-    ;; Helpers
-    (defun minemacs-files-in-emacs-subdir (subdir)
-      (message "Scan files in emacs subdir %s" subdir)
-      (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
-	(message "Scan files in dir %s" scan-dir)
-	(if (file-exists-p scan-dir)
-	    (directory-files scan-dir t directory-files-no-dot-files-regexp))))
-
-    ;; Modules
-    (defun minemacs-tangle-if-not-disabled (tangle)
-      (if (member-ignore-case "disable" (org-get-tags)) "no" tangle))
-
-    (defun minemacs-modules-load ()
-      "Load all modules '*.el' files in './.emacs.d/modules/'"
-      (interactive)
-      ;; TODO: locate-dominating-file
-      (let ((modules (minemacs-files-in-emacs-subdir "modules")))
-	(if modules (mapcar (lambda (module)
-			      (load  module 'noerror))
-			    modules))))
+	      custom-file (minemacs-custom-file)))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -253,8 +258,8 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 ** Load modules and custom configurations
 
 #+begin_src elisp
-  (minemacs-modules-load)
   (load custom-file :no-error-if-file-is-missing)
+  (minemacs-modules-load)
 #+end_src
 
 * On hand documentation

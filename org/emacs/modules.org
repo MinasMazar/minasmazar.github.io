@@ -6,7 +6,7 @@
 
 * Overrides
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/overrides.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "overrides.el") :mkdirp yes
 :END:
 
 ** Bookmarks + browse-url
@@ -24,7 +24,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 
 * Custom Helpers
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/custom-helpers.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "custom-helpers.el") :mkdirp yes
 :END:
 
 #+begin_src elisp
@@ -34,7 +34,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 
 * Info and Help
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/info-help.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "info-help.el") :mkdirp yes
 :END:
 
 #+begin_src elisp
@@ -74,7 +74,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 
 * Hail Hydra! 🐍
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "hydra.el") :mkdirp yes
 :END:
 
 #+begin_src elisp
@@ -171,7 +171,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 
 * IDE 🖥️
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/ide.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "ide.el") :mkdirp yes
 :END:
 
 ** MacOS compatibility
@@ -321,7 +321,7 @@ curl https://cht.sh
 
 * Jarvis 🤖
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/jarvis.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "jarvis.el") :mkdirp yes
 :END:
 
 Jarvis is a module that enables some high-level/automation features.
@@ -467,11 +467,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 #+end_src
 
 ** Collector 🗄️
-:PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/jarvis-collector.el") :mkdirp yes :comments link
-:END:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
   (require 'cl-lib)
   (require 'ucs-normalize)
 
@@ -728,7 +725,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
 * Look and feel 🎨
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/look_n_feel.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "look_n_feel.el") :mkdirp yes
 :END:
 ** Icons
 
@@ -839,7 +836,7 @@ Install the =doom-modeline=.
 
 * Multimedia 🎶
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/media.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "media.el") :mkdirp yes
 :END:
 
 ** Bongo
@@ -886,7 +883,7 @@ The **MPV** backend by default is able to play "http" URIs, but when you add a "
 
 * News 📰 and Mail 📬
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/news-mail.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "news-mail.el") :mkdirp yes
 :END:
 ** RSS
 
@@ -1077,7 +1074,7 @@ Then configure the =gnus-select-method=
 
 * Utils ⚒️
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/utils.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "utils.el") :mkdirp yes
 :END:
 ** Password management
 
@@ -1182,7 +1179,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
 
 * Emacs as Window Manager
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "exwm.el") :mkdirp yes
 :END:
 
 ** exwm
