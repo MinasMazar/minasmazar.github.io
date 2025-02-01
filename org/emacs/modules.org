@@ -561,7 +561,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>
   ,#+END_EXPORT
   " id title)))
-   
+
   (defun minemacs-jarvis-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
       (unless (minemacs-blank? description)
@@ -620,6 +620,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		 :tags (gethash "tags" data)
 		 :thumbnail-url (minemacs-jarvis-collector--extract-thumbnail-url data)
 		 :script-url (minemacs-jarvis-collector--find-transcript-format data)
+		 :transcript-dom (gethash "transcript_dom" data)
 		 :fetched-at (gethash "fetched_at" data)
 		 )))
       vid))
@@ -632,11 +633,9 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		div))))
 
   (defun minemacs-jarvis-collector--create-file (vid)
-    (let* ((transcript (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
-	   (vid (plist-put vid :transcript-dom transcript))
-	   (id (plist-get vid :id))
-	   (pathname (minemacs-jarvis-collector--build-pathname vid))
-	   (coding-system-for-write 'raw-text))
+    (let ((id (plist-get vid :id))
+	  (pathname (minemacs-jarvis-collector--build-pathname vid))
+	  (coding-system-for-write 'raw-text))
       (with-temp-file pathname
 	(set-buffer-file-coding-system 'raw-text)
 	(minemacs-jarvis-collector--insert-org-content vid (current-buffer)))
@@ -688,10 +687,14 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
 	  ;;(insert-file "~/Desktop/vid.json") ; debug line
 	  (goto-char 0)
-	  (let* ((json (json-parse-buffer)))
+	  (let* ((json (json-parse-buffer))
+		 (vid (minemacs-jarvis-collector--parse-info json))
+		 (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+		 (vid (plist-put vid :transcript-dom transcript-dom)))
 	    (puthash "fetched_at" (current-time) json)
+	    (puthash "transcript_dom" transcript-dom json)
 	    (minemacs-jarvis-collector--set-cache url json)
-	    (minemacs-jarvis-collector--parse-info json))))))
+	    vid)))))
 
   (defun minemacs-jarvis-collected-vids ()
     "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
@@ -702,12 +705,13 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		  (cons url file)))
 	      files)))
 
-  (defun minemacs-jarvis-collect (url &optional force-fetch visit)
+  (defun minemacs-jarvis-collect (url &optional force-fetch)
     (interactive "sYoutube video URL: ")
-    (let* ((url (minemacs-jarvis-collector--canonize-url url))
+    (let* ((force-fetch (or current-prefix-arg force-fetch))
+	   (url (minemacs-jarvis-collector--canonize-url url))
 	   (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
 	   (pathname (minemacs-jarvis-collector--create-file vid)))
-      (and (or visit (called-interactively-p 'any)) (find-file pathname))
+      (and (called-interactively-p 'any) (find-file pathname))
       pathname))
 #+end_src
 
