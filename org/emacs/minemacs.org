@@ -170,7 +170,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
 	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
-    ("s-n" . #'god-mode)
+    ("s-n" . #'god-local-mode)
     (:map god-local-mode-map
      ("i" . #'god-local-mode)
      ("I" . #'org-edit-special)
@@ -181,7 +181,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
      ("[" . #'backward-paragraph)
      ("]" . #'forward-paragraph))
     :config
-    (god-mode))
+    (god-local-mode))
 #+end_src
 
 ** Auto-completion
