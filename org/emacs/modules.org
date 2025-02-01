@@ -469,11 +469,10 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 ** Collector 🗄️
 
 #+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
+  (use-package s)
   (require 'cl-lib)
+  (require 'dom)
   (require 'ucs-normalize)
-
-  (defun minemacs-blank? (str)
-    (and str (s-blank? (s-trim str))))
 
   (defun minemacs-jarvis-dashitize-string (str)
     (cl-remove-if
@@ -561,7 +560,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun minemacs-jarvis-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
-      (unless (minemacs-blank? description)
+      (unless (string-blank-p description)
 	(format
 	 "\n** Description
 
@@ -604,7 +603,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (vid (list
 		 :id id
 		 :title (gethash "title" data)
-		 :description (s-trim (gethash "description" data))
+		 :description (string-trim (gethash "description" data))
 		 :channel (gethash "channel" data)
 		 :channel-url (gethash "channel_url" data)
 		 :channel-follower-count (gethash "channel_follower_count" data)
