@@ -497,7 +497,9 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (expand-file-name filename minemacs-jarvis-collector-directory)))
 
   (defun minemacs-jarvis-collector--insert-org-content (vid buffer)
-    (let* ((org-content-header (concat (minemacs-jarvis-collector--org-content-header vid)
+    (let* ((org-content-header (concat (minemacs-jarvis-collector--org-headers vid)
+				       (minemacs-jarvis-collector--org-content-embed vid)
+				       (minemacs-jarvis-collector--org-content-details vid)
 				       (minemacs-jarvis-collector--org-content-description vid)))
 	   (transcript-dom (plist-get vid :transcript-dom))
 	   (transcript-text (dom-texts transcript-dom)))
@@ -512,8 +514,23 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   ,#+end_quote
   "
 			    transcript-text))))))
+  (defun minemacs-jarvis-collector--org-headers (vid)
+    (let* ((title (plist-get vid :title))
+	   (link (plist-get vid :webpage-url))
+	   (author (user-full-name))
+	   (date (plist-get vid :fetched-at))
+	   (humanized-date (and date (format-time-string "%F %a" date))))
+      (format
+       "#+TITLE: %s
+  ,#+AUTHOR: %s
+  ,#+DATE: <%s>
+  ,#+OPTIONS: toc:nil num:nil title:nil
 
-  (defun minemacs-jarvis-collector--org-content-header (vid)
+  ,* [[%s][%s]]
+  "
+       title author humanized-date link title)))
+
+  (defun minemacs-jarvis-collector--org-content-details (vid)
     (let* ((title (plist-get vid :title))
 	   (webpage-url (plist-get vid :webpage-url))
 	   (channel (plist-get vid :channel))
@@ -523,17 +540,28 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	   (fetched-at (plist-get vid :fetched-at))
 	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
 	   (like-count (plist-get vid :like-count))
-	   (view-count (plist-get vid :view-count)))
+	   (view-count (plist-get vid :view-count))
+	   (thumbnail-url (plist-get vid :thumbnail-url)))
       (format
-       "* [[%s][%s]]
+       "
+  📹 *Published by* [[%s][%s]] (🧑 %s followers)
+  🔄 *Last sync at* %s
 
-  📹 *From:* [[%s][%s]] (🧑 %s followers)
   🕓 *Duration:* %s
-  ❤️ *Likes:* %s / 👀 *Views:* %s
+  ❤️ *Likes:* %s 
+  👀 *Views:* %s
 
-  🔄 Last sync at %s
-  " webpage-url title channel-url channel channel-follower-count humanized-duration like-count view-count humanized-fetched-at)))
+  " channel-url channel channel-follower-count humanized-fetched-at humanized-duration like-count view-count)))
 
+  (defun minemacs-jarvis-collector--org-content-embed (vid)
+    (let ((id (plist-get vid :id))
+	  (title (plist-get vid :title)))
+      (format "
+  ,#+BEGIN_EXPORT html
+  <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>
+  ,#+END_EXPORT
+  " id title)))
+   
   (defun minemacs-jarvis-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
       (unless (minemacs-blank? description)
@@ -542,6 +570,23 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   %s
   " description))))
+
+  (defun minemacs-jarvis-collector--extract-thumbnail-url (json)
+    (let* ((thumbnails (gethash "thumbnails" json))
+	   (filter-resolution-thumbnails
+	    (lambda (thumbnail)
+	      (let ((height (gethash "height" thumbnail))
+		    (width (gethash "width" thumbnail))
+		    (preference (gethash "preference" thumbnail)))
+		(and width preference (> width 300) (> preference -12)))))
+	   (sort-thumbnails
+	    (lambda (t1 t2)
+	      (let ((t1ref (gethash "preference" t1))
+		    (t2ref (gethash "preference" t2)))
+		(< t1ref t2ref))))
+	   (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
+	   (target-thumbnail (car preferred-thumbnails)))
+      (and target-thumbnail (gethash "url" target-thumbnail))))
 
   (defun minemacs-jarvis-collector--find-transcript-format (json)
     (let* ((auto-captions (gethash "automatic_captions" json))
@@ -573,8 +618,10 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		 :webpage-url (gethash "webpage_url" data)
 		 :categories (gethash "categories" data)
 		 :tags (gethash "tags" data)
+		 :thumbnail-url (minemacs-jarvis-collector--extract-thumbnail-url data)
+		 :script-url (minemacs-jarvis-collector--find-transcript-format data)
 		 :fetched-at (gethash "fetched_at" data)
-		 :script-url (minemacs-jarvis-collector--find-transcript-format data))))
+		 )))
       vid))
 
   (defun minemacs-jarvis-collector--fetch-transcript (url)
@@ -660,9 +707,10 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     (let* ((url (minemacs-jarvis-collector--canonize-url url))
 	   (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
 	   (pathname (minemacs-jarvis-collector--create-file vid)))
-      (and visit (find-file pathname))
+      (and (or visit (called-interactively-p 'any)) (find-file pathname))
       pathname))
 #+end_src
+
 ** Speak 🗣️
 
 #+begin_src elisp
