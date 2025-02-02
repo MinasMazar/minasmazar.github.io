@@ -683,14 +683,15 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
 	  ;;(insert-file "~/Desktop/vid.json") ; debug line
 	  (goto-char 0)
-	  (let* ((json (json-parse-buffer))
-		 (vid (minemacs-jarvis-collector--parse-info json))
-		 (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
-		 (vid (plist-put vid :transcript-dom transcript-dom)))
-	    (puthash "fetched_at" (current-time) json)
-	    (puthash "transcript_dom" transcript-dom json)
-	    (minemacs-jarvis-collector--set-cache url json)
-	    vid)))))
+	  (ignore-error json-parse-error
+	    (let* ((json (json-parse-buffer))
+		   (vid (minemacs-jarvis-collector--parse-info json))
+		   (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+		   (vid (plist-put vid :transcript-dom transcript-dom)))
+	      (puthash "fetched_at" (current-time) json)
+	      (puthash "transcript_dom" transcript-dom json)
+	      (minemacs-jarvis-collector--set-cache url json)
+	      vid))))))
 
   (defun minemacs-jarvis-collected-vids ()
     "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
@@ -703,12 +704,13 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun minemacs-jarvis-collect (url &optional force-fetch)
     (interactive "sYoutube video URL: ")
-    (let* ((force-fetch (or current-prefix-arg force-fetch))
-	   (url (minemacs-jarvis-collector--canonize-url url))
-	   (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
-	   (pathname (minemacs-jarvis-collector--create-file vid)))
-      (and (called-interactively-p 'any) (find-file pathname))
-      pathname))
+    (let ((force-fetch (or current-prefix-arg force-fetch)))
+      (if-let* ((url (minemacs-jarvis-collector--canonize-url url))
+		(vid (minemacs-jarvis-collector-fetch-info url force-fetch))
+		(pathname (minemacs-jarvis-collector--create-file vid)))
+	  (progn
+	    (and (called-interactively-p 'any) (find-file pathname))
+	    pathname))))
 #+end_src
 
 ** Speak 🗣️
