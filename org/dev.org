@@ -1068,8 +1068,12 @@ If you want to add a text stripe under the image
 * Linux desktop
 ** Brief list of useful commands, examples, snippets
 
+- =lsb_release -a= show info about distro
+- =lsblk -f= show partitions informations
+- =pacman -Qq= / =apt list --installed= / =dnf list install= show installed packages (Arch, Debian, Fedora)
 - =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
 - =ls -1 | wc -l= determine how many files there are in a directory
+- =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
 
 ** How do I get a list of installed files from a package?
 
