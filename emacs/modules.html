@@ -203,7 +203,30 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgbad95e4">Patches</a></li>
+<li><a href="#orgb9eb8a7">Org</a></li>
+<li><a href="#org6250332">Overrides</a>
+<ul>
+<li><a href="#org87babdf">Bookmarks + browse-url</a></li>
+</ul>
+</li>
+<li><a href="#org3863ff2">Custom Helpers</a></li>
+<li><a href="#org9ce6c64">Info and Help</a>
+<ul>
+<li><a href="#org59ddc40">Show keybindings&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
+</ul>
+</li>
+<li><a href="#org20c96bc">Hail Hydra! 🐍</a>
+<ul>
+<li><a href="#orgf033f92">Advanced hydra ⚠️ experimental ⚠️&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
+</ul>
+</li>
+<li><a href="#org6530918">Eshell</a>
+<ul>
+<li><a href="#orgb6583b1">Functions</a></li>
+<li><a href="#org2add709">Scripts</a></li>
+</ul>
+</li>
+<li><a href="#org19d381e">imenu</a></li>
 <li><a href="#org2edee99">IDE 🖥️</a>
 <ul>
 <li><a href="#org0142e62">MacOS compatibility</a></li>
@@ -212,6 +235,7 @@
 <li><a href="#orgb8a181e">Markdown</a></li>
 </ul>
 </li>
+<li><a href="#orgd126dd1">Data serialization</a></li>
 <li><a href="#org6f1f096">Programming languages</a>
 <ul>
 <li><a href="#org8eae620">Elixir</a></li>
@@ -219,7 +243,7 @@
 </li>
 <li><a href="#org83cc18f">Versioning</a></li>
 <li><a href="#org48169b7">Docker</a></li>
-<li><a href="#org7ffc534">Workspaces</a></li>
+<li><a href="#org7ffc534">Workspaces&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
 <li><a href="#org69b5310">Templating</a></li>
 <li><a href="#orgc61cb9d">Terminal</a></li>
 <li><a href="#orgcb0f1ac">cht.sh</a></li>
@@ -228,7 +252,14 @@
 <li><a href="#org23d373c">Jarvis 🤖</a>
 <ul>
 <li><a href="#orgd981008">Helpers</a></li>
-<li><a href="#org05242e9">Youtube 🎥</a></li>
+<li><a href="#org05242e9">Youtube 🎥</a>
+<ul>
+<li><a href="#org134cd51">Helper functions</a></li>
+<li><a href="#org12cac59">Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)</a></li>
+<li><a href="#org292ea2b">Experimenting with the Google APIs (here's the doc).</a></li>
+</ul>
+</li>
+<li><a href="#orgccc45e6">Collector 🗄️</a></li>
 <li><a href="#orga79f127">Speak 🗣️</a></li>
 </ul>
 </li>
@@ -237,7 +268,8 @@
 <li><a href="#org140d7fe">Icons</a></li>
 <li><a href="#orgc488366">Dashboard</a></li>
 <li><a href="#org53e6ed9">Beautify</a></li>
-<li><a href="#org6f3a0e8">Highlight line</a></li>
+<li><a href="#orgca25947">Transparent Emacs</a></li>
+<li><a href="#org6f3a0e8">Highlight line&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
 <li><a href="#org060c4a8">Themes</a></li>
 <li><a href="#org31977b0">Modeline</a></li>
 <li><a href="#org04c35c6">Headline</a></li>
@@ -247,6 +279,7 @@
 <ul>
 <li><a href="#org7b424f4">Bongo</a></li>
 <li><a href="#orgd095358">yeetube</a></li>
+<li><a href="#orgab3f9fd">Pulseaudio interface</a></li>
 </ul>
 </li>
 <li><a href="#org799949a">News 📰 and Mail 📬</a>
@@ -261,15 +294,6 @@
 </li>
 </ul>
 </li>
-<li><a href="#org7976ab7">Web browsing</a>
-<ul>
-<li><a href="#org063d11e">EWW</a>
-<ul>
-<li><a href="#org381cc47">Experimenting with <code>eww-retrieve-command</code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li><a href="#orgc61dbde">Utils ⚒️</a>
 <ul>
 <li><a href="#orgba9376d">Password management</a></li>
@@ -277,14 +301,38 @@
 <li><a href="#org2ae18ea">Web search</a></li>
 </ul>
 </li>
-<li><a href="#org3d27cae">Emacs as Window Manager&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></a></li>
+<li><a href="#org3d27cae">Emacs as Window Manager</a>
+<ul>
+<li><a href="#orgf71364c">exwm</a></li>
+<li><a href="#orgd276ef9">System configuration (Linux Mint/Ubuntu)</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgbad95e4" class="outline-2">
-<h2 id="orgbad95e4">Patches</h2>
-<div class="outline-text-2" id="text-orgbad95e4">
+<div id="outline-container-orgb9eb8a7" class="outline-2">
+<h2 id="orgb9eb8a7">Org</h2>
+<div class="outline-text-2" id="text-orgb9eb8a7">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package org
+  :bind
+  (:map org-mode-map
+        ("M-p" . #'org-move-subtree-up)
+        ("M-n" . #'org-move-subtree-down)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6250332" class="outline-2">
+<h2 id="org6250332">Overrides</h2>
+<div class="outline-text-2" id="text-org6250332">
+</div>
+
+<div id="outline-container-org87babdf" class="outline-3">
+<h3 id="org87babdf">Bookmarks + browse-url</h3>
+<div class="outline-text-3" id="text-org87babdf">
 <p>
 Here add a custom bookmark handler relying on <code>browse-url</code> and <code>browse-url-handlers</code>, so even if we store a bookmark via <code>eww</code>, we're going to use the proper browser when opening it.
 </p>
@@ -301,11 +349,188 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 </div>
 </div>
 </div>
+</div>
+
+<div id="outline-container-org3863ff2" class="outline-2">
+<h2 id="org3863ff2">Custom Helpers</h2>
+<div class="outline-text-2" id="text-org3863ff2">
+<div class="org-src-container">
+<pre class="src src-elisp">(defun random-from-list (list)
+  (nth (random (length list)) list))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9ce6c64" class="outline-2">
+<h2 id="org9ce6c64">Info and Help</h2>
+<div class="outline-text-2" id="text-org9ce6c64">
+<div class="org-src-container">
+<pre class="src src-elisp">;; Enable rich annotations using the Marginalia package
+(use-package marginalia
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init section is always executed.
+  :init
+
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package helpful
+  :bind
+  ("C-h f" . #'helpful-callable)
+  ("C-h v" . #'helpful-variable)
+  ("C-h k" . #'helpful-key)
+  ("C-h x" . #'helpful-command))
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org59ddc40" class="outline-3">
+<h3 id="org59ddc40">Show keybindings&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h3>
+<div class="outline-text-3" id="text-org59ddc40">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package which-key
+  :config
+  (which-key-mode 1))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org20c96bc" class="outline-2">
+<h2 id="org20c96bc">Hail Hydra! 🐍</h2>
+<div class="outline-text-2" id="text-org20c96bc">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package hydra)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf033f92" class="outline-3">
+<h3 id="orgf033f92">Advanced hydra ⚠️ experimental ⚠️&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h3>
+<div class="outline-text-3" id="text-orgf033f92">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package hydra
+  :ensure t
+  :init
+
+  (defun send-key(key)
+    (setq unread-command-events (listify-key-sequence key)))
+
+  :config
+  (defhydra hydra-nav (:color pink
+                           :pre (setq cursor-type 'box)
+                           :post (setq cursor-type 'bar))
+          "hydra-nav:"
+          ("w" #'kill-ring-save "w")
+          ("n" #'next-line "n")
+          ("p" #'previous-line "p")
+          ("a" #'beginning-of-line "a")
+          ("e" #'end-of-line "e")
+          ("k" #'kill-buffer "k")
+          ("K" #'kill-line "K")
+          ("]" #'scroll-up-command "]")
+          ("[" #'scroll-down-command "[")
+          ("&lt;" #'beginning-of-buffer "&lt;")
+          ("o" #'other-window "o")
+          ("b" #'switch-to-buffer "b")
+          ("&gt;" #'end-of-buffer "&gt;")
+          ("u" #'undo "undo")
+          ("2" #'split-window-below "2")
+          ("3" #'split-window-right "3")
+          ("0" #'delete-window "0")
+          ("1" #'delete-other-windows "1")
+          ("i" nil "quit"))
+
+  (defhydra hydra-kommand (:color teal
+                                  :pre (setq cursor-type 'box)
+                                  :post (setq cursor-type 'bar))
+          "hydra-kommand"
+          ("k" #'execute-extended-command "🚀 Kommand")
+          ("m" #'hydra-nav/body "modal")
+          ("p" (lambda () (interactive) (send-key "\M-p")) "M-p")
+          ("n" (lambda () (interactive) (send-key "\M-n")) "M-n")
+          ("e" #'eval-defun "Λ eval-defun")
+          ("l" #'god-mode "👼 god")
+          ("r" #'repeat "repeat")
+          ("x" #'dabbrev-expand "expand")
+          ("b" #'ibuffer "🧰 ibuffer")
+          ("j" #'bookmark-jump "🔖 bookmark")
+          ("a" #'org-agenda)
+          ("q" nil "_q_uit"))
+  :bind
+  (("s-o" . #'hydra-kommand/body)
+   ("s-l" . #'hydra-nav/body)))
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6530918" class="outline-2">
+<h2 id="org6530918">Eshell</h2>
+<div class="outline-text-2" id="text-org6530918">
+</div>
+<div id="outline-container-orgb6583b1" class="outline-3">
+<h3 id="orgb6583b1">Functions</h3>
+<div class="outline-text-3" id="text-orgb6583b1">
+<div class="org-src-container">
+<pre class="src src-elisp">(defun eshell/ve (&amp;rest args)
+  (let* ((cmd (car args))
+         (argv (cdr args))
+         (argl (string-join argv " ")))
+    (if argv (eshell-exec-visual cmd argl) (eshell-exec-visual cmd))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2add709" class="outline-3">
+<h3 id="org2add709">Scripts</h3>
+<div class="outline-text-3" id="text-org2add709">
+<div class="org-src-container">
+<pre class="src src-elisp">set wallpaper ${random-from-list ${ls ~/Pictures/wallpapers/*}}
+ln -sf $wallpaper  ~/Pictures/wallpaper
+feh --bg-fill ~/Pictures/wallpaper
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19d381e" class="outline-2">
+<h2 id="org19d381e">imenu</h2>
+<div class="outline-text-2" id="text-org19d381e">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package imenu
+  :init
+  (setq eww-imenu-heading-expression '((nil "^* +\\(.+\\)" 1))
+        eshell-imenu-commands-expression '((nil "\$ \\(\\w+\\)" 1)))
+  :hook
+  (eww-mode . (lambda () (setq imenu-generic-expression eww-imenu-heading-expression)))
+  (eshell-mode . (lambda () (setq imenu-generic-expression eshell-imenu-commands-expression))))
+</pre>
+</div>
+</div>
+</div>
 
 <div id="outline-container-org2edee99" class="outline-2">
 <h2 id="org2edee99">IDE 🖥️</h2>
 <div class="outline-text-2" id="text-org2edee99">
 </div>
+
 <div id="outline-container-org0142e62" class="outline-3">
 <h3 id="org0142e62">MacOS compatibility</h3>
 <div class="outline-text-3" id="text-org0142e62">
@@ -329,6 +554,18 @@ Here add a custom bookmark handler relying on <code>browse-url</code> and <code>
 <pre class="src src-elisp">(use-package markdown-mode)
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd126dd1" class="outline-3">
+<h3 id="orgd126dd1">Data serialization</h3>
+<div class="outline-text-3" id="text-orgd126dd1">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package csv)
+(use-package csv-mode)
+(use-package yaml-mode)
+</pre>
 </div>
 </div>
 </div>
@@ -373,9 +610,15 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
 (("C-x g" . #'magit-status)))
 </pre>
 </div>
-</div>
-</div>
 
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package diff-hl
+  :config
+  (diff-hl-mode 1))
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org48169b7" class="outline-3">
 <h3 id="org48169b7">Docker</h3>
 <div class="outline-text-3" id="text-org48169b7">
@@ -389,7 +632,7 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
 </div>
 
 <div id="outline-container-org7ffc534" class="outline-3">
-<h3 id="org7ffc534">Workspaces</h3>
+<h3 id="org7ffc534">Workspaces&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h3>
 <div class="outline-text-3" id="text-org7ffc534">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package tabspaces
@@ -518,6 +761,41 @@ Jarvis is a module that enables some high-level/automation features.
 <div id="outline-container-org05242e9" class="outline-3">
 <h3 id="org05242e9">Youtube 🎥</h3>
 <div class="outline-text-3" id="text-org05242e9">
+</div>
+<div id="outline-container-org134cd51" class="outline-4">
+<h4 id="org134cd51">Helper functions</h4>
+<div class="outline-text-4" id="text-org134cd51">
+<p>
+Given a Youtuve channel URL, returns the channel ID. This is  useful in cases like when you want to get the RSS feed of a Youtube channel.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(defun jarvis-youtube-get-channel-rss (url)
+  "Given a Youtuve channel URL, returns the channel ID. This is
+useful in cases like when you want to get the RSS feed of a Youtube channel."
+  (interactive "sYoutube channel url: ")
+  (let* ((url-user-agent "curl/8.7.1")
+         (url-request-extra-headers '(("Accept" . "*/*")))
+         (buffer (url-retrieve-synchronously url)))
+    (with-current-buffer buffer
+      (let* ((dom (libxml-parse-html-region))
+             (link (dom-search dom
+                               (lambda (el)
+                                 (and (string= (dom-tag el) "link")
+                                      (string= (dom-attr el 'itemprop) "url")))))
+             (channel-id-url (and link (dom-attr link 'href))))
+        (if channel-id-url
+            (let ((_ (string-match "/channel/\\(\\w+\\)" channel-id-url))
+                  (id (match-string 1 channel-id-url)))
+              (message "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org12cac59" class="outline-4">
+<h4 id="org12cac59">Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)</h4>
+<div class="outline-text-4" id="text-org12cac59">
 <p>
 Simply open pick or randomly select a Youtube video from a list. Open in browser or using <code>mpv</code>.
 </p>
@@ -547,18 +825,19 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   (browse-url-default-browser url))
 </pre>
 </div>
+</div>
+</div>
 
-<p>
-Fetch data from the Google APIs (<a href="https://developers.google.com/apis-explorer?hl=it">here's the doc</a>).
-</p>
-
+<div id="outline-container-org292ea2b" class="outline-4">
+<h4 id="org292ea2b">Experimenting with the Google APIs (<a href="https://developers.google.com/apis-explorer?hl=it">here's the doc</a>).</h4>
+<div class="outline-text-4" id="text-org292ea2b">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package request)
 
 (defcustom jarvis/youtube-api-key "" "Youtube API key")
 (cl-defstruct (youtube-video (:constructor youtube-video-create)
-                           (:copier nil))
-  id title desc)
+                             (:copier nil))
+  id title desc url channel channel-url categories tags)
 
 (defun jarvis/youtube-search (query)
   "Returns a list of youtube vidoes given a search term."
@@ -567,7 +846,7 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
     :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
     :parser 'json-read
     :success (cl-function
-            (lambda (&amp;key data &amp;allow-other-keys)
+              (lambda (&amp;key data &amp;allow-other-keys)
                 (when data
                   (with-current-buffer (get-buffer-create "*youtube-vids*")
                     (erase-buffer)
@@ -577,29 +856,300 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
 (defun jarvis/youtube-video (url)
   "Returns details about a Youtube video given an URL"
   (interactive "sURL: ")
-  (let ((id (jarvis/youtube--extract-video-id url)))
+  (let ((id (jarvis/youtube--extract-id url)))
     (request "https://www.googleapis.com/youtube/v3/videos"
-      :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
+      :params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics,topicDetails,status,localizations"))
       :parser 'json-read
       :success (cl-function
-              (lambda (&amp;key data &amp;allow-other-keys)
+                (lambda (&amp;key data &amp;allow-other-keys)
                   (when data
-                    (with-current-buffer (get-buffer-create "*youtube-vid*")
-                      (erase-buffer)
                     (let* ((items (alist-get 'items data))
                            (video-data (elt items 0))
                            (video (let-alist video-data
                                     (youtube-video-create
                                      :title .snippet.title
-                                     :desc .snippet.title))))
-                      (insert (prin1-to-string video))
-                      (beginning-of-buffer))
-                      (pop-to-buffer (current-buffer)))))))))
+                                     :url .snippet.webpage-url
+                                     :channel .snippet.channel
+                                     :channel-url .snippet.channel-url
+                                     :categories .snippet.categories
+                                     :tags .snippet.tags
+                                     :desc .snippet.description)))
+                           (buffer-name "*yt-vid*")) ; (normalize-string (youtube-video-title video))))
+                      (with-current-buffer (get-buffer-create buffer-name)
+                        (erase-buffer)
+                        (insert (prin1-to-string video-data))
+                        ;; (insert (format "# [%s](%s)" (youtube-video-title video) (youtube-video-url video)))
+                        ;; (insert ?\n)
+                        ;; (insert (format "From [%s](%s)\n" (youtube-video-channel video) (youtube-video-channel-url video)))
+                        ;; (insert (youtube-video-desc video))
+                        (beginning-of-buffer)
+                        (pop-to-buffer (current-buffer))))))))))
 
-(defun jarvis/youtube--extract-video-id (string)
+(defun normalize-string (str)
+  (require 'cl-lib)
+  (require 'ucs-normalize)
+  (let* ((dstr (downcase str))
+         (fstr (cl-remove-if
+               (lambda (char)
+                 (&gt; char 127))
+               (ucs-normalize-NFKD-string dstr))))
+    fstr))
+
+(defun jarvis/youtube--extract-id (string)
   "Extract the id from a Youtube video URL"
   (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
     (match-string 1 string)))
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgccc45e6" class="outline-3">
+<h3 id="orgccc45e6">Collector 🗄️</h3>
+<div class="outline-text-3" id="text-orgccc45e6">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package s)
+(require 'cl-lib)
+(require 'dom)
+(require 'ucs-normalize)
+
+(defun minemacs-jarvis-dashitize-string (str)
+  (cl-remove-if
+   (lambda (char)
+     (&gt; char 127))
+   (ucs-normalize-NFKD-string (s-dashed-words str))))
+
+(defvar minemacs-jarvis-collector-directory "~/Public/collector"
+  "Base directory where to put the collected Youtube videos.")
+
+(defun minemacs-jarvis-collector--build-filename (vid)
+  (minemacs-jarvis-dashitize-string (plist-get vid :title)))
+
+(defun minemacs-jarvis-collector--build-pathname (vid)
+  (let* ((id (plist-get vid :id))
+         (name (minemacs-jarvis-collector--build-filename vid))
+         (filename (format "%s-%s.org" id name)))
+    (expand-file-name filename minemacs-jarvis-collector-directory)))
+
+(defun minemacs-jarvis-collector--insert-org-content (vid buffer)
+  (let* ((org-content-header (concat (minemacs-jarvis-collector--org-headers vid)
+                                     (minemacs-jarvis-collector--org-content-embed vid)
+                                     (minemacs-jarvis-collector--org-content-details vid)
+                                     (minemacs-jarvis-collector--org-content-description vid)))
+         (transcript-dom (plist-get vid :transcript-dom))
+         (transcript-text (dom-texts transcript-dom)))
+    (with-current-buffer buffer
+      (erase-buffer)
+      (insert org-content-header)
+      (if transcript-dom
+          (insert (format "\n** Transcript
+
+#+begin_quote
+%s
+#+end_quote
+"
+                          transcript-text))))))
+(defun minemacs-jarvis-collector--org-headers (vid)
+  (let* ((title (plist-get vid :title))
+         (link (plist-get vid :webpage-url))
+         (author (user-full-name))
+         (date (plist-get vid :fetched-at))
+         (humanized-date (and date (format-time-string "%F %a" date))))
+    (format
+     "#+TITLE: %s
+#+AUTHOR: %s
+#+DATE: &lt;%s&gt;
+#+OPTIONS: toc:nil num:nil title:nil
+
+* [[%s][%s]]
+"
+     title author humanized-date link title)))
+
+(defun minemacs-jarvis-collector--org-content-details (vid)
+  (let* ((title (plist-get vid :title))
+         (webpage-url (plist-get vid :webpage-url))
+         (channel (plist-get vid :channel))
+         (channel-url (plist-get vid :channel-url))
+         (channel-follower-count (plist-get vid :channel-follower-count))
+         (humanized-duration (plist-get vid :duration))
+         (fetched-at (plist-get vid :fetched-at))
+         (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
+         (like-count (plist-get vid :like-count))
+         (view-count (plist-get vid :view-count))
+         (thumbnail-url (plist-get vid :thumbnail-url)))
+    (format
+     "
+📹 *Published by* [[%s][%s]] (🧑 %s followers)
+🔄 *Last sync at* %s
+
+🕓 *Duration:* %s
+❤️ *Likes:* %s 
+👀 *Views:* %s
+
+" channel-url channel channel-follower-count humanized-fetched-at humanized-duration like-count view-count)))
+
+(defun minemacs-jarvis-collector--org-content-embed (vid)
+  (let ((id (plist-get vid :id))
+        (title (plist-get vid :title)))
+    (format "
+#+BEGIN_EXPORT html
+&lt;iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen&gt;&lt;/iframe&gt;
+#+END_EXPORT
+" id title)))
+
+(defun minemacs-jarvis-collector--org-content-description (vid)
+  (let ((description (plist-get vid :description)))
+    (unless (string-blank-p description)
+      (format
+       "\n** Description
+
+%s
+" description))))
+
+(defun minemacs-jarvis-collector--extract-thumbnail-url (json)
+  (let* ((thumbnails (gethash "thumbnails" json))
+         (filter-resolution-thumbnails
+          (lambda (thumbnail)
+            (let ((height (gethash "height" thumbnail))
+                  (width (gethash "width" thumbnail))
+                  (preference (gethash "preference" thumbnail)))
+              (and width preference (&gt; width 300) (&gt; preference -12)))))
+         (sort-thumbnails
+          (lambda (t1 t2)
+            (let ((t1ref (gethash "preference" t1))
+                  (t2ref (gethash "preference" t2)))
+              (&lt; t1ref t2ref))))
+         (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
+         (target-thumbnail (car preferred-thumbnails)))
+    (and target-thumbnail (gethash "url" target-thumbnail))))
+
+(defun minemacs-jarvis-collector--find-transcript-format (json)
+  (let* ((auto-captions (gethash "automatic_captions" json))
+         (langs (hash-table-keys auto-captions))
+         (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
+         (orig-lang (gethash orig-lang-key auto-captions))
+         (ttml-format (seq-find
+                       (lambda (format)
+                         (let* ((ext (gethash "ext" format))
+                                (res (string= "ttml" ext)))
+                           res))
+                       orig-lang))
+         (script-url (and ttml-format (gethash "url" ttml-format))))
+    script-url))
+
+(defun minemacs-jarvis-collector--parse-info (data)
+  (let* ((id (gethash "id" data))
+        (vid (list
+               :id id
+               :title (gethash "title" data)
+               :description (string-trim (gethash "description" data))
+               :channel (gethash "channel" data)
+               :channel-url (gethash "channel_url" data)
+               :channel-follower-count (gethash "channel_follower_count" data)
+               :duration (gethash "duration" data)
+               :like-count (gethash "like_count" data)
+               :view-count (gethash "view_count" data)
+               :average-rating (gethash "average_rating" data)
+               :webpage-url (gethash "webpage_url" data)
+               :categories (gethash "categories" data)
+               :tags (gethash "tags" data)
+               :thumbnail-url (minemacs-jarvis-collector--extract-thumbnail-url data)
+               :script-url (minemacs-jarvis-collector--find-transcript-format data)
+               :transcript-dom (gethash "transcript_dom" data)
+               :fetched-at (gethash "fetched_at" data)
+               )))
+    vid))
+
+(defun minemacs-jarvis-collector--fetch-transcript (url)
+  (if url (with-current-buffer (url-retrieve-synchronously url)
+            (let* ((dom (xml-parse-region))
+                   (body (car (dom-by-tag dom 'body)))
+                   (div (car (dom-by-tag body 'div))))
+              div))))
+
+(defun minemacs-jarvis-collector--create-file (vid)
+  (let ((id (plist-get vid :id))
+        (pathname (minemacs-jarvis-collector--build-pathname vid))
+        (coding-system-for-write 'raw-text))
+    (with-temp-file pathname
+      (set-buffer-file-coding-system 'raw-text)
+      (minemacs-jarvis-collector--insert-org-content vid (current-buffer)))
+    pathname))
+
+(defun minemacs-jarvis-collector--get-cache-entry-name (url)
+  (file-name-concat
+   minemacs-jarvis-collector-directory
+   ".cache"
+   (concat
+    (minemacs-jarvis-collector--extract-id-from-url url)
+    "-"
+    (md5 url))))
+
+(defun minemacs-jarvis-collector--get-cache (url)
+  (let* ((filename (minemacs-jarvis-collector--get-cache-entry-name url)))
+    (and
+     (file-readable-p filename)
+     (with-temp-buffer
+       (insert-file-contents filename)
+       ;;(cl-assert (eq (point) (point-min)))
+       (read (current-buffer))))))
+
+(defun minemacs-jarvis-collector--set-cache (url data)
+  (let* ((name (md5 url))
+         (filename (minemacs-jarvis-collector--get-cache-entry-name url))
+         (base-dir (file-name-directory filename)))
+    (mkdir base-dir t)
+    (with-temp-file filename (prin1 data (current-buffer)))))
+
+(defun minemacs-jarvis-collector--extract-id-from-collected-vid (file)
+  (let ((filename (file-name-base file)))
+    (and (string-match "\\(\\ca\\{11\\}\\)-" filename) (match-string 1 filename))))
+
+(defun minemacs-jarvis-collector--extract-id-from-url (url)
+  (or
+   (and (string-match "v=\\(\\ca\\{11\\}\\)" url) (match-string 1 url))
+   (and (string-match "/\\(\\ca\\{11\\}\\)$" url) (match-string 1 url))))
+
+(defun minemacs-jarvis-collector--canonize-url (url)
+  (let ((id (minemacs-jarvis-collector--extract-id-from-url url)))
+    (and id (format "https://www.youtube.com/watch?v=%s" id))))
+
+(defun minemacs-jarvis-collector-fetch-info (url &amp;optional force)
+  (let ((cache-value (minemacs-jarvis-collector--get-cache url)))
+    (if (and cache-value (not force))
+        (minemacs-jarvis-collector--parse-info cache-value)
+      (with-temp-buffer
+        (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+        ;;(insert-file "~/Desktop/vid.json") ; debug line
+        (goto-char 0)
+        (ignore-error json-parse-error
+          (let* ((json (json-parse-buffer))
+                 (vid (minemacs-jarvis-collector--parse-info json))
+                 (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+                 (vid (plist-put vid :transcript-dom transcript-dom)))
+            (puthash "fetched_at" (current-time) json)
+            (puthash "transcript_dom" transcript-dom json)
+            (minemacs-jarvis-collector--set-cache url json)
+            vid))))))
+
+(defun minemacs-jarvis-collected-vids ()
+  "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
+  (let ((files (directory-files minemacs-jarvis-collector-directory t "\\.org")))
+    (mapcar (lambda (file)
+              (let* ((id (minemacs-jarvis-collector--extract-id-from-collected-vid file))
+                    (url (minemacs-jarvis-collector--canonize-url (concat "/" id))))
+                (cons url file)))
+            files)))
+
+(defun minemacs-jarvis-collect (url &amp;optional force-fetch)
+  (interactive "sYoutube video URL: ")
+  (let ((force-fetch (or current-prefix-arg force-fetch)))
+    (if-let* ((url (minemacs-jarvis-collector--canonize-url url))
+              (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
+              (pathname (minemacs-jarvis-collector--create-file vid)))
+        (and (called-interactively-p 'any) (find-file pathname))
+      pathname)))
 </pre>
 </div>
 </div>
@@ -609,7 +1159,7 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
 <h3 id="orga79f127">Speak 🗣️</h3>
 <div class="outline-text-3" id="text-orga79f127">
 <div class="org-src-container">
-<pre class="src src-elisp">(defun jarvis/speak (text)
+<pre class="src src-elisp">(defun jarvis/espeak (text)
   "Speak text using `espeak`."
   (interactive (list
               (completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
@@ -687,8 +1237,22 @@ Fetch data from the Google APIs (<a href="https://developers.google.com/apis-exp
 </div>
 </div>
 
+<div id="outline-container-orgca25947" class="outline-3">
+<h3 id="orgca25947"><a href="https://www.emacswiki.org/emacs/TransparentEmacs">Transparent Emacs</a></h3>
+<div class="outline-text-3" id="text-orgca25947">
+<p>
+Remember you need a compositing manager to handle transparency (compton, compiz or else).
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(set-frame-parameter nil 'alpha-background 85)
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org6f3a0e8" class="outline-3">
-<h3 id="org6f3a0e8">Highlight line</h3>
+<h3 id="org6f3a0e8">Highlight line&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h3>
 <div class="outline-text-3" id="text-org6f3a0e8">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package beacon
@@ -739,9 +1303,12 @@ Install the <code>doom-modeline</code>.
   :hook (after-init . doom-modeline-mode))
 </pre>
 </div>
-</div>
-</div>
 
+<p>
+#+end<sub>src</sub>
+</p>
+</div>
+</div>
 <div id="outline-container-org04c35c6" class="outline-3">
 <h3 id="org04c35c6">Headline</h3>
 <div class="outline-text-3" id="text-org04c35c6">
@@ -773,7 +1340,7 @@ Install the <code>doom-modeline</code>.
 The <b><b>MPV</b></b> backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with <code>bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......</code>. In order to allow <code>mpv</code> to play "https" URIs change the <code>bongo-custom-backend-matchers</code> variable.
 </p>
 
-<pre class="example" id="org64f3ae3">
+<pre class="example" id="org2f34e33">
 (setq bongo-custom-backend-matchers
        '((mpv ("https:") . t)))
 </pre>
@@ -789,6 +1356,30 @@ The <b><b>MPV</b></b> backend by default is able to play "http" URIs, but when y
   (:map minemacs-map
         ("m y" . #'yeetube-search)
         ("m s" . #'empv-youtube)))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgab3f9fd" class="outline-3">
+<h3 id="orgab3f9fd">Pulseaudio interface</h3>
+<div class="outline-text-3" id="text-orgab3f9fd">
+<div class="org-src-container">
+<pre class="src src-elisp">  (use-package pulseaudio-control
+    :after hydra
+    :defer t
+    :config
+    (defhydra hydra-pulseaudio-control (:color amaranth)
+      "
+Control audio (pulseaudio)
+🔊 [n] decrease | 🔉 [_p_] decrease | 🔇 _m_ute == _q_uit
+"
+      ("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
+      ("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
+      ("m" (lambda () (interactive) (pulseaudio-control-toggle-current-sink-mute)) nil)		       
+      ("q" nil nil))
+    :bind
+    (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
 </pre>
 </div>
 </div>
@@ -871,7 +1462,7 @@ Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like 
 On <i>deb based linux systems</i> you can install those via
 </p>
 
-<pre class="example" id="org971d8f1">
+<pre class="example" id="orge7a550c">
 $ sudo apt install mu isync pass
 </pre>
 
@@ -892,7 +1483,7 @@ Useful links:
 Create a file <code>~/.authinfo</code> directly in the root of your home directory.
 </p>
 
-<pre class="example" id="org7f21fd2">
+<pre class="example" id="orgd690709">
 machine smtp.example.com login myname port 587 password mypassword
 </pre>
 </div>
@@ -904,7 +1495,7 @@ machine smtp.example.com login myname port 587 password mypassword
 Configure <code>mbsync</code> via <code>~/.mbsyncrc</code> with a content similar to this:
 </p>
 
-<pre class="example" id="orgb0d1d1d">
+<pre class="example" id="org06118e0">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -940,7 +1531,7 @@ SyncState *
 
 <li><a id="orgf4f4e6b"></a>mu4e configuration<br />
 <div class="outline-text-5" id="text-orgf4f4e6b">
-<pre class="example" id="org645617a">
+<pre class="example" id="org5592a4b">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
@@ -968,7 +1559,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org99b3d98">
+<pre class="example" id="orgdd0b9f0">
 (setq mu4e-contexts
       (list
        ;; Work account
@@ -1028,33 +1619,13 @@ To configure gnus in order to read your Gmail, you have to:
 Then configure the <code>gnus-select-method</code>
 </p>
 
-<pre class="example" id="orgb6fe111">
+<pre class="example" id="org7319898">
 (setq gnus-select-method
       '(nnimap "gmail"
 	       (nnimap-address "imap.gmail.com")
 	       (nnimap-server-port "imaps")
 	       (nnimap-stream ssl)))
 </pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org7976ab7" class="outline-2">
-<h2 id="org7976ab7">Web browsing</h2>
-<div class="outline-text-2" id="text-org7976ab7">
-</div>
-<div id="outline-container-org063d11e" class="outline-3">
-<h3 id="org063d11e">EWW</h3>
-<div class="outline-text-3" id="text-org063d11e">
-</div>
-<div id="outline-container-org381cc47" class="outline-4">
-<h4 id="org381cc47">Experimenting with <code>eww-retrieve-command</code></h4>
-<div class="outline-text-4" id="text-org381cc47">
-<p>
-Possible values for this variable could be
-<code>chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/</code>
-</p>
 </div>
 </div>
 </div>
@@ -1129,7 +1700,7 @@ To retrieve passwords use <code>(password-store-get "youtube-api")</code>.
     :keybinding "i")
 
   (defengine google-maps
-    "http://maps.google.com/maps?q=%s"
+    "https://maps.google.com/maps?q=%s"
     :docstring "Google Maps"
     :keybinding "m")
 
@@ -1181,26 +1752,121 @@ To retrieve passwords use <code>(password-store-get "youtube-api")</code>.
 </div>
 
 <div id="outline-container-org3d27cae" class="outline-2">
-<h2 id="org3d27cae">Emacs as Window Manager&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disable">disable</span></span></h2>
+<h2 id="org3d27cae">Emacs as Window Manager</h2>
 <div class="outline-text-2" id="text-org3d27cae">
+</div>
+
+<div id="outline-container-orgf71364c" class="outline-3">
+<h3 id="orgf71364c">exwm</h3>
+<div class="outline-text-3" id="text-orgf71364c">
+<p>
+Useful links:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/emacs-exwm/exwm/wiki">User Guide</a></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package vertico-posframe
+  :if (getenv "EXWM")
+  :config
+  (vertico-posframe-mode 1))
+</pre>
+</div>
+
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package exwm
+  :if (getenv "EXWM")
+  :bind
+  (:map key-translation-map
+        ("s-m" . nil))
+  ;; ("&lt;XF86AudioLowerVolume&gt;" . #'pulseaudio-control-decrease-sink-volume)
+  ;; ("&lt;XF86AudioRaiseVolume&gt;" . #'pulseaudio-control-increase-sink-volume)
+  ;; ("&lt;XF86AudioMute&gt;" . #'pulseaudio-control-toggle-current-sink-mute)
+  ("&lt;XF86AudioPlay&gt;" . #'minemacs-media-toggle-pause)
   :config
   (server-mode 1)
-  ;; (require 'exwm-config)
-  (exwm-config-example)
-  ;; (require 'exwm-randr)
-  ;; (exwm-randr-enable)
-  ;; (setq exwm-workspace-number 2
-  ;; 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
-  ;; (defun holymacs/xrandr-set-monitors ()
-  ;;   (start-process-shell-command "xrandr" nil
-  ;; 				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
-  ;; 				   "xrandr --output eDP-1 --primary --mode 1920x1080"
-  ;; 				   ))
-  ;; (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+  (display-battery-mode 1)
+  (require 'exwm)
+  (setq exwm-workspace-number 1)
+  ;; Make class name the buffer name.
+  (add-hook 'exwm-update-class-hook
+            (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+  ;; Global keybindings.
+  (setq exwm-systemtray-height 25
+        exwm-input-global-keys
+        `(([?\s-k] . execute-extended-command)
+          ([?\s-m] . exwm-reset)
+          ([?\s-M] . exwm-input-release-keyboard)
+          ([?\s-\]] . next-buffer)
+          ([?\s-\[] . previous-buffer)
+          ([?\s-`] . other-frame)))
+
+  (setq exwm-input-simulation-keys
+        '(([?\C-b] . [left])
+          ([?\C-f] . [right])
+          ([?\C-p] . [up])
+          ([?\C-n] . [down])
+          ([?\C-a] . [home])
+          ([?\C-e] . [end])
+          ([?\M-v] . [prior])
+          ([?\C-v] . [next])
+          ([?\C-d] . [delete])
+          ([?\C-k] . [S-end delete])))
+
+  (exwm-enable)
   (require 'exwm-systemtray)
-  (exwm-systemtray-enable))
+  (exwm-systemtray-mode 1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd276ef9" class="outline-3">
+<h3 id="orgd276ef9">System configuration (Linux Mint/Ubuntu)</h3>
+<div class="outline-text-3" id="text-orgd276ef9">
+<p>
+Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at <code>/usr/local/bin/exwm.sh</code>.
+</p>
+
+<pre class="example" id="org91440ec">
+#!/bin/sh
+
+## Set capslock as ctrl
+#
+setxkbmap -layout us -option ctrl:nocaps
+
+## Programs to start upon startup
+#
+
+dbus-launch xfsettingsd &amp;
+dbus-launch xfce4-power-manager &amp;
+dbus-launch nm-applet &amp;                     # Network Manager
+dbus-launch pasystray &amp;                     # Pulseaudio volume control from tray
+dbus-launch dex -a -e i3 &amp;
+
+## Start emacs
+#
+export EXWM=true
+# exec dbus-launch --exit-with-session emacs
+exec dbus-run-session emacs
+</pre>
+
+<p>
+In order to have the <code>EXWM</code> desktop environment available in the Login manager menu (i.e. LightDM) add this to <code>/usr/share/xsessions/exwm.desktop</code>
+</p>
+
+<pre class="example" id="orgc6770fc">
+[Desktop Entry]
+Name=Exwm
+Comment=Emacs as Window Manager
+Exec=/usr/local/bin/exwm.sh
+TryExec=emacs
+Type=Application
+X-LightDM-DesktopName=exwm
+DesktopNames=exwm
+Keywords=tiling;wm;windowmanager;window;manager;emacs;
 </pre>
 </div>
 </div>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="/"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org791ef31">Package initialization</a></li>
+<li><a href="#org336c395">Emacs configuration</a></li>
+<li><a href="#orgd3ff564">System</a></li>
+<li><a href="#org19fe39a">Exwm</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org791ef31" class="outline-2">
+<h2 id="org791ef31">Package initialization</h2>
+<div class="outline-text-2" id="text-org791ef31">
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+(require 'use-package)
+(require 'use-package-ensure)
+(setq use-package-always-ensure t
+      package-enable-at-startup t)
+(package-initialize)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org336c395" class="outline-2">
+<h2 id="org336c395">Emacs configuration</h2>
+<div class="outline-text-2" id="text-org336c395">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package emacs
+  :ensure nil
+  :defer
+  :hook ((after-init . toggle-frame-maximized))
+  :custom
+  (completion-auto-help nil)
+  (custom-file "~/.emacs.d.holymacs/custom.el")
+  :config
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (repeat-mode 1)
+  (fido-vertical-mode)
+
+  ;; Helpers
+  (defun minemacs-files-in-emacs-subdir (subdir)
+    (message "Scan files in emacs subdir %s" subdir)
+    (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
+      (message "Scan files in dir %s" scan-dir)
+      (if (file-exists-p scan-dir)
+          (directory-files scan-dir t directory-files-no-dot-files-regexp))))
+
+  ;; Modules
+  (defun minemacs-modules-load ()
+    "Load all modules '*.el' files in 'modules/' under the 'user-emacs-directory'"
+    (interactive)
+    ;; TODO: locate-dominating-file
+    (let ((modules (minemacs-files-in-emacs-subdir "modules")))
+      (if modules (mapcar (lambda (module)
+                            (load  module 'noerror))
+                          modules))))
+  :bind
+  ("s-k" . #'execute-extended-command)
+  ("s-j" . #'switch-to-buffer)
+  ("s-0" . #'delete-window)
+  ("s-1" . #'delete-other-windows)
+  ("s-2" . #'split-window-below)
+  ("s-3" . #'split-window-right)
+  ("&lt;XF86AudioLowerVolume&gt;" . #'pulseaudio-control-decrease-sink-volume)
+  ("&lt;XF86AudioRaiseVolume&gt;" . #'pulseaudio-control-increase-sink-volume)
+  ("&lt;XF86AudioMute&gt;" . #'pulseaudio-control-toggle-current-sink-mute))
+
+(if (file-exists-p custom-file) (load-file custom-file))
+(minemacs-modules-load)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3ff564" class="outline-2">
+<h2 id="orgd3ff564">System</h2>
+<div class="outline-text-2" id="text-orgd3ff564">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package dmenu)
+(use-package pulseaudio-control)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19fe39a" class="outline-2">
+<h2 id="org19fe39a">Exwm</h2>
+<div class="outline-text-2" id="text-org19fe39a">
+<p>
+Useful links:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/emacs-exwm/exwm/wiki">User Guide</a></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package hydra
+  :bind
+  ("s-j" . #'holymacs-mode/body)
+  :config
+  (defhydra holymacs-mode (:color amaranth)
+    "Holymacs"
+    ("n" #'tab-next "➡️" :color blue)
+    ("p" #'tab-previous "⬅️" :color blue)
+    ("N" #'tab-next "➡️*" :color red)
+    ("P" #'tab-previous "⬅️*" :color red)
+    ("s-n" nil "quit")
+    ("RET" nil "quit")))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package exwm
+  :init
+  (start-process "dex" nil "dex" "-a" "-e" "i3")
+  (start-process "power-manager" nil "xfce4-power-manager")
+  (start-process "xfce-settings" nil "xfsettingsd")
+  ;; (async-shell-command "dex -a -e i3" nil nil)
+  :config
+  (server-mode 1)
+  (require 'exwm)
+  (setq exwm-workspace-number 4)
+  ;; Make class name the buffer name.
+  (add-hook 'exwm-update-class-hook
+            (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+  ;; Global keybindings.
+  (setq exwm-systemtray-height 30
+        exwm-input-global-keys
+        `(([?\s-k] . execute-extended-command)
+          ([?\s-m] . exwm-reset)
+          ([?\s-M] . exwm-input-release-keyboard)
+          ([?\s-]] . next-buffer)
+          ([?\s-[] . previous-buffer)
+          ([?\s-o] . other-window)
+          ([?\s-n] . holymacs-mode/body)))
+  (exwm-enable)
+  (require 'exwm-systemtray)
+  (exwm-systemtray-mode 1))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2025-01-07 Tue 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 29.4 (<a href="https://orgmode.org">Org</a> mode 9.6.15)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

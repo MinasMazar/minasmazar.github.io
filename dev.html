@@ -203,11 +203,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org0d7251b">Alsamixer</a></li>
 <li><a href="#org1d5fa82">Blog and publishing</a>
 <ul>
 <li><a href="#org635fd7f">Static site generators</a></li>
 <li><a href="#org0ef9da8">Hosting</a></li>
+</ul>
+</li>
+<li><a href="#org93ac5b0">Web browsing/crawling</a>
+<ul>
+<li><a href="#org579e1e2">Get the DOM of a webpage using chrome via command-line.</a></li>
+<li><a href="#org28502a7">Fetch a page via a nodejs app</a></li>
 </ul>
 </li>
 <li><a href="#org3af3703">Crontab</a></li>
@@ -226,6 +231,9 @@
 <li><a href="#orgeb74c3a">Elixir</a>
 <ul>
 <li><a href="#orgf250de9">Resources</a></li>
+<li><a href="#org5b59194">Clustering Elixir applications</a></li>
+<li><a href="#org270e139">Distributed Elixir nodes</a></li>
+<li><a href="#org42641d9">Elixir Ecommerce platforms</a></li>
 <li><a href="#org995c8ed">GenServer template</a></li>
 <li><a href="#org1224edd">DynamicSupervsior template</a></li>
 <li><a href="#orgb4bccb9">example KV server</a></li>
@@ -234,26 +242,38 @@
 <li><a href="#orgb06cf54">Phoenix</a>
 <ul>
 <li><a href="#orga3264c5">Example of app release generation and setup</a></li>
-<li><a href="#orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
-<li><a href="#orge41ecb6">Dockerfile</a></li>
-<li><a href="#org53020e3">Docker compose</a></li>
 <li><a href="#org7bd4c99">Phoenix Pubsub comms across nodes</a></li>
+<li><a href="#org0695805">Graceful startup and shutdown for Phoenix applications</a></li>
+<li><a href="#orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
 </ul>
 </li>
+<li><a href="#org9bded9d">Inspecting data</a></li>
 <li><a href="#org13060ef">Phoenix Livebooks</a>
 <ul>
 <li><a href="#orgbbfa7e4">Livebook Cluster</a></li>
 </ul>
 </li>
+<li><a href="#org5712732">Dockerize</a>
+<ul>
+<li><a href="#org862f4d3">Example Dockerfile for Elixir app</a></li>
+<li><a href="#org53020e3">Docker compose</a></li>
+</ul>
+</li>
 <li><a href="#org31adc32">Mocking (a blogpost from José Valim)</a></li>
 <li><a href="#orgd001c7f">Scale serverless with FLAME!</a></li>
-<li><a href="#orgda07b9c">Nerves</a></li>
+<li><a href="#orgda07b9c">Nerves</a>
+<ul>
+<li><a href="#org370b919">Resources</a></li>
+<li><a href="#org3d60c9d">Nerves + Livebook</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#orgae8c2d1">FFmpeg</a>
 <ul>
 <li><a href="#orgcc4b6fd">Extract audio from video</a></li>
 <li><a href="#org97ff0fa">Extract frames</a></li>
+<li><a href="#org3bae7e1">Get an image from a webcam using V4L (video for Linux)</a></li>
 <li><a href="#orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</a></li>
 <li><a href="#orgc1952f8">Adjust volume</a></li>
 <li><a href="#org9dbd568">Fade in/out</a></li>
@@ -282,7 +302,7 @@
 </ul>
 </li>
 <li><a href="#org3d8da1c">Import a key</a></li>
-<li><a href="#org32e0859">Troubleshooting</a></li>
+<li><a href="#orgada3e2a">Troubleshooting</a></li>
 <li><a href="#org3526b6b">Generate SSH keys</a></li>
 <li><a href="#org918b960">GPG Agent: cache and timeouts</a></li>
 </ul>
@@ -296,14 +316,29 @@
 <li><a href="#org6c95657">Annotating image</a></li>
 </ul>
 </li>
-<li><a href="#orga541047">Journalctl</a></li>
 <li><a href="#org84a2d5a">Linux desktop</a>
 <ul>
+<li><a href="#org979b42a">Brief list of useful commands, examples, snippets</a></li>
+<li><a href="#orgac1dca7">How do I get a list of installed files from a package?</a></li>
 <li><a href="#org9b1d2f0">Add a custom window manager entry for LightDM</a></li>
+<li><a href="#orgf90f204">Audio management</a>
+<ul>
+<li><a href="#org0d7251b">Alsamixer</a></li>
+<li><a href="#orga4460d5">Pulseaudio</a></li>
+</ul>
+</li>
 <li><a href="#orge728db0">Create a .desktop File</a></li>
 <li><a href="#orgbc54bca">Handling screen saver / blank screen</a></li>
-<li><a href="#org3832863">Read battery status from command line</a></li>
-<li><a href="#org2465bee">Screen managing (xrandr)</a></li>
+<li><a href="#org3baa893">Read battery status from command-line</a></li>
+<li><a href="#orgeab74b4">Screen managing</a>
+<ul>
+<li><a href="#org96336b7">X11 / xrandr</a></li>
+<li><a href="#orgaaedc43">Wayland / wlr-randr</a></li>
+</ul>
+</li>
+<li><a href="#org6f9ef20">Set keyboard layout from command-line</a></li>
+<li><a href="#org0cb0a9b">Set an image as wallpaper using feh</a></li>
+<li><a href="#org909c44f">Set custom name/class to an application (window)</a></li>
 </ul>
 </li>
 <li><a href="#org43c8c46">i3 (Window Manager)</a></li>
@@ -329,7 +364,6 @@
 </li>
 <li><a href="#org1ddc9d0">Makefile</a></li>
 <li><a href="#orgcdb0c75">Postgres</a></li>
-<li><a href="#orga4460d5">Pulseaudio</a></li>
 <li><a href="#orgc48033c">Raspberry</a>
 <ul>
 <li><a href="#orge7a8cdb">Overscan</a></li>
@@ -340,16 +374,31 @@
 <li><a href="#orgcc038c7">Use Raspberry Pi in "Kiosk" mode</a></li>
 <li><a href="#orgc9eb77e">How to attach a cooler fan</a></li>
 <li><a href="#orgc8a2f2c">Magic Mirror</a></li>
-<li><a href="#org5b30a0a">Turn your RPi into an Access Point</a></li>
+<li><a href="#org7aba626">Working with USB webcams on your Raspberry Pi</a></li>
+<li><a href="#org2545fe3">How to Make Raspberry Pi Webcam Server and Stream</a></li>
 <li><a href="#org7b8964c">Turn your RPi into a Spy</a></li>
+<li><a href="#org15f0ab6">Turn your RPi into a Spy (audio)</a></li>
+<li><a href="#org5b30a0a">Turn your RPi into an Access Point</a></li>
 </ul>
 </li>
 <li><a href="#orgbb0254a">Run make on list of projects</a></li>
 <li><a href="#org912a6c0">Shell</a></li>
+<li><a href="#orgd3d8a93">Simple Static assets web server ~ Busybox</a></li>
 <li><a href="#orgdd5c364">Spritely institute - distributed web technology</a></li>
-<li><a href="#orgfa73228">Systemd</a></li>
+<li><a href="#orgfa73228">Systemd</a>
+<ul>
+<li><a href="#org6b59e34">Services definition</a></li>
+<li><a href="#orga541047">Journalctl</a></li>
+<li><a href="#org03d5501">Troubleshooting</a></li>
+</ul>
+</li>
 <li><a href="#org879b7fe">Tailwind</a></li>
 <li><a href="#orge79eef7">Tmux</a></li>
+<li><a href="#org3750e1c">Tor</a>
+<ul>
+<li><a href="#org017f782">Use Tor proxy via Docker</a></li>
+</ul>
+</li>
 <li><a href="#org37bb5ce">Userscripts</a>
 <ul>
 <li><a href="#orgdf3b06a">How to store data on a file using Greasemonkey</a></li>
@@ -357,31 +406,18 @@
 </li>
 <li><a href="#org46a230e">Youtube</a>
 <ul>
-<li><a href="#org67e7c34">Export your <i>watch later</i> list from the browser</a></li>
+<li><a href="#org7865f51">Get the list of subscriptions (followed channels)</a></li>
 <li><a href="#org73458cb">Get RSS feed of a channel or playlist</a></li>
 <li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a>
 <ul>
 <li><a href="#org624bb26">Usage examples</a></li>
-<li><a href="#orgada3e2a">Troubleshooting</a></li>
+<li><a href="#org918c4aa">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li><a href="#org59b28ee">Web Resources</a></li>
 </ul>
-</div>
-</div>
-
-<div id="outline-container-org0d7251b" class="outline-2">
-<h2 id="org0d7251b">Alsamixer</h2>
-<div class="outline-text-2" id="text-org0d7251b">
-<p>
-Toggle mute
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">amixer set Master toggle
-</pre>
-</div>
 </div>
 </div>
 
@@ -406,6 +442,67 @@ Toggle mute
 <li><a href="https://pages.github.com/">Github pages</a></li>
 <li><a href="https://www.netlify.com/">Netlify</a></li>
 </ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org93ac5b0" class="outline-2">
+<h2 id="org93ac5b0">Web browsing/crawling</h2>
+<div class="outline-text-2" id="text-org93ac5b0">
+</div>
+<div id="outline-container-org579e1e2" class="outline-3">
+<h3 id="org579e1e2">Get the DOM of a webpage using chrome via command-line.</h3>
+<div class="outline-text-3" id="text-org579e1e2">
+<div class="org-src-container">
+<pre class="src src-sh">chrome --headless --dump-dom https://developer.chrome.com/
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org28502a7" class="outline-3">
+<h3 id="org28502a7">Fetch a page via a nodejs app</h3>
+<div class="outline-text-3" id="text-org28502a7">
+<p>
+Inspiration (and code stolen 🤪) from <a href="https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e">this Medium article</a> (errr&#x2026; <a href="https://freedium.cfd/">Freedium</a> 😎)
+</p>
+
+<p>
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+</p>
+
+<ol class="org-ol">
+<li>setup a new nodejs project <code>mkdir html-fetch &amp;&amp; node init --yes</code></li>
+<li>add <code>node-fetch</code> dependency into the <code>package.json</code> and <code>npm install</code></li>
+<li>create the <code>index.js</code> source file with the content as follow:</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-javascript">const fetch = require("node-fetch");
+const fs = require("fs");
+// you can update this to any website you want to download
+const site = "https://www.youtube.com/@BorderNightsOfficial";
+// you can update this if you want to save
+const filename = "index.html";
+// fetch url
+fetch(site, {
+  headers: {
+    // some sites require a user-agent header to return the webpage
+    "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+}).then((res) =&gt; {
+  // get text from Response stream
+  return res.text();
+}).then((text) =&gt; {
+  // write html from response to index.html
+  fs.writeFile(filename, text, () =&gt; {});
+});
+</pre>
+</div>
+
+<p>
+Run it via <code>node index.js</code>. This will fetch the page into the <code>index.html</code> file.
+</p>
 </div>
 </div>
 </div>
@@ -588,6 +685,73 @@ It seems there's a problem with <a href="https://github.com/moby/moby/issues/407
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
 <li><a href="https://joyofelixir.com/17-mix-dependencies">Mix dependencies</a></li>
 <li><a href="https://learn-elixir.dev/#hiring">Learn Elixir (learn-elixir.dev/#hiring)</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5b59194" class="outline-3">
+<h3 id="org5b59194">Clustering Elixir applications</h3>
+<div class="outline-text-3" id="text-org5b59194">
+<ul class="org-ul">
+<li><a href="https://betterprogramming.pub/notes-on-clustering-elixir-applications-49707ed53910">https://betterprogramming.pub/notes-on-clustering-elixir-applications-49707ed53910</a></li>
+<li><a href="https://hexdocs.pm/libcluster/readme.html">https://hexdocs.pm/libcluster/readme.html</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org270e139" class="outline-3">
+<h3 id="org270e139">Distributed Elixir nodes</h3>
+<div class="outline-text-3" id="text-org270e139">
+<p>
+Good readings about this topic:
+</p>
+<ul class="org-ul">
+<li><a href="https://medium.com/hackernoon/running-distributed-erlang-elixir-applications-on-docker-b211d95affbe">https://medium.com/hackernoon/running-distributed-erlang-elixir-applications-on-docker-b211d95affbe</a></li>
+<li><a href="https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/">https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/</a></li>
+</ul>
+
+<p>
+Here's a talk I still have to watch <a href="https://www.youtube.com/watch?v=F_YUyd_Qdjs">https://www.youtube.com/watch?v=F_YUyd_Qdjs</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org42641d9" class="outline-3">
+<h3 id="org42641d9">Elixir Ecommerce platforms</h3>
+<div class="outline-text-3" id="text-org42641d9">
+<p>
+Follow this link to <a href="https://elixirforum.com/t/phoenix-frameworks-is-good-choice-for-e-commerce-web-apps/46772/3">Elixir forum post</a>.
+</p>
+
+<p>
+It will probably faster and for sure will cope a lot more under load, due to the
+BEAM, that is well exemplified <a href="https://video-hub.exadra37.com/watch/goto-2019-the-soul-of-erlang-and-elixir-sa%C5%A1a-juri%C4%87">here</a> by <a href="https://elixirforum.com/u/sasajuric">@sasajuric</a>.
+</p>
+
+<p>
+We already have several projects in Elixir fore ecommerce:
+</p>
+
+<ul class="org-ul">
+<li><a href="https://github.com/amacgregor/crimson_commerce">Crimsom</a> repo and <a href="https://dev.to/allanmacgregor/ecommerce-platform-prototype-with-elixir-and-phoenix-2d9g">article</a>.</li>
+<li><a href="https://github.com/nicolasblanco/shopix">Shopix</a> repo and <a href="https://nicolasblan.co/blog/shopix-e-commerce-engine">aritcle</a>.</li>
+<li><a href="https://github.com/freshcom">Freshcom</a> repos. They have separated it in several repos.</li>
+<li>Many more <a href="https://github.com/search?q=elixir+ecommerce">here</a>.</li>
+</ul>
+
+<p>
+I don’t really know if any of them is being/continued to be used in production. I
+think Freshcom was being used in prod at some point or was about to launch.
+The author is here in the forum @rbao.
+</p>
+
+<p>
+If you search the forum you have more questions like yours:
+</p>
+
+<ul class="org-ul">
+<li>Resources for building an e-commerce store in Phoenix?</li>
+<li>Presenting Aviacommerce, open source e-commerce in Elixir</li>
 </ul>
 </div>
 </div>
@@ -822,12 +986,99 @@ Run for localhsot.
 </div>
 </div>
 
+<div id="outline-container-org7bd4c99" class="outline-4">
+<h4 id="org7bd4c99"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h4>
+</div>
+<div id="outline-container-org0695805" class="outline-4">
+<h4 id="org0695805"><a href="https://felt.com/blog/startup-and-shutdown-for-phoenix-applications">Graceful startup and shutdown for Phoenix applications</a></h4>
+<div class="outline-text-4" id="text-org0695805">
+<ul class="org-ul">
+<li>if you started your server with <code>iex -S mix phx.server</code> (which is what I use 95% of the time) then you can run <code>System.stop()</code></li>
+<li>use <code>ps aux | grep 'mix phx.server'</code> to find the OS PID for the BEAM, then run <code>kill -s TERM &lt;os_pid&gt;</code></li>
+</ul>
+
+<p>
+In GenServers add <code>Process.flag(:trap_exit, true)</code> along with the <code>terminate/2</code> callback.
+</p>
+</div>
+</div>
+
 <div id="outline-container-orgdcdd65a" class="outline-4">
 <h4 id="orgdcdd65a">Dockerize Phoenix webapp (my<sub>app</sub>)</h4>
 </div>
-<div id="outline-container-orge41ecb6" class="outline-4">
-<h4 id="orge41ecb6">Dockerfile</h4>
-<div class="outline-text-4" id="text-orge41ecb6">
+</div>
+
+<div id="outline-container-org9bded9d" class="outline-3">
+<h3 id="org9bded9d">Inspecting data</h3>
+<div class="outline-text-3" id="text-org9bded9d">
+<p>
+How to use IO.inspect on a long list without trimming it? See <a href="https://hexdocs.pm/elixir/Inspect.Opts.html">Inspect.Opts</a> for a description of the available options, but in short:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elixir">IO.inspect(list, limit: :infinity)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13060ef" class="outline-3">
+<h3 id="org13060ef">Phoenix Livebooks</h3>
+<div class="outline-text-3" id="text-org13060ef">
+<ul class="org-ul">
+<li><a href="https://notes.club/">Discover Livebook notebooks (Elixir)</a></li>
+<li><a href="https://github.com/aslakjohansen/livebook-demos">https://github.com/aslakjohansen/livebook-demos</a></li>
+<li><a href="https://github.com/Arp-G/async-elixir">https://github.com/Arp-G/async-elixir</a></li>
+<li><a href="https://github.com/whatyouhide/guide_async_processing_in_elixir">https://github.com/whatyouhide/guide_async_processing_in_elixir</a></li>
+</ul>
+</div>
+
+<div id="outline-container-orgbbfa7e4" class="outline-4">
+<h4 id="orgbbfa7e4">Livebook Cluster</h4>
+<div class="outline-text-4" id="text-orgbbfa7e4">
+<p>
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using <a href="https://github.com/bitwalker/libcluster">libcluster</a> should be enough to make nodes to cluster together by using the <code>LocalEpmd</code> strategy. But it seems <code>PubSub</code> is not able to spot all nodes out (that's because , more info in <a href="https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3">this thread</a>).
+</p>
+
+<p>
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and <a href="https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups">pg2 don't see hidden nodes</a>.
+</p>
+
+<p>
+I've created the <a href="https://git.sr.ht/~minasmazar/livebook_cluster">livebook<sub>cluster</sub></a> package that uses <a href="https://github.com/bitwalker/libcluster">libcluster</a> and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+</p>
+
+<p>
+Adding <code>livebook_cluster</code> as dependency in my livebooks I was able to make three livebooks working together:
+</p>
+
+<ul class="org-ul">
+<li>KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features</li>
+<li><p>
+Bifrost expose two HTTP entrypoints (page, event) using <code>Kino.Proxy</code>. Using a custom <a href="https://en.wikipedia.org/wiki/Userscript">userscript</a> (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML <code>body</code>) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using <code>Phoenix.PubSub</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">livebook -&gt; PubSub (broadcast in current node)
+</pre>
+</div>
+
+<p>
+Remember that this open a wide range of <b><b>security issues</b></b>.. uses it with responsibility!
+</p></li>
+<li>Youtube</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5712732" class="outline-3">
+<h3 id="org5712732">Dockerize</h3>
+<div class="outline-text-3" id="text-org5712732">
+</div>
+<div id="outline-container-org862f4d3" class="outline-4">
+<h4 id="org862f4d3">Example Dockerfile for Elixir app</h4>
+<div class="outline-text-4" id="text-org862f4d3">
 <p>
 More info on <a href="#orga492a8a">Docker here</a>.
 </p>
@@ -1005,60 +1256,7 @@ networks:
 </div>
 </div>
 </div>
-<div id="outline-container-org7bd4c99" class="outline-4">
-<h4 id="org7bd4c99"><a href="https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/">Phoenix Pubsub comms across nodes</a></h4>
 </div>
-</div>
-<div id="outline-container-org13060ef" class="outline-3">
-<h3 id="org13060ef">Phoenix Livebooks</h3>
-<div class="outline-text-3" id="text-org13060ef">
-<ul class="org-ul">
-<li><a href="https://notes.club/">Discover Livebook notebooks (Elixir)</a></li>
-<li><a href="https://github.com/aslakjohansen/livebook-demos">https://github.com/aslakjohansen/livebook-demos</a></li>
-<li><a href="https://github.com/Arp-G/async-elixir">https://github.com/Arp-G/async-elixir</a></li>
-<li><a href="https://github.com/whatyouhide/guide_async_processing_in_elixir">https://github.com/whatyouhide/guide_async_processing_in_elixir</a></li>
-</ul>
-</div>
-
-<div id="outline-container-orgbbfa7e4" class="outline-4">
-<h4 id="orgbbfa7e4">Livebook Cluster</h4>
-<div class="outline-text-4" id="text-orgbbfa7e4">
-<p>
-I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using <a href="https://github.com/bitwalker/libcluster">libcluster</a> should be enough to make nodes to cluster together by using the <code>LocalEpmd</code> strategy. But it seems <code>PubSub</code> is not able to spot all nodes out (that's because , more info in <a href="https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3">this thread</a>).
-</p>
-
-<p>
-The issue is that livebooks are hidden nodes, PubSub is using pg2 and <a href="https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups">pg2 don't see hidden nodes</a>.
-</p>
-
-<p>
-I've created the <a href="https://git.sr.ht/~minasmazar/livebook_cluster">livebook<sub>cluster</sub></a> package that uses <a href="https://github.com/bitwalker/libcluster">libcluster</a> and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
-</p>
-
-<p>
-Adding <code>livebook_cluster</code> as dependency in my livebooks I was able to make three livebooks working together:
-</p>
-
-<ul class="org-ul">
-<li>KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features</li>
-<li><p>
-Bifrost expose two HTTP entrypoints (page, event) using <code>Kino.Proxy</code>. Using a custom <a href="https://en.wikipedia.org/wiki/Userscript">userscript</a> (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML <code>body</code>) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using <code>Phoenix.PubSub</code>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-text">livebook -&gt; PubSub (broadcast in current node)
-</pre>
-</div>
-
-<p>
-Remember that this open a wide range of <b><b>security issues</b></b>.. uses it with responsibility!
-</p></li>
-<li>Youtube</li>
-</ul>
-</div>
-</div>
-</div>
-
 <div id="outline-container-org31adc32" class="outline-3">
 <h3 id="org31adc32">Mocking (<a href="https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/">a blogpost from José Valim</a>)</h3>
 </div>
@@ -1068,14 +1266,33 @@ Remember that this open a wide range of <b><b>security issues</b></b>.. uses it 
 <div id="outline-container-orgda07b9c" class="outline-3">
 <h3 id="orgda07b9c"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
 <div class="outline-text-3" id="text-orgda07b9c">
+</div>
+<div id="outline-container-org370b919" class="outline-4">
+<h4 id="org370b919">Resources</h4>
+<div class="outline-text-4" id="text-org370b919">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
 <li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
 </ul>
 </div>
 </div>
-</div>
 
+<div id="outline-container-org3d60c9d" class="outline-4">
+<h4 id="org3d60c9d">Nerves + Livebook</h4>
+<div class="outline-text-4" id="text-org3d60c9d">
+<ul class="org-ul">
+<li><a href="https://github.com/nerves-livebook">https://github.com/nerves-livebook</a></li>
+<li><a href="https://hexdocs.pm/nerves_runtime/Nerves.Runtime.html">https://hexdocs.pm/nerves_runtime/Nerves.Runtime.html</a></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-elixir">Nerves.Runtime.halt()
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 <div id="outline-container-orgae8c2d1" class="outline-2">
 <h2 id="orgae8c2d1"><a href="https://www.ffmpeg.org">FFmpeg</a></h2>
 <div class="outline-text-2" id="text-orgae8c2d1">
@@ -1087,7 +1304,7 @@ A complete, cross-platform solution to record, convert and stream audio and vide
 <div id="outline-container-orgcc4b6fd" class="outline-3">
 <h3 id="orgcc4b6fd">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orgcc4b6fd">
-<pre class="example" id="orgd04d529">
+<pre class="example" id="org34874a8">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1100,7 +1317,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orge656574">
+<pre class="example" id="orge0da09e">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1108,7 +1325,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org16d33f9">
+<pre class="example" id="org0223ea0">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1123,10 +1340,20 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 </div>
 </div>
 
+<div id="outline-container-org3bae7e1" class="outline-3">
+<h3 id="org3bae7e1">Get an image from a webcam using V4L (video for Linux)</h3>
+<div class="outline-text-3" id="text-org3bae7e1">
+<div class="org-src-container">
+<pre class="src src-sh">ffmpeg -f v4l2 -video_size 1280x720 -i /dev/video0 -frames 1 out.jpg
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orgd664cfc" class="outline-3">
 <h3 id="orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-orgd664cfc">
-<pre class="example" id="orge1d1c09">
+<pre class="example" id="orga99ffbb">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1134,7 +1361,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="orge699604">
+<pre class="example" id="orgd13165f">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1146,21 +1373,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orgb9cd40e">
+<pre class="example" id="orgf72654b">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org9a101c3">
+<pre class="example" id="org69f16d4">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgc01342a">
+<pre class="example" id="org4edf6bc">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1177,7 +1404,7 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="orgc7aa81b">
+<pre class="example" id="org1144af7">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
@@ -1197,14 +1424,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgca73859">
+<pre class="example" id="orgb5a0a27">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org45264b0">
+<pre class="example" id="org9a3f458">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1221,7 +1448,7 @@ For audio I found this
 <div id="outline-container-orgb64a055" class="outline-3">
 <h3 id="orgb64a055">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-orgb64a055">
-<pre class="example" id="org4ea727c">
+<pre class="example" id="org152fd27">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1229,7 +1456,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org07b2de4">
+<pre class="example" id="org5715ee2">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1278,7 +1505,7 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="orgdcea1bc">
+<pre class="example" id="org3884dca">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1289,7 +1516,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org8034aed">
+<pre class="example" id="org4b22170">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1628,9 +1855,9 @@ gpg --import --allow-secret-key-import private.key
 </div>
 </div>
 
-<div id="outline-container-org32e0859" class="outline-3">
-<h3 id="org32e0859">Troubleshooting</h3>
-<div class="outline-text-3" id="text-org32e0859">
+<div id="outline-container-orgada3e2a" class="outline-3">
+<h3 id="orgada3e2a">Troubleshooting</h3>
+<div class="outline-text-3" id="text-orgada3e2a">
 <p>
 Interesting resources if you encounter problems:
 </p>
@@ -1788,33 +2015,47 @@ If you want to add a text stripe under the image
 </div>
 </div>
 
-<div id="outline-container-orga541047" class="outline-2">
-<h2 id="orga541047">Journalctl</h2>
-<div class="outline-text-2" id="text-orga541047">
-<p>
-Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">journalctl --vacuum-time=2d
-</pre>
-</div>
-
-<p>
-or retain only the past 500 MB
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">journalctl --vacuum-size=500M
-</pre>
-</div>
-</div>
-</div>
-
 <div id="outline-container-org84a2d5a" class="outline-2">
 <h2 id="org84a2d5a">Linux desktop</h2>
 <div class="outline-text-2" id="text-org84a2d5a">
 </div>
+<div id="outline-container-org979b42a" class="outline-3">
+<h3 id="org979b42a">Brief list of useful commands, examples, snippets</h3>
+<div class="outline-text-3" id="text-org979b42a">
+<ul class="org-ul">
+<li><code>lsb_release -a</code> show info about distro</li>
+<li><code>lsblk -f</code> show partitions informations</li>
+<li><code>pacman -Qq</code> / <code>apt list --installed</code> / <code>dnf list install</code> show installed packages (Arch, Debian, Fedora)</li>
+<li><code>sudo update-alternatives --config x-session-manager</code> and <code>stat /etc/alternatives/x-session-manager</code></li>
+<li><code>ls -1 | wc -l</code> determine how many files there are in a directory</li>
+<li><code>echo $XDG_SESSION_TYPE</code> show if you're using the X session manager is use (X11 or Wayland)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgac1dca7" class="outline-3">
+<h3 id="orgac1dca7">How do I get a list of installed files from a package?</h3>
+<div class="outline-text-3" id="text-orgac1dca7">
+<p>
+To see all the files the package installed onto your system, do this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">dpkg-query -L &lt;package_name&gt;
+</pre>
+</div>
+
+<p>
+To see the files a .deb file will install
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">dpkg-deb -c &lt;package_name.deb&gt;
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org9b1d2f0" class="outline-3">
 <h3 id="org9b1d2f0">Add a custom window manager entry for <a href="https://wiki.ubuntu.com/LightDM">LightDM</a></h3>
 <div class="outline-text-3" id="text-org9b1d2f0">
@@ -1837,14 +2078,62 @@ Keywords=tiling;wm;windowmanager;window;manager;
 </div>
 </div>
 
+<div id="outline-container-orgf90f204" class="outline-3">
+<h3 id="orgf90f204">Audio management</h3>
+<div class="outline-text-3" id="text-orgf90f204">
+</div>
+<div id="outline-container-org0d7251b" class="outline-4">
+<h4 id="org0d7251b">Alsamixer</h4>
+<div class="outline-text-4" id="text-org0d7251b">
+<p>
+Toggle mute
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">amixer set Master toggle
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga4460d5" class="outline-4">
+<h4 id="orga4460d5">Pulseaudio</h4>
+<div class="outline-text-4" id="text-orga4460d5">
+</div>
+<ul class="org-ul">
+<li><a id="org745d916"></a>pacmd<br />
+<div class="outline-text-5" id="text-org745d916">
+<p>
+You can refer this interesting <a href="https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback">SO thread</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacmd help list-sinks
+pacmd list-sink-inputs
+pacmd move-sink-input 5 1
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="orgc3d399d"></a>pactl<br />
+<div class="outline-text-5" id="text-orgc3d399d">
+<ul class="org-ul">
+<li><code>pactl list sinks short</code> get the sink list with some additional info, the first column is the INDEX</li>
+<li><code>pactl get-sink-volume &lt;INDEX&gt;</code> get the volume of the given sink</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
 <div id="outline-container-orge728db0" class="outline-3">
 <h3 id="orge728db0">Create a .desktop File</h3>
 <div class="outline-text-3" id="text-orge728db0">
-<div class="org-src-container">
-<pre class="src src-sh">mkdir /home/pi/.config/autostart
-nano /home/pi/.config/autostart/clock.desktop
-</pre>
-</div>
+<p>
+In <code>~/.local/share/applications/</code> or <code>~/.config/autostart</code> to start at login.
+</p>
 
 <div class="org-src-container">
 <pre class="src src-toml">[Desktop Entry]
@@ -1867,18 +2156,34 @@ Exec=/usr/bin/python3 /home/pi/clock.py
 </div>
 </div>
 
-<div id="outline-container-org3832863" class="outline-3">
-<h3 id="org3832863">Read battery status from command line</h3>
-<div class="outline-text-3" id="text-org3832863">
+<div id="outline-container-org3baa893" class="outline-3">
+<h3 id="org3baa893">Read battery status from command-line</h3>
+<div class="outline-text-3" id="text-org3baa893">
 <p>
 Here's a <a href="https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal">StackOverlow thread</a>: from Linux 4.20 <code>cat /sys/class/power_supply/BAT1/status</code>; check the link for old methods.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org2465bee" class="outline-3">
-<h3 id="org2465bee">Screen managing (xrandr)</h3>
-<div class="outline-text-3" id="text-org2465bee">
+<div id="outline-container-orgeab74b4" class="outline-3">
+<h3 id="orgeab74b4">Screen managing</h3>
+<div class="outline-text-3" id="text-orgeab74b4">
+<p>
+Here's <a href="https://pimylifeup.com/raspberry-pi-screen-resolution/">a good blogpost</a> specific for Raspberry PI.
+</p>
+
+<p>
+If you're using the LightDM and you want to set monitor resolutions and layout at the startup, edit the <code>display-setup-script</code> option in <code>/etc/lightdm/lightdm.conf</code>.
+</p>
+</div>
+
+<div id="outline-container-org96336b7" class="outline-4">
+<h4 id="org96336b7">X11 / xrandr</h4>
+<div class="outline-text-4" id="text-org96336b7">
+<p>
+Remember to set <code>DISPLAY</code> env in the console before using <code>xrandr</code> (usually <code>export DISPLAY=:0</code>)
+</p>
+
 <blockquote>
 <p>
 I use this command to mirror my desktop with my external VGA:
@@ -1912,6 +2217,68 @@ $ xrandr &#x2013;output VGA-1 &#x2013;mode 1920x1080 &#x2013;scale 1x1 &#x2013;o
 You can detect the names of your screens by just running xrandr
 </p>
 </blockquote>
+
+<p>
+Adjust brightness from command line:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">xrandr --output monitor-name --brightness level
+</pre>
+</div>
+
+<p>
+<b><b>Remember</b></b> as mentioned in <code>man xrandr</code>
+</p>
+
+<blockquote>
+<p>
+However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
+</p>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-orgaaedc43" class="outline-4">
+<h4 id="orgaaedc43">Wayland / wlr-randr</h4>
+<div class="outline-text-4" id="text-orgaaedc43">
+<p>
+Remember to set <code>WAYLAND_DISPLAY</code> env var before using <code>wlr-randr</code> (usually <code>export WAYLAND_DISPLAY=wayland-1</code>)
+</p>
+
+<p>
+The commands are almost the same as <code>xrandr</code>; keep in mind the way the screens are handled is different and <code>--same-as</code> option is not available.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6f9ef20" class="outline-3">
+<h3 id="org6f9ef20">Set keyboard layout from command-line</h3>
+<div class="outline-text-3" id="text-org6f9ef20">
+<div class="org-src-container">
+<pre class="src src-sh">setxkbmap -layout us,it
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0cb0a9b" class="outline-3">
+<h3 id="org0cb0a9b">Set an image as wallpaper using feh</h3>
+<div class="outline-text-3" id="text-org0cb0a9b">
+<div class="org-src-container">
+<pre class="src src-sh">feh --bg-fill ~/path/to/image.png
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org909c44f" class="outline-3">
+<h3 id="org909c44f">Set custom name/class to an application (window)</h3>
+<div class="outline-text-3" id="text-org909c44f">
+<p>
+If the app as been built as GTK+ app it accepts <code>--screen</code>, <code>--name</code>, <code>--class</code> options. It can be used, for instance, by <a href="#org43c8c46">i3 rules configuration</a>.
+</p>
 </div>
 </div>
 </div>
@@ -1923,7 +2290,7 @@ You can detect the names of your screens by just running xrandr
 A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit <code>$mod+Return</code> to access the <b><b>i3</b></b> mode, and <code>alt+Tab</code> to cycle across windows; all other keybidings will go straight to Emacs.
 </p>
 
-<pre class="example" id="orge5584d5">
+<pre class="example" id="orgce4b08e">
 # This file has been auto-generated by i3-config-wizard(1).
 # It will not be overwritten, so edit it as you like.
 #
@@ -1936,6 +2303,8 @@ A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> u
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
+set $alt Mod1
+set $wallpaper_file ~/Pictures/wallpaper
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -1948,22 +2317,29 @@ font pango:monospace 8
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id xfsettingsd
+exec --no-startup-id compton
+exec --no-startup-id feh --bg-max $wallpaper_file
+# exec --no-startup-id xmodmap ~/.Xmodmaprc
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
+exec --no-startup-id emacs --daemon &amp;&amp; emacsclient -r
 
 # Use pactl to adjust volume in PulseAudio.
+set $volume_step 5%
 set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step &amp;&amp; $refresh_i3status
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step &amp;&amp; $refresh_i3status
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
 
@@ -1974,15 +2350,20 @@ floating_modifier $mod
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
 
-# start a terminal
+# start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
+set $app_launcher i3-dmenu-desktop
 # bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
 # change focus
-bindsym alt+Tab focus left
-bindsym alt+Shift+Tab focus down
+bindsym $mod+Tab focus left ; focus up
+bindsym $mod+Shift+Tab focus right ; focus down
+# change workspace
+bindsym $mod+braceright workspace next
+bindsym $mod+braceleft workspace prev
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -1997,17 +2378,19 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-mode "i3" {
-  # start dmenu (a program launcher)
-  bindsym d exec --no-startup-id dmenu_run
-  # A more modern dmenu replacement is rofi:
-  # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
-  # There also is i3-dmenu-desktop which only displays applications shipping a
-  # .desktop file. It is a wrapper around dmenu, so you need that installed.
-  # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
+# Window rules
+# for_window [class="^firefox$"] move container to workspace $ws2
+for_window [class="^mpv$"] move container to workspace $ws3
 
+mode "i3" {
+  # start program launcher
+  bindsym d exec --no-startup-id $app_launcher ; mode "default"
   # bindsym $mod+l focus up
   # bindsym $mod+semicolon focus right
+  bindsym p focus left ; focus up
+  bindsym n focus right ; focus down
+  bindsym Shift+p workspace prev
+  bindsym Shift+n workspace next
 
   # alternatively, you can use the cursor keys:
   bindsym Left focus left
@@ -2015,11 +2398,13 @@ mode "i3" {
   bindsym Up focus up
   bindsym Right focus right
 
-  # move focused window
-  bindsym Shift+j move left
-  bindsym Shift+k move down
-  bindsym Shift+l move up
-  bindsym Shift+semicolon move right
+  bindsym Shift+Left move left
+  bindsym Shift+Down move down
+  bindsym Shift+Up move up
+  bindsym Shift+Right move right
+
+  # toggle i3bar mode
+  bindsym i bar mode toggle ; mode "default"
 
   # split in horizontal orientation
   bindsym h split h
@@ -2036,7 +2421,7 @@ mode "i3" {
   bindsym e layout toggle split
 
   # toggle tiling / floating
-  bindsym $mod+Shift+space floating toggle
+  bindsym space floating toggle
 
   # change focus between tiling / floating windows
   bindsym space focus mode_toggle
@@ -2071,12 +2456,23 @@ mode "i3" {
   bindsym Shift+9 move container to workspace number $ws9
   bindsym Shift+0 move container to workspace number $ws10
 
+  # Media
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
+  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
+  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
+
+  # Emacs everywhere
+  bindsym Shift+m exec --no-startup-id emacsclient --eval "(emacs-everywhere)" &amp;&amp; mode "default"
+  # Kill current window
+  bindsym Shift+q kill
   # reload the configuration file
   bindsym Shift+c reload
   # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
   bindsym Shift+r restart
   # exit i3 (logs you out of your X session)
-  bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+  # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+  bindsym Shift+e exec i3-msg exit
 
   bindsym Return mode "default"
   bindsym Escape mode "default"
@@ -2086,27 +2482,27 @@ mode "i3" {
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-	# These bindings trigger as soon as you enter the resize mode
+  # These bindings trigger as soon as you enter the resize mode
 
-	# Pressing left will shrink the window’s width.
-	# Pressing right will grow the window’s width.
-	# Pressing up will shrink the window’s height.
-	# Pressing down will grow the window’s height.
-	bindsym j resize shrink width 10 px or 10 ppt
-	bindsym k resize grow height 10 px or 10 ppt
-	bindsym l resize shrink height 10 px or 10 ppt
-	bindsym semicolon resize grow width 10 px or 10 ppt
+  # Pressing left will shrink the window’s width.
+  # Pressing right will grow the window’s width.
+  # Pressing up will shrink the window’s height.
+  # Pressing down will grow the window’s height.
+  bindsym j resize shrink width 10 px or 10 ppt
+  bindsym k resize grow height 10 px or 10 ppt
+  bindsym l resize shrink height 10 px or 10 ppt
+  bindsym semicolon resize grow width 10 px or 10 ppt
 
-	# same bindings, but for the arrow keys
-	bindsym Left resize shrink width 10 px or 10 ppt
-	bindsym Down resize grow height 10 px or 10 ppt
-	bindsym Up resize shrink height 10 px or 10 ppt
-	bindsym Right resize grow width 10 px or 10 ppt
+  # same bindings, but for the arrow keys
+  bindsym Left resize shrink width 10 px or 10 ppt
+  bindsym Down resize grow height 10 px or 10 ppt
+  bindsym Up resize shrink height 10 px or 10 ppt
+  bindsym Right resize grow width 10 px or 10 ppt
 
-	# back to normal: Enter or Escape or $mod+r
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
-	bindsym r mode "resize"
+  # back to normal: Enter or Escape or $mod+r
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+  bindsym r mode "resize"
 }
 
 bindsym $mod+Return mode "i3"
@@ -2116,19 +2512,37 @@ bindsym $mod+Return mode "i3"
 bar {
 	mode hide
 	hidden_state hide
-	modifier $mod
+	modifier none # $mod
 
+	position top
 	font pango:monospace 14
 	status_command i3status
 }
 
+workspace_layout tabbed
 </pre>
+
+<p>
+Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
+</p>
+
+<ul class="org-ul">
+<li><code>xfsettingsd</code>  XSettings daemon for Xfce</li>
+<li><code>gnome-settings-daemon</code> for GNOME</li>
+</ul>
+<p>
+&#x2026;
+</p>
+
+<p>
+So remember to start it in the i3 config file (ex. <code>exec gnome-settings-daemon</code>).
+</p>
 
 <p>
 And this is a sample configuration of <code>i3status</code> at <code>~/.config/i3status/config</code>.
 </p>
 
-<pre class="example" id="org67c4b1a">
+<pre class="example" id="org6147931">
 # i3status configuration file.
 # see "man i3status" for documentation.
 
@@ -2655,22 +3069,6 @@ Rename a database (<a href="https://www.postgresqltutorial.com/postgresql-admini
 </div>
 </div>
 
-<div id="outline-container-orga4460d5" class="outline-2">
-<h2 id="orga4460d5">Pulseaudio</h2>
-<div class="outline-text-2" id="text-orga4460d5">
-<p>
-You can refer this interesting <a href="https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback">SO thread</a>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">pacmd help list-sinks
-pacmd list-sink-inputs
-pacmd move-sink-input 5 1
-</pre>
-</div>
-</div>
-</div>
-
 <div id="outline-container-orgc48033c" class="outline-2">
 <h2 id="orgc48033c">Raspberry</h2>
 <div class="outline-text-2" id="text-orgc48033c">
@@ -2743,22 +3141,74 @@ or if you want to automate via <code>Makefile</code>
 <div id="outline-container-orgc8a2f2c" class="outline-3">
 <h3 id="orgc8a2f2c"><a href="https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/">Magic Mirror</a></h3>
 </div>
+<div id="outline-container-org7aba626" class="outline-3">
+<h3 id="org7aba626"><a href="https://raspberrypi-guide.github.io/electronics/using-usb-webcams">Working with USB webcams on your Raspberry Pi</a></h3>
+</div>
+<div id="outline-container-org2545fe3" class="outline-3">
+<h3 id="org2545fe3"><a href="https://www.instructables.com/How-to-Make-Raspberry-Pi-Webcam-Server-and-Stream-/">How to Make Raspberry Pi Webcam Server and Stream</a></h3>
+</div>
+<div id="outline-container-org7b8964c" class="outline-3">
+<h3 id="org7b8964c">Turn your RPi into a Spy</h3>
+<div class="outline-text-3" id="text-org7b8964c">
+<p>
+Use <a href="https://motion-project.github.io/">motion</a> app.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org15f0ab6" class="outline-3">
+<h3 id="org15f0ab6">Turn your RPi into a Spy (audio)</h3>
+<div class="outline-text-3" id="text-org15f0ab6">
+<p>
+I want to use the mic of the Raspberry to stream on the audio over the network.
+I've achieved by following the instructions in this blogpost: <a href="https://hobbylad.wordpress.com/2017/04/26/raspberry-pi-system-audio-redirection-over-network/">Stream audio over the network using VLC</a>.
+To detect the alsa card for recording use <code>arecord -l</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">card 3: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+</pre>
+</div>
+
+<p>
+then stream using VLC
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cvlc -vvv alsa://plughw:3 --sout '#transcode{acodec=mp3,ab=64,channels=1}:standard{access=http,dst=0.0.0.0:8888/out.mp3}'
+</pre>
+</div>
+
+<p>
+Connect to the raspberry: if the IP address is, for instance, 192.168.1.44, go to <a href="http://192.168.1.44:8888/out.mp3">http://192.168.1.44:8888/out.mp3</a>.
+</p>
+
+<p>
+If you're not interested in streaming but just record the audio onto a file start recording using <code>arecord</code> for 4 seconds in <i>dat</i> format (16bit; see man for more options):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">arecord -d 4 -f dat spy.wav
+</pre>
+</div>
+
+<p>
+Other resources:
+</p>
+<ul class="org-ul">
+<li><a href="https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1">https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1</a></li>
+</ul>
+</div>
+</div>
+
 <div id="outline-container-org5b30a0a" class="outline-3">
 <h3 id="org5b30a0a">Turn your RPi into an Access Point</h3>
 <div class="outline-text-3" id="text-org5b30a0a">
 <p>
 <a href="https://raspberrytips.com/access-point-setup-raspberry-pi/">https://raspberrytips.com/access-point-setup-raspberry-pi/</a>
 </p>
-</div>
-</div>
-
-<div id="outline-container-org7b8964c" class="outline-3">
-<h3 id="org7b8964c">Turn your RPi into a Spy</h3>
-<div class="outline-text-3" id="text-org7b8964c">
-<ul class="org-ul">
-<li><a href="https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1">https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1</a></li>
-<li><a href="https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e">https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e</a></li>
-</ul>
 </div>
 </div>
 </div>
@@ -2776,11 +3226,63 @@ My <code>.zprofile</code> on my Mackbook.
 <div class="org-src-container">
 <pre class="src src-sh">eval "$(/usr/local/bin/brew shellenv)"
 eval "$(fzf --bash)"
+export ASDF_DIR="$HOME/.asdf"
 . "$HOME/.asdf/asdf.sh"
 . "$HOME/.asdf/completions/asdf.bash"
 export PATH=~/.local/bin:$PATH
 alias e='emacs -nw --init-directory=~/.emacs.d.minemacs'
 alias t='tmux attach'
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd3d8a93" class="outline-2">
+<h2 id="orgd3d8a93">Simple Static assets web server ~ Busybox</h2>
+<div class="outline-text-2" id="text-orgd3d8a93">
+<p>
+Taken from <a href="https://lipanski.com/posts/smallest-docker-image-static-website">this blogpost</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-dockerfile">FROM busybox:1.35
+
+# Create a non-root user to own the files and run our server
+RUN adduser -D static
+USER static
+WORKDIR /home/static
+VOLUME /home/static
+EXPOSE 3000
+
+# Copy the static website
+# Use the .dockerignore file to control what ends up inside the image!
+
+# Run BusyBox httpd
+CMD ["busybox", "httpd", "-f", "-v", "-p", "3000"]
+</pre>
+</div>
+
+<p>
+Create the image
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cd
+docker build -t busybox:1.3.5 -f busybox.dockerfile .
+</pre>
+</div>
+
+<p>
+Start the container (the fullpath is required on MacOS docker installations, if I recall correctly.. 🤔)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">docker run -d --rm --init -p 3000:3000 --volume=/Users/minasmazar/volumes/busybox:/home/static busybox:1.3.5
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;Hei there!&lt;/body&gt;&lt;/html&gt;
 </pre>
 </div>
 </div>
@@ -2792,6 +3294,10 @@ alias t='tmux attach'
 <div id="outline-container-orgfa73228" class="outline-2">
 <h2 id="orgfa73228">Systemd</h2>
 <div class="outline-text-2" id="text-orgfa73228">
+</div>
+<div id="outline-container-org6b59e34" class="outline-3">
+<h3 id="org6b59e34">Services definition</h3>
+<div class="outline-text-3" id="text-org6b59e34">
 <p>
 Add a service to systemd (more info <a href="https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all">here</a>, while here's an article on how to create and manage <a href="https://www.baeldung.com/linux/systemd-create-user-services">user’s services With systemd</a>).
 </p>
@@ -2817,6 +3323,48 @@ WantedBy=multi-user.target
 <p>
 Then start with <code>systemctl [--user] (enable|restart|start|stop) blink</code>
 </p>
+</div>
+</div>
+
+<div id="outline-container-orga541047" class="outline-3">
+<h3 id="orga541047">Journalctl</h3>
+<div class="outline-text-3" id="text-orga541047">
+<p>
+Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">journalctl --vacuum-time=2d
+</pre>
+</div>
+
+<p>
+or retain only the past 500 MB
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">journalctl --vacuum-size=500M
+</pre>
+</div>
+
+<p>
+To print last 40 entries for a particular service (i.e. <i>unit</i>) and keeps following the logs:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">journalctl -n 40 -u my-service -f
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org03d5501" class="outline-3">
+<h3 id="org03d5501">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org03d5501">
+<p>
+Sometimes you end up by having some services to start and immediately stop (for instance <code>my-daemon.service Deactivated successfully</code>). I've found the solution to in this <a href="https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started">StackOverlow thread</a>: you have to specify the <code>Type</code>!
+</p>
+</div>
 </div>
 </div>
 
@@ -2849,6 +3397,30 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 </div>
 </div>
 
+<div id="outline-container-org3750e1c" class="outline-2">
+<h2 id="org3750e1c">Tor</h2>
+<div class="outline-text-2" id="text-org3750e1c">
+</div>
+<div id="outline-container-org017f782" class="outline-3">
+<h3 id="org017f782"><a href="https://hub.docker.com/r/dperson/torproxy/">Use Tor proxy via Docker</a></h3>
+<div class="outline-text-3" id="text-org017f782">
+<div class="org-src-container">
+<pre class="src src-sh">sudo docker run -it -p 8118:8118 -p 9050:9050 -d dperson/torproxy
+</pre>
+</div>
+
+<p>
+then verify you're using the tor proxy connecting to <a href="https://check.torproject.org/">https://check.torproject.org/</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">curl -Lx http://localhost:8118 https://check.torproject.org/ | grep "Congratulations"
+</pre>
+</div>
+</div>
+</div>
+</div>
+
 <div id="outline-container-org37bb5ce" class="outline-2">
 <h2 id="org37bb5ce">Userscripts</h2>
 <div class="outline-text-2" id="text-org37bb5ce">
@@ -2860,7 +3432,7 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 More details in this <a href="https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313">StackOverflow thread</a> showing different approaches, here I'm reporting just one.
 </p>
 
-<pre class="example" id="org8ac0494">
+<pre class="example" id="org04d6171">
 // @grant        GM_download
 
 function saveData(data, filename) {
@@ -2883,9 +3455,9 @@ saveData("hello world", "hello.txt");
 <h2 id="org46a230e">Youtube</h2>
 <div class="outline-text-2" id="text-org46a230e">
 </div>
-<div id="outline-container-org67e7c34" class="outline-3">
-<h3 id="org67e7c34">Export your <i>watch later</i> list from the browser</h3>
-<div class="outline-text-3" id="text-org67e7c34">
+<div id="outline-container-org7865f51" class="outline-3">
+<h3 id="org7865f51">Get the list of subscriptions (followed channels)</h3>
+<div class="outline-text-3" id="text-org7865f51">
 <p>
 Go the your "Watch later" page on the browser, open the console and execute
 </p>
@@ -2904,12 +3476,29 @@ console.log(JSON.stringify(elsExp));
 <h3 id="org73458cb">Get RSS feed of a channel or playlist</h3>
 <div class="outline-text-3" id="text-org73458cb">
 <p>
-Having the channel ID (<a href="https://www.youtube.com/watch?v=zNABOcxGkt8&amp;t=0s">here</a> a video explainging how to do that), construct as follow:
+Get the Channel ID of a Youtube channel (manual approach): <a href="https://www.youtube.com/watch?v=zNABOcxGkt8&amp;t=0s">here</a> a video explaining how to do that. You can ease the process using by copy/pasting this snippet into the Dev console (if the browser allows you that)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">alert(document.querySelector("link[itemprop='url']").href);
+</pre>
+</div>
+
+<p>
+then construct as follow:
 </p>
 
 <p>
 <code>https://youtube.com/watch?v=CHANNEL-ID</code> to <code>https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID</code>
 </p>
+
+<p>
+I made some experiments to automate this process:
+</p>
+<ul class="org-ul">
+<li>a sample NodeJS project (see <a href="#org28502a7">this section</a>)</li>
+<li>using <a href="emacs/modules.html#org134cd51">ad-hoc Emacs function</a></li>
+</ul>
 </div>
 </div>
 
@@ -2976,9 +3565,9 @@ Get the channel ID from a channel URL
 </div>
 </div>
 
-<div id="outline-container-orgada3e2a" class="outline-4">
-<h4 id="orgada3e2a">Troubleshooting</h4>
-<div class="outline-text-4" id="text-orgada3e2a">
+<div id="outline-container-org918c4aa" class="outline-4">
+<h4 id="org918c4aa">Troubleshooting</h4>
+<div class="outline-text-4" id="text-org918c4aa">
 <p>
 If you have issues with an error like <code>WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)</code>.
 </p>
@@ -2989,6 +3578,14 @@ If you have issues with an error like <code>WARNING: [youtube] Unable to downloa
 </div>
 </div>
 </div>
+</div>
+</div>
+<div id="outline-container-org59b28ee" class="outline-2">
+<h2 id="org59b28ee">Web Resources</h2>
+<div class="outline-text-2" id="text-org59b28ee">
+<ul class="org-ul">
+<li><a href="https://www.instructables.com/">https://www.instructables.com/</a></li>
+</ul>
 </div>
 </div>
 </div>

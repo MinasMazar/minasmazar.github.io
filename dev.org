@@ -4,14 +4,6 @@
 #+DATE: <2024-01-31 Wed>
 #+STARTUP: overview
 
-* Alsamixer
-
-Toggle mute
-
-#+begin_src sh
-  amixer set Master toggle
-#+end_src
-
 * Blog and publishing
 
 ** Static site generators
@@ -23,6 +15,48 @@ Toggle mute
 - https://srht.site/
 - [[https://pages.github.com/][Github pages]]
 - [[https://www.netlify.com/][Netlify]]
+
+* Web browsing/crawling
+
+** Get the DOM of a webpage using chrome via command-line.
+
+#+begin_src sh
+  chrome --headless --dump-dom https://developer.chrome.com/
+#+end_src
+
+** Fetch a page via a nodejs app
+
+Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
+
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+
+1. setup a new nodejs project =mkdir html-fetch && node init --yes=
+2. add =node-fetch= dependency into the =package.json= and =npm install=
+3. create the =index.js= source file with the content as follow: 
+
+#+begin_src javascript
+  const fetch = require("node-fetch");
+  const fs = require("fs");
+  // you can update this to any website you want to download
+  const site = "https://www.youtube.com/@BorderNightsOfficial";
+  // you can update this if you want to save
+  const filename = "index.html";
+  // fetch url
+  fetch(site, {
+    headers: {
+      // some sites require a user-agent header to return the webpage
+      "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+  }).then((res) => {
+    // get text from Response stream
+    return res.text();
+  }).then((text) => {
+    // write html from response to index.html
+    fs.writeFile(filename, text, () => {});
+  });
+#+end_src
+
+Run it via =node index.js=. This will fetch the page into the =index.html= file.
 
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
@@ -142,6 +176,41 @@ docker run -it lukechilds/dockerpi
 - [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
 - [[https://joyofelixir.com/17-mix-dependencies][Mix dependencies]]
 - [[https://learn-elixir.dev/#hiring][Learn Elixir (learn-elixir.dev/#hiring)]]
+
+** Clustering Elixir applications
+- https://betterprogramming.pub/notes-on-clustering-elixir-applications-49707ed53910
+- https://hexdocs.pm/libcluster/readme.html
+
+** Distributed Elixir nodes
+
+Good readings about this topic:
+- https://medium.com/hackernoon/running-distributed-erlang-elixir-applications-on-docker-b211d95affbe
+- https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/
+
+Here's a talk I still have to watch https://www.youtube.com/watch?v=F_YUyd_Qdjs
+
+** Elixir Ecommerce platforms
+
+Follow this link to [[https://elixirforum.com/t/phoenix-frameworks-is-good-choice-for-e-commerce-web-apps/46772/3][Elixir forum post]].
+
+It will probably faster and for sure will cope a lot more under load, due to the
+BEAM, that is well exemplified [[https://video-hub.exadra37.com/watch/goto-2019-the-soul-of-erlang-and-elixir-sa%C5%A1a-juri%C4%87][here]] by [[https://elixirforum.com/u/sasajuric][@sasajuric]].
+
+We already have several projects in Elixir fore ecommerce:
+
+- [[https://github.com/amacgregor/crimson_commerce][Crimsom]] repo and [[https://dev.to/allanmacgregor/ecommerce-platform-prototype-with-elixir-and-phoenix-2d9g][article]].
+- [[https://github.com/nicolasblanco/shopix][Shopix]] repo and [[https://nicolasblan.co/blog/shopix-e-commerce-engine][aritcle]].
+- [[https://github.com/freshcom][Freshcom]] repos. They have separated it in several repos.
+- Many more [[https://github.com/search?q=elixir+ecommerce][here]].
+
+I don’t really know if any of them is being/continued to be used in production. I
+think Freshcom was being used in prod at some point or was about to launch.
+The author is here in the forum @rbao.
+
+If you search the forum you have more questions like yours:
+
+- Resources for building an e-commerce store in Phoenix?
+- Presenting Aviacommerce, open source e-commerce in Elixir
 
 ** GenServer template
 
@@ -334,9 +403,53 @@ Run for localhsot.
   SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4040 ~/my-app/bin/my-app start
 #+end_src
 
-*** Dockerize Phoenix webapp (my_app)
-*** Dockerfile
+*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
+*** [[https://felt.com/blog/startup-and-shutdown-for-phoenix-applications][Graceful startup and shutdown for Phoenix applications]]
 
+- if you started your server with =iex -S mix phx.server= (which is what I use 95% of the time) then you can run =System.stop()=
+- use =ps aux | grep 'mix phx.server'= to find the OS PID for the BEAM, then run =kill -s TERM <os_pid>=
+
+In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
+
+*** Dockerize Phoenix webapp (my_app)
+
+** Inspecting data
+
+How to use IO.inspect on a long list without trimming it? See [[https://hexdocs.pm/elixir/Inspect.Opts.html][Inspect.Opts]] for a description of the available options, but in short:
+
+#+begin_src elixir
+  IO.inspect(list, limit: :infinity)
+#+end_src
+
+** Phoenix Livebooks
+
+- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
+- https://github.com/aslakjohansen/livebook-demos
+- https://github.com/Arp-G/async-elixir
+- https://github.com/whatyouhide/guide_async_processing_in_elixir
+
+*** Livebook Cluster
+
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
+
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
+
+I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+
+Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
+
+- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
+- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
+
+  #+begin_src text
+  livebook -> PubSub (broadcast in current node)
+  #+end_src
+
+ Remember that this open a wide range of **security issues**.. uses it with responsibility!
+- Youtube 
+
+** Dockerize
+*** Example Dockerfile for Elixir app 
 More info on [[Docker][Docker here]].
 
 #+begin_src yml
@@ -505,41 +618,22 @@ networks:
   outside:
 
 #+end_src
-*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
-** Phoenix Livebooks
-
-- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
-- https://github.com/aslakjohansen/livebook-demos
-- https://github.com/Arp-G/async-elixir
-- https://github.com/whatyouhide/guide_async_processing_in_elixir
-
-*** Livebook Cluster
-
-I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
-
-The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
-
-I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
-
-Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
-
-- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
-- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
-
-  #+begin_src text
-  livebook -> PubSub (broadcast in current node)
-  #+end_src
-
- Remember that this open a wide range of **security issues**.. uses it with responsibility!
-- Youtube 
-
 ** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
 ** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
 ** [[https://nerves-project.org/newsletter/][Nerves]]
+*** Resources
 
 - [[https://nerves-project.org/newsletter/][Nervers newsletter]]
 - [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
 
+*** Nerves + Livebook
+
+- https://github.com/nerves-livebook
+- https://hexdocs.pm/nerves_runtime/Nerves.Runtime.html
+
+#+begin_src elixir
+Nerves.Runtime.halt()
+#+end_src
 * [[https://www.ffmpeg.org][FFmpeg]]
 
 A complete, cross-platform solution to record, convert and stream audio and video.
@@ -569,6 +663,12 @@ Using FFMPEG's scene detection to generate a [[https://blog.gdeltproject.org/usi
 
 #+begin_src shell
 time ./ffmpeg -i ./VIDEO.mp4 -vf "select=gt(scene\,0.4),scale=160:-1,tile=6x80" -frames:v 1 -qscale:v 3 preview.jpg  
+#+end_src
+
+** Get an image from a webcam using V4L (video for Linux)
+
+#+begin_src sh
+  ffmpeg -f v4l2 -video_size 1280x720 -i /dev/video0 -frames 1 out.jpg
 #+end_src
 
 ** Cut audio/videos starting from 10s from the beginning for 20s.
@@ -965,21 +1065,30 @@ If you want to add a text stripe under the image
   convert original-image.jpg -background Khaki -font Arial -pointsize 27 label:'Sfilatini Buitoni' -gravity Center -append out-image.jpg 
 #+end_src
 
-* Journalctl
-
-Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
-
-#+begin_src sh
-journalctl --vacuum-time=2d
-#+end_src
-
-or retain only the past 500 MB
-
-#+begin_src sh
-journalctl --vacuum-size=500M
-#+end_src
-
 * Linux desktop
+** Brief list of useful commands, examples, snippets
+
+- =lsb_release -a= show info about distro
+- =lsblk -f= show partitions informations
+- =pacman -Qq= / =apt list --installed= / =dnf list install= show installed packages (Arch, Debian, Fedora)
+- =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
+- =ls -1 | wc -l= determine how many files there are in a directory
+- =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
+
+** How do I get a list of installed files from a package?
+
+To see all the files the package installed onto your system, do this:
+
+#+begin_src sh
+dpkg-query -L <package_name>
+#+end_src
+
+To see the files a .deb file will install
+
+#+begin_src sh
+dpkg-deb -c <package_name.deb>
+#+end_src
+
 ** Add a custom window manager entry for [[https://wiki.ubuntu.com/LightDM][LightDM]]
 
 Add a file in =/usr/share/xsessions/= with something like this (example for =i3=)
@@ -996,12 +1105,33 @@ DesktopNames=i3
 Keywords=tiling;wm;windowmanager;window;manager;
 #+end_src
 
-** Create a .desktop File
+** Audio management
+*** Alsamixer
+
+Toggle mute
 
 #+begin_src sh
-  mkdir /home/pi/.config/autostart
-  nano /home/pi/.config/autostart/clock.desktop
+  amixer set Master toggle
 #+end_src
+
+*** Pulseaudio
+**** pacmd
+You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
+
+#+begin_src sh
+  pacmd help list-sinks
+  pacmd list-sink-inputs
+  pacmd move-sink-input 5 1
+#+end_src
+
+**** pactl
+
+- =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
+- =pactl get-sink-volume <INDEX>= get the volume of the given sink
+
+** Create a .desktop File
+
+In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 
 #+begin_src toml
   [Desktop Entry]
@@ -1016,11 +1146,19 @@ Keywords=tiling;wm;windowmanager;window;manager;
 =xset s noblank= (turns off blanking)
 =xset -dpms= (disable the power management)
 
-** Read battery status from command line
+** Read battery status from command-line
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
 
-** Screen managing (xrandr)
+** Screen managing
+
+Here's [[https://pimylifeup.com/raspberry-pi-screen-resolution/][a good blogpost]] specific for Raspberry PI.
+
+If you're using the LightDM and you want to set monitor resolutions and layout at the startup, edit the =display-setup-script= option in =/etc/lightdm/lightdm.conf=.
+
+*** X11 / xrandr
+
+Remember to set =DISPLAY= env in the console before using =xrandr= (usually ~export DISPLAY=:0~)
 
 #+begin_quote
 I use this command to mirror my desktop with my external VGA:
@@ -1040,6 +1178,40 @@ $ xrandr --output VGA-1 --mode 1920x1080 --scale 1x1 --output LVDS-1 --mode 1366
 You can detect the names of your screens by just running xrandr
 #+end_quote
 
+Adjust brightness from command line:
+
+#+begin_src sh
+  xrandr --output monitor-name --brightness level
+#+end_src
+
+**Remember** as mentioned in =man xrandr=
+
+#+begin_quote
+ However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
+#+end_quote
+
+*** Wayland / wlr-randr
+
+Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~export WAYLAND_DISPLAY=wayland-1~)
+
+The commands are almost the same as =xrandr=; keep in mind the way the screens are handled is different and =--same-as= option is not available.
+
+** Set keyboard layout from command-line
+
+#+begin_src sh
+  setxkbmap -layout us,it
+#+end_src
+
+** Set an image as wallpaper using feh
+
+#+begin_src sh
+  feh --bg-fill ~/path/to/image.png
+#+end_src
+
+** Set custom name/class to an application (window)
+
+If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[*\[\[https://en.wikipedia.org/wiki/I3_(window_manager)\]\[i3\]\] (Window Manager)][i3 rules configuration]].
+
 * [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
 
 A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
@@ -1057,6 +1229,8 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
   set $mod Mod4
+  set $alt Mod1
+  set $wallpaper_file ~/Pictures/wallpaper
 
   # Font for window titles. Will also be used by the bar unless a different font
   # is used in the bar {} block below.
@@ -1069,22 +1243,29 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   # Start XDG autostart .desktop files using dex. See also
   # https://wiki.archlinux.org/index.php/XDG_Autostart
   exec --no-startup-id dex --autostart --environment i3
+  exec --no-startup-id xfsettingsd
+  exec --no-startup-id compton
+  exec --no-startup-id feh --bg-max $wallpaper_file
+  # exec --no-startup-id xmodmap ~/.Xmodmaprc
 
   # The combination of xss-lock, nm-applet and pactl is a popular choice, so
   # they are included here as an example. Modify as you see fit.
 
   # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
   # screen before suspend. Use loginctl lock-session to lock your screen.
-  exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
 
   # NetworkManager is the most popular way to manage wireless networks on Linux,
   # and nm-applet is a desktop environment-independent system tray GUI for it.
   exec --no-startup-id nm-applet
+  exec --no-startup-id emacs --daemon && emacsclient -r
 
   # Use pactl to adjust volume in PulseAudio.
+  set $volume_step 5%
   set $refresh_i3status killall -SIGUSR1 i3status
-  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step && $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step && $refresh_i3status
   bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
   bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
@@ -1095,15 +1276,20 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   # or left-clicking anywhere into the window while holding the floating modifier.
   tiling_drag modifier titlebar
 
-  # start a terminal
+  # start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
+  set $app_launcher i3-dmenu-desktop
   # bindsym $mod+Return exec i3-sensible-terminal
+  bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
 
   # kill focused window
   bindsym $mod+Shift+q kill
 
   # change focus
-  bindsym alt+Tab focus left
-  bindsym alt+Shift+Tab focus down
+  bindsym $mod+Tab focus left ; focus up
+  bindsym $mod+Shift+Tab focus right ; focus down
+  # change workspace
+  bindsym $mod+braceright workspace next
+  bindsym $mod+braceleft workspace prev
 
   # Define names for default workspaces for which we configure key bindings later on.
   # We use variables to avoid repeating the names in multiple places.
@@ -1118,53 +1304,57 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   set $ws9 "9"
   set $ws10 "10"
 
+  # Window rules
+  # for_window [class="^firefox$"] move container to workspace $ws2
+  for_window [class="^mpv$"] move container to workspace $ws3
+
   mode "i3" {
-    # start dmenu (a program launcher)
-    bindsym d exec --no-startup-id dmenu_run
-    # A more modern dmenu replacement is rofi:
-    # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
-    # There also is i3-dmenu-desktop which only displays applications shipping a
-    # .desktop file. It is a wrapper around dmenu, so you need that installed.
-    # bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
-  
+    # start program launcher
+    bindsym d exec --no-startup-id $app_launcher ; mode "default"
     # bindsym $mod+l focus up
     # bindsym $mod+semicolon focus right
-  
+    bindsym p focus left ; focus up
+    bindsym n focus right ; focus down
+    bindsym Shift+p workspace prev
+    bindsym Shift+n workspace next
+
     # alternatively, you can use the cursor keys:
     bindsym Left focus left
     bindsym Down focus down
     bindsym Up focus up
     bindsym Right focus right
-  
-    # move focused window
-    bindsym Shift+j move left
-    bindsym Shift+k move down
-    bindsym Shift+l move up
-    bindsym Shift+semicolon move right
-  
+
+    bindsym Shift+Left move left
+    bindsym Shift+Down move down
+    bindsym Shift+Up move up
+    bindsym Shift+Right move right
+
+    # toggle i3bar mode
+    bindsym i bar mode toggle ; mode "default"
+
     # split in horizontal orientation
     bindsym h split h
-  
+
     # split in vertical orientation
     bindsym v split v
-  
+
     # enter fullscreen mode for the focused container
     bindsym f fullscreen toggle
-  
+
     # change container layout (stacked, tabbed, toggle split)
     bindsym s layout stacking
     bindsym w layout tabbed
     bindsym e layout toggle split
-  
+
     # toggle tiling / floating
-    bindsym $mod+Shift+space floating toggle
-  
+    bindsym space floating toggle
+
     # change focus between tiling / floating windows
     bindsym space focus mode_toggle
-  
+
     # focus the parent container
     bindsym a focus parent
-  
+
     # focus the child container
     #bindsym $mod+d focus child
 
@@ -1179,7 +1369,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym 8 workspace number $ws8
     bindsym 9 workspace number $ws9
     bindsym 0 workspace number $ws10
-  
+
     # move focused container to workspace
     bindsym Shift+1 move container to workspace number $ws1
     bindsym Shift+2 move container to workspace number $ws2
@@ -1191,13 +1381,24 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym Shift+8 move container to workspace number $ws8
     bindsym Shift+9 move container to workspace number $ws9
     bindsym Shift+0 move container to workspace number $ws10
-  
+
+    # Media
+    bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+    bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+    bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+    bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+    # Emacs everywhere
+    bindsym Shift+m exec --no-startup-id emacsclient --eval "(emacs-everywhere)" && mode "default"
+    # Kill current window
+    bindsym Shift+q kill
     # reload the configuration file
     bindsym Shift+c reload
     # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
     bindsym Shift+r restart
     # exit i3 (logs you out of your X session)
-    bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+    # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+    bindsym Shift+e exec i3-msg exit
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -1207,27 +1408,27 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   # resize window (you can also use the mouse for that)
   mode "resize" {
-	  # These bindings trigger as soon as you enter the resize mode
+    # These bindings trigger as soon as you enter the resize mode
 
-	  # Pressing left will shrink the window’s width.
-	  # Pressing right will grow the window’s width.
-	  # Pressing up will shrink the window’s height.
-	  # Pressing down will grow the window’s height.
-	  bindsym j resize shrink width 10 px or 10 ppt
-	  bindsym k resize grow height 10 px or 10 ppt
-	  bindsym l resize shrink height 10 px or 10 ppt
-	  bindsym semicolon resize grow width 10 px or 10 ppt
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
 
-	  # same bindings, but for the arrow keys
-	  bindsym Left resize shrink width 10 px or 10 ppt
-	  bindsym Down resize grow height 10 px or 10 ppt
-	  bindsym Up resize shrink height 10 px or 10 ppt
-	  bindsym Right resize grow width 10 px or 10 ppt
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-	  # back to normal: Enter or Escape or $mod+r
-	  bindsym Return mode "default"
-	  bindsym Escape mode "default"
-	  bindsym r mode "resize"
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym r mode "resize"
   }
 
   bindsym $mod+Return mode "i3"
@@ -1237,13 +1438,23 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   bar {
 	  mode hide
 	  hidden_state hide
-	  modifier $mod
+	  modifier none # $mod
 
+	  position top
 	  font pango:monospace 14
 	  status_command i3status
   }
 
+  workspace_layout tabbed
 #+end_example
+
+Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
+
+- =xfsettingsd=  XSettings daemon for Xfce
+- =gnome-settings-daemon= for GNOME
+...
+
+So remember to start it in the i3 config file (ex. =exec gnome-settings-daemon=).
 
 And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
 
@@ -1665,16 +1876,6 @@ Rename a database ([[https://www.postgresqltutorial.com/postgresql-administratio
 ALTER DATABASE db RENAME TO newdb;
 #+end_src
 
-* Pulseaudio
-
-You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
-
-#+begin_src sh
-  pacmd help list-sinks
-  pacmd list-sink-inputs
-  pacmd move-sink-input 5 1
-#+end_src
-
 * Raspberry
 ** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
 ** Detect Raspberry model
@@ -1711,14 +1912,44 @@ or if you want to automate via =Makefile=
 - https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv
 
 ** [[https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/][Magic Mirror]]
+** [[https://raspberrypi-guide.github.io/electronics/using-usb-webcams][Working with USB webcams on your Raspberry Pi]]
+** [[https://www.instructables.com/How-to-Make-Raspberry-Pi-Webcam-Server-and-Stream-/][How to Make Raspberry Pi Webcam Server and Stream]]
+** Turn your RPi into a Spy
+
+Use [[https://motion-project.github.io/][motion]] app.
+
+** Turn your RPi into a Spy (audio)
+
+I want to use the mic of the Raspberry to stream on the audio over the network.
+I've achieved by following the instructions in this blogpost: [[https://hobbylad.wordpress.com/2017/04/26/raspberry-pi-system-audio-redirection-over-network/][Stream audio over the network using VLC]].
+To detect the alsa card for recording use =arecord -l=
+
+#+begin_src sh
+card 3: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+#+end_src
+
+then stream using VLC
+
+#+begin_src sh
+ cvlc -vvv alsa://plughw:3 --sout '#transcode{acodec=mp3,ab=64,channels=1}:standard{access=http,dst=0.0.0.0:8888/out.mp3}'
+#+end_src
+
+Connect to the raspberry: if the IP address is, for instance, 192.168.1.44, go to http://192.168.1.44:8888/out.mp3.
+
+If you're not interested in streaming but just record the audio onto a file start recording using =arecord= for 4 seconds in /dat/ format (16bit; see man for more options):
+
+#+begin_src shell
+  arecord -d 4 -f dat spy.wav
+#+end_src
+
+Other resources:
+- https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1
+
 ** Turn your RPi into an Access Point
 
 https://raspberrytips.com/access-point-setup-raspberry-pi/
-
-** Turn your RPi into a Spy
-
-- https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1
-- https://blog.mutsuda.com/raspberry-pi-into-an-audio-spying-device-7a56e7a9090e
 
 * [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
 * Shell
@@ -1728,6 +1959,7 @@ My =.zprofile= on my Mackbook.
 #+begin_src sh
   eval "$(/usr/local/bin/brew shellenv)"
   eval "$(fzf --bash)"
+  export ASDF_DIR="$HOME/.asdf"
   . "$HOME/.asdf/asdf.sh"
   . "$HOME/.asdf/completions/asdf.bash"
   export PATH=~/.local/bin:$PATH
@@ -1735,8 +1967,49 @@ My =.zprofile= on my Mackbook.
   alias t='tmux attach'
 #+end_src
 
+* Simple Static assets web server ~ Busybox
+
+Taken from [[https://lipanski.com/posts/smallest-docker-image-static-website][this blogpost]].
+
+#+begin_src dockerfile :tangle ~/busybox.dockerfile
+  FROM busybox:1.35
+
+  # Create a non-root user to own the files and run our server
+  RUN adduser -D static
+  USER static
+  WORKDIR /home/static
+  VOLUME /home/static
+  EXPOSE 3000
+
+  # Copy the static website
+  # Use the .dockerignore file to control what ends up inside the image!
+
+  # Run BusyBox httpd
+  CMD ["busybox", "httpd", "-f", "-v", "-p", "3000"]
+#+end_src
+
+Create the image
+
+#+begin_src sh
+  cd
+  docker build -t busybox:1.3.5 -f busybox.dockerfile .
+#+end_src
+
+#+RESULTS:
+
+Start the container (the fullpath is required on MacOS docker installations, if I recall correctly.. 🤔)
+
+#+begin_src sh
+  docker run -d --rm --init -p 3000:3000 --volume=/Users/minasmazar/volumes/busybox:/home/static busybox:1.3.5
+#+end_src
+
+#+begin_src html :tangle ~/volumes/busybox/index.html
+  <html><head></head><body>Hei there!</body></html>
+#+end_src
+
 * [[https://spritely.institute/][Spritely institute]] - distributed web technology
 * Systemd
+** Services definition
 
 Add a service to systemd (more info [[https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all][here]], while here's an article on how to create and manage [[https://www.baeldung.com/linux/systemd-create-user-services][user’s services With systemd]]).
 
@@ -1757,6 +2030,30 @@ Create =/lib/systemd/system/blink.service= (or =/lib/systemd/user/blink.service=
 
 Then start with =systemctl [--user] (enable|restart|start|stop) blink=
 
+** Journalctl
+
+Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
+
+#+begin_src sh
+journalctl --vacuum-time=2d
+#+end_src
+
+or retain only the past 500 MB
+
+#+begin_src sh
+journalctl --vacuum-size=500M
+#+end_src
+
+To print last 40 entries for a particular service (i.e. /unit/) and keeps following the logs:
+
+#+begin_src sh
+  journalctl -n 40 -u my-service -f
+#+end_src
+
+** Troubleshooting
+
+Sometimes you end up by having some services to start and immediately stop (for instance =my-daemon.service Deactivated successfully=). I've found the solution to in this [[https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started][StackOverlow thread]]: you have to specify the =Type=!
+
 * Tailwind
 
 CDN installation:
@@ -1772,6 +2069,19 @@ CDN installation:
 Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+
+* Tor
+** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]
+
+#+begin_src sh
+sudo docker run -it -p 8118:8118 -p 9050:9050 -d dperson/torproxy
+#+end_src
+
+then verify you're using the tor proxy connecting to https://check.torproject.org/
+
+#+begin_src sh
+  curl -Lx http://localhost:8118 https://check.torproject.org/ | grep "Congratulations"
+#+end_src
 
 * Userscripts
 ** How to store data on a file using Greasemonkey
@@ -1795,7 +2105,7 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
 #+end_example
 
 * Youtube
-** Export your /watch later/ list from the browser
+** Get the list of subscriptions (followed channels)
 
 Go the your "Watch later" page on the browser, open the console and execute
 
@@ -1808,9 +2118,19 @@ Go the your "Watch later" page on the browser, open the console and execute
 
 ** Get RSS feed of a channel or playlist
 
-Having the channel ID ([[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explainging how to do that), construct as follow:
+Get the Channel ID of a Youtube channel (manual approach): [[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explaining how to do that. You can ease the process using by copy/pasting this snippet into the Dev console (if the browser allows you that)
+
+#+begin_src javascript
+  alert(document.querySelector("link[itemprop='url']").href);
+#+end_src
+
+then construct as follow:
 
 =https://youtube.com/watch?v=CHANNEL-ID= to =https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID=
+
+I made some experiments to automate this process:
+- a sample NodeJS project (see [[*Fetch a page via a nodejs app][this section]])
+- using [[file:emacs/modules.org::*Helper functions][ad-hoc Emacs function]]
 
 ** Youtube downloader (yt-dlp)
 *** Usage examples
@@ -1858,3 +2178,6 @@ If you have issues with an error like ~WARNING: [youtube] Unable to download web
 #+begin_src sh
   pip3 install --upgrade certifi
 #+end_src
+* Web Resources
+
+- https://www.instructables.com/

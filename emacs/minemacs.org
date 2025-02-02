@@ -3,33 +3,74 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-08-08 Thu>
 #+STARTUP: show2levels
-#+PROPERTY: header-args :tangle ~/.emacs.d/init.el
+#+PROPERTY: header-args :tangle (file-name-concat user-emacs-directory "init.el")
 #+SETUPFILE: ../../../templates/_header.org
 
-* Package initialization
+* Emacs configuration
+** Minemacs
 
-#+begin_src elisp
-  (add-to-list 'load-path "~/.emacs.d/vendor/") ; that's your sandbox
-  (require 'package)
+#+begin_src emacs-lisp
+  ;; Minemacs helpers
+  ;;
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-  			 ("elpa" . "https://elpa.gnu.org/packages/")
-  			 ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+  (defun minemacs-tangle-if-not-disabled (module)
+    (let ((dest-file (file-name-concat (minemacs-modules-directory) module)))
+      (if (member-ignore-case "disable" (org-get-tags)) "no" dest-file)))
 
-  (require 'use-package)
-  (require 'use-package-ensure)
-  (setq use-package-always-ensure t
-        package-enable-at-startup t)
-  (package-initialize)
+  (defun minemacs-subdir (path)
+    (file-name-concat user-emacs-directory path))
+
+  (defun minemacs-modules-directory ()
+    (minemacs-subdir "modules"))
+
+  (defun minemacs-custom-file ()
+    (file-name-concat user-emacs-directory "custom.el"))
+
+  (defun minemacs-modules-load (&optional matcher)
+    "Load all modules '*.el' files in 'minemacs-modules-directory'"
+    (interactive)
+    (if (file-readable-p (minemacs-modules-directory))
+	(let ((matcher (format "%s\.el$" (or matcher "."))))
+	  (mapcar (lambda (file)
+		    (load file 'noerror))
+		  (directory-files (minemacs-modules-directory) t matcher)))))
 #+end_src
 
-* Emacs configuration
+** Package initialization
+
+More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this initial setup is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
+
+#+begin_src elisp
+  (let* ((vendor (minemacs-subdir "vendor"))
+	 (default-directory vendor))
+    (add-to-list 'load-path vendor)
+    (and (file-readable-p vendor) (normal-top-level-add-subdirs-to-load-path)))
+
+  (require 'package)
+  (package-initialize)
+  (setq use-package-always-ensure t
+	package-archives '(
+			   ("melpa" . "https://melpa.org/packages/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")
+			   ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			   ))
+
+  (when (< emacs-major-version 29)
+    (unless (package-installed-p 'use-package)
+      (unless package-archive-contents
+	(package-refresh-contents))
+      (package-install 'use-package)))
+#+end_src
+
+** Basic settings
 
 #+begin_src elisp
   (use-package emacs
     :ensure nil
     :defer
-    :hook ((after-init . toggle-frame-fullscreen))
+    :hook
+    (after-init . toggle-frame-maximized)
+    (dired-mode . dired-hide-details-mode)
     :custom
     (dired-dwim-target t)
     (dired-listing-switches "-alth")
@@ -48,51 +89,34 @@
     (recentf-mode 1)
     (ffap-bindings)
     (repeat-mode 1)
+    (server-start 1)
     ;; (fido-vertical-mode 1)
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
 	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
 	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-	      custom-file "~/Dropbox/minemacs/custom.el"))
-    ;; Helpers
-    (defun minemacs-files-in-emacs-subdir (subdir)
-      (message "Scan files in emacs subdir %s" subdir)
-      (let ((scan-dir (concat user-emacs-directory (format "%s/" subdir "/"))))
-	(message "Scan files in dir %s" scan-dir)
-	(if (file-exists-p scan-dir)
-	    (directory-files scan-dir t directory-files-no-dot-files-regexp))))
-
-    ;; Modules
-    (defun minemacs-tangle-if-not-disabled (tangle)
-      (if (member-ignore-case "disable" (org-get-tags))
-	  "no"
-	tangle))
-
-    (defun minemacs-modules-load ()
-      "Load all modules '*.el' files in './.emacs.d/modules/'"
-      (interactive)
-      ;; TODO: locate-dominating-file
-      (let ((modules (minemacs-files-in-emacs-subdir "modules")))
-	(if modules (mapcar (lambda (module)
-			      (load  module 'noerror))
-			    modules))))
+	      custom-file (minemacs-custom-file)))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
     (global-set-key (kbd "s-2") (kbd "C-x 2"))
     (global-set-key (kbd "s-3") (kbd "C-x 3"))
 
-    (defvar minemacs-map
+    (setq minemacs-map
       (let ((map (make-sparse-keymap)))
 	(define-key map (kbd "a") #'org-agenda)
 	(define-key map (kbd "k") #'org-capture)
 	(define-key map (kbd "e") #'eshell)
+	(define-key map (kbd "E")
+		    (lambda (command)
+		      (interactive "sEmacs eshell command: ")
+		      (eshell-command command current-prefix-arg)))
+	(define-key map (kbd "r") #'recentf)
 	(define-key map (kbd "8") #'emoji-search)
 	(define-key map (kbd "w j") #'webjump)
 	(define-key map (kbd "w w") #'eww)
-	map)
-      "Minemacs map.")
+	map))
 
     :bind-keymap
     ("s-o" . minemacs-map)
@@ -101,7 +125,7 @@
     ("s-n" . #'god-local-mode)
     ("s-w" . #'other-window)
     ("s-)" . #'kill-current-buffer)
-    ("s-p" . #'project-switch-buffer)
+    ("s-p" . #'project-switch-to-buffer)
     ("s-P" . #'project-find-file)
     ("s-[" . #'previous-buffer)
     ("s-]" . #'next-buffer)
@@ -113,6 +137,7 @@
     ("s-j" . #'switch-to-buffer)
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
+    ("s-_" . #'bookmark-set)
     (:map key-translation-map
 	  ("s-m" . "\C-x")
 	  ("s-M" . "\C-c"))
@@ -123,22 +148,21 @@
 	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
 	  ("e" . #'switch-to-minibuffer)))
-
-  (minemacs-modules-load)
 #+end_src
 
-* Minibuffer
+** Minibuffer
 
 #+begin_src elisp
   (use-package orderless :custom (completion-styles '(orderless)))
   (use-package vertico :config (vertico-mode 1))
 #+end_src
 
-* Modal editing
+** Modal editing
 
 #+begin_src elisp
   (use-package god-mode
     :after emacs
+    :demand
     :init
     (defun minemacs-god-mode-line ()
       (if god-mode "⛪" " "))
@@ -150,7 +174,7 @@
       (setq cursor-type 'box))
 
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
-    	 (god-mode-disabled . minemacs-god-mode-disabled))
+	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
     ("s-n" . #'god-local-mode)
     (:map god-local-mode-map
@@ -166,7 +190,7 @@
     (god-local-mode))
 #+end_src
 
-* Auto-completion
+** Auto-completion
 
 #+begin_src elisp
   (use-package corfu
@@ -183,29 +207,22 @@
 #+begin_src elisp
   (use-package cape
     :init
-    (add-hook 'completion-at-point-functions #'cape-dabbrev)
     (add-hook 'completion-at-point-functions #'cape-file)
     (add-hook 'completion-at-point-functions #'cape-elisp-block)
     (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
     (add-hook 'completion-at-point-functions #'cape-history)
+    (add-hook 'completion-at-point-functions #'cape-line)
+    (add-hook 'completion-at-point-functions #'cape-dabbrev))
     ;;(add-hook 'completion-at-point-functions #'cape-keyword)
     ;;(add-hook 'completion-at-point-functions #'cape-tex)
     ;;(add-hook 'completion-at-point-functions #'cape-sgml)
     ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
     ;;(add-hook 'completion-at-point-functions #'cape-abbrev)
     ;;(add-hook 'completion-at-point-functions #'cape-dict)
-    (add-hook 'completion-at-point-functions #'cape-line))
+
 #+end_src
 
-* Org
-#+begin_src elisp
-  (use-package org
-    :bind
-    (:map org-mode-map
-          ("M-p" . #'org-move-subtree-up)
-          ("M-n" . #'org-move-subtree-down)))
-#+end_src
-* Embark
+** Embark
 
 #+begin_src elisp
   (use-package embark
@@ -231,17 +248,20 @@
 	   ("," . append-to-previous-buffer)))
 #+end_src
 
-* Load custom configurations
+** Load modules and custom configurations
 
 #+begin_src elisp
-  (if custom-file (load custom-file 'noerror))
+  (load custom-file :no-error-if-file-is-missing)
+  (minemacs-modules-load)
 #+end_src
 
 * On hand documentation
 :PROPERTIES:
 :header-args: :tangle no
 :END:
-*** Other Commands, functions, variables, keybindings
+** [[https://raw.githubusercontent.com/emacs-tw/awesome-elisp/refs/heads/master/README.org][Awesome Elisp]]
+** Online documentation for [[http://orgmode.org][org-mode 🦄]] and [[https://orgmode.org/worg/][worg 🌈]]
+** Other Commands, functions, variables, keybindings
 
 Just press ~C-h o~ to get help on those symbols.
 
@@ -254,15 +274,19 @@ Just press ~C-h o~ to get help on those symbols.
 - =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
+- =dired-guess-shell-alist-user=
 - =display-time-day-and-date=
 - =display-time-mode=
+- =epa-pinentry-mode=
 - =format-time-string=
 - =describe-text-properties=
 - =face-remap-add-relative= and =face-remap-remove-relative= to easily modify faces in current buffer
 - =find-name-dired=
+- =frame-title-format=
 - =image-crop=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=
+- =make-list= and =number-sequence=
 - =mm-discouraged-alternatives=
 - =org-agenda-include-diary=
 - =org-agenda-custom-commands=
@@ -271,11 +295,12 @@ Just press ~C-h o~ to get help on those symbols.
 - =org-todo-keywords=
 - =pp-eval-expression=
 - =proced=
+- =project-switch-commands=
 - =shr-inhibit-images=
 - =string-match=
-- ~C-x @~
+- ~C-x @~ prefix allow to reach/remap alt/super/Hyper keys
 
-*** [[info:org#Working with Source Code][Org code-blocks]]
+** [[info:org#Working with Source Code][Org code-blocks]]
 
 #+begin_example org
 ,#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
@@ -283,7 +308,7 @@ Just press ~C-h o~ to get help on those symbols.
 ,#+END_SRC
 #+end_example
 
-*** String and Symbols
+** String and Symbols
 
 #+begin_src elisp
 (symbol-name 'some-symbol)
@@ -292,14 +317,14 @@ Just press ~C-h o~ to get help on those symbols.
 ; => some-symbol
 #+end_src
 
-*** Macros
+** Macros
 
 #+begin_src elisp
   (defmacro ++ (x)
     (list 'setq x (list '1+ x)))
 #+end_src
 
-*** Vectors
+** Vectors
 
 Get an element from a vector
 
@@ -314,7 +339,7 @@ What's the difference between =aref= and =elt=?
 =elt= is more general. It works on vector and list. But if you know
 it's vector, you should use =aref=, because it's precise and faster.
 
-*** Handle List
+** Handle List
 
 To find an element
 
@@ -326,7 +351,25 @@ To find an element
   (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 #+end_example
 
-*** (interactive) functions
+** Ibuffer
+
+To occur among marked buffers in =ibuffer= press ~O~.
+
+** Imenu
+** Eshell
+
+Download four random images from picsum using an index.
+
+#+begin_src elisp
+  for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
+#+end_src
+
+** EWW ~ experimenting with =eww-retrieve-command=
+
+Possible values for this variable could be
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
+
+** (interactive) functions
 
 Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
 
@@ -339,7 +382,7 @@ Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-functio
      (message (format "url: %s, handler: %s" url handler )))
 #+end_example
 
-*** Regular Expression Syntax (regexp)
+** Regular Expression Syntax (regexp)
 
 You can use the wonderful tool =regexp-builder=. Use =string-match= to run a regexp and =match-string= to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
 
@@ -411,7 +454,7 @@ Syntax classes:
   \s\   escape character
 #+end_quote
 
-*** Timers
+** Timers
 
 You can run specified function at specified time and with a specific timeout. Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
 
@@ -427,13 +470,13 @@ only one command available in the buffer displayed: c
 point.
 #+END_QUOTE
 
-*** Insert colorize text programmatically
+** Insert colorize text programmatically
 
 #+begin_example elisp
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 #+end_example
 
-*** Buffer management
+** Buffer management
 
 Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer][stackoverflow]].
 
@@ -449,7 +492,7 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   (delete-region (point-min) (point-max)))
 #+end_src
 
-*** Faces and fonts
+** Faces and fonts
 
 If you'd like to have a smaller font on compialtion buffers
 
@@ -472,11 +515,11 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 #+begin_src elisp
   (set-face-font 'default (seq-random-elt (font-family-list)))
 #+end_src
-*** Libaries
+** Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]
 
-*** Useful topics
+** Useful topics
 - [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key-Bindings in Emacs]]
 - [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
 - [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]
@@ -495,8 +538,7 @@ I would like to thanks:
 - [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
 - [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
 - [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄
-- [[https://orgmode.org/worg/][worg]] 🌈
 - [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
 - [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
 - [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
-
+- [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]]

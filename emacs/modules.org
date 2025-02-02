@@ -3,12 +3,23 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-12-10 Tue>
 #+STARTUP: overview
+#+PROPERTY: header-args :tangle (minemacs-tangle-if-not-disabled "minemacs-modules.el") :mkdirp yes
 
-* Patches
+* Org
+#+begin_src elisp
+  (use-package org
+    :bind
+    (:map org-mode-map
+          ("M-p" . #'org-move-subtree-up)
+          ("M-n" . #'org-move-subtree-down)))
+#+end_src
+
+* Overrides
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/patches.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "overrides.el") :mkdirp yes
 :END:
 
+** Bookmarks + browse-url
 Here add a custom bookmark handler relying on =browse-url= and =browse-url-handlers=, so even if we store a bookmark via =eww=, we're going to use the proper browser when opening it.
 
 #+begin_src emacs-lisp
@@ -21,42 +32,66 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (defalias #'eww-bookmark-jump #'browse-url-bookmark-jump)
 #+end_src
 
-* COMMENT Hail Hydra! 🐍 ⚠️ experimental ⚠️                            :disable:
+* Custom Helpers
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/hydra.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "custom-helpers.el") :mkdirp yes
 :END:
 
-Simple hydra.
-
 #+begin_src elisp
-  (use-package hydra
-    :bind
-    ("M-o h" . #'hydra-modal/body)
-    :config
-    (defhydra hydra-media (:color blue)
-	      "Media"
-	      ("y s" #'yeetube-search "youtube search")
-	      ("q" nil))
-
-    (defhydra hydra-modal (:color pink)
-      "Main Modal Mode."
-      ("n" #'next-line "_n_ext")
-      ("p" #'previous-line "_p_rev")
-      ("k" #'hydra-kommand/body "_k_ommand")
-      ("i" nil)
-      ("q" nil))
-
-    (defhydra hydra-kommand (:color blue)
-      ;; "Easily access most used commands: _a_genda _e_shell _c_apture _m_edia _q_uit"
-      ("a" #'org-agenda "agenda 📆")
-      ("e" #'eshell "eshell 🐚")
-      ("c" #'org-capture "capture 📘")
-      ("8" #'emoji-search "emoji 🙂")
-      ("m" #'hydra-media/body "media 🎵")
-      ("q" nil)))
+  (defun random-from-list (list)
+    (nth (random (length list)) list))
 #+end_src
 
-Advanced hydra.
+* Info and Help
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "info-help.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  ;; Enable rich annotations using the Marginalia package
+  (use-package marginalia
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+    ;; available in the *Completions* buffer, add it to the
+    ;; `completion-list-mode-map'.
+    :bind (:map minibuffer-local-map
+	   ("M-A" . marginalia-cycle))
+
+    ;; The :init section is always executed.
+    :init
+
+    ;; Marginalia must be activated in the :init section of use-package such that
+    ;; the mode gets enabled right away. Note that this forces loading the
+    ;; package.
+    (marginalia-mode))
+#+end_src
+
+#+begin_src elisp
+  (use-package helpful
+    :bind
+    ("C-h f" . #'helpful-callable)
+    ("C-h v" . #'helpful-variable)
+    ("C-h k" . #'helpful-key)
+    ("C-h x" . #'helpful-command))
+#+end_src
+
+** Show keybindings                                                 :disable:
+
+#+begin_src elisp
+  (use-package which-key
+    :config
+    (which-key-mode 1))
+#+end_src
+
+* Hail Hydra! 🐍
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "hydra.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (use-package hydra)
+#+end_src
+
+** Advanced hydra ⚠️ experimental ⚠️                                  :disable:
 
 #+begin_src elisp
   (use-package hydra
@@ -113,10 +148,42 @@ Advanced hydra.
 
 #+end_src
 
+* Eshell
+** Functions
+
+#+begin_src elisp
+  (defun eshell/ve (&rest args)
+    (let* ((cmd (car args))
+	   (argv (cdr args))
+	   (argl (string-join argv " ")))
+      (if argv (eshell-exec-visual cmd argl) (eshell-exec-visual cmd))))
+#+end_src
+
+** Scripts
+
+#+begin_src elisp :tangle ~/scripts/wallpaper-set.esh :mkdirp yes
+  set wallpaper ${random-from-list ${ls ~/Pictures/wallpapers/*}}
+  ln -sf $wallpaper  ~/Pictures/wallpaper
+  feh --bg-fill ~/Pictures/wallpaper
+#+end_src
+
+* imenu
+
+#+begin_src elisp
+  (use-package imenu
+    :init
+    (setq eww-imenu-heading-expression '((nil "^* +\\(.+\\)" 1))
+	  eshell-imenu-commands-expression '((nil "\$ \\(\\w+\\)" 1)))
+    :hook
+    (eww-mode . (lambda () (setq imenu-generic-expression eww-imenu-heading-expression)))
+    (eshell-mode . (lambda () (setq imenu-generic-expression eshell-imenu-commands-expression))))
+#+end_src
+
 * IDE 🖥️
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/ide.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "ide.el") :mkdirp yes
 :END:
+
 ** MacOS compatibility
 
 #+begin_src elisp
@@ -130,6 +197,14 @@ Advanced hydra.
 
 #+begin_src elisp
   (use-package markdown-mode)
+#+end_src
+
+** Data serialization
+
+#+begin_src elisp
+  (use-package csv)
+  (use-package csv-mode)
+  (use-package yaml-mode)
 #+end_src
 
 ** Programming languages
@@ -160,6 +235,11 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   (("C-x g" . #'magit-status)))
 #+end_src
 
+#+begin_src elisp
+  (use-package diff-hl
+    :config
+    (diff-hl-mode 1))
+#+end_src
 ** Docker
 
 #+begin_src elisp
@@ -168,7 +248,7 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   (use-package docker-compose-mode)
 #+end_src
 
-** Workspaces
+** Workspaces                                                       :disable:
 
 #+begin_src elisp
   (use-package tabspaces
@@ -251,7 +331,7 @@ curl https://cht.sh
 
 * Jarvis 🤖
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/jarvis.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "jarvis.el") :mkdirp yes
 :END:
 
 Jarvis is a module that enables some high-level/automation features.
@@ -271,43 +351,68 @@ Jarvis is a module that enables some high-level/automation features.
 #+end_src
 
 ** Youtube 🎥
+*** Helper functions
 
+Given a Youtuve channel URL, returns the channel ID. This is  useful in cases like when you want to get the RSS feed of a Youtube channel.
+
+#+begin_src elisp
+  (defun jarvis-youtube-get-channel-rss (url)
+    "Given a Youtuve channel URL, returns the channel ID. This is
+  useful in cases like when you want to get the RSS feed of a Youtube channel."
+    (interactive "sYoutube channel url: ")
+    (let* ((url-user-agent "curl/8.7.1")
+	   (url-request-extra-headers '(("Accept" . "*/*")))
+	   (buffer (url-retrieve-synchronously url)))
+      (with-current-buffer buffer
+	(let* ((dom (libxml-parse-html-region))
+	       (link (dom-search dom
+				 (lambda (el)
+				   (and (string= (dom-tag el) "link")
+					(string= (dom-attr el 'itemprop) "url")))))
+	       (channel-id-url (and link (dom-attr link 'href))))
+	  (if channel-id-url
+	      (let ((_ (string-match "/channel/\\(\\w+\\)" channel-id-url))
+		    (id (match-string 1 channel-id-url)))
+		(message "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
+#+end_src
+
+*** Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)
 Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
 
 #+begin_src elisp
-  (defcustom jarvis/youtube-sources '()
-    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
-    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+    (defcustom jarvis/youtube-sources '()
+      "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+      :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
-  (defun jarvis/play-youtube (&optional url)
-    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
-    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
-    (let ((command (format "mpv \"%s\"" url))
-	(buffer-name (format "mpv: %s" url)))
-      (async-shell-command command buffer-name)))
+    (defun jarvis/play-youtube (&optional url)
+      "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+      (let ((command (format "mpv \"%s\"" url))
+	  (buffer-name (format "mpv: %s" url)))
+	(async-shell-command command buffer-name)))
 
-  (defun jarvis/open-random-youtube ()
-    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
-    (interactive)
-    (let ((entry (minemacs-random jarvis/youtube-sources))
-	  (url (nth 1 entry)))
-      (jarvis/open-youtube url)))
+    (defun jarvis/open-random-youtube ()
+      "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+      (interactive)
+      (let ((entry (minemacs-random jarvis/youtube-sources))
+	    (url (nth 1 entry)))
+	(jarvis/open-youtube url)))
 
-  (defun jarvis/open-youtube (&optional url)
-    "Open in browser one of the sources in `jarvis/youtube-sources`."
-    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
-    (browse-url-default-browser url))
+    (defun jarvis/open-youtube (&optional url)
+      "Open in browser one of the sources in `jarvis/youtube-sources`."
+      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+      (browse-url-default-browser url))
 #+end_src
 
-Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
+*** Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
 
 #+begin_src elisp
   (use-package request)
 
   (defcustom jarvis/youtube-api-key "" "Youtube API key")
   (cl-defstruct (youtube-video (:constructor youtube-video-create)
-			     (:copier nil))
-    id title desc)
+			       (:copier nil))
+    id title desc url channel channel-url categories tags)
 
   (defun jarvis/youtube-search (query)
     "Returns a list of youtube vidoes given a search term."
@@ -316,7 +421,7 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
       :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 3))
       :parser 'json-read
       :success (cl-function
-	      (lambda (&key data &allow-other-keys)
+		(lambda (&key data &allow-other-keys)
 		  (when data
 		    (with-current-buffer (get-buffer-create "*youtube-vids*")
 		      (erase-buffer)
@@ -326,35 +431,301 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
   (defun jarvis/youtube-video (url)
     "Returns details about a Youtube video given an URL"
     (interactive "sURL: ")
-    (let ((id (jarvis/youtube--extract-video-id url)))
+    (let ((id (jarvis/youtube--extract-id url)))
       (request "https://www.googleapis.com/youtube/v3/videos"
-	:params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics"))
+	:params `(("id" . ,id) ("key" . ,jarvis/youtube-api-key) ("maxResults" . 1) ("part" . "snippet,contentDetails,statistics,topicDetails,status,localizations"))
 	:parser 'json-read
 	:success (cl-function
-		(lambda (&key data &allow-other-keys)
+		  (lambda (&key data &allow-other-keys)
 		    (when data
-		      (with-current-buffer (get-buffer-create "*youtube-vid*")
-			(erase-buffer)
 		      (let* ((items (alist-get 'items data))
 			     (video-data (elt items 0))
 			     (video (let-alist video-data
 				      (youtube-video-create
 				       :title .snippet.title
-				       :desc .snippet.title))))
-			(insert (prin1-to-string video))
-			(beginning-of-buffer))
-			(pop-to-buffer (current-buffer)))))))))
+				       :url .snippet.webpage-url
+				       :channel .snippet.channel
+				       :channel-url .snippet.channel-url
+				       :categories .snippet.categories
+				       :tags .snippet.tags
+				       :desc .snippet.description)))
+			     (buffer-name "*yt-vid*")) ; (normalize-string (youtube-video-title video))))
+			(with-current-buffer (get-buffer-create buffer-name)
+			  (erase-buffer)
+			  (insert (prin1-to-string video-data))
+			  ;; (insert (format "# [%s](%s)" (youtube-video-title video) (youtube-video-url video)))
+			  ;; (insert ?\n)
+			  ;; (insert (format "From [%s](%s)\n" (youtube-video-channel video) (youtube-video-channel-url video)))
+			  ;; (insert (youtube-video-desc video))
+			  (beginning-of-buffer)
+			  (pop-to-buffer (current-buffer))))))))))
 
-  (defun jarvis/youtube--extract-video-id (string)
+  (defun normalize-string (str)
+    (require 'cl-lib)
+    (require 'ucs-normalize)
+    (let* ((dstr (downcase str))
+	   (fstr (cl-remove-if
+		 (lambda (char)
+		   (> char 127))
+		 (ucs-normalize-NFKD-string dstr))))
+      fstr))
+
+  (defun jarvis/youtube--extract-id (string)
     "Extract the id from a Youtube video URL"
     (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" string)))
       (match-string 1 string)))
 #+end_src
 
+** Collector 🗄️
+
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
+  (use-package s)
+  (require 'cl-lib)
+  (require 'dom)
+  (require 'ucs-normalize)
+
+  (defun minemacs-jarvis-dashitize-string (str)
+    (cl-remove-if
+     (lambda (char)
+       (> char 127))
+     (ucs-normalize-NFKD-string (s-dashed-words str))))
+
+  (defvar minemacs-jarvis-collector-directory "~/Public/collector"
+    "Base directory where to put the collected Youtube videos.")
+
+  (defun minemacs-jarvis-collector--build-filename (vid)
+    (minemacs-jarvis-dashitize-string (plist-get vid :title)))
+
+  (defun minemacs-jarvis-collector--build-pathname (vid)
+    (let* ((id (plist-get vid :id))
+	   (name (minemacs-jarvis-collector--build-filename vid))
+	   (filename (format "%s-%s.org" id name)))
+      (expand-file-name filename minemacs-jarvis-collector-directory)))
+
+  (defun minemacs-jarvis-collector--insert-org-content (vid buffer)
+    (let* ((org-content-header (concat (minemacs-jarvis-collector--org-headers vid)
+				       (minemacs-jarvis-collector--org-content-embed vid)
+				       (minemacs-jarvis-collector--org-content-details vid)
+				       (minemacs-jarvis-collector--org-content-description vid)))
+	   (transcript-dom (plist-get vid :transcript-dom))
+	   (transcript-text (dom-texts transcript-dom)))
+      (with-current-buffer buffer
+	(erase-buffer)
+	(insert org-content-header)
+	(if transcript-dom
+	    (insert (format "\n** Transcript
+
+  ,#+begin_quote
+  %s
+  ,#+end_quote
+  "
+			    transcript-text))))))
+  (defun minemacs-jarvis-collector--org-headers (vid)
+    (let* ((title (plist-get vid :title))
+	   (link (plist-get vid :webpage-url))
+	   (author (user-full-name))
+	   (date (plist-get vid :fetched-at))
+	   (humanized-date (and date (format-time-string "%F %a" date))))
+      (format
+       "#+TITLE: %s
+  ,#+AUTHOR: %s
+  ,#+DATE: <%s>
+  ,#+OPTIONS: toc:nil num:nil title:nil
+
+  ,* [[%s][%s]]
+  "
+       title author humanized-date link title)))
+
+  (defun minemacs-jarvis-collector--org-content-details (vid)
+    (let* ((title (plist-get vid :title))
+	   (webpage-url (plist-get vid :webpage-url))
+	   (channel (plist-get vid :channel))
+	   (channel-url (plist-get vid :channel-url))
+	   (channel-follower-count (plist-get vid :channel-follower-count))
+	   (humanized-duration (plist-get vid :duration))
+	   (fetched-at (plist-get vid :fetched-at))
+	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
+	   (like-count (plist-get vid :like-count))
+	   (view-count (plist-get vid :view-count))
+	   (thumbnail-url (plist-get vid :thumbnail-url)))
+      (format
+       "
+  📹 *Published by* [[%s][%s]] (🧑 %s followers)
+  🔄 *Last sync at* %s
+
+  🕓 *Duration:* %s
+  ❤️ *Likes:* %s 
+  👀 *Views:* %s
+
+  " channel-url channel channel-follower-count humanized-fetched-at humanized-duration like-count view-count)))
+
+  (defun minemacs-jarvis-collector--org-content-embed (vid)
+    (let ((id (plist-get vid :id))
+	  (title (plist-get vid :title)))
+      (format "
+  ,#+BEGIN_EXPORT html
+  <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>
+  ,#+END_EXPORT
+  " id title)))
+
+  (defun minemacs-jarvis-collector--org-content-description (vid)
+    (let ((description (plist-get vid :description)))
+      (unless (string-blank-p description)
+	(format
+	 "\n** Description
+
+  %s
+  " description))))
+
+  (defun minemacs-jarvis-collector--extract-thumbnail-url (json)
+    (let* ((thumbnails (gethash "thumbnails" json))
+	   (filter-resolution-thumbnails
+	    (lambda (thumbnail)
+	      (let ((height (gethash "height" thumbnail))
+		    (width (gethash "width" thumbnail))
+		    (preference (gethash "preference" thumbnail)))
+		(and width preference (> width 300) (> preference -12)))))
+	   (sort-thumbnails
+	    (lambda (t1 t2)
+	      (let ((t1ref (gethash "preference" t1))
+		    (t2ref (gethash "preference" t2)))
+		(< t1ref t2ref))))
+	   (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
+	   (target-thumbnail (car preferred-thumbnails)))
+      (and target-thumbnail (gethash "url" target-thumbnail))))
+
+  (defun minemacs-jarvis-collector--find-transcript-format (json)
+    (let* ((auto-captions (gethash "automatic_captions" json))
+	   (langs (hash-table-keys auto-captions))
+	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
+	   (orig-lang (gethash orig-lang-key auto-captions))
+	   (ttml-format (seq-find
+			 (lambda (format)
+			   (let* ((ext (gethash "ext" format))
+				  (res (string= "ttml" ext)))
+			     res))
+			 orig-lang))
+	   (script-url (and ttml-format (gethash "url" ttml-format))))
+      script-url))
+
+  (defun minemacs-jarvis-collector--parse-info (data)
+    (let* ((id (gethash "id" data))
+	  (vid (list
+		 :id id
+		 :title (gethash "title" data)
+		 :description (string-trim (gethash "description" data))
+		 :channel (gethash "channel" data)
+		 :channel-url (gethash "channel_url" data)
+		 :channel-follower-count (gethash "channel_follower_count" data)
+		 :duration (gethash "duration" data)
+		 :like-count (gethash "like_count" data)
+		 :view-count (gethash "view_count" data)
+		 :average-rating (gethash "average_rating" data)
+		 :webpage-url (gethash "webpage_url" data)
+		 :categories (gethash "categories" data)
+		 :tags (gethash "tags" data)
+		 :thumbnail-url (minemacs-jarvis-collector--extract-thumbnail-url data)
+		 :script-url (minemacs-jarvis-collector--find-transcript-format data)
+		 :transcript-dom (gethash "transcript_dom" data)
+		 :fetched-at (gethash "fetched_at" data)
+		 )))
+      vid))
+
+  (defun minemacs-jarvis-collector--fetch-transcript (url)
+    (if url (with-current-buffer (url-retrieve-synchronously url)
+	      (let* ((dom (xml-parse-region))
+		     (body (car (dom-by-tag dom 'body)))
+		     (div (car (dom-by-tag body 'div))))
+		div))))
+
+  (defun minemacs-jarvis-collector--create-file (vid)
+    (let ((id (plist-get vid :id))
+	  (pathname (minemacs-jarvis-collector--build-pathname vid))
+	  (coding-system-for-write 'raw-text))
+      (with-temp-file pathname
+	(set-buffer-file-coding-system 'raw-text)
+	(minemacs-jarvis-collector--insert-org-content vid (current-buffer)))
+      pathname))
+
+  (defun minemacs-jarvis-collector--get-cache-entry-name (url)
+    (file-name-concat
+     minemacs-jarvis-collector-directory
+     ".cache"
+     (concat
+      (minemacs-jarvis-collector--extract-id-from-url url)
+      "-"
+      (md5 url))))
+
+  (defun minemacs-jarvis-collector--get-cache (url)
+    (let* ((filename (minemacs-jarvis-collector--get-cache-entry-name url)))
+      (and
+       (file-readable-p filename)
+       (with-temp-buffer
+	 (insert-file-contents filename)
+	 ;;(cl-assert (eq (point) (point-min)))
+	 (read (current-buffer))))))
+
+  (defun minemacs-jarvis-collector--set-cache (url data)
+    (let* ((name (md5 url))
+	   (filename (minemacs-jarvis-collector--get-cache-entry-name url))
+	   (base-dir (file-name-directory filename)))
+      (mkdir base-dir t)
+      (with-temp-file filename (prin1 data (current-buffer)))))
+
+  (defun minemacs-jarvis-collector--extract-id-from-collected-vid (file)
+    (let ((filename (file-name-base file)))
+      (and (string-match "\\(\\ca\\{11\\}\\)-" filename) (match-string 1 filename))))
+
+  (defun minemacs-jarvis-collector--extract-id-from-url (url)
+    (or
+     (and (string-match "v=\\(\\ca\\{11\\}\\)" url) (match-string 1 url))
+     (and (string-match "/\\(\\ca\\{11\\}\\)$" url) (match-string 1 url))))
+
+  (defun minemacs-jarvis-collector--canonize-url (url)
+    (let ((id (minemacs-jarvis-collector--extract-id-from-url url)))
+      (and id (format "https://www.youtube.com/watch?v=%s" id))))
+
+  (defun minemacs-jarvis-collector-fetch-info (url &optional force)
+    (let ((cache-value (minemacs-jarvis-collector--get-cache url)))
+      (if (and cache-value (not force))
+	  (minemacs-jarvis-collector--parse-info cache-value)
+	(with-temp-buffer
+	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	  ;;(insert-file "~/Desktop/vid.json") ; debug line
+	  (goto-char 0)
+	  (ignore-error json-parse-error
+	    (let* ((json (json-parse-buffer))
+		   (vid (minemacs-jarvis-collector--parse-info json))
+		   (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+		   (vid (plist-put vid :transcript-dom transcript-dom)))
+	      (puthash "fetched_at" (current-time) json)
+	      (puthash "transcript_dom" transcript-dom json)
+	      (minemacs-jarvis-collector--set-cache url json)
+	      vid))))))
+
+  (defun minemacs-jarvis-collected-vids ()
+    "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
+    (let ((files (directory-files minemacs-jarvis-collector-directory t "\\.org")))
+      (mapcar (lambda (file)
+		(let* ((id (minemacs-jarvis-collector--extract-id-from-collected-vid file))
+		      (url (minemacs-jarvis-collector--canonize-url (concat "/" id))))
+		  (cons url file)))
+	      files)))
+
+  (defun minemacs-jarvis-collect (url &optional force-fetch)
+    (interactive "sYoutube video URL: ")
+    (let ((force-fetch (or current-prefix-arg force-fetch)))
+      (if-let* ((url (minemacs-jarvis-collector--canonize-url url))
+		(vid (minemacs-jarvis-collector-fetch-info url force-fetch))
+		(pathname (minemacs-jarvis-collector--create-file vid)))
+	  (and (called-interactively-p 'any) (find-file pathname))
+	pathname)))
+#+end_src
+
 ** Speak 🗣️
 
 #+begin_src elisp
-  (defun jarvis/speak (text)
+  (defun jarvis/espeak (text)
     "Speak text using `espeak`."
     (interactive (list
   		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
@@ -364,7 +735,7 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
 
 * Look and feel 🎨
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/look_n_feel.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "look_n_feel.el") :mkdirp yes
 :END:
 ** Icons
 
@@ -416,7 +787,15 @@ Fetch data from the Google APIs ([[https://developers.google.com/apis-explorer?h
     (global-org-modern-mode))
 #+end_src
 
-** Highlight line
+** [[https://www.emacswiki.org/emacs/TransparentEmacs][Transparent Emacs]]
+
+Remember you need a compositing manager to handle transparency (compton, compiz or else).
+
+#+begin_src elisp
+  (set-frame-parameter nil 'alpha-background 85)
+#+end_src
+
+** Highlight line                                                   :disable:
 
 #+begin_src elisp
   (use-package beacon
@@ -455,6 +834,7 @@ Install the =doom-modeline=.
     :hook (after-init . doom-modeline-mode))
 #+end_src
 
+#+end_src
 ** Headline
 
 #+begin_src elisp
@@ -466,7 +846,7 @@ Install the =doom-modeline=.
 
 * Multimedia 🎶
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/media.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "media.el") :mkdirp yes
 :END:
 
 ** Bongo
@@ -491,9 +871,29 @@ The **MPV** backend by default is able to play "http" URIs, but when you add a "
 	  ("m s" . #'empv-youtube)))
 #+end_src
 
+** Pulseaudio interface
+
+#+begin_src elisp
+    (use-package pulseaudio-control
+      :after hydra
+      :defer t
+      :config
+      (defhydra hydra-pulseaudio-control (:color amaranth)
+	"
+  Control audio (pulseaudio)
+  🔊 [n] decrease | 🔉 [_p_] decrease | 🔇 _m_ute == _q_uit
+  "
+	("p" (lambda () (interactive) (pulseaudio-control-increase-sink-volume 5)) nil)
+	("n" (lambda () (interactive) (pulseaudio-control-decrease-sink-volume 5)) nil)
+	("m" (lambda () (interactive) (pulseaudio-control-toggle-current-sink-mute)) nil)		       
+	("q" nil nil))
+      :bind
+      (:map minemacs-map (("m v" . hydra-pulseaudio-control/body))))
+#+end_src
+
 * News 📰 and Mail 📬
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/news-mail.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "news-mail.el") :mkdirp yes
 :END:
 ** RSS
 
@@ -682,19 +1082,9 @@ Then configure the =gnus-select-method=
 		 (nnimap-stream ssl)))
 #+end_example
 
-* Web browsing
-:PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/web-browsing.el") :mkdirp yes
-:END:
-** EWW
-*** Experimenting with =eww-retrieve-command=
-
-Possible values for this variable could be
-=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
-
 * Utils ⚒️
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/utils.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "utils.el") :mkdirp yes
 :END:
 ** Password management
 
@@ -750,7 +1140,7 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
       :keybinding "i")
 
     (defengine google-maps
-      "http://maps.google.com/maps?q=%s"
+      "https://maps.google.com/maps?q=%s"
       :docstring "Google Maps"
       :keybinding "m")
 
@@ -797,27 +1187,108 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
     (engine-mode t))
 #+end_src
 
-* Emacs as Window Manager                                           :disable:
+* Emacs as Window Manager
 :PROPERTIES:
-:header-args: :tangle (minemacs-tangle-if-not-disabled "~/.emacs.d/modules/exwm.el") :mkdirp yes
+:header-args: :tangle (minemacs-tangle-if-not-disabled "exwm.el") :mkdirp yes
 :END:
+
+** exwm
+Useful links:
+
+- [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
+
+#+begin_src elisp
+  (use-package vertico-posframe
+    :if (getenv "EXWM")
+    :config
+    (vertico-posframe-mode 1))
+#+end_src
 
 #+begin_src elisp
   (use-package exwm
+    :if (getenv "EXWM")
+    :bind
+    (:map key-translation-map
+	  ("s-m" . nil))
+    ;; ("<XF86AudioLowerVolume>" . #'pulseaudio-control-decrease-sink-volume)
+    ;; ("<XF86AudioRaiseVolume>" . #'pulseaudio-control-increase-sink-volume)
+    ;; ("<XF86AudioMute>" . #'pulseaudio-control-toggle-current-sink-mute)
+    ("<XF86AudioPlay>" . #'minemacs-media-toggle-pause)
     :config
     (server-mode 1)
-    ;; (require 'exwm-config)
-    (exwm-config-example)
-    ;; (require 'exwm-randr)
-    ;; (exwm-randr-enable)
-    ;; (setq exwm-workspace-number 2
-    ;; 	  exwm-randr-workspace-monitor-plist '(0 "DP-2" 1 "eDP-1"))
-    ;; (defun holymacs/xrandr-set-monitors ()
-    ;;   (start-process-shell-command "xrandr" nil
-    ;; 				   ;; "xrandr --output DP-2 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output eDP-1 --1920x1080 --left-of DP-2"
-    ;; 				   "xrandr --output eDP-1 --primary --mode 1920x1080"
-    ;; 				   ))
-    ;; (add-hook 'exwm-randr-screen-change-hook #'holymacs/xrandr-set-monitors)
+    (display-battery-mode 1)
+    (require 'exwm)
+    (setq exwm-workspace-number 1)
+    ;; Make class name the buffer name.
+    (add-hook 'exwm-update-class-hook
+	      (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
+    ;; Global keybindings.
+    (setq exwm-systemtray-height 25
+	  exwm-input-global-keys
+	  `(([?\s-k] . execute-extended-command)
+	    ([?\s-m] . exwm-reset)
+	    ([?\s-M] . exwm-input-release-keyboard)
+	    ([?\s-\]] . next-buffer)
+	    ([?\s-\[] . previous-buffer)
+	    ([?\s-`] . other-frame)))
+
+    (setq exwm-input-simulation-keys
+	  '(([?\C-b] . [left])
+	    ([?\C-f] . [right])
+	    ([?\C-p] . [up])
+	    ([?\C-n] . [down])
+	    ([?\C-a] . [home])
+	    ([?\C-e] . [end])
+	    ([?\M-v] . [prior])
+	    ([?\C-v] . [next])
+	    ([?\C-d] . [delete])
+	    ([?\C-k] . [S-end delete])))
+
+    (exwm-enable)
     (require 'exwm-systemtray)
-    (exwm-systemtray-enable))
+    (exwm-systemtray-mode 1))
 #+end_src
+
+** System configuration (Linux Mint/Ubuntu)
+:PROPERTIES:
+:header-args: :tangle no
+:END:
+
+Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at =/usr/local/bin/exwm.sh=.
+
+#+begin_example sh :tangle /usr/local/bin/exwm.sh
+  #!/bin/sh
+
+  ## Set capslock as ctrl
+  #
+  setxkbmap -layout us -option ctrl:nocaps
+
+  ## Programs to start upon startup
+  #
+
+  dbus-launch xfsettingsd &
+  dbus-launch xfce4-power-manager &
+  dbus-launch nm-applet &                     # Network Manager
+  dbus-launch pasystray &                     # Pulseaudio volume control from tray
+  dbus-launch dex -a -e i3 &
+
+  ## Start emacs
+  #
+  export EXWM=true
+  # exec dbus-launch --exit-with-session emacs
+  exec dbus-run-session emacs
+#+end_example
+
+In order to have the =EXWM= desktop environment available in the Login manager menu (i.e. LightDM) add this to =/usr/share/xsessions/exwm.desktop=
+
+#+begin_example conf :tangle /usr/share/xsessions/exwm.desktop
+[Desktop Entry]
+Name=Exwm
+Comment=Emacs as Window Manager
+Exec=/usr/local/bin/exwm.sh
+TryExec=emacs
+Type=Application
+X-LightDM-DesktopName=exwm
+DesktopNames=exwm
+Keywords=tiling;wm;windowmanager;window;manager;emacs;
+#+end_example

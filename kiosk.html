@@ -203,33 +203,231 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org016acc6">Using Elixir as Kiosk</a>
+<li><a href="#orgeb36212">Kiosk app</a>
+<ul>
+<li><a href="#org1092ebb">Darbula (Elixir/Phoenix)</a>
 <ul>
 <li><a href="#orgd7bd4b3">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#orgeb0e4f2">Simulate keyboard events</a></li>
-<li><a href="#orga689106">Use Browser in kiosk mode</a></li>
-<li><a href="#orga4ec46a">Other resources</a></li>
 </ul>
 </li>
-<li><a href="#org1cacce5">Using Emacs and Org as Kiosk (Midori)</a></li>
+</ul>
+</li>
+<li><a href="#org53b5abc">Browsers</a>
+<ul>
+<li>
+<ul>
+<li><a href="#orga36f05b">Chromium</a></li>
+<li><a href="#orgab23cf5">Old RPi models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgb40bd4d">System setup</a>
+<ul>
+<li><a href="#orgf413f14">Screen setup</a>
+<ul>
+<li><a href="#org7f0ea87">Wayland vs X11</a></li>
+<li><a href="#orgb6541d3">Window manager</a></li>
+</ul>
+</li>
+<li><a href="#orge2fe595">Setup PulseAudio</a></li>
+</ul>
+</li>
+<li><a href="#org7ce397e">Additional notes</a>
+<ul>
+<li><a href="#orgeb0e4f2">Simulate keyboard events</a></li>
+<li><a href="#orga59d2d6">Emacs + Org + Midori</a></li>
+</ul>
+</li>
+<li><a href="#orga9f4a81">Resources</a></li>
 </ul>
 </div>
 </div>
+<p>
+These are some notes on how I turned my Raspberry Pi into a <i>Kiosk</i>.
+</p>
 
-<div id="outline-container-org016acc6" class="outline-2">
-<h2 id="org016acc6">Using Elixir as Kiosk</h2>
-<div class="outline-text-2" id="text-org016acc6">
+<p>
+The equipment:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.raspberrypi.com/products/raspberry-pi-4-model-b/">Raspberry Pi 4</a> + <a href="https://www.waveshare.com/4.3inch-dsi-lcd.htm">Waveshare 4.3inch Capacitive Touch Display (DSI Interface, 800×480)</a> within <a href="https://amzn.eu/d/fDUc4BF">ad-hoc case</a></li>
+<li>an external TV with an HDMI cable (+ mini-HDMI adapter that plugs in the rpi case)</li>
+</ul>
+
+<div id="outline-container-orgeb36212" class="outline-2">
+<h2 id="orgeb36212">Kiosk app</h2>
+<div class="outline-text-2" id="text-orgeb36212">
 </div>
-<div id="outline-container-orgd7bd4b3" class="outline-3">
-<h3 id="orgd7bd4b3">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-orgd7bd4b3">
+<div id="outline-container-org1092ebb" class="outline-3">
+<h3 id="org1092ebb">Darbula (Elixir/Phoenix)</h3>
+<div class="outline-text-3" id="text-org1092ebb">
+</div>
+<div id="outline-container-orgd7bd4b3" class="outline-4">
+<h4 id="orgd7bd4b3">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h4>
+<div class="outline-text-4" id="text-orgd7bd4b3">
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
 </pre>
 </div>
 </div>
 </div>
+</div>
+</div>
 
+<div id="outline-container-org53b5abc" class="outline-2">
+<h2 id="org53b5abc">Browsers</h2>
+<div class="outline-text-2" id="text-org53b5abc">
+</div>
+<div id="outline-container-orga36f05b" class="outline-4">
+<h4 id="orga36f05b">Chromium</h4>
+<div class="outline-text-4" id="text-orga36f05b">
+<p>
+Use Chromium/Firefox as browser works well only on RPi &gt; 1
+</p>
+
+<p>
+Start Chromium in Kiosk mode within Wayland.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+</pre>
+</div>
+
+<p>
+Start Chromium in Kiosk mode within X11.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgab23cf5" class="outline-4">
+<h4 id="orgab23cf5">Old RPi models</h4>
+<div class="outline-text-4" id="text-orgab23cf5">
+<p>
+For old devices (RPi 1) Midori browser looks promising. The only problem is the <code>e jump-to</code> command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
+</p>
+
+<p>
+P.S. Epiphany: it has interesting options like <code>automation-mode</code> but didn't have the time to inspect more.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgb40bd4d" class="outline-2">
+<h2 id="orgb40bd4d">System setup</h2>
+<div class="outline-text-2" id="text-orgb40bd4d">
+</div>
+<div id="outline-container-orgf413f14" class="outline-3">
+<h3 id="orgf413f14">Screen setup</h3>
+<div class="outline-text-3" id="text-orgf413f14">
+</div>
+<div id="outline-container-org7f0ea87" class="outline-4">
+<h4 id="org7f0ea87">Wayland vs X11</h4>
+<div class="outline-text-4" id="text-org7f0ea87">
+<p>
+With Wayland I've encountered many troubles trying to manage the monitors (TV + touchscreen) via command line tools (<code>wlr-randr</code>); it handles the virtual monitor in a different way and it lacks handy options like <code>--same-as</code>. For this reason I've decided to temporary drop Wayland in favor of the good old X11.
+I've used <code>raspi-config</code> in order to use the standard <code>X11</code> server.
+</p>
+
+<p>
+In order to have the same contents both on TV and the touchscreen I've used <code>xrandr</code> to mirror the output in almost the same layout
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480 --scale 2.2 --same-as HDMI-1
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb6541d3" class="outline-4">
+<h4 id="orgb6541d3">Window manager</h4>
+<div class="outline-text-4" id="text-orgb6541d3">
+<p>
+Even if the main purpose of the <i>Kiosk</i> is to display a browser window in fullscreen mode (or kiosk mode, if the browser supports it), and since I do most of the operations on the Raspberry via SSH, I could leave the default LXDE window manager. But since I've two monitors, I'd like to take advantage and use both of them in different way instad of just replicate the same contents. Since I've no mouse, I want to launch apps and have them to be arranged automatically via <b>rules</b>. I don't want to investigate LXDE configuration files, or if it can be achieved via some XDG files: I use i3 every day and it allow to span windows across workspaces (and screens) by defining simple rules. For this reason I'll install i3 and I'll configure the system to auto-login in a i3 session.
+</p>
+
+<p>
+<b>N.B.</b> At the time of writing I was able to install and setup i3, but I haven't defined any rules yet, even because I've to decide how to use the touchscreen. 
+</p>
+
+<ol class="org-ol">
+<li><code>sudo apt install i3</code></li>
+<li>update LightDM conf (<code>/etc/lightdm/lightdm.conf</code>) in order to set the
+<code>autologin-session</code> to <code>i3</code></li>
+<li><code>sudo update-alternatives --config x-session-manager</code> and <code>sudo update-alternatives --config x-window-manager</code> and set i3</li>
+</ol>
+
+<p>
+I'm not sure the step <b>3</b> is really needed, I'll investigate more later.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge2fe595" class="outline-3">
+<h3 id="orge2fe595">Setup PulseAudio</h3>
+<div class="outline-text-3" id="text-orge2fe595">
+<p>
+Due to the troubles about Wayland, I've decided to switched back to PulseAudio instead of PipeWire. Since the Raspberry case does not have any speaker, I want to reproduce the sounds via the TV (HDMI). In order to do that I had to set the PulseAudio default sink to the HDMI card device:
+</p>
+
+<ol class="org-ol">
+<li>get the device index via</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacmd list-sinks
+</pre>
+</div>
+
+<p>
+the current default sink has an asterisk near the index.
+</p>
+
+<pre class="example">
+index: 1
+  name: &lt;alsa_output.platform-fef00700.hdmi.hdmi-stereo&gt;
+  driver: &lt;module-alsa-card.c&gt;
+</pre>
+
+<ol class="org-ol">
+<li>find the index of the HDMI device and use it (assume it's <code>1</code>)</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-sh">pacmd set-default-sink 1
+</pre>
+</div>
+
+<p>
+To verify I rerun <code>pacmd list-sinks</code> and check for the <code>*</code>.
+</p>
+
+<pre class="example">
+* index: 1
+      name: &lt;alsa_output.platform-fef00700.hdmi.hdmi-stereo&gt;
+      driver: &lt;module-alsa-card.c&gt;
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org7ce397e" class="outline-2">
+<h2 id="org7ce397e">Additional notes</h2>
+<div class="outline-text-2" id="text-org7ce397e">
+</div>
 <div id="outline-container-orgeb0e4f2" class="outline-3">
 <h3 id="orgeb0e4f2">Simulate keyboard events</h3>
 <div class="outline-text-3" id="text-orgeb0e4f2">
@@ -241,49 +439,9 @@ Wayland: <code>XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Ta
 </div>
 </div>
 
-<div id="outline-container-orga689106" class="outline-3">
-<h3 id="orga689106">Use Browser in kiosk mode</h3>
-<div class="outline-text-3" id="text-orga689106">
-<p>
-Use Chromium/Firefox as browser works well only on RPi &gt; 1
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">sleep 11
-
-XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-featur\
-es=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
-</pre>
-</div>
-
-<ul class="org-ul">
-<li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
-</ul>
-
-<p>
-For old devices (RPi 1) Midori browser looks promising. The only problem is the <code>e jump-to</code> command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
-</p>
-
-<p>
-P.S. Epiphany: it has interesting options like <code>automation-mode</code> but didn't have the time to inspect more.
-</p>
-</div>
-</div>
-
-<div id="outline-container-orga4ec46a" class="outline-3">
-<h3 id="orga4ec46a">Other resources</h3>
-<div class="outline-text-3" id="text-orga4ec46a">
-<ul class="org-ul">
-<li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
-<li><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org1cacce5" class="outline-2">
-<h2 id="org1cacce5">Using Emacs and Org as Kiosk (Midori)</h2>
-<div class="outline-text-2" id="text-org1cacce5">
+<div id="outline-container-orga59d2d6" class="outline-3">
+<h3 id="orga59d2d6">Emacs + Org + Midori</h3>
+<div class="outline-text-3" id="text-orga59d2d6">
 <p>
 Install midori.
 </p>
@@ -334,7 +492,7 @@ This is a sample <code>index</code> page written in org. You can export as HTML 
 </div>
 
 <p>
-Or you can just write yout ouwn HTML.
+Or you can just write yout own HTML.
 </p>
 
 <div class="org-src-container">
@@ -350,6 +508,18 @@ Or you can just write yout ouwn HTML.
 &lt;/html&gt;
 </pre>
 </div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga9f4a81" class="outline-2">
+<h2 id="orga9f4a81">Resources</h2>
+<div class="outline-text-2" id="text-orga9f4a81">
+<ul class="org-ul">
+<li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
+<li><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/</a></li>
+</ul>
 </div>
 </div>
 </div>
