@@ -15,3 +15,17 @@ Here's some resources:
 - ⚠️ work-in-progress ⚠️ [[file:emacs/minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
 - [[file:holymacs.org][Holymacs]] ([[eww:/holymacs.org][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
 - [[/init.el][init.el]] (real minimal configuration adding only =god-mode= as /modal editing/ layer)
+
+
+Here's some /credits/ from other adepts for their inspiring work 😁
+- [[https://www.youtube.com/watch?v=sBc7toJaCxw][Returning to the Church (of Emacs)]] by [[https://joshblais.com/][Joshua Blais]]
+- [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
+- [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
+- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
+- [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
+- [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
+- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄
+- [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
+- [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
+- [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
+- [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]]

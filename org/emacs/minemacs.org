@@ -266,6 +266,8 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 :PROPERTIES:
 :header-args: :tangle no
 :END:
+** [[https://raw.githubusercontent.com/emacs-tw/awesome-elisp/refs/heads/master/README.org][Awesome Elisp]]
+** Online documentation for [[http://orgmode.org][org-mode 🦄]] and [[https://orgmode.org/worg/][worg 🌈]]
 ** Other Commands, functions, variables, keybindings
 
 Just press ~C-h o~ to get help on those symbols.
@@ -534,17 +536,3 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 	  (end (point-max)))
       (buffer-substring start end))
   #+end_example
-* Credits
-
-I would like to thanks:
-- [[http://kelvinh.github.io/][Kelvin Hu]] for his [[https://github.com/kelvinh/.emacs.d][emacs configuration]] and the idea to write it in a *literate style*.
-- [[http://www.howardism.org/][Howard Abrams]] for his [[https://github.com/howardabrams/dot-files][dotfiles]].
-- [[https://github.com/aaronbieber][Aaron Bieber]] for his dotfiles and for the wonderful speech [[https://www.youtube.com/watch?v=JWD1Fpdd4Pc][Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs]] that makes me *fall in love* with Emacs. ;-)
-- [[https://protesilaos.com/][Protesilaos Stavrou]] for his [[https://protesilaos.com/dotemacs/][comprehensive "dotemacs" (.emacs) for GNU/Linux]] and [[https://protesilaos.com/codelog/][the huge amount of posts and videos about Emacs]].
-- [[https://github.com/sponsors/daviwil][David Wilson]] for his fantastic [[https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters screencasts]]!
-- [[http://staff.science.uva.nl/~dominik/][Carsten Dominik]], creator of [[http://orgmode.org][org-mode]] 🦄
-- [[https://orgmode.org/worg/][worg]] 🌈
-- [[https://gitlab.com/spudlyo][Mike Hamrick]] for [[https://gitlab.com/spudlyo/orgdemo2][orgdemo2]] which is really useful if you want learn a lot of stuff about =org-mode=.
-- [[http://ehneilsen.net][Eric H. Neilsen, Jr.]] for his wonderful  [[http://ehneilsen.net/notebook/orgExamples/org-examples.html][org-mode examples and cookbook]].
-- [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
-- [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]]
