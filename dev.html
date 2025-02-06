@@ -54,7 +54,7 @@
 </li>
 <li><a href="#orgeb74c3a">Elixir</a>
 <ul>
-<li><a href="#org370b919">Resources</a></li>
+<li><a href="#org001a070">Resources</a></li>
 <li><a href="#org5b59194">Clustering Elixir applications</a></li>
 <li><a href="#org270e139">Distributed Elixir nodes</a></li>
 <li><a href="#org42641d9">Elixir Ecommerce platforms</a></li>
@@ -87,7 +87,7 @@
 <li><a href="#orgd001c7f">Scale serverless with FLAME!</a></li>
 <li><a href="#orgda07b9c">Nerves</a>
 <ul>
-<li><a href="#org001a070">Resources</a></li>
+<li><a href="#orgcbacba7">Resources</a></li>
 <li><a href="#org3d60c9d">Nerves + Livebook</a></li>
 </ul>
 </li>
@@ -126,7 +126,7 @@
 </ul>
 </li>
 <li><a href="#org3d8da1c">Import a key</a></li>
-<li><a href="#org918c4aa">Troubleshooting</a></li>
+<li><a href="#orge7237a5">Troubleshooting</a></li>
 <li><a href="#org3526b6b">Generate SSH keys</a></li>
 <li><a href="#org918b960">GPG Agent: cache and timeouts</a></li>
 </ul>
@@ -214,7 +214,7 @@
 <ul>
 <li><a href="#org6b59e34">Services definition</a></li>
 <li><a href="#orga541047">Journalctl</a></li>
-<li><a href="#orgf3b01b2">Troubleshooting</a></li>
+<li><a href="#org19e279d">Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#org879b7fe">Tailwind</a></li>
@@ -236,7 +236,7 @@
 <li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a>
 <ul>
 <li><a href="#org624bb26">Usage examples</a></li>
-<li><a href="#orge7237a5">Troubleshooting</a></li>
+<li><a href="#org1315b09">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -502,9 +502,9 @@ It seems there's a problem with <a href="https://github.com/moby/moby/issues/407
 <h2 id="orgeb74c3a"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgeb74c3a">
 </div>
-<div id="outline-container-org370b919" class="outline-3">
-<h3 id="org370b919">Resources</h3>
-<div class="outline-text-3" id="text-org370b919">
+<div id="outline-container-org001a070" class="outline-3">
+<h3 id="org001a070">Resources</h3>
+<div class="outline-text-3" id="text-org001a070">
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
@@ -1092,9 +1092,9 @@ networks:
 <h3 id="orgda07b9c"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
 <div class="outline-text-3" id="text-orgda07b9c">
 </div>
-<div id="outline-container-org001a070" class="outline-4">
-<h4 id="org001a070">Resources</h4>
-<div class="outline-text-4" id="text-org001a070">
+<div id="outline-container-orgcbacba7" class="outline-4">
+<h4 id="orgcbacba7">Resources</h4>
+<div class="outline-text-4" id="text-orgcbacba7">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
 <li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
@@ -1129,7 +1129,7 @@ A complete, cross-platform solution to record, convert and stream audio and vide
 <div id="outline-container-orgcc4b6fd" class="outline-3">
 <h3 id="orgcc4b6fd">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orgcc4b6fd">
-<pre class="example" id="orgaade1d4">
+<pre class="example" id="orge35c875">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1142,7 +1142,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="org5edd4b4">
+<pre class="example" id="org73571f3">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1150,7 +1150,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="orgdbd435d">
+<pre class="example" id="org602c4d5">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1178,7 +1178,7 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 <div id="outline-container-orgd664cfc" class="outline-3">
 <h3 id="orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-orgd664cfc">
-<pre class="example" id="orga7471e3">
+<pre class="example" id="org89b71ce">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1186,7 +1186,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org19c48b8">
+<pre class="example" id="org1f97e7f">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1198,21 +1198,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org12391c3">
+<pre class="example" id="org82a3eac">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org2b6f9f7">
+<pre class="example" id="org125ba67">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgebb1fd2">
+<pre class="example" id="orgb47d15a">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1229,7 +1229,7 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="orgfd918ce">
+<pre class="example" id="org8936d9c">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
@@ -1249,14 +1249,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgab06c63">
+<pre class="example" id="orgc79743d">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org78bf9e7">
+<pre class="example" id="org1162ebc">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1273,7 +1273,7 @@ For audio I found this
 <div id="outline-container-orgb64a055" class="outline-3">
 <h3 id="orgb64a055">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-orgb64a055">
-<pre class="example" id="org6e99786">
+<pre class="example" id="orgf13be66">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1281,7 +1281,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="orgf873f3a">
+<pre class="example" id="org418978d">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1330,7 +1330,7 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org29b654d">
+<pre class="example" id="orgc8a8952">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1341,7 +1341,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org903bec5">
+<pre class="example" id="orgd289d59">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1680,9 +1680,9 @@ gpg --import --allow-secret-key-import private.key
 </div>
 </div>
 
-<div id="outline-container-org918c4aa" class="outline-3">
-<h3 id="org918c4aa">Troubleshooting</h3>
-<div class="outline-text-3" id="text-org918c4aa">
+<div id="outline-container-orge7237a5" class="outline-3">
+<h3 id="orge7237a5">Troubleshooting</h3>
+<div class="outline-text-3" id="text-orge7237a5">
 <p>
 Interesting resources if you encounter problems:
 </p>
@@ -2144,7 +2144,7 @@ If the app as been built as GTK+ app it accepts <code>--screen</code>, <code>--n
 A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit <code>$mod+Return</code> to access the <b><b>i3</b></b> mode, and <code>alt+Tab</code> to cycle across windows; all other keybidings will go straight to Emacs.
 </p>
 
-<pre class="example" id="org22bc7eb">
+<pre class="example" id="org3de9184">
 # This file has been auto-generated by i3-config-wizard(1).
 # It will not be overwritten, so edit it as you like.
 #
@@ -2396,7 +2396,7 @@ So remember to start it in the i3 config file (ex. <code>exec gnome-settings-dae
 And this is a sample configuration of <code>i3status</code> at <code>~/.config/i3status/config</code>.
 </p>
 
-<pre class="example" id="org58a8a21">
+<pre class="example" id="orgc939318">
 # i3status configuration file.
 # see "man i3status" for documentation.
 
@@ -3131,7 +3131,7 @@ Start the container (the fullpath is required on MacOS docker installations, if 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">docker run -d --rm --init -p 3000:3000 --volume=/Users/minasmazar/volumes/busybox:/home/static busybox:1.3.5
+<pre class="src src-sh">docker run -d --rm --init -p 3000:3000 --volume=/absolute/path/to/your/local/busybox:/home/static busybox:1.3.5
 </pre>
 </div>
 
@@ -3212,9 +3212,9 @@ To print last 40 entries for a particular service (i.e. <i>unit</i>) and keeps f
 </div>
 </div>
 
-<div id="outline-container-orgf3b01b2" class="outline-3">
-<h3 id="orgf3b01b2">Troubleshooting</h3>
-<div class="outline-text-3" id="text-orgf3b01b2">
+<div id="outline-container-org19e279d" class="outline-3">
+<h3 id="org19e279d">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org19e279d">
 <p>
 Sometimes you end up by having some services to start and immediately stop (for instance <code>my-daemon.service Deactivated successfully</code>). I've found the solution to in this <a href="https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started">StackOverlow thread</a>: you have to specify the <code>Type</code>!
 </p>
@@ -3286,7 +3286,7 @@ then verify you're using the tor proxy connecting to <a href="https://check.torp
 More details in this <a href="https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313">StackOverflow thread</a> showing different approaches, here I'm reporting just one.
 </p>
 
-<pre class="example" id="org2b1ebd8">
+<pre class="example" id="org97cc3d5">
 // @grant        GM_download
 
 function saveData(data, filename) {
@@ -3419,9 +3419,9 @@ Get the channel ID from a channel URL
 </div>
 </div>
 
-<div id="outline-container-orge7237a5" class="outline-4">
-<h4 id="orge7237a5">Troubleshooting</h4>
-<div class="outline-text-4" id="text-orge7237a5">
+<div id="outline-container-org1315b09" class="outline-4">
+<h4 id="org1315b09">Troubleshooting</h4>
+<div class="outline-text-4" id="text-org1315b09">
 <p>
 If you have issues with an error like <code>WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)</code>.
 </p>
