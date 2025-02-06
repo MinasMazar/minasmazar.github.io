@@ -3,6 +3,16 @@
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-12-10 Tue>
 #+STARTUP: overview
+#+PROPERTY: header-args :tangle (minemacs-tangle-if-not-disabled "minemacs-modules.el") :mkdirp yes
+
+* Org
+#+begin_src elisp
+  (use-package org
+    :bind
+    (:map org-mode-map
+          ("M-p" . #'org-move-subtree-up)
+          ("M-n" . #'org-move-subtree-down)))
+#+end_src
 
 * Overrides
 :PROPERTIES:
@@ -713,7 +723,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
-** FFmpeg Scenecutter
+** COMMENT FFmpeg Scenecutter :wip:
 #+begin_src emacs-lisp
   (defun jarvis-scenecutter--add-scene (proc pts duration pts-time duration-time)
     ;; (message "Adding scene pts:%s duration:%s pts-time:%s duration-time:%s" pts duration pts-time duration-time)
@@ -747,38 +757,57 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	     "ffmpeg -i %s -ss %s -t %s %s"
 	     file start duration scene-file)))
       (message "Creating scene via: %s" cmd)
-      (mkdir scenes-dir t)
-      (call-process-shell-command cmd nil 0)))
+      ;;(mkdir scenes-dir t)
+      ;;(call-process-shell-command cmd nil 0)))
+      ))
+
+  (defun jarvis-scenecutter--create-scenes-index (file scenes)
+    (let* ((name (file-name-sans-extension (file-name-base file)))
+	   (scenes-index-file (file-name-concat scenes-dir (format "%s-scenes.org" name)))
+	   (buffer (find-file-noselect scenes-index-file)))
+      (with-current-buffer buffer
+	(org-mode)
+	(insert (format "* Scenes for %s\n\n" file))
+	(dolist (scene scenes)
+	  (let ((seek-start (plist-get scene :pts))
+		(duration (plist-get scene :duration))
+		(seek-end (+ seek-start duration)))
+	    (insert (format "- % -- %s\n" seek-start seek-end))
+	    (save-buffer)
+	    (beginning-of-buffer))))))
 
   (defun jarvis-scenecutter--sentinel (proc event)
     (when (string= event "finished\n")
       (with-current-buffer (process-buffer proc)
 	(let* ((data (gethash proc jarvis-scenecutter--scenes))
 	       (file (plist-get data :file))
+	       (name (file-name-sans-extension (file-name-base file)))
+	       (scenes-file (file-name-concat scenes-dir (format "%s-scenes.el" name)))
 	       (scenes (plist-get data :scenes)))
+	  (setq jarvis-scenecutter--last-processed data)
+	  (jarvis-scenecutter--create-scenes-index file scenes)
 	  (seq-do-indexed
 	   (lambda (scene index)
 	     (jarvis-scenecutter--create-scene-async file scene index))
 	   scenes))
+	(with-temp-file scenes-file (prin1 data (current-buffer)))
+	(remhash proc jarvis-scenecutter--scenes)
 	(kill-current-buffer))))
 
   (defvar jarvis-scenecutter--scenes (make-hash-table))
 
   (defun jarvis-scenecutter (file)
+    (interactive "fFile: ")
     (with-current-buffer (generate-new-buffer "*jarvis-scenecutter*")
       (let* ((pathname (expand-file-name file))
 	     (cmd (list "ffmpeg" "-i" pathname "-vf" "select='gt(scene,0.4)',showinfo" "-f" "null" "-"))
-  p	   (proc (make-process
+	     (proc (make-process
 		    :name pathname
 		    :buffer (current-buffer)
 		    :command cmd
 		    :filter #'jarvis-scenecutter--parse-scenes
 		    :sentinel #'jarvis-scenecutter--sentinel)))
 	(puthash proc (list :file pathname :scenes '()) jarvis-scenecutter--scenes))))
-
-  (when t
-    (setq jarvis-scenecutter--scenes (make-hash-table))
-    (jarvis-scenecutter "~/Downloads/svezia.mkv"))
 #+end_src
 ** Speak 🗣️
 
