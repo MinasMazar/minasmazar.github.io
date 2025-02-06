@@ -1123,15 +1123,17 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
         (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
         ;;(insert-file "~/Desktop/vid.json") ; debug line
         (goto-char 0)
-        (ignore-error json-parse-error
-          (let* ((json (json-parse-buffer))
-                 (vid (minemacs-jarvis-collector--parse-info json))
-                 (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
-                 (vid (plist-put vid :transcript-dom transcript-dom)))
-            (puthash "fetched_at" (current-time) json)
-            (puthash "transcript_dom" transcript-dom json)
-            (minemacs-jarvis-collector--set-cache url json)
-            vid))))))
+        (condition-case nil
+            (let* ((json (json-parse-buffer))
+                   (vid (minemacs-jarvis-collector--parse-info json))
+                   (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+                   (vid (plist-put vid :transcript-dom transcript-dom)))
+              (puthash "fetched_at" (current-time) json)
+              (puthash "transcript_dom" transcript-dom json)
+              (minemacs-jarvis-collector--set-cache url json)
+              vid)
+          (json-parse-error (error "%s" (buffer-string)))
+          (t (error "%s" (buffer-string))))))))
 
 (defun minemacs-jarvis-collected-vids ()
   "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
@@ -1148,8 +1150,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     (if-let* ((url (minemacs-jarvis-collector--canonize-url url))
               (vid (minemacs-jarvis-collector-fetch-info url force-fetch))
               (pathname (minemacs-jarvis-collector--create-file vid)))
-        (and (called-interactively-p 'any) (find-file pathname))
-      pathname)))
+        (and (called-interactively-p 'any) (find-file pathname) pathname))))
 </pre>
 </div>
 </div>
@@ -1340,7 +1341,7 @@ Install the <code>doom-modeline</code>.
 The <b><b>MPV</b></b> backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with <code>bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......</code>. In order to allow <code>mpv</code> to play "https" URIs change the <code>bongo-custom-backend-matchers</code> variable.
 </p>
 
-<pre class="example" id="org2f34e33">
+<pre class="example" id="orgc99d071">
 (setq bongo-custom-backend-matchers
        '((mpv ("https:") . t)))
 </pre>
@@ -1462,7 +1463,7 @@ Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like 
 On <i>deb based linux systems</i> you can install those via
 </p>
 
-<pre class="example" id="orge7a550c">
+<pre class="example" id="org2a4c30a">
 $ sudo apt install mu isync pass
 </pre>
 
@@ -1483,7 +1484,7 @@ Useful links:
 Create a file <code>~/.authinfo</code> directly in the root of your home directory.
 </p>
 
-<pre class="example" id="orgd690709">
+<pre class="example" id="orgf6bb8ea">
 machine smtp.example.com login myname port 587 password mypassword
 </pre>
 </div>
@@ -1495,7 +1496,7 @@ machine smtp.example.com login myname port 587 password mypassword
 Configure <code>mbsync</code> via <code>~/.mbsyncrc</code> with a content similar to this:
 </p>
 
-<pre class="example" id="org06118e0">
+<pre class="example" id="orgce9c7fe">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -1531,7 +1532,7 @@ SyncState *
 
 <li><a id="orgf4f4e6b"></a>mu4e configuration<br />
 <div class="outline-text-5" id="text-orgf4f4e6b">
-<pre class="example" id="org5592a4b">
+<pre class="example" id="orgd169a59">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
@@ -1559,7 +1560,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="orgdd0b9f0">
+<pre class="example" id="org10dd185">
 (setq mu4e-contexts
       (list
        ;; Work account
@@ -1619,7 +1620,7 @@ To configure gnus in order to read your Gmail, you have to:
 Then configure the <code>gnus-select-method</code>
 </p>
 
-<pre class="example" id="org7319898">
+<pre class="example" id="orga06d57d">
 (setq gnus-select-method
       '(nnimap "gmail"
 	       (nnimap-address "imap.gmail.com")
@@ -1830,7 +1831,7 @@ Useful links:
 Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at <code>/usr/local/bin/exwm.sh</code>.
 </p>
 
-<pre class="example" id="org91440ec">
+<pre class="example" id="orgdeb0d5c">
 #!/bin/sh
 
 ## Set capslock as ctrl
@@ -1857,7 +1858,7 @@ exec dbus-run-session emacs
 In order to have the <code>EXWM</code> desktop environment available in the Login manager menu (i.e. LightDM) add this to <code>/usr/share/xsessions/exwm.desktop</code>
 </p>
 
-<pre class="example" id="orgc6770fc">
+<pre class="example" id="org4a69c91">
 [Desktop Entry]
 Name=Exwm
 Comment=Emacs as Window Manager

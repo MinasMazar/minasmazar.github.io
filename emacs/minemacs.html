@@ -191,38 +191,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
-<script>
-  window.MathJax = {
-    tex: {
-      ams: {
-        multlineWidth: '85%'
-      },
-      tags: 'ams',
-      tagSide: 'right',
-      tagIndent: '.8em'
-    },
-    chtml: {
-      scale: 1.0,
-      displayAlign: 'center',
-      displayIndent: '0em'
-    },
-    svg: {
-      scale: 1.0,
-      displayAlign: 'center',
-      displayIndent: '0em'
-    },
-    output: {
-      font: 'mathjax-modern',
-      displayOverflow: 'overflow'
-    }
-  };
-</script>
-
-<script
-  id="MathJax-script"
-  async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -235,8 +203,6 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf953f79">Emacs configuration</a>
-<ul>
 <li><a href="#org977e1f5">Minemacs</a></li>
 <li><a href="#orga883027">Package initialization</a></li>
 <li><a href="#org3b2313e">Basic settings</a></li>
@@ -246,43 +212,12 @@
 <li><a href="#orgeed96b0">Embark</a></li>
 <li><a href="#org638cfe6">Load modules and custom configurations</a></li>
 </ul>
-</li>
-<li><a href="#org4371aa9">On hand documentation</a>
-<ul>
-<li><a href="#org8aa60da">Awesome Elisp</a></li>
-<li><a href="#org85c3ce7">Online documentation for org-mode 🦄 and worg 🌈</a></li>
-<li><a href="#org7df5334">Other Commands, functions, variables, keybindings</a></li>
-<li><a href="#org0b0ab66">Org code-blocks</a></li>
-<li><a href="#org64d5e2a">String and Symbols</a></li>
-<li><a href="#org5e6b3e8">Macros</a></li>
-<li><a href="#orgf7aefb5">Vectors</a></li>
-<li><a href="#org9648a37">Handle List</a></li>
-<li><a href="#orge48e2ea">Ibuffer</a></li>
-<li><a href="#org54300c0">Imenu</a></li>
-<li><a href="#org2e96858">Eshell</a></li>
-<li><a href="#org33e2592">EWW ~ experimenting with <code>eww-retrieve-command</code></a></li>
-<li><a href="#orgdd85394">(interactive) functions</a></li>
-<li><a href="#org44c812a">Regular Expression Syntax (regexp)</a></li>
-<li><a href="#org0ce608f">Timers</a></li>
-<li><a href="#org69f0929">Insert colorize text programmatically</a></li>
-<li><a href="#orgfdbcc32">Buffer management</a></li>
-<li><a href="#org4eb9e47">Faces and fonts</a></li>
-<li><a href="#orgc621ac5">Libaries</a></li>
-<li><a href="#orgb64f2f7">Useful topics</a></li>
-</ul>
-</li>
-<li><a href="#org82c391f">Credits</a></li>
-</ul>
 </div>
 </div>
 
-<div id="outline-container-orgf953f79" class="outline-2">
-<h2 id="orgf953f79">Emacs configuration</h2>
-<div class="outline-text-2" id="text-orgf953f79">
-</div>
-<div id="outline-container-org977e1f5" class="outline-3">
-<h3 id="org977e1f5">Minemacs</h3>
-<div class="outline-text-3" id="text-org977e1f5">
+<div id="outline-container-org977e1f5" class="outline-2">
+<h2 id="org977e1f5">Minemacs</h2>
+<div class="outline-text-2" id="text-org977e1f5">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">;; Minemacs helpers
 ;;
@@ -297,9 +232,6 @@
 (defun minemacs-modules-directory ()
   (minemacs-subdir "modules"))
 
-(defun minemacs-custom-file ()
-  (file-name-concat user-emacs-directory "custom.el"))
-
 (defun minemacs-modules-load (&amp;optional matcher)
   "Load all modules '*.el' files in 'minemacs-modules-directory'"
   (interactive)
@@ -313,9 +245,9 @@
 </div>
 </div>
 
-<div id="outline-container-orga883027" class="outline-3">
-<h3 id="orga883027">Package initialization</h3>
-<div class="outline-text-3" id="text-orga883027">
+<div id="outline-container-orga883027" class="outline-2">
+<h2 id="orga883027">Package initialization</h2>
+<div class="outline-text-2" id="text-orga883027">
 <p>
 More info about <code>load-path</code> at <a href="https://www.emacswiki.org/emacs/LoadPath">https://www.emacswiki.org/emacs/LoadPath</a>. Most of this initial setup is inspired by <a href="https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration">Protesilaos setup configuration</a>.
 </p>
@@ -345,9 +277,9 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-org3b2313e" class="outline-3">
-<h3 id="org3b2313e">Basic settings</h3>
-<div class="outline-text-3" id="text-org3b2313e">
+<div id="outline-container-org3b2313e" class="outline-2">
+<h2 id="org3b2313e">Basic settings</h2>
+<div class="outline-text-2" id="text-org3b2313e">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package emacs
   :ensure nil
@@ -356,6 +288,7 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
   (after-init . toggle-frame-maximized)
   (dired-mode . dired-hide-details-mode)
   :custom
+  (custom-file (file-name-concat user-emacs-directory "custom.el"))
   (dired-dwim-target t)
   (dired-listing-switches "-alth")
   ;; (completion-auto-help nil)
@@ -380,7 +313,7 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
   (if (file-exists-p "~/Dropbox/minemacs/")
       (setq bookmark-file "~/Dropbox/minemacs/bookmarks"
             eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-            custom-file (minemacs-custom-file)))
+            minemacs-shared-custom-file "~/Dropbox/minemacs/custom.el"))
 
   (global-set-key (kbd "s-0") (kbd "C-x 0"))
   (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -437,9 +370,9 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-orgaba4432" class="outline-3">
-<h3 id="orgaba4432">Minibuffer</h3>
-<div class="outline-text-3" id="text-orgaba4432">
+<div id="outline-container-orgaba4432" class="outline-2">
+<h2 id="orgaba4432">Minibuffer</h2>
+<div class="outline-text-2" id="text-orgaba4432">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package orderless :custom (completion-styles '(orderless)))
 (use-package vertico :config (vertico-mode 1))
@@ -448,9 +381,9 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-orgf0d653e" class="outline-3">
-<h3 id="orgf0d653e">Modal editing</h3>
-<div class="outline-text-3" id="text-orgf0d653e">
+<div id="outline-container-orgf0d653e" class="outline-2">
+<h2 id="orgf0d653e">Modal editing</h2>
+<div class="outline-text-2" id="text-orgf0d653e">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package god-mode
   :after emacs
@@ -485,9 +418,9 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-orgcdca935" class="outline-3">
-<h3 id="orgcdca935">Auto-completion</h3>
-<div class="outline-text-3" id="text-orgcdca935">
+<div id="outline-container-orgcdca935" class="outline-2">
+<h2 id="orgcdca935">Auto-completion</h2>
+<div class="outline-text-2" id="text-orgcdca935">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package corfu
   :hook
@@ -522,9 +455,9 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-orgeed96b0" class="outline-3">
-<h3 id="orgeed96b0">Embark</h3>
-<div class="outline-text-3" id="text-orgeed96b0">
+<div id="outline-container-orgeed96b0" class="outline-2">
+<h2 id="orgeed96b0">Embark</h2>
+<div class="outline-text-2" id="text-orgeed96b0">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package embark
   :after god-mode
@@ -552,438 +485,15 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 </div>
 </div>
 
-<div id="outline-container-org638cfe6" class="outline-3">
-<h3 id="org638cfe6">Load modules and custom configurations</h3>
-<div class="outline-text-3" id="text-org638cfe6">
+<div id="outline-container-org638cfe6" class="outline-2">
+<h2 id="org638cfe6">Load modules and custom configurations</h2>
+<div class="outline-text-2" id="text-org638cfe6">
 <div class="org-src-container">
 <pre class="src src-elisp">(load custom-file :no-error-if-file-is-missing)
+(load minemacs-shared-custom-file :no-error-if-file-is-missing)
 (minemacs-modules-load)
 </pre>
 </div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org4371aa9" class="outline-2">
-<h2 id="org4371aa9">On hand documentation</h2>
-<div class="outline-text-2" id="text-org4371aa9">
-</div>
-<div id="outline-container-org8aa60da" class="outline-3">
-<h3 id="org8aa60da"><a href="https://raw.githubusercontent.com/emacs-tw/awesome-elisp/refs/heads/master/README.org">Awesome Elisp</a></h3>
-</div>
-<div id="outline-container-org85c3ce7" class="outline-3">
-<h3 id="org85c3ce7">Online documentation for <a href="http://orgmode.org">org-mode 🦄</a> and <a href="https://orgmode.org/worg/">worg 🌈</a></h3>
-</div>
-<div id="outline-container-org7df5334" class="outline-3">
-<h3 id="org7df5334">Other Commands, functions, variables, keybindings</h3>
-<div class="outline-text-3" id="text-org7df5334">
-<p>
-Just press <code>C-h o</code> to get help on those symbols.
-</p>
-
-<ul class="org-ul">
-<li><code>add-file-local-variable</code> (append at bottom of the file) and <code>add-file-local-variable-prop-line</code> (prepend in the first line)</li>
-<li><code>align-regexp</code></li>
-<li><code>auto-mode-alist</code></li>
-<li><code>browse-url-of-buffer</code></li>
-<li><code>command-switch-alist</code></li>
-<li><code>completions-max-height</code></li>
-<li><code>completion-auto-help</code></li>
-<li><code>compilation-scroll-output</code></li>
-<li><code>current-time-string</code></li>
-<li><code>dired-guess-shell-alist-user</code></li>
-<li><code>display-time-day-and-date</code></li>
-<li><code>display-time-mode</code></li>
-<li><code>epa-pinentry-mode</code></li>
-<li><code>format-time-string</code></li>
-<li><code>describe-text-properties</code></li>
-<li><code>face-remap-add-relative</code> and <code>face-remap-remove-relative</code> to easily modify faces in current buffer</li>
-<li><code>find-name-dired</code></li>
-<li><code>frame-title-format</code></li>
-<li><code>image-crop</code></li>
-<li><code>imenu-generic-expression</code></li>
-<li><code>json-pretty-print-buffer</code></li>
-<li><code>make-list</code> and <code>number-sequence</code></li>
-<li><code>mm-discouraged-alternatives</code></li>
-<li><code>org-agenda-include-diary</code></li>
-<li><code>org-agenda-custom-commands</code></li>
-<li><code>org-archive-subtree-default</code></li>
-<li><code>org-babel-load-file</code></li>
-<li><code>org-todo-keywords</code></li>
-<li><code>pp-eval-expression</code></li>
-<li><code>proced</code></li>
-<li><code>project-switch-commands</code></li>
-<li><code>shr-inhibit-images</code></li>
-<li><code>string-match</code></li>
-<li><code>C-x @</code> prefix allow to reach/remap alt/super/Hyper keys</li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org0b0ab66" class="outline-3">
-<h3 id="org0b0ab66"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h3>
-<div class="outline-text-3" id="text-org0b0ab66">
-<pre class="example" id="org54b8219">
-#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
-  wc -w $filename
-#+END_SRC
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org64d5e2a" class="outline-3">
-<h3 id="org64d5e2a">String and Symbols</h3>
-<div class="outline-text-3" id="text-org64d5e2a">
-<div class="org-src-container">
-<pre class="src src-elisp">(symbol-name 'some-symbol)
-; =&gt; "some-symbol"
-(intern "some-symbol")
-; =&gt; some-symbol
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5e6b3e8" class="outline-3">
-<h3 id="org5e6b3e8">Macros</h3>
-<div class="outline-text-3" id="text-org5e6b3e8">
-<div class="org-src-container">
-<pre class="src src-elisp">(defmacro ++ (x)
-  (list 'setq x (list '1+ x)))
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgf7aefb5" class="outline-3">
-<h3 id="orgf7aefb5">Vectors</h3>
-<div class="outline-text-3" id="text-orgf7aefb5">
-<p>
-Get an element from a vector
-</p>
-
-<pre class="example" id="org3d52d9f">
-;; get a element from vector
-(aref ["a" "b" "c"] 0) ; ⇒ "a"
-;; get a element from vector
-(elt ["a" "b" "c"] 0) ; ⇒ "a"
-</pre>
-
-<p>
-What's the difference between <code>aref</code> and <code>elt</code>?
-<code>elt</code> is more general. It works on vector and list. But if you know
-it's vector, you should use <code>aref</code>, because it's precise and faster.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org9648a37" class="outline-3">
-<h3 id="org9648a37">Handle List</h3>
-<div class="outline-text-3" id="text-org9648a37">
-<p>
-To find an element
-</p>
-
-<ul class="org-ul">
-<li><code>member</code></li>
-<li><code>contains</code></li>
-<li><code>seq-find</code></li>
-</ul>
-
-<pre class="example" id="org0c13380">
-(seq-find (lambda (val) (= 3 val)) '(1 2 3))
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orge48e2ea" class="outline-3">
-<h3 id="orge48e2ea">Ibuffer</h3>
-<div class="outline-text-3" id="text-orge48e2ea">
-<p>
-To occur among marked buffers in <code>ibuffer</code> press <code>O</code>.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org54300c0" class="outline-3">
-<h3 id="org54300c0">Imenu</h3>
-</div>
-<div id="outline-container-org2e96858" class="outline-3">
-<h3 id="org2e96858">Eshell</h3>
-<div class="outline-text-3" id="text-org2e96858">
-<p>
-Download four random images from picsum using an index.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org33e2592" class="outline-3">
-<h3 id="org33e2592">EWW ~ experimenting with <code>eww-retrieve-command</code></h3>
-<div class="outline-text-3" id="text-org33e2592">
-<p>
-Possible values for this variable could be
-<code>chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/</code>
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgdd85394" class="outline-3">
-<h3 id="orgdd85394">(interactive) functions</h3>
-<div class="outline-text-3" id="text-orgdd85394">
-<p>
-Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="(completing-read "Prompt: " '(i1 i2 i3))">(completing-read "Prompt: " '(i1 i2 i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="(read-from-minibuffer "Prompt: " "initial")">(read-from-minibuffer "Prompt: " "initial")</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
-</p>
-
-<pre class="example" id="orgbed239c">
-(defun minemacs/demo-function (url &amp;optional handler)
-  "Example function."
-  (interactive (list
-		(read-from-minibuffer "URL: ")
-		(completing-read "handler: " '(browse-url-firefox browse-url-chrome))))
-   (message (format "url: %s, handler: %s" url handler )))
-</pre>
-</div>
-</div>
-
-<div id="outline-container-org44c812a" class="outline-3">
-<h3 id="org44c812a">Regular Expression Syntax (regexp)</h3>
-<div class="outline-text-3" id="text-org44c812a">
-<p>
-You can use the wonderful tool <code>regexp-builder</code>. Use <code>string-match</code> to run a regexp and <code>match-string</code> to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
-</p>
-
-<pre class="example" id="org3bf2991">
-(let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
-  (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
-</pre>
-
-<blockquote>
-<p>
-Here is the syntax used by Emacs for regular expressions. Any character matches itself, except for the list below.
-</p>
-
-<p>
-The following characters are special : . * + ? ^ $ \ [
-</p>
-
-<p>
-Between brackets [], the following are special : ] - ^
-</p>
-
-<p>
-Many characters are special when they follow a backslash – see below.
-</p>
-
-<p>
-.        any character (but newline)
-</p>
-<ul class="org-ul">
-<li>previous character or group, repeated 0 or more time</li>
-<li>previous character or group, repeated 1 or more time</li>
-</ul>
-<p>
-  ?        previous character or group, repeated 0 or 1 time
-  ^        start of line
-  $        end of line
-  [&#x2026;]    any character between brackets
-  [^..]    any character not in the brackets
-  [a-z]    any character between a and z
-  \        prevents interpretation of following special char
-  \|       or
-  \w       word constituent
-  \b       word boundary
-  \sc      character with c syntax (e.g. \s- for whitespace char)
-  \( \)    start\end of group
-  \&lt; \&gt;    start\end of word
-  \_&lt; \_&gt;  start\end of symbol
-  \` \'    start\end of buffer\string
-  \1       string matched by the first group
-  \n       string matched by the nth group
-  \{3\}    previous character or group, repeated 3 times
-  \{3,\}   previous character or group, repeated 3 or more times
-  \{3,6\}  previous character or group, repeated 3 to 6 times
-  \=       match succeeds if it is located at point
-*?, +?, and ?? are non-greedy versions of *, +, and ? – see NonGreedyRegexp. Also, \W, \B, and \Sc match any character that does not match \w, \b, and \sc.
-</p>
-
-<p>
-Characters are organized by category. Use C-u C-x = to display the category of the character under the cursor.
-</p>
-
-<p>
-  \ca      ascii character
-  \Ca      non-ascii character (newline included)
-  \cl      latin character
-  \cg      greek character
-Here are some syntax classes that can be used between brackets, e.g. [[:upper:]\|[:digit:]\.].
-</p>
-
-<p>
-  [:digit:]  a digit, same as [0-9]
-  [:alpha:]  a letter (an alphabetic character)
-  [:alnum:]  a letter or adigit (an alphanumeric character ()
-  [:upper:]  a letter in uppercase
-  [:space:]  a whitespace character, as defined by the syntax table
-  [:xdigit:] an hexadecimal digit
-  [:cntrl:]  a control character
-  [:ascii:]  an ascii character
-Syntax classes:
-</p>
-
-<p>
-\s-   whitespace character        \s/   character quote character
-\sw   word constituent            \s$   paired delimiter
-\s_   symbol constituent          \s'   expression prefix
-\s.   punctuation character       \s&lt;   comment starter
-\s(   open delimiter character    \s&gt;   comment ender
-\s)   close delimiter character   \s!   generic comment delimiter
-\s"   string quote character      \s|   generic string delimiter
-\s\   escape character
-</p>
-</blockquote>
-</div>
-</div>
-
-<div id="outline-container-org0ce608f" class="outline-3">
-<h3 id="org0ce608f">Timers</h3>
-<div class="outline-text-3" id="text-org0ce608f">
-<p>
-You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
-</p>
-
-<pre class="example" id="orgbf690e9">
-(run-at-time "11 min" t #'elfeed-update)
-(run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
-</pre>
-
-<blockquote>
-<p>
-The list-timers command lists all the currently active timers. There’s
-only one command available in the buffer displayed: c
-(timer-list-cancel) that will cancel the timer on the line under
-point.
-</p>
-</blockquote>
-</div>
-</div>
-
-<div id="outline-container-org69f0929" class="outline-3">
-<h3 id="org69f0929">Insert colorize text programmatically</h3>
-<div class="outline-text-3" id="text-org69f0929">
-<pre class="example" id="org288edd2">
-(insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
-</pre>
-</div>
-</div>
-
-<div id="outline-container-orgfdbcc32" class="outline-3">
-<h3 id="orgfdbcc32">Buffer management</h3>
-<div class="outline-text-3" id="text-orgfdbcc32">
-<p>
-Code stolen from <a href="https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer">stackoverflow</a>.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">(defun minemacs-clear-buffer ()
-  "clear whole buffer add contents to the kill ring"
-  (interactive)
-  (kill-region (point-min) (point-max)))
-
-(defun minemacs-clear-buffer-permenantly ()
-  "clear whole buffer, contents is not added to the kill ring"
-  (interactive)
-  (delete-region (point-min) (point-max)))
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org4eb9e47" class="outline-3">
-<h3 id="org4eb9e47">Faces and fonts</h3>
-<div class="outline-text-3" id="text-org4eb9e47">
-<p>
-If you'd like to have a smaller font on compialtion buffers
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(add-hook 'compilation-mode-hook (lambda () (text-scale-decrease 1)))
-</pre>
-</div>
-
-<p>
-Useful function if you want to quick inspect the face under cursor
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(defun what-face (pos)
-  (interactive "d")
-  (let ((face (or (get-char-property pos 'read-face-name)
-                  (get-char-property pos 'face))))
-    (if face (message "Face: %s" face) (message "No face at %d" pos))))
-</pre>
-</div>
-
-<p>
-Get the list of font families <code>(font-family-list)</code>; here's the code to set a random font family in the current frame.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(set-face-font 'default (seq-random-elt (font-family-list)))
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-orgc621ac5" class="outline-3">
-<h3 id="orgc621ac5">Libaries</h3>
-<div class="outline-text-3" id="text-orgc621ac5">
-<ul class="org-ul">
-<li><a href="https://tkf.github.io/emacs-request/">request.el</a></li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-orgb64f2f7" class="outline-3">
-<h3 id="orgb64f2f7">Useful topics</h3>
-<div class="outline-text-3" id="text-orgb64f2f7">
-<ul class="org-ul">
-<li><a href="https://www.masteringemacs.org/article/mastering-key-bindings-emacs">Mastering Key-Bindings in Emacs</a></li>
-<li><a href="https://orgmode.org/manual/Results-of-Evaluation.html">Results of Evaluation</a></li>
-<li><p>
-<a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
-</p>
-
-<pre class="example" id="org0336737">
-(let ((start (point-min))
-      (end (point-max)))
-  (buffer-substring start end))
-</pre></li>
-</ul>
-</div>
-</div>
-</div>
-<div id="outline-container-org82c391f" class="outline-2">
-<h2 id="org82c391f">Credits</h2>
-<div class="outline-text-2" id="text-org82c391f">
-<p>
-I would like to thanks:
-</p>
-<ul class="org-ul">
-<li><a href="http://kelvinh.github.io/">Kelvin Hu</a> for his <a href="https://github.com/kelvinh/.emacs.d">emacs configuration</a> and the idea to write it in a <b>literate style</b>.</li>
-<li><a href="http://www.howardism.org/">Howard Abrams</a> for his <a href="https://github.com/howardabrams/dot-files">dotfiles</a>.</li>
-<li><a href="https://github.com/aaronbieber">Aaron Bieber</a> for his dotfiles and for the wonderful speech <a href="https://www.youtube.com/watch?v=JWD1Fpdd4Pc">Evil Mode: Or, How I Learned to Stop Worrying and Love Emacs</a> that makes me <b>fall in love</b> with Emacs. ;-)</li>
-<li><a href="https://protesilaos.com/">Protesilaos Stavrou</a> for his <a href="https://protesilaos.com/dotemacs/">comprehensive "dotemacs" (.emacs) for GNU/Linux</a> and <a href="https://protesilaos.com/codelog/">the huge amount of posts and videos about Emacs</a>.</li>
-<li><a href="https://github.com/sponsors/daviwil">David Wilson</a> for his fantastic <a href="https://www.youtube.com/channel/UCAiiOTio8Yu69c3XnR7nQBQ">System Crafters screencasts</a>!</li>
-<li><a href="http://staff.science.uva.nl/~dominik/">Carsten Dominik</a>, creator of <a href="http://orgmode.org">org-mode</a> 🦄</li>
-<li><a href="https://gitlab.com/spudlyo">Mike Hamrick</a> for <a href="https://gitlab.com/spudlyo/orgdemo2">orgdemo2</a> which is really useful if you want learn a lot of stuff about <code>org-mode</code>.</li>
-<li><a href="http://ehneilsen.net">Eric H. Neilsen, Jr.</a> for his wonderful  <a href="http://ehneilsen.net/notebook/orgExamples/org-examples.html">org-mode examples and cookbook</a>.</li>
-<li><a href="https://www.omarpolo.com/">Omar Polo</a> and <a href="https://ict4g.net/adolfo/index.html">Adolfo Villafiorita</a></li>
-<li><a href="http://xahlee.info/emacs/emacs/emacs.html">Xah Lee Web</a></li>
-</ul>
 </div>
 </div>
 </div>

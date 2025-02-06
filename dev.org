@@ -2,6 +2,7 @@
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-31 Wed>
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+STARTUP: overview
 
 * Blog and publishing
@@ -1149,6 +1150,29 @@ In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 ** Read battery status from command-line
 
 Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
+
+** iptables
+
+Iptables rules used to configure a router on linux
+
+#+begin_src txt
+WAN='wlp7s0'
+LAN='enp7s0'
+
+iptables -F
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+
+iptables -A INPUT -m state --state=RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i $LAN -j ACCEPT
+
+# iptables -A FORWARD -m state --state=RELATED,ESTABLISHED -j ACCEPT
+
+iptables -t nat -F
+# iptables -t nat -A POSTROUTING -s 172.16.0.0/20 -o $WAN -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $WAN -j MASQUERADE
+#+end_src
 
 ** Screen managing
 

@@ -7,190 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>MinasMazar's blog ~ dev stuff</title>
 <meta name="generator" content="Org Mode" />
-<style>
-  #content { max-width: 60em; margin: auto; }
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
-  .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
-  .tag    { background-color: #eee; font-family: monospace;
-            padding: 2px; font-size: 80%; font-weight: normal; }
-  .timestamp { color: #bebebe; }
-  .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
-  .underline { text-decoration: underline; }
-  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
-  p.verse { margin-left: 3%; }
-  pre {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-    background-color: #f2f2f2;
-    padding: 8pt;
-    font-family: monospace;
-    overflow: auto;
-    margin: 1.2em;
-  }
-  pre.src {
-    position: relative;
-    overflow: auto;
-  }
-  pre.src:before {
-    display: none;
-    position: absolute;
-    top: -8px;
-    right: 12px;
-    padding: 3px;
-    color: #555;
-    background-color: #f2f2f299;
-  }
-  pre.src:hover:before { display: inline; margin-top: 14px;}
-  /* Languages per Org manual */
-  pre.src-asymptote:before { content: 'Asymptote'; }
-  pre.src-awk:before { content: 'Awk'; }
-  pre.src-authinfo::before { content: 'Authinfo'; }
-  pre.src-C:before { content: 'C'; }
-  /* pre.src-C++ doesn't work in CSS */
-  pre.src-clojure:before { content: 'Clojure'; }
-  pre.src-css:before { content: 'CSS'; }
-  pre.src-D:before { content: 'D'; }
-  pre.src-ditaa:before { content: 'ditaa'; }
-  pre.src-dot:before { content: 'Graphviz'; }
-  pre.src-calc:before { content: 'Emacs Calc'; }
-  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-fortran:before { content: 'Fortran'; }
-  pre.src-gnuplot:before { content: 'gnuplot'; }
-  pre.src-haskell:before { content: 'Haskell'; }
-  pre.src-hledger:before { content: 'hledger'; }
-  pre.src-java:before { content: 'Java'; }
-  pre.src-js:before { content: 'Javascript'; }
-  pre.src-latex:before { content: 'LaTeX'; }
-  pre.src-ledger:before { content: 'Ledger'; }
-  pre.src-lisp:before { content: 'Lisp'; }
-  pre.src-lilypond:before { content: 'Lilypond'; }
-  pre.src-lua:before { content: 'Lua'; }
-  pre.src-matlab:before { content: 'MATLAB'; }
-  pre.src-mscgen:before { content: 'Mscgen'; }
-  pre.src-ocaml:before { content: 'Objective Caml'; }
-  pre.src-octave:before { content: 'Octave'; }
-  pre.src-org:before { content: 'Org mode'; }
-  pre.src-oz:before { content: 'OZ'; }
-  pre.src-plantuml:before { content: 'Plantuml'; }
-  pre.src-processing:before { content: 'Processing.js'; }
-  pre.src-python:before { content: 'Python'; }
-  pre.src-R:before { content: 'R'; }
-  pre.src-ruby:before { content: 'Ruby'; }
-  pre.src-sass:before { content: 'Sass'; }
-  pre.src-scheme:before { content: 'Scheme'; }
-  pre.src-screen:before { content: 'Gnu Screen'; }
-  pre.src-sed:before { content: 'Sed'; }
-  pre.src-sh:before { content: 'shell'; }
-  pre.src-sql:before { content: 'SQL'; }
-  pre.src-sqlite:before { content: 'SQLite'; }
-  /* additional languages in org.el's org-babel-load-languages alist */
-  pre.src-forth:before { content: 'Forth'; }
-  pre.src-io:before { content: 'IO'; }
-  pre.src-J:before { content: 'J'; }
-  pre.src-makefile:before { content: 'Makefile'; }
-  pre.src-maxima:before { content: 'Maxima'; }
-  pre.src-perl:before { content: 'Perl'; }
-  pre.src-picolisp:before { content: 'Pico Lisp'; }
-  pre.src-scala:before { content: 'Scala'; }
-  pre.src-shell:before { content: 'Shell Script'; }
-  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
-  /* additional language identifiers per "defun org-babel-execute"
-       in ob-*.el */
-  pre.src-cpp:before  { content: 'C++'; }
-  pre.src-abc:before  { content: 'ABC'; }
-  pre.src-coq:before  { content: 'Coq'; }
-  pre.src-groovy:before  { content: 'Groovy'; }
-  /* additional language identifiers from org-babel-shell-names in
-     ob-shell.el: ob-shell is the only babel language using a lambda to put
-     the execution function name together. */
-  pre.src-bash:before  { content: 'bash'; }
-  pre.src-csh:before  { content: 'csh'; }
-  pre.src-ash:before  { content: 'ash'; }
-  pre.src-dash:before  { content: 'dash'; }
-  pre.src-ksh:before  { content: 'ksh'; }
-  pre.src-mksh:before  { content: 'mksh'; }
-  pre.src-posh:before  { content: 'posh'; }
-  /* Additional Emacs modes also supported by the LaTeX listings package */
-  pre.src-ada:before { content: 'Ada'; }
-  pre.src-asm:before { content: 'Assembler'; }
-  pre.src-caml:before { content: 'Caml'; }
-  pre.src-delphi:before { content: 'Delphi'; }
-  pre.src-html:before { content: 'HTML'; }
-  pre.src-idl:before { content: 'IDL'; }
-  pre.src-mercury:before { content: 'Mercury'; }
-  pre.src-metapost:before { content: 'MetaPost'; }
-  pre.src-modula-2:before { content: 'Modula-2'; }
-  pre.src-pascal:before { content: 'Pascal'; }
-  pre.src-ps:before { content: 'PostScript'; }
-  pre.src-prolog:before { content: 'Prolog'; }
-  pre.src-simula:before { content: 'Simula'; }
-  pre.src-tcl:before { content: 'tcl'; }
-  pre.src-tex:before { content: 'TeX'; }
-  pre.src-plain-tex:before { content: 'Plain TeX'; }
-  pre.src-verilog:before { content: 'Verilog'; }
-  pre.src-vhdl:before { content: 'VHDL'; }
-  pre.src-xml:before { content: 'XML'; }
-  pre.src-nxml:before { content: 'XML'; }
-  /* add a generic configuration mode; LaTeX export needs an additional
-     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
-  pre.src-conf:before { content: 'Configuration File'; }
-
-  table { border-collapse:collapse; }
-  caption.t-above { caption-side: top; }
-  caption.t-bottom { caption-side: bottom; }
-  td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
-  dt { font-weight: bold; }
-  .footpara { display: inline; }
-  .footdef  { margin-bottom: 1em; }
-  .figure { padding: 1em; }
-  .figure p { text-align: center; }
-  .equation-container {
-    display: table;
-    text-align: center;
-    width: 100%;
-  }
-  .equation {
-    vertical-align: middle;
-  }
-  .equation-label {
-    display: table-cell;
-    text-align: right;
-    vertical-align: middle;
-  }
-  .inlinetask {
-    padding: 10px;
-    border: 2px solid gray;
-    margin: 10px;
-    background: #ffffcc;
-  }
-  #org-div-home-and-up
-   { text-align: right; font-size: 70%; white-space: nowrap; }
-  textarea { overflow-x: auto; }
-  .linenr { font-size: smaller }
-  .code-highlighted { background-color: #ffff00; }
-  .org-info-js_info-navigation { border-style: none; }
-  #org-info-js_console-label
-    { font-size: 10px; font-weight: bold; white-space: nowrap; }
-  .org-info-js_search-highlight
-    { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { }
-</style>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -230,7 +54,7 @@
 </li>
 <li><a href="#orgeb74c3a">Elixir</a>
 <ul>
-<li><a href="#orgf250de9">Resources</a></li>
+<li><a href="#org370b919">Resources</a></li>
 <li><a href="#org5b59194">Clustering Elixir applications</a></li>
 <li><a href="#org270e139">Distributed Elixir nodes</a></li>
 <li><a href="#org42641d9">Elixir Ecommerce platforms</a></li>
@@ -263,7 +87,7 @@
 <li><a href="#orgd001c7f">Scale serverless with FLAME!</a></li>
 <li><a href="#orgda07b9c">Nerves</a>
 <ul>
-<li><a href="#org370b919">Resources</a></li>
+<li><a href="#org001a070">Resources</a></li>
 <li><a href="#org3d60c9d">Nerves + Livebook</a></li>
 </ul>
 </li>
@@ -302,7 +126,7 @@
 </ul>
 </li>
 <li><a href="#org3d8da1c">Import a key</a></li>
-<li><a href="#orgada3e2a">Troubleshooting</a></li>
+<li><a href="#org918c4aa">Troubleshooting</a></li>
 <li><a href="#org3526b6b">Generate SSH keys</a></li>
 <li><a href="#org918b960">GPG Agent: cache and timeouts</a></li>
 </ul>
@@ -330,6 +154,7 @@
 <li><a href="#orge728db0">Create a .desktop File</a></li>
 <li><a href="#orgbc54bca">Handling screen saver / blank screen</a></li>
 <li><a href="#org3baa893">Read battery status from command-line</a></li>
+<li><a href="#org8ce5b02">iptables</a></li>
 <li><a href="#orgeab74b4">Screen managing</a>
 <ul>
 <li><a href="#org96336b7">X11 / xrandr</a></li>
@@ -389,7 +214,7 @@
 <ul>
 <li><a href="#org6b59e34">Services definition</a></li>
 <li><a href="#orga541047">Journalctl</a></li>
-<li><a href="#org03d5501">Troubleshooting</a></li>
+<li><a href="#orgf3b01b2">Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#org879b7fe">Tailwind</a></li>
@@ -411,7 +236,7 @@
 <li><a href="#org4a19e75">Youtube downloader (yt-dlp)</a>
 <ul>
 <li><a href="#org624bb26">Usage examples</a></li>
-<li><a href="#org918c4aa">Troubleshooting</a></li>
+<li><a href="#orge7237a5">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
@@ -677,9 +502,9 @@ It seems there's a problem with <a href="https://github.com/moby/moby/issues/407
 <h2 id="orgeb74c3a"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgeb74c3a">
 </div>
-<div id="outline-container-orgf250de9" class="outline-3">
-<h3 id="orgf250de9">Resources</h3>
-<div class="outline-text-3" id="text-orgf250de9">
+<div id="outline-container-org370b919" class="outline-3">
+<h3 id="org370b919">Resources</h3>
+<div class="outline-text-3" id="text-org370b919">
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
@@ -1267,9 +1092,9 @@ networks:
 <h3 id="orgda07b9c"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
 <div class="outline-text-3" id="text-orgda07b9c">
 </div>
-<div id="outline-container-org370b919" class="outline-4">
-<h4 id="org370b919">Resources</h4>
-<div class="outline-text-4" id="text-org370b919">
+<div id="outline-container-org001a070" class="outline-4">
+<h4 id="org001a070">Resources</h4>
+<div class="outline-text-4" id="text-org001a070">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
 <li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
@@ -1304,7 +1129,7 @@ A complete, cross-platform solution to record, convert and stream audio and vide
 <div id="outline-container-orgcc4b6fd" class="outline-3">
 <h3 id="orgcc4b6fd">Extract audio from video</h3>
 <div class="outline-text-3" id="text-orgcc4b6fd">
-<pre class="example" id="org34874a8">
+<pre class="example" id="orgaade1d4">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1317,7 +1142,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orge0da09e">
+<pre class="example" id="org5edd4b4">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1325,7 +1150,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org0223ea0">
+<pre class="example" id="orgdbd435d">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1353,7 +1178,7 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 <div id="outline-container-orgd664cfc" class="outline-3">
 <h3 id="orgd664cfc">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-orgd664cfc">
-<pre class="example" id="orga99ffbb">
+<pre class="example" id="orga7471e3">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1361,7 +1186,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="orgd13165f">
+<pre class="example" id="org19c48b8">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1373,21 +1198,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="orgf72654b">
+<pre class="example" id="org12391c3">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="org69f16d4">
+<pre class="example" id="org2b6f9f7">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="org4edf6bc">
+<pre class="example" id="orgebb1fd2">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1404,7 +1229,7 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="org1144af7">
+<pre class="example" id="orgfd918ce">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
@@ -1424,14 +1249,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="orgb5a0a27">
+<pre class="example" id="orgab06c63">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="org9a3f458">
+<pre class="example" id="org78bf9e7">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1448,7 +1273,7 @@ For audio I found this
 <div id="outline-container-orgb64a055" class="outline-3">
 <h3 id="orgb64a055">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-orgb64a055">
-<pre class="example" id="org152fd27">
+<pre class="example" id="org6e99786">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1456,7 +1281,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org5715ee2">
+<pre class="example" id="orgf873f3a">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1505,7 +1330,7 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org3884dca">
+<pre class="example" id="org29b654d">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1516,7 +1341,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="org4b22170">
+<pre class="example" id="org903bec5">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1855,9 +1680,9 @@ gpg --import --allow-secret-key-import private.key
 </div>
 </div>
 
-<div id="outline-container-orgada3e2a" class="outline-3">
-<h3 id="orgada3e2a">Troubleshooting</h3>
-<div class="outline-text-3" id="text-orgada3e2a">
+<div id="outline-container-org918c4aa" class="outline-3">
+<h3 id="org918c4aa">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org918c4aa">
 <p>
 Interesting resources if you encounter problems:
 </p>
@@ -2165,6 +1990,35 @@ Here's a <a href="https://askubuntu.com/questions/69556/how-do-i-check-the-batte
 </div>
 </div>
 
+<div id="outline-container-org8ce5b02" class="outline-3">
+<h3 id="org8ce5b02">iptables</h3>
+<div class="outline-text-3" id="text-org8ce5b02">
+<p>
+Iptables rules used to configure a router on linux
+</p>
+
+<div class="org-src-container">
+<pre class="src src-txt">WAN='wlp7s0'
+LAN='enp7s0'
+
+iptables -F
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+
+iptables -A INPUT -m state --state=RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i $LAN -j ACCEPT
+
+# iptables -A FORWARD -m state --state=RELATED,ESTABLISHED -j ACCEPT
+
+iptables -t nat -F
+# iptables -t nat -A POSTROUTING -s 172.16.0.0/20 -o $WAN -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $WAN -j MASQUERADE
+</pre>
+</div>
+</div>
+</div>
+
 <div id="outline-container-orgeab74b4" class="outline-3">
 <h3 id="orgeab74b4">Screen managing</h3>
 <div class="outline-text-3" id="text-orgeab74b4">
@@ -2290,7 +2144,7 @@ If the app as been built as GTK+ app it accepts <code>--screen</code>, <code>--n
 A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit <code>$mod+Return</code> to access the <b><b>i3</b></b> mode, and <code>alt+Tab</code> to cycle across windows; all other keybidings will go straight to Emacs.
 </p>
 
-<pre class="example" id="orgce4b08e">
+<pre class="example" id="org22bc7eb">
 # This file has been auto-generated by i3-config-wizard(1).
 # It will not be overwritten, so edit it as you like.
 #
@@ -2542,7 +2396,7 @@ So remember to start it in the i3 config file (ex. <code>exec gnome-settings-dae
 And this is a sample configuration of <code>i3status</code> at <code>~/.config/i3status/config</code>.
 </p>
 
-<pre class="example" id="org6147931">
+<pre class="example" id="org58a8a21">
 # i3status configuration file.
 # see "man i3status" for documentation.
 
@@ -3358,9 +3212,9 @@ To print last 40 entries for a particular service (i.e. <i>unit</i>) and keeps f
 </div>
 </div>
 
-<div id="outline-container-org03d5501" class="outline-3">
-<h3 id="org03d5501">Troubleshooting</h3>
-<div class="outline-text-3" id="text-org03d5501">
+<div id="outline-container-orgf3b01b2" class="outline-3">
+<h3 id="orgf3b01b2">Troubleshooting</h3>
+<div class="outline-text-3" id="text-orgf3b01b2">
 <p>
 Sometimes you end up by having some services to start and immediately stop (for instance <code>my-daemon.service Deactivated successfully</code>). I've found the solution to in this <a href="https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started">StackOverlow thread</a>: you have to specify the <code>Type</code>!
 </p>
@@ -3432,7 +3286,7 @@ then verify you're using the tor proxy connecting to <a href="https://check.torp
 More details in this <a href="https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313">StackOverflow thread</a> showing different approaches, here I'm reporting just one.
 </p>
 
-<pre class="example" id="org04d6171">
+<pre class="example" id="org2b1ebd8">
 // @grant        GM_download
 
 function saveData(data, filename) {
@@ -3565,9 +3419,9 @@ Get the channel ID from a channel URL
 </div>
 </div>
 
-<div id="outline-container-org918c4aa" class="outline-4">
-<h4 id="org918c4aa">Troubleshooting</h4>
-<div class="outline-text-4" id="text-org918c4aa">
+<div id="outline-container-orge7237a5" class="outline-4">
+<h4 id="orge7237a5">Troubleshooting</h4>
+<div class="outline-text-4" id="text-orge7237a5">
 <p>
 If you have issues with an error like <code>WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)</code>.
 </p>

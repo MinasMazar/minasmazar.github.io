@@ -693,15 +693,17 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
 	  ;;(insert-file "~/Desktop/vid.json") ; debug line
 	  (goto-char 0)
-	  (ignore-error json-parse-error
-	    (let* ((json (json-parse-buffer))
-		   (vid (minemacs-jarvis-collector--parse-info json))
-		   (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
-		   (vid (plist-put vid :transcript-dom transcript-dom)))
-	      (puthash "fetched_at" (current-time) json)
-	      (puthash "transcript_dom" transcript-dom json)
-	      (minemacs-jarvis-collector--set-cache url json)
-	      vid))))))
+	  (condition-case nil
+	      (let* ((json (json-parse-buffer))
+		     (vid (minemacs-jarvis-collector--parse-info json))
+		     (transcript-dom (minemacs-jarvis-collector--fetch-transcript (plist-get vid :script-url)))
+		     (vid (plist-put vid :transcript-dom transcript-dom)))
+		(puthash "fetched_at" (current-time) json)
+		(puthash "transcript_dom" transcript-dom json)
+		(minemacs-jarvis-collector--set-cache url json)
+		vid)
+	    (json-parse-error (error "%s" (buffer-string)))
+	    (t (error "%s" (buffer-string))))))))
 
   (defun minemacs-jarvis-collected-vids ()
     "Return all the collected vids in the ~minemacs-jarvis-collector-directory~."
@@ -718,10 +720,95 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (if-let* ((url (minemacs-jarvis-collector--canonize-url url))
 		(vid (minemacs-jarvis-collector-fetch-info url force-fetch))
 		(pathname (minemacs-jarvis-collector--create-file vid)))
-	  (and (called-interactively-p 'any) (find-file pathname))
-	pathname)))
+	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
+** COMMENT FFmpeg Scenecutter :wip:
+#+begin_src emacs-lisp
+  (defun jarvis-scenecutter--add-scene (proc pts duration pts-time duration-time)
+    ;; (message "Adding scene pts:%s duration:%s pts-time:%s duration-time:%s" pts duration pts-time duration-time)
+    (let* ((scene (list :pts pts :duration duration :pts-time pts-time :duration-time duration-time))
+	   (data (gethash proc jarvis-scenecutter--scenes))
+	   (scenes (plist-get data :scenes))
+	   (new-scenes (add-to-list 'scenes scene)))
+      (puthash proc (plist-put data :scenes new-scenes) jarvis-scenecutter--scenes)))
+
+  (defun jarvis-scenecutter--parse-scenes (proc input)
+    (when (string-match "Parsed_showinfo" input)
+      (let* ((_ (string-match "pts:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (pts (match-string 1 input))
+	     (_ (string-match "duration:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (duration (match-string 1 input))
+	     (_ (string-match "pts_time:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (pts-time (match-string 1 input))
+	     (_ (string-match "duration_time:\s*\\([[:alnum:]\|\.]+\\)" input))
+	     (duration-time (match-string 1 input)))
+	(and pts duration pts-time duration-time (jarvis-scenecutter--add-scene proc pts duration pts-time duration-time)))))
+
+  (defun jarvis-scenecutter--create-scene-async (file scene index)
+    (let* ((name (file-name-sans-extension (file-name-base file)))
+	   (ext (file-name-extension file))
+	   (scenes-dir (file-name-sans-extension file))
+	   (scene-file (file-name-concat scenes-dir (format "%s-scene-%s.%s" name index ext)))
+	   (start (plist-get scene :pts))
+	   (duration (plist-get scene :duration))
+	   (cmd
+	    (format
+	     "ffmpeg -i %s -ss %s -t %s %s"
+	     file start duration scene-file)))
+      (message "Creating scene via: %s" cmd)
+      ;;(mkdir scenes-dir t)
+      ;;(call-process-shell-command cmd nil 0)))
+      ))
+
+  (defun jarvis-scenecutter--create-scenes-index (file scenes)
+    (let* ((name (file-name-sans-extension (file-name-base file)))
+	   (scenes-index-file (file-name-concat scenes-dir (format "%s-scenes.org" name)))
+	   (buffer (find-file-noselect scenes-index-file)))
+      (with-current-buffer buffer
+	(org-mode)
+	(insert (format "* Scenes for %s\n\n" file))
+	(dolist (scene scenes)
+	  (let ((seek-start (plist-get scene :pts))
+		(duration (plist-get scene :duration))
+		(seek-end (+ seek-start duration)))
+	    (insert (format "- % -- %s\n" seek-start seek-end))
+	    (save-buffer)
+	    (beginning-of-buffer))))))
+
+  (defun jarvis-scenecutter--sentinel (proc event)
+    (when (string= event "finished\n")
+      (with-current-buffer (process-buffer proc)
+	(let* ((data (gethash proc jarvis-scenecutter--scenes))
+	       (file (plist-get data :file))
+	       (name (file-name-sans-extension (file-name-base file)))
+	       (scenes-file (file-name-concat scenes-dir (format "%s-scenes.el" name)))
+	       (scenes (plist-get data :scenes)))
+	  (setq jarvis-scenecutter--last-processed data)
+	  (jarvis-scenecutter--create-scenes-index file scenes)
+	  (seq-do-indexed
+	   (lambda (scene index)
+	     (jarvis-scenecutter--create-scene-async file scene index))
+	   scenes))
+	(with-temp-file scenes-file (prin1 data (current-buffer)))
+	(remhash proc jarvis-scenecutter--scenes)
+	(kill-current-buffer))))
+
+  (defvar jarvis-scenecutter--scenes (make-hash-table))
+
+  (defun jarvis-scenecutter (file)
+    (interactive "fFile: ")
+    (with-current-buffer (generate-new-buffer "*jarvis-scenecutter*")
+      (let* ((pathname (expand-file-name file))
+	     (cmd (list "ffmpeg" "-i" pathname "-vf" "select='gt(scene,0.4)',showinfo" "-f" "null" "-"))
+	     (proc (make-process
+		    :name pathname
+		    :buffer (current-buffer)
+		    :command cmd
+		    :filter #'jarvis-scenecutter--parse-scenes
+		    :sentinel #'jarvis-scenecutter--sentinel)))
+	(puthash proc (list :file pathname :scenes '()) jarvis-scenecutter--scenes))))
+#+end_src
 ** Speak 🗣️
 
 #+begin_src elisp
