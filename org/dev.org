@@ -101,6 +101,16 @@ docker update --restart [no|unless-stopped] <docker-container>
   sudo docker rename oldname_app newname_app
 #+end_src
 
+** Remove unused images
+
+#+begin_src sh
+  docker image prune -a
+#+end_src
+
+=docker system prune= will delete all dangling data (containers, networks, and images)
+
+More info in this [[https://stackoverflow.com/a/32723127][StackOverflow thread]].
+
 ** Installing Docker on Raspberry PI
 
 Follow [[https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository][the instructions in the Docker documentation]]. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
@@ -766,7 +776,7 @@ Basic ffmpeg scene detection:
 scene (video only) value between 0 and 1 to indicate a new scene; a low value reflects a low probability for the current frame to introduce a new scene, while a higher value means the current frame is more likely to be one (see the example below) https://ffmpeg.org/ffmpeg-filters.html#select_002c-aselect. Set the scene change detection threshold as a percentage of maximum change on the luma plane. Good values are in the [8.0, 14.0] range. Scene change detection is only relevant in case combmatch=sc. The range for scthresh is [0.0, 100.0]. https://ffmpeg.org/ffmpeg-filters.html
 
 - [[https://github.com/slhck/scenecut-extractor][Scenecut Extractor (python)]]
-- [[https://pyscenedetect.readthedocs.io][PySceneDetect]]
+- [[https://www.scenedetect.com/][PySceneDetect]]
 - [[https://trac.ffmpeg.org/ticket/442][FFMPEG Ticket]]
 - [[https://publik.tuwien.ac.at/files/pub-et_9739.pdf][SCENE CHANGE DETECTION FOR H.264 USING DYNAMIC THRESHOLD TECHNIQUES]]
 
@@ -1871,19 +1881,26 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
           git fetch
           git pull origin master
   sshadd:
-  	eval `ssh-agent -s`
-  	ssh-add
+	eval `ssh-agent -s`
+	ssh-add
 #+end_src
 
-Simple example on how to use =make= variables and shell environment variables.
+Here a sample Makefile that uses /double dollar sign/ to assign variables using ENVs. Also notice the use of nested interpolation: you can connect to =nas= using the command =make ssh host=nas=.
 
 #+begin_src makefile
-  app := $$APP
+  username := $$USER # <-- uses shell ENV
+  laptop := 192.168.1.67
+  nas := 192.168.1.226
 
-  default: .elixir.phoenix.new.live
+  default: usage
 
-  .elixir.phoenix.new.live:
-  	new ${app} --live
+  nas:
+	  ssh ${username}@${nas}
+
+  ssh:
+	  ssh ${username}@${${host}} # <-- notice the nested interpolation!
+  usage:
+	  cat ~/Makefile
 #+end_src
 
 * Postgres
