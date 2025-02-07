@@ -339,15 +339,54 @@ Jarvis is a module that enables some high-level/automation features.
 ** Helpers
 
 #+begin_src elisp
-  (defun minemacs-random (items)
-    "Pick a random element from a list"
-    (nth (random (length items)) items))
-
   (defun eval-replace-last-sexp ()
     (interactive)
     (let ((value (eval (preceding-sexp))))
       (kill-sexp -1)
       (insert (format "%S" value))))
+
+  (defun stringify (obj)
+    (cond
+     ((stringp obj) obj)
+     ((symbolp obj) (symbol-name obj))
+     (t (format "%s" obj))))
+
+  (defun async-shell-command-no-window (command)
+    (interactive "sAsync shell command (no window): ")
+    (let ((display-buffer-alist
+	   (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command command)))
+
+  (defvar minemacs--cache (make-hash-table :test 'equal))
+  (defvar minemacs-cache-directory (file-name-concat user-emacs-directory ".minemacs-cache"))
+
+  (defun minemacs-cache-file-name (id &optional namespace)
+    (expand-file-name (file-name-concat minemacs-cache-directory (stringify namespace) (md5 (stringify id)))))
+
+  (defun minemacs-cache-key (id &optional namespace)
+    (list :id id :namespace namespace))
+
+  (defun minemacs-cache-get (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	   (cache-value (gethash cache-key minemacs--cache)))
+      (or
+       cache-value
+       (let ((cache-value (and (file-readable-p cache-key)
+			       (with-temp-buffer
+				 (insert-file-contents cache-key)
+				 ;;(cl-assert (eq (point) (point-min)))
+				 (read (current-buffer))))))
+	 (minemacs-cache-set id cache-value namespace)))))
+
+  (defun minemacs-cache-set (id data &optional namespace persist)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	   (cache-value (gethash cache-key minemacs--cache))
+	   (cache-base-dir (file-name-directory cache-key)))
+      (puthash cache-key data minemacs--cache)
+      (when persist
+	(mkdir cache-base-dir t)
+	(with-temp-file cache-key (prin1 data (current-buffer))))
+      data))
 #+end_src
 
 ** Youtube 🎥
@@ -490,8 +529,9 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
        (> char 127))
      (ucs-normalize-NFKD-string (s-dashed-words str))))
 
-  (defvar minemacs-jarvis-collector-directory "~/Public/collector"
-    "Base directory where to put the collected Youtube videos.")
+  (defcustom minemacs-jarvis-collector-directory "~/Dropbox/collector"
+    "Base directory where to put the collected Youtube videos."
+    :type '(directory))
 
   (defun minemacs-jarvis-collector--build-filename (vid)
     (minemacs-jarvis-dashitize-string (plist-get vid :title)))
@@ -723,14 +763,15 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
-** COMMENT FFmpeg Scenecutter :wip:
+** FFmpeg Scenecutter
+
 #+begin_src emacs-lisp
   (defun jarvis-scenecutter--add-scene (proc pts duration pts-time duration-time)
-    ;; (message "Adding scene pts:%s duration:%s pts-time:%s duration-time:%s" pts duration pts-time duration-time)
+    (message "Adding scene pts:%s duration:%s pts-time:%s duration-time:%s" pts duration pts-time duration-time)
     (let* ((scene (list :pts pts :duration duration :pts-time pts-time :duration-time duration-time))
 	   (data (gethash proc jarvis-scenecutter--scenes))
 	   (scenes (plist-get data :scenes))
-	   (new-scenes (add-to-list 'scenes scene)))
+	   (new-scenes (append scenes scene)))
       (puthash proc (plist-put data :scenes new-scenes) jarvis-scenecutter--scenes)))
 
   (defun jarvis-scenecutter--parse-scenes (proc input)
@@ -743,7 +784,12 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	     (pts-time (match-string 1 input))
 	     (_ (string-match "duration_time:\s*\\([[:alnum:]\|\.]+\\)" input))
 	     (duration-time (match-string 1 input)))
-	(and pts duration pts-time duration-time (jarvis-scenecutter--add-scene proc pts duration pts-time duration-time)))))
+	(and pts duration pts-time duration-time
+	     (jarvis-scenecutter--add-scene proc
+					    (string-to-number pts)
+					    (string-to-number duration)
+					    (string-to-number pts-time)
+					    (string-to-number duration-time))))))
 
   (defun jarvis-scenecutter--create-scene-async (file scene index)
     (let* ((name (file-name-sans-extension (file-name-base file)))
@@ -761,43 +807,94 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       ;;(call-process-shell-command cmd nil 0)))
       ))
 
+  (defun jarvis-scenecutter--create-scene-thumb (file thumb-seek thumb-file)
+    (let* ((cmd (format "ffmpeg -i %s -ss %sms -frames:v 1 %s" file thumb-seek thumb-file))
+	   (thumb-width 840)
+	   (thumb-org-code (format "#+ATTR_HTML: width=\"%spx\"\n#+ATTR_ORG: :width %s\n[[%s]]\n" thumb-width thumb-width thumb-file))
+	   (proc (make-process
+		  :name thumb-file
+		  :command (list "ffmpeg" "-i" file "-ss" (format "%sms" thumb-seek) "-frames:v" "1" thumb-file)
+		  :buffer nil
+		  :sentinel (lambda (proc event)
+			      (and (equal "finished\n" event)
+				   (let* ((entry (minemacs-cache-get proc))
+					  (buffer (car entry))
+					  (point (cdr entry)))
+				     (when buffer (with-current-buffer buffer (org-redisplay-inline-images) (goto-char point)))
+				     ;; remove cache entry
+				     ))))))
+      (minemacs-cache-set proc (cons (current-buffer) (point)))
+      thumb-org-code))
+
   (defun jarvis-scenecutter--create-scenes-index (file scenes)
-    (let* ((name (file-name-sans-extension (file-name-base file)))
-	   (scenes-index-file (file-name-concat scenes-dir (format "%s-scenes.org" name)))
-	   (buffer (find-file-noselect scenes-index-file)))
+    (let* ((default-directory (file-name-directory file))
+	   (name (file-name-sans-extension (file-name-base file)))
+	   (scenes-index-file (file-name-concat default-directory (format "%s-scenes.org" name)))
+	   (buffer (find-file-noselect scenes-index-file))
+	   (title (format "%s scenes index" name)))
       (with-current-buffer buffer
-	(org-mode)
+	(erase-buffer)
+	(insert "# -*- org-image-actual-width: nil; org-inline-image-overlays: t; -*-\n")
+	(insert (format "#+TITLE: %s\n#+STARTUP: content\n\n" title))
 	(insert (format "* Scenes for %s\n\n" file))
-	(dolist (scene scenes)
-	  (let ((seek-start (plist-get scene :pts))
-		(duration (plist-get scene :duration))
-		(seek-end (+ seek-start duration)))
-	    (insert (format "- % -- %s\n" seek-start seek-end))
-	    (save-buffer)
-	    (beginning-of-buffer))))))
+	(let ((first-scene (car scenes))
+	      (reduce-fun (lambda (prev-scene scene)
+			    (let* ((seek-start (plist-get prev-scene :pts))
+				   (seek-end (plist-get scene :pts))
+				   (thumb-seek (+ seek-start 10))
+				   (scene-file (file-name-concat default-directory (format "%s-scene-%s.mp4" name seek-start)))
+				   (thumb-file (file-name-concat default-directory (format "%s-scene-%s.png" name seek-start))))
+			      ;; (insert (format "%s\n\n" (prin1-to-string scene)))
+			      (insert (format "** %s -- %s\n\n" seek-start seek-end))
+
+			      (insert "#+begin_src emacs-lisp :results raw\n")
+			      (insert (format "(jarvis-scenecutter--create-scene-thumb \"%s\" %s \"%s\")\n" file seek-start thumb-file))
+			      (insert "#+end_src\n\n")
+
+			      (insert "#+begin_src sh :results silent\n")
+			      (insert (format "ffmpeg -i %s -ss %sms -to %sms %s\n" file seek-start seek-end scene-file))
+			      (insert "#+end_src\n\n")
+			      scene))))
+	  (seq-reduce reduce-fun scenes (list :pts 0)))
+	(basic-save-buffer)
+	(beginning-of-buffer)
+	(pop-to-buffer buffer))))
+
+  (defun jarvis-scenecutter--cache-key (file)
+    (file-name-sans-extension (file-name-base (expand-file-name file))))
+
+  (defun jarvis-scenecutter--cache-scenes-load (file)
+    (minemacs-cache-get (jarvis-scenecutter--cache-key file) :jarvis-scenecutter))
+
+  (defun jarvis-scenecutter--cache-scenes-save (file data)
+    (minemacs-cache-set (jarvis-scenecutter--cache-key file) data :jarvis-scenecutter))
+
+  (defun jarvis-scenecutter--process-scenes (file scenes)
+    (message "Processing scenes for %s" file)
+    (jarvis-scenecutter--create-scenes-index file scenes)
+    ;; (seq-do-indexed
+    ;;  (lambda (scene index)
+    ;;    (jarvis-scenecutter--create-scene-async file scene index))
+    ;;  scenes))
+    )
 
   (defun jarvis-scenecutter--sentinel (proc event)
     (when (string= event "finished\n")
       (with-current-buffer (process-buffer proc)
 	(let* ((data (gethash proc jarvis-scenecutter--scenes))
 	       (file (plist-get data :file))
-	       (name (file-name-sans-extension (file-name-base file)))
-	       (scenes-file (file-name-concat scenes-dir (format "%s-scenes.el" name)))
 	       (scenes (plist-get data :scenes)))
-	  (setq jarvis-scenecutter--last-processed data)
-	  (jarvis-scenecutter--create-scenes-index file scenes)
-	  (seq-do-indexed
-	   (lambda (scene index)
-	     (jarvis-scenecutter--create-scene-async file scene index))
-	   scenes))
-	(with-temp-file scenes-file (prin1 data (current-buffer)))
+	  (message "Finished extraction for %s" file)
+	  (message "extracted %s scenes" (length scenes))
+	  (jarvis-scenecutter--process-scenes file scenes)
+	  (jarvis-scenecutter--cache-scenes-save file data))
 	(remhash proc jarvis-scenecutter--scenes)
 	(kill-current-buffer))))
 
   (defvar jarvis-scenecutter--scenes (make-hash-table))
 
-  (defun jarvis-scenecutter (file)
-    (interactive "fFile: ")
+  (defun jarvis-scenecutter--extract-scenes (file)
+    (message "Started extraction for %s" file)
     (with-current-buffer (generate-new-buffer "*jarvis-scenecutter*")
       (let* ((pathname (expand-file-name file))
 	     (cmd (list "ffmpeg" "-i" pathname "-vf" "select='gt(scene,0.4)',showinfo" "-f" "null" "-"))
@@ -808,6 +905,15 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		    :filter #'jarvis-scenecutter--parse-scenes
 		    :sentinel #'jarvis-scenecutter--sentinel)))
 	(puthash proc (list :file pathname :scenes '()) jarvis-scenecutter--scenes))))
+
+  (defun jarvis-scenecutter (file)
+    (interactive "fFile: ")
+    (let ((data (jarvis-scenecutter--cache-scenes-load file)))
+      (if data
+	  (let ((file (plist-get data :file))
+		(scenes (plist-get data :scenes)))
+	    (jarvis-scenecutter--process-scenes file scenes))
+	(jarvis-scenecutter--extract-scenes file))))
 #+end_src
 ** Speak 🗣️
 
