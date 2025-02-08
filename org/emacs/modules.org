@@ -367,25 +367,13 @@ Jarvis is a module that enables some high-level/automation features.
     (list :id id :namespace namespace))
 
   (defun minemacs-cache-get (id &optional namespace)
-    (let* ((cache-key (minemacs-cache-file-name id namespace))
-	   (cache-value (gethash cache-key minemacs--cache)))
-      (or
-       cache-value
-       (let ((cache-value (and (file-readable-p cache-key)
-			       (with-temp-buffer
-				 (insert-file-contents cache-key)
-				 ;;(cl-assert (eq (point) (point-min)))
-				 (read (current-buffer))))))
-	 (minemacs-cache-set id cache-value namespace)))))
+    (let ((cache-key (minemacs-cache-file-name id namespace)))
+      (gethash cache-key minemacs--cache)))
 
-  (defun minemacs-cache-set (id data &optional namespace persist)
+  (defun minemacs-cache-set (id data &optional namespace)
     (let* ((cache-key (minemacs-cache-file-name id namespace))
-	   (cache-value (gethash cache-key minemacs--cache))
 	   (cache-base-dir (file-name-directory cache-key)))
       (puthash cache-key data minemacs--cache)
-      (when persist
-	(mkdir cache-base-dir t)
-	(with-temp-file cache-key (prin1 data (current-buffer))))
       data))
 #+end_src
 
@@ -771,7 +759,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     (let* ((scene (list :pts pts :duration duration :pts-time pts-time :duration-time duration-time))
 	   (data (gethash proc jarvis-scenecutter--scenes))
 	   (scenes (plist-get data :scenes))
-	   (new-scenes (append scenes scene)))
+	   (new-scenes (append scenes (list scene))))
       (puthash proc (plist-put data :scenes new-scenes) jarvis-scenecutter--scenes)))
 
   (defun jarvis-scenecutter--parse-scenes (proc input)
@@ -834,7 +822,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	   (title (format "%s scenes index" name)))
       (with-current-buffer buffer
 	(erase-buffer)
-	(insert "# -*- org-image-actual-width: nil; org-inline-image-overlays: t; -*-\n")
+	(insert "# -*- org-image-actual-width: nil; eval: (org-display-inline-images); -*-\n")
 	(insert (format "#+TITLE: %s\n#+STARTUP: content\n\n" title))
 	(insert (format "* Scenes for %s\n\n" file))
 	(let ((first-scene (car scenes))
