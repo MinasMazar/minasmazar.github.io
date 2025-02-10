@@ -329,6 +329,44 @@ curl https://cht.sh
       (async-shell-command cmd buffer-name)))
 #+end_src
 
+** Github API
+
+In order to make the authentication work remember to add your Github username and API token in the =~/.authinfo.gpg=; also customize =minemacs-github-api-username= in order to match the auth source entry.
+
+#+begin_example authinfo
+  machine api.github.com login YOUR@EMAIL.COM password YOUR-GITHUB-API-TOKEN port 80
+#+end_example
+
+#+begin_src emacs-lisp
+  (defcustom minemacs-github-api-username nil "Your Github username (email)" :type '(string))
+
+  (defun minemacs-github-api-token ()
+    (if-let* ((matched (auth-source-search :host "api.github.com" :login minemacs-github-api-username :port 80))
+	      (auth (car matched)))
+	(funcall (plist-get auth :secret))))
+
+  (defun minemacs-github--display-repos (repos)
+    (with-current-buffer (get-buffer-create "test")
+      (erase-buffer)
+      (seq-doseq (repo repos)
+	(let ((name (gethash "full_name" repo)))
+	  (insert (format "=> %s\n" name))))
+      (pop-to-buffer (current-buffer))))
+
+  (defun minemacs-github--fetch-repos ()
+    (let* ((token-header (format "token %s" (minemacs-github-api-token)))
+	   (url-request-extra-headers `(
+					("Content-Type" . "application/json")
+					("Authorization" . ,token-header))))
+      (with-temp-buffer
+	(url-insert-file-contents "https://api.github.com/user/repos")
+	(minemacs-github--display-repos (json-parse-buffer)))))
+
+  (defun minemacs-github-repos ()
+    (interactive)
+    (minemacs-github--fetch-repos))
+#+end_src
+
 * Jarvis 🤖
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "jarvis.el") :mkdirp yes
@@ -1144,6 +1182,19 @@ Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][e
 		("C-c C-f" . elfeed-tube-mpv-follow-mode)
 		("C-c C-w" . elfeed-tube-mpv-where)))
 #+end_src
+
+Here's an experiment on how to iterate over the elfeed feeds
+
+#+begin_src elisp :tangle no :results raw
+  (let* ((feeds nil))
+    (with-elfeed-db-visit (entry feed)
+      (add-to-list 'feeds feed)
+      (when (equal (length feeds) 1)
+	(elfeed-db-return (list :ok feeds)))))
+#+end_src
+
+#+RESULTS:
+(:ok (#s(elfeed-feed http://www.ansa.it/web/ansait_web_rss_homepage.xml http://www.ansa.it/web/ansait_web_rss_homepage.xml Primo piano ANSA - ANSA.it nil (:canonical-url http://www.ansa.it/sito/ansait_rss.xml))))
 
 ** Mail
 *** Resources
