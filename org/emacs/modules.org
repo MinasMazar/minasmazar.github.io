@@ -367,14 +367,27 @@ Jarvis is a module that enables some high-level/automation features.
     (list :id id :namespace namespace))
 
   (defun minemacs-cache-get (id &optional namespace)
-    (let ((cache-key (minemacs-cache-file-name id namespace)))
-      (gethash cache-key minemacs--cache)))
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	  (cache-value (gethash cache-key minemacs--cache)))
+      (if cache-value cache-value (minemacs-cache-get-from-file id namespace))))
+
+  (defun minemacs-cache-get-from-file (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (when (file-readable-p cache-key)
+	(with-temp-buffer
+	  (insert-file-contents cache-key)
+	  ;;(cl-assert (eq (point) (point-min)))
+	  (read (current-buffer))))))
 
   (defun minemacs-cache-set (id data &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (puthash cache-key data minemacs--cache) data))
+
+  (defun minemacs-cache-set-to-file (id data &optional namespace)
     (let* ((cache-key (minemacs-cache-file-name id namespace))
 	   (cache-base-dir (file-name-directory cache-key)))
-      (puthash cache-key data minemacs--cache)
-      data))
+      (mkdir cache-base-dir t)
+      (with-temp-file cache-key (prin1 data (current-buffer)))))
 #+end_src
 
 ** Youtube 🎥
@@ -797,7 +810,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun jarvis-scenecutter--create-scene-thumb (file thumb-seek thumb-file)
     (let* ((cmd (format "ffmpeg -i %s -ss %sms -frames:v 1 %s" file thumb-seek thumb-file))
-	   (thumb-width 840)
+	   (thumb-width 660)
 	   (thumb-org-code (format "#+ATTR_HTML: width=\"%spx\"\n#+ATTR_ORG: :width %s\n[[%s]]\n" thumb-width thumb-width thumb-file))
 	   (proc (make-process
 		  :name thumb-file
@@ -814,13 +827,30 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (minemacs-cache-set proc (cons (current-buffer) (point)))
       thumb-org-code))
 
+  (defun jarvis-scenecutter--create-scenes-thumbs (file scenes thumb-files-template)
+    (let* ((scenes-params (string-join (cons "eq(n\\,0)" (mapcar (lambda (scene) (format "eq(n\\,%d)" (plist-get scene :pts))) scenes)) "+"))
+	   (cmd (list "ffmpeg" "-i" file "-vf" (format "select='%s'" scenes-params) "-frame_pts" "1" "-vsync" "0" thumb-files-template))
+	   (proc (make-process
+		  :name (format "scenecutter-%s" file)
+		  :command cmd
+		  :buffer nil
+		  :sentinel (lambda (proc event)
+			      (and (equal "finished\n" event)
+				   (let ((buffer (minemacs-cache-get proc)))
+				     (when buffer (with-current-buffer buffer (org-redisplay-inline-images)))
+				     ;; remove cache entry
+				     ))))))
+      (minemacs-cache-set proc (current-buffer))))
+
   (defun jarvis-scenecutter--create-scenes-index (file scenes)
     (let* ((default-directory (file-name-directory file))
 	   (name (file-name-sans-extension (file-name-base file)))
 	   (scenes-index-file (file-name-concat default-directory (format "%s-scenes.org" name)))
 	   (buffer (find-file-noselect scenes-index-file))
-	   (title (format "%s scenes index" name)))
+	   (title (format "%s scenes index" name))
+	   (thumb-width 660))
       (with-current-buffer buffer
+	(jarvis-scenecutter--create-scenes-thumbs file scenes (format "%s-scene-%%d.png" name))
 	(erase-buffer)
 	(insert "# -*- org-image-actual-width: nil; eval: (org-display-inline-images); -*-\n")
 	(insert (format "#+TITLE: %s\n#+STARTUP: content\n\n" title))
@@ -835,9 +865,11 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 			      ;; (insert (format "%s\n\n" (prin1-to-string scene)))
 			      (insert (format "** %s -- %s\n\n" seek-start seek-end))
 
-			      (insert "#+begin_src emacs-lisp :results raw\n")
+			      (insert "#+begin_src emacs-lisp :results output raw replace\n")
 			      (insert (format "(jarvis-scenecutter--create-scene-thumb \"%s\" %s \"%s\")\n" file seek-start thumb-file))
 			      (insert "#+end_src\n\n")
+
+			      (insert (format "#+RESULTS:\n#+ATTR_HTML: width=\"%spx\"\n#+ATTR_ORG: :width %s\n[[%s]]\n\n" thumb-width thumb-width thumb-file))
 
 			      (insert "#+begin_src sh :results silent\n")
 			      (insert (format "ffmpeg -i %s -ss %sms -to %sms %s\n" file seek-start seek-end scene-file))
@@ -874,8 +906,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	       (scenes (plist-get data :scenes)))
 	  (message "Finished extraction for %s" file)
 	  (message "extracted %s scenes" (length scenes))
-	  (jarvis-scenecutter--process-scenes file scenes)
 	  (jarvis-scenecutter--cache-scenes-save file data))
+	  (jarvis-scenecutter--process-scenes file scenes)
 	(remhash proc jarvis-scenecutter--scenes)
 	(kill-current-buffer))))
 

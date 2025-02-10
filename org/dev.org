@@ -670,6 +670,16 @@ Extract a frame each minute.
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 #+end_example
 
+Extract list of specific frames using ffmpeg. More details in this [[https://stackoverflow.com/questions/38253406/extract-list-of-specific-frames-using-ffmpeg][StackOverflow thread]].
+
+#+begin_src shell
+  ffmpeg -i in.mp4 -vf select='eq(n\,100)+eq(n\,184)+eq(n\,213)' -vsync 0 frames%d.jpg
+#+end_src
+
+#+begin_quote
+FFmpeg is primarily a processor of timed video i.e. media with a cycle rate such as framerate or sample rate. It assumes that the output should be at the same rate as the source. If inadequate frames are supplied, it duplicates unless told not to. -vsync 0 is added which, in this case, tells it to suppress duplication.
+#+end_quote
+
 Using FFMPEG's scene detection to generate a [[https://blog.gdeltproject.org/using-ffmpegs-scene-detection-to-generate-a-visual-shot-summary-of-television-news/][visual shot summary of Television News]].
 
 #+begin_src shell
