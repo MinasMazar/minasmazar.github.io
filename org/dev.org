@@ -877,6 +877,21 @@ How to add chmod permissions to file in Git ([[https://git-scm.com/docs/git-upda
 #+begin_src sh
   git update-index --chmod=+x path/to/file
 #+end_src
+
+Use =git bundle= to backup a repo with all branches; =repo.bundle= is the file what you need (full back up) in the same directory.
+
+#+begin_src sh
+  git bundle create repo.bundle --all
+#+end_src
+
+To restore the bundle
+
+#+begin_src sh
+  git clone repo.bundle
+#+end_src
+
+The =git clone repo.bundle= can be used to restore repositories in the tarball exported account data in Github (https://github.com/settings/admin -> Account -> Export account data)
+
 * Google Chrome & chromedriver
 
 Download chromedriver version according to the version of Google Chrome installed.
@@ -1572,6 +1587,8 @@ And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
 
 Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
 
+* Android
+** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
 * MacOS
 ** Install [[https://brew.sh/][Homebrew]]
 

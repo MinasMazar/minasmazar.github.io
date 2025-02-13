@@ -5,6 +5,60 @@
 #+STARTUP: overview
 #+PROPERTY: header-args :tangle (minemacs-tangle-if-not-disabled "minemacs-modules.el") :mkdirp yes
 
+* Minemacs core
+
+#+begin_src elisp
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+
+  (defun stringify (obj)
+    (cond
+     ((stringp obj) obj)
+     ((symbolp obj) (symbol-name obj))
+     (t (format "%s" obj))))
+
+  (defun async-shell-command-no-window (command)
+    (interactive "sAsync shell command (no window): ")
+    (let ((display-buffer-alist
+	   (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command command)))
+
+  (defvar minemacs--cache (make-hash-table :test 'equal))
+  (defvar minemacs-cache-directory (file-name-concat user-emacs-directory ".minemacs-cache"))
+
+  (defun minemacs-cache-file-name (id &optional namespace)
+    (expand-file-name (file-name-concat minemacs-cache-directory (stringify namespace) (md5 (stringify id)))))
+
+  (defun minemacs-cache-key (id &optional namespace)
+    (list :id id :namespace namespace))
+
+  (defun minemacs-cache-get (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	  (cache-value (gethash cache-key minemacs--cache)))
+      (if cache-value cache-value (minemacs-cache-get-from-file id namespace))))
+
+  (defun minemacs-cache-get-from-file (id &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (when (file-readable-p cache-key)
+	(with-temp-buffer
+	  (insert-file-contents cache-key)
+	  ;;(cl-assert (eq (point) (point-min)))
+	  (read (current-buffer))))))
+
+  (defun minemacs-cache-set (id data &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace)))
+      (puthash cache-key data minemacs--cache) data))
+
+  (defun minemacs-cache-set-to-file (id data &optional namespace)
+    (let* ((cache-key (minemacs-cache-file-name id namespace))
+	   (cache-base-dir (file-name-directory cache-key)))
+      (mkdir cache-base-dir t)
+      (with-temp-file cache-key (prin1 data (current-buffer)))))
+#+end_src
+
 * Org
 #+begin_src elisp
   (use-package org
@@ -373,60 +427,6 @@ In order to make the authentication work remember to add your Github username an
 :END:
 
 Jarvis is a module that enables some high-level/automation features.
-
-** Helpers
-
-#+begin_src elisp
-  (defun eval-replace-last-sexp ()
-    (interactive)
-    (let ((value (eval (preceding-sexp))))
-      (kill-sexp -1)
-      (insert (format "%S" value))))
-
-  (defun stringify (obj)
-    (cond
-     ((stringp obj) obj)
-     ((symbolp obj) (symbol-name obj))
-     (t (format "%s" obj))))
-
-  (defun async-shell-command-no-window (command)
-    (interactive "sAsync shell command (no window): ")
-    (let ((display-buffer-alist
-	   (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
-      (async-shell-command command)))
-
-  (defvar minemacs--cache (make-hash-table :test 'equal))
-  (defvar minemacs-cache-directory (file-name-concat user-emacs-directory ".minemacs-cache"))
-
-  (defun minemacs-cache-file-name (id &optional namespace)
-    (expand-file-name (file-name-concat minemacs-cache-directory (stringify namespace) (md5 (stringify id)))))
-
-  (defun minemacs-cache-key (id &optional namespace)
-    (list :id id :namespace namespace))
-
-  (defun minemacs-cache-get (id &optional namespace)
-    (let* ((cache-key (minemacs-cache-file-name id namespace))
-	  (cache-value (gethash cache-key minemacs--cache)))
-      (if cache-value cache-value (minemacs-cache-get-from-file id namespace))))
-
-  (defun minemacs-cache-get-from-file (id &optional namespace)
-    (let* ((cache-key (minemacs-cache-file-name id namespace)))
-      (when (file-readable-p cache-key)
-	(with-temp-buffer
-	  (insert-file-contents cache-key)
-	  ;;(cl-assert (eq (point) (point-min)))
-	  (read (current-buffer))))))
-
-  (defun minemacs-cache-set (id data &optional namespace)
-    (let* ((cache-key (minemacs-cache-file-name id namespace)))
-      (puthash cache-key data minemacs--cache) data))
-
-  (defun minemacs-cache-set-to-file (id data &optional namespace)
-    (let* ((cache-key (minemacs-cache-file-name id namespace))
-	   (cache-base-dir (file-name-directory cache-key)))
-      (mkdir cache-base-dir t)
-      (with-temp-file cache-key (prin1 data (current-buffer)))))
-#+end_src
 
 ** Youtube 🎥
 *** Helper functions
@@ -982,6 +982,125 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
     (save-window-excursion
       (async-shell-command (format "espeak -v it \"%s\"" text) nil)))
+#+end_src
+
+* Bifrost 🌈
+*** Client side (userscript)
+
+#+begin_src javascript :tangle no
+  // ==UserScript==
+  // @name         Bifrost-HTTP
+  // @namespace    http://minasmazar.github.io/bifrost
+  // @version      0.3
+  // @description  Bifrost is a userscript to bridge your Browser and an Elixir app.
+  // @author       minasmazar@gmail.com
+  // @include      *
+  // @icon         https://www.google.com/s2/favicons?sz=64&domain=undefined.localhost
+  // @grant        GM_xmlhttpRequest
+  // @grant        GM.xmlHttpRequest
+  // @grant        GM_openInTab
+  // @connect      localhost
+  // ==/UserScript==
+
+  window.bifrostCircularReplacer = function() {
+    const seen = new WeakSet();
+    return (key, value) => {
+      if (typeof value === "object" && value !== null) {
+	if (seen.has(value)) {
+	  return;
+	}
+	seen.add(value);
+      }
+      return value;
+    };
+  };
+
+  window.bifrostSend = function(message) {
+    const payload = JSON.stringify({ "id": window.bifrostPageId, "location": window.location, "message": message }, window.bifrostCircularReplacer());
+    console.log(`Sending : ${message}`);
+    GM.xmlHttpRequest({
+      method: "POST",
+      url: "http://localhost:9096/bifrost",
+      data: message,
+      headers: {
+	"Content-Type": "application/x-www-form-urlencoded"
+      },
+      onload: function(response) {
+	console.log("Received response");
+      },
+      onerror: function(response) {
+	console.log("Error");
+      }
+    });
+  };
+
+  window.bifrostOpenInTab = function(url, openInBackground = true) {
+    //window.open(url, "_blank");
+    GM_openInTab(url, openInBackground);
+  };
+
+  window.bifrostSetup = function() {
+    window.bifrostPageId = crypto.randomUUID();
+    window.bifrostEventHandler = function(event) {
+      const payload = {
+	"event": {
+	  "type": event.type,
+	  "tag": event.target.tagName,
+	  "class": event.target.className,
+	  "id": event.target.id,
+	  "text": event.target.innerText,
+	  "value": event.target.value
+	}
+      };
+      // console.log(payload);
+      window.bifrostSend(payload);
+    };
+    document.addEventListener("click", window.bifrostEventHandler);
+    document.addEventListener("change", window.bifrostEventHandler);
+    document.addEventListener("input", window.bifrostEventHandler);
+
+    window.bifrostSend(document.body.outerHTML);
+  };
+
+  window.addEventListener("load", window.bifrostSetup);
+#+end_src
+
+*** Server side (emacs)
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "bifrost.el") :mkdirp yes
+:END:
+
+#+begin_src emacs-lisp
+  (use-package web-server
+    :init
+    (defcustom bifrost-active t "Wether bifrost is going to handle requests or not." :type '(boolean))
+    (defvar bifrost-request-hooks nil "Hooks invoked when Bifrost request is received.")
+    :hook
+    (bifrost-request-hooks . (lambda (_request _dom)
+			       (pop-to-buffer "*bifrost*")))
+    :config
+    (require 'web-server)
+
+    (defun bifrost--request-handler (request)
+      (when bifrost-active
+	(with-current-buffer (get-buffer-create "*bifrost*" t)
+	  (let ((inhibit-read-only t))
+	    (erase-buffer)
+	    (with-slots (body) request (insert body))
+	    (beginning-of-buffer))
+	  (setq bifrost--last-request request)
+	  (run-hook-with-args 'bifrost-request-hooks request (libxml-parse-html-region)))))
+
+    (setq bifrost--server
+	  (ws-start
+	   '(((:POST . ".*") .
+	      (lambda (request)
+		(with-slots (process headers body) request
+		  (let ((message (cdr (assoc "message" headers))))
+		    (ws-response-header process 200 '("Content-type" . "text/plain"))
+		    (setq bifrost--last-request request)
+		    (bifrost--request-handler request))))))
+	   9096)))
 #+end_src
 
 * Look and feel 🎨
