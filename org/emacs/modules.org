@@ -128,7 +128,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     ("C-h x" . #'helpful-command))
 #+end_src
 
-** Show keybindings                                                 :disable:
+** Show keybindings
 
 #+begin_src elisp
   (use-package which-key
@@ -1115,7 +1115,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     document.addEventListener("change", window.bifrostEventHandler);
     document.addEventListener("input", window.bifrostEventHandler);
 
-    window.bifrostSend(document.body.outerHTML);
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href);
+    window.bifrostSend({"links": links});
   };
 
   window.addEventListener("load", window.bifrostSetup);
@@ -1145,18 +1146,27 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	    (with-slots (body) request (insert body))
 	    (beginning-of-buffer))
 	  (setq bifrost--last-request request)
-	  (run-hook-with-args 'bifrost-request-hooks request (libxml-parse-html-region)))))
+	  (let* ((json (json-parse-buffer))
+		 (location (gethash "location" json))
+		 (url (getash "href" location))
+		 (message (gethash "message" json)))
+	  (run-hook-with-args 'bifrost-request-hooks url message)))))
 
-    (setq bifrost--server
-	  (ws-start
-	   '(((:POST . ".*") .
-	      (lambda (request)
-		(with-slots (process headers body) request
-		  (let ((message (cdr (assoc "message" headers))))
-		    (ws-response-header process 200 '("Content-type" . "text/plain"))
-		    (setq bifrost--last-request request)
-		    (bifrost--request-handler request))))))
-	   9096)))
+    (defun bifrost-server-start ()
+      "Start bifrost server."
+      (interactive)
+      (setq bifrost--server
+	    (ws-start
+	     '(((:POST . ".*") .
+		(lambda (request)
+		  (with-slots (process headers body) request
+		    (let ((message (cdr (assoc "message" headers))))
+		      (ws-response-header process 200 '("Content-type" . "text/plain"))
+		      (setq bifrost--last-request request)
+		      (bifrost--request-handler request))))))
+	     9096)))
+
+    (when bifrost-active (bifrost-server-start)))
 #+end_src
 
 * Look and feel 🎨
