@@ -117,6 +117,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
     :bind-keymap
     ("s-o" . minemacs-map)
+    ("M-o" . minemacs-map)
     :bind
     ("s-k" . #'execute-extended-command)
     ("s-n" . #'god-local-mode)
