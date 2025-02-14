@@ -555,7 +555,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 #+end_src
 
 ** Collector 🗄️
-
+*** Video
 #+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
   (use-package s)
   (require 'cl-lib)
@@ -800,6 +800,62 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		(vid (minemacs-jarvis-collector-fetch-info url force-fetch))
 		(pathname (minemacs-jarvis-collector--create-file vid)))
 	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
+#+end_src
+
+*** Feeds
+#+begin_src emacs-lisp
+  (defvar jarvis-feeds-default-template
+    "#+TITLE: %s
+  ,#+AUTHOR: %s
+  ,#+DATE: <%s>
+
+  ,* [[%s][%s]]
+
+  Tags :%s
+
+  %s")
+
+  (defun jarvis-feeds--extract-authors-names (entry)
+    (if-let* ((meta (elfeed-entry-meta entry))
+	      (authors (plist-get meta :authors)))
+	(mapcar (lambda (author) (plist-get author :name)) authors)))
+
+  (defun jarvis-feeds--render (template entry)
+    (let* ((url (elfeed-entry-link entry))
+	   (title (elfeed-entry-title entry))
+	   (content (elfeed-entry-content entry))
+	   (date (format-time-string "%F %R" (elfeed-entry-date entry)))
+	   (tags-str (string-join (mapcar
+				   (lambda (sym) (format "#%s" (symbol-name sym)))
+				   (elfeed-entry-tags entry)) " "))
+	   (authors (jarvis-feeds--extract-authors-names entry))
+	   (authors-str (string-join authors ", ")))
+      (format template
+	      title
+	      authors-str
+	      date
+	      url title
+	      tags-str
+	      content)))
+
+  (defun jarvis-feeds-collect-feed (entry feed)
+    (let* ((template jarvis-feeds-default-template)
+	   (org-content (jarvis-feeds--render template entry)))
+      (with-current-buffer (get-buffer-create "*jarvis-feeds-collect*")
+	(erase-buffer)
+	(insert org-content)
+	(org-mode)
+	(beginning-of-buffer))))
+
+  (defun jarvis-feeds-collect ()
+    (interactive)
+    (let* ((count 0))
+      (with-elfeed-db-visit (entry feed)
+	(setq count (1+ count))
+	(setq jarvis-feeds--entry entry jarvis-feeds--feed feed)
+	(jarvis-feeds-collect entry feed)
+	(when (= count 3)
+	  (elfeed-db-return (list :ok count))))))
 #+end_src
 
 ** FFmpeg Scenecutter
