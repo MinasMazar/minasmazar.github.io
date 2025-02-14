@@ -1587,6 +1587,14 @@ And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
 
 Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
 
+* Javascript
+
+Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
+
+#+begin_src javascript
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
+#+end_src
+
 * Android
 ** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
 * MacOS
