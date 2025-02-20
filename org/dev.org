@@ -5,20 +5,7 @@
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+STARTUP: overview
 
-* Blog and publishing
-
-** Static site generators
-
-- [[https://orgmode.org/manual/Publishing.html][Org-mode publishing]]
-
-** Hosting
-
-- https://srht.site/
-- [[https://pages.github.com/][Github pages]]
-- [[https://www.netlify.com/][Netlify]]
-
 * Web browsing/crawling
-
 ** Get the DOM of a webpage using chrome via command-line.
 
 #+begin_src sh
@@ -1165,6 +1152,7 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
 - =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
 - =pactl get-sink-volume <INDEX>= get the volume of the given sink
 
+*** [[https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md][PipeWire]]
 ** Create a .desktop File
 
 In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
@@ -1255,16 +1243,25 @@ Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~exp
 
 The commands are almost the same as =xrandr=; keep in mind the way the screens are handled is different and =--same-as= option is not available.
 
+** Set wallpaper
+
+You can use [[https://wiki.archlinux.org/title/Feh][=feh=]]
+
+#+begin_src sh
+  feh --bg-fill ~/path/to/image.png
+#+end_src
+
+Or you can use the =xsetroot= utility (usually packaged into =xdotool=).
+Consider xsetroot accepts a particular format of file called /bitmap/ (=xsetroot -bitmap bitmap-file.xbm=); to convert a file into this format you can use Imagemagick. *N.B.* the bitmap is not the well-known Windows bitmap format (.bmp) but is the /X11 bitmap format/ (.xbm):
+
+#+begin_src sh
+  convert wallpaper.png wallpaper.xbm
+#+end_src
+
 ** Set keyboard layout from command-line
 
 #+begin_src sh
   setxkbmap -layout us,it
-#+end_src
-
-** Set an image as wallpaper using feh
-
-#+begin_src sh
-  feh --bg-fill ~/path/to/image.png
 #+end_src
 
 ** Set custom name/class to an application (window)
@@ -1682,7 +1679,8 @@ After the install I've noticed the laptop speakers weren't usable. I've googled 
 
 *** Remap keys with xmodmap
 
-at .Xmodmap
+#+begin_src sh
+cat .Xmodmap
 
 !
 ! Swap Caps_Lock and Control_L
@@ -1695,6 +1693,7 @@ keysym Control_L = Caps_Lock
 keysym Caps_Lock = Control_L
 add Lock = Caps_Lock
 add Control = Control_L
+#+end_src
 
 *** Set keyboard layout
 
@@ -2076,7 +2075,7 @@ Create the image
 Start the container (the fullpath is required on MacOS docker installations, if I recall correctly.. 🤔)
 
 #+begin_src sh
-  docker run -d --rm --init -p 3000:3000 --volume=/absolute/path/to/your/local/busybox:/home/static busybox:1.3.5
+  docker run -d --rm --name file-server --init -p 3000:3000 --volume=/absolute/path/to/your/local/busybox:/home/static busybox:1.3.5
 #+end_src
 
 #+begin_src html :tangle ~/volumes/busybox/index.html
@@ -2183,13 +2182,15 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
 * Youtube
 ** Get the list of subscriptions (followed channels)
 
-Go the your "Watch later" page on the browser, open the console and execute
+Go the [[https://www.youtube.com/feed/channels]["Manage subscription" page]], open the Web Inspector of the browser and execute the snippet below in the JS console; *N.B.* ensure you've loaded all the entries by scrolling down to the very end of the page.
 
 #+begin_src javascript
-  var els = document.querySelectorAll('a.ytd-playlist-video-renderer'));
-  var elsExp = [];
-  els.forEach(function(el) { elsExp.push([el.innerText, el.getAttribute("href")]) });
-  console.log(JSON.stringify(elsExp));
+  var channelList = [];
+  [...document.querySelectorAll('a#main-link.channel-link')].forEach(el => {
+    const channelId = el.getAttribute("href");
+    channelList.push((`https://www.youtube.com${channelId}`));
+  });
+  console.log(channelList.join("\n"));
 #+end_src
 
 ** Get RSS feed of a channel or playlist

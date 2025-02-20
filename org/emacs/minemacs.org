@@ -91,35 +91,38 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
-	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-	      minemacs-shared-custom-file "~/Dropbox/minemacs/custom.el"))
+  	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+  	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
+  	      minemacs-shared-custom-file "~/Dropbox/minemacs/custom.el"))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
     (global-set-key (kbd "s-2") (kbd "C-x 2"))
     (global-set-key (kbd "s-3") (kbd "C-x 3"))
 
+    (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
+    (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
+    (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
+
     (setq minemacs-map
       (let ((map (make-sparse-keymap)))
-	(define-key map (kbd "a") #'org-agenda)
-	(define-key map (kbd "k") #'org-capture)
-	(define-key map (kbd "e") #'eshell)
-	(define-key map (kbd "E")
-		    (lambda (command)
-		      (interactive "sEmacs eshell command: ")
-		      (eshell-command command current-prefix-arg)))
-	(define-key map (kbd "r") #'recentf)
-	(define-key map (kbd "8") #'emoji-search)
-	(define-key map (kbd "w j") #'webjump)
-	(define-key map (kbd "w w") #'eww)
-	map))
+  	(define-key map (kbd "a") #'org-agenda)
+  	(define-key map (kbd "k") #'org-capture)
+  	(define-key map (kbd "e") #'eshell)
+  	(define-key map (kbd "E")
+  		    (lambda (command)
+  		      (interactive "sEmacs eshell command: ")
+  		      (eshell-command command current-prefix-arg)))
+  	(define-key map (kbd "r") #'recentf)
+  	(define-key map (kbd "8") #'emoji-search)
+  	(define-key map (kbd "w j") #'webjump)
+  	(define-key map (kbd "w w") #'eww)
+  	map))
 
     :bind-keymap
     ("s-o" . minemacs-map)
     ("M-o" . minemacs-map)
     :bind
-    ("s-k" . #'execute-extended-command)
     ("s-n" . #'god-local-mode)
     ("s-w" . #'other-window)
     ("s-)" . #'kill-current-buffer)
@@ -136,16 +139,13 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
     ("s-_" . #'bookmark-set)
-    (:map key-translation-map
-	  ("s-m" . "\C-x")
-	  ("s-M" . "\C-c"))
     (:map isearch-mode-map
-	  ("C-p" . #'isearch-repeat-backward)
-	  ("C-n" . #'isearch-repeat-forward)
-	  ("<tab>" . #'isearch-repeat-forward)
-	  ("<S-tab>" . #'isearch-repeat-backward))
+  	  ("C-p" . #'isearch-repeat-backward)
+  	  ("C-n" . #'isearch-repeat-forward)
+  	  ("<tab>" . #'isearch-repeat-forward)
+  	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
-	  ("e" . #'switch-to-minibuffer)))
+  	  ("e" . #'switch-to-minibuffer)))
 #+end_src
 
 * Minibuffer
@@ -174,9 +174,9 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
 	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
-    ("s-n" . #'god-local-mode)
+    ("s-n" . #'god-mode)
     (:map god-local-mode-map
-     ("i" . #'god-local-mode)
+     ("i" . #'god-mode)
      ("I" . #'org-edit-special)
      ("u" . #'undo)
      ("U" . #'undo-redo)
@@ -185,7 +185,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
      ("[" . #'backward-paragraph)
      ("]" . #'forward-paragraph))
     :config
-    (god-local-mode))
+    (god-mode))
 #+end_src
 
 * Auto-completion
@@ -250,7 +250,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
 #+begin_src elisp
   (load custom-file :no-error-if-file-is-missing)
-  (load minemacs-shared-custom-file :no-error-if-file-is-missing)
+  (if (boundp 'minemacs-shared-custom-file) (load minemacs-shared-custom-file :no-error-if-file-is-missing))
   (minemacs-modules-load)
 #+end_src
 

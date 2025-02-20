@@ -42,7 +42,6 @@ For old devices (RPi 1) Midori browser looks promising. The only problem is the 
 
 P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
 
-
 * System setup
 ** Screen setup
 
@@ -68,7 +67,7 @@ Even if the main purpose of the /Kiosk/ is to display a browser window in fullsc
    =autologin-session= to =i3=
 3) =sudo update-alternatives --config x-session-manager= and =sudo update-alternatives --config x-window-manager= and set i3
 
-I'm not sure the step *3* is really needed, I'll investigate more later.
+I'm not sure the step *3* is really needed, I'll investigate more later. You also probably have to check if there's a file in =/usr/share/xsessions/= (check [[file:dev.org::*Add a custom window manager entry for \[\[https://wiki.ubuntu.com/LightDM\]\[LightDM\]\]][here]] for more details)
 
 ** Setup PulseAudio
 
@@ -101,6 +100,19 @@ To verify I rerun =pacmd list-sinks= and check for the ~*~.
         name: <alsa_output.platform-fef00700.hdmi.hdmi-stereo>
         driver: <module-alsa-card.c>
 #+end_src
+
+* MPV + Youtube
+
+In order to play Youtube videos directly via =mpv= use the setting =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol.
+
+#+begin_src emacs-lisp
+  (use-package bongo
+    :custom
+    (bongo-enabled-backends '(mpv))
+    (bongo-custom-backend-matchers '((mpv ("https:") . t)))
+    (bongo-mpv-extra-arguments '("--no-audio-display" "--ytdl-raw-options=cookies-from-browser=chromium")))
+#+end_src
+
 * Additional notes
 ** Simulate keyboard events
 - Send keys to the graphic server
@@ -160,7 +172,6 @@ Or you can just write yout own HTML.
     </body>
   </html>
 #+end_src
-
 
 * Resources
 
