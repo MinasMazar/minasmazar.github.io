@@ -1324,7 +1324,7 @@ Install the =doom-modeline=.
   (setq header-line-format '((:eval minemacs-headline-content)))
 #+end_src
 
-* Web
+* Networking
 ** Search
 
 #+begin_src elisp
@@ -1416,6 +1416,13 @@ Install the =doom-modeline=.
 
 #+begin_src emacs-lisp
   (use-package elpher)
+#+end_src
+
+** HTTP Client
+
+#+begin_src emacs-lisp
+  (use-package walkman)
+  (use-package restclient)
 #+end_src
 
 * Multimedia 🎶
@@ -1742,6 +1749,7 @@ In order to make the endpoint available in a local net (i.e =192.168.xxx.xxx=) w
 Useful links:
 
 - [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
+- [[https://wiki.archlinux.org/title/EXWM][archlinux wiki]]
 
 #+begin_src elisp
   (use-package vertico-posframe

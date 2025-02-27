@@ -46,8 +46,7 @@ I think the video [[https://www.youtube.com/watch?v=sBc7toJaCxw]["Returning to t
 - [[https://www.omarpolo.com/][Omar Polo]] and [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita]]
 - [[http://xahlee.info/emacs/emacs/emacs.html][Xah Lee Web]], [[https://karthinks.com/tags/emacs/][Karthinks]]
 
-* On hand Documentation
-** Other Commands, functions, variables, keybindings
+* On hand doc: Commands, functions, variables, keybindings
 
 Just press ~C-h o~ to get help on those symbols.
 
@@ -87,7 +86,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =string-match=
 - ~C-x @~ prefix allow to reach/remap alt/super/Hyper keys
 
-** [[info:org#Working with Source Code][Org code-blocks]]
+* [[info:org#Working with Source Code][Org code-blocks]]
 
 #+begin_example org
 ,#+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
@@ -95,7 +94,7 @@ Just press ~C-h o~ to get help on those symbols.
 ,#+END_SRC
 #+end_example
 
-** String and Symbols
+* String and Symbols
 
 #+begin_src elisp
 (symbol-name 'some-symbol)
@@ -104,14 +103,14 @@ Just press ~C-h o~ to get help on those symbols.
 ; => some-symbol
 #+end_src
 
-** Macros
+* Macros
 
 #+begin_src elisp
   (defmacro ++ (x)
     (list 'setq x (list '1+ x)))
 #+end_src
 
-** Vectors
+* Vectors
 
 Get an element from a vector
 
@@ -126,7 +125,7 @@ What's the difference between =aref= and =elt=?
 =elt= is more general. It works on vector and list. But if you know
 it's vector, you should use =aref=, because it's precise and faster.
 
-** Handle List
+* Handle List
 
 To find an element
 
@@ -138,12 +137,12 @@ To find an element
   (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 #+end_example
 
-** Ibuffer
+* Ibuffer
 
 To occur among marked buffers in =ibuffer= press ~O~.
 
-** Imenu
-** Eshell
+* Imenu
+* Eshell
 
 Download four random images from picsum using an index.
 
@@ -151,12 +150,12 @@ Download four random images from picsum using an index.
   for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
 #+end_src
 
-** EWW ~ experimenting with =eww-retrieve-command=
+* EWW ~ experimenting with =eww-retrieve-command=
 
 Possible values for this variable could be
 =chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
 
-** (interactive) functions
+* (interactive) functions
 
 Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument][this SO post]] try [[elisp:(completing-read "Prompt: " '(i1 i2 i3))]] and [[https://emacsdocs.org/docs/elisp/Text-from-Minibuffer][this post]]; try [[elisp:(read-from-minibuffer "Prompt: " "initial")]]. Take a look at =minemacs/demo-function=, it can help if you want to write functions with bit more complex interactive prompts.
 
@@ -169,7 +168,7 @@ Refs to [[https://emacs.stackexchange.com/questions/32248/how-to-write-a-functio
      (message (format "url: %s, handler: %s" url handler )))
 #+end_example
 
-** Regular Expression Syntax (regexp)
+* Regular Expression Syntax (regexp)
 
 You can use the wonderful tool =regexp-builder=. Use =string-match= to run a regexp and =match-string= to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
 
@@ -241,7 +240,7 @@ Syntax classes:
   \s\   escape character
 #+end_quote
 
-** Timers
+* Timers
 
 You can run specified function at specified time and with a specific timeout. Check out [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html][the doc]] for more information.
 
@@ -257,13 +256,13 @@ only one command available in the buffer displayed: c
 point.
 #+END_QUOTE
 
-** Insert colorize text programmatically
+* Insert colorize text programmatically
 
 #+begin_example elisp
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 #+end_example
 
-** Buffer management
+* Buffer management
 
 Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the-shortcut-key-to-clear-buffer][stackoverflow]].
 
@@ -279,7 +278,7 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
   (delete-region (point-min) (point-max)))
 #+end_src
 
-** Faces and fonts
+* Faces and fonts
 
 If you'd like to have a smaller font on compialtion buffers
 
@@ -302,11 +301,11 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 #+begin_src elisp
   (set-face-font 'default (seq-random-elt (font-family-list)))
 #+end_src
-** Libaries
+* Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]
 
-** Widget example
+* Widget example
 
 Example stolen from [[https://www.gnu.org/software/emacs/manual/html_node/widget/Programming-Example.html][here]].
 
@@ -404,7 +403,20 @@ Example stolen from [[https://www.gnu.org/software/emacs/manual/html_node/widget
       (pop-to-buffer buffer)))
 #+end_src
 
-** Useful topics
+* Kiosk
+
+Drive a graphical Emacs instance via =emacsclient=.
+
+#+begin_src emacs-lisp
+  (defun first-x-frame ()
+    (car (filtered-frame-list (lambda (frame) (member (framep frame) '(ns x))))))
+
+  (defmacro with-x-frame (body)
+    `(let ((frame (first-x-frame)))
+      (with-selected-frame frame ,body)))
+#+end_src
+
+* Useful topics
 - [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key-Bindings in Emacs]]
 - [[https://orgmode.org/manual/Results-of-Evaluation.html][Results of Evaluation]]
 - [[https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l][5 ways to get text from an Emacs buffer]]

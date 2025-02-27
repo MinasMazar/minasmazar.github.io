@@ -160,6 +160,33 @@ It seems there's a problem with [[https://github.com/moby/moby/issues/40734][lib
 
 - https://github.com/teslamate-org/teslamate/issues/3691
   
+** Play sounds from your containers on MacOS host machine
+
+source: https://stackoverflow.com/questions/40136606/how-to-expose-audio-from-docker-container-to-a-mac
+
+You need to install PulseAudio
+
+#+begin_src sh
+  brew install pulseaudio
+#+end_src
+
+Start the server
+
+#+begin_src sh
+  pulseaudio --load=module-native-protocol-tcp --exit-idle-time=-1 --daemon
+#+end_src
+
+In your Docker container:
+
+- install PulseAudio, e.g., =apt-get install pulseaudio=.
+- set the following environment variable: =ENV PULSE_SERVER\=host.docker.internal=
+
+You can run a test to see if it's working like this:
+
+#+begin_src sh
+  docker run -it -e PULSE_SERVER=host.docker.internal --mount type=bind,source=/Users/YOURUSERNAME/.config/pulse,target=/home/pulseaudio/.config/pulse --entrypoint speaker-test --rm jess/pulseaudio -c 2 -l 1 -t wav
+#+end_src
+
 ** [[Dockerize Phoenix webapp (my_app)]]
 ** COMMENT [[https://github.com/lukechilds/dockerpi][dockerpi]]: Docker + Raspberry :wip:
 
@@ -1089,6 +1116,73 @@ If you want to add a text stripe under the image
 #+end_src
 
 * Linux desktop
+** Change the ownership of a input device, like a usb mouse
+Retrive information of device through
+
+#+BEGIN_SRC sh
+udevadm info --attribute-walk --name /dev/input/mouse0
+#+END_SRC
+
+Then add a rule in /etc/udev/rules.d/
+
+#+begin_src sh
+SUBSYSTEM=="input", KERNEL=="mouse0", OWNER="myusername"
+#+end_src
+
+** Opena a remote desktop session on a PCDuino
+
+Configuring The VNC Server
+
+As it turns out, the pcDuino comes with the x11vnc server already installed and all that’s necessary is to configure SSH on the pcDuino and local machine to support it.  (Note:  while working on putting together a bootable SD card I found out this is not necessarily the case.  If you find the x11vnc server is not installed, you can do so by executing the command from the pcDuino command line.)
+
+#+begin_src sh
+sudo apt-get install x11vnc
+#+end_src
+
+On the local machine and change to the /etc/ssh directory as root:
+
+#+begin_src sh
+sudo su
+cd /etc/ssh
+#+end_src
+
+Open the file ssh_config file in your editor of choice and find the ForwardX11 option.  Uncomment it if necessary, change its value to YES, and save the file.
+
+Now log into the pcDuino via the SSH link and gain root access in the same manner:
+
+#+begin_src sh
+sudo su
+cd /etc/ssh
+#+end_src
+
+Open the file sshd_config file in your editor of choice, find the X11Forwarding option, change its value to YES, and save the file.
+
+Install and Connect Via a VNC Client
+
+The final step is to install a VNC client on your local computer.  There are a number of them to choose from.  Of these, I chose xtightvncviewer for no other reason than it was there, installing it as:
+
+#+begin_src sh
+sudo apt-get install xtightvncviewer
+#+end_src
+
+Putting It All Together
+
+At this point if you SSH into the pcDuino and try to start the VNC server, you’ll get an error indicating you cannot connect to the display (XOpenDisplay failed) along with hints on how to fix it.  The cause of this error is that the account used for SSH does not have sufficient permissions to connect to the X display.
+
+To fix this, execute the command ps -fe | grep /usr/bin/X | grep -v grep from the pcDuino command line.  The returned process will have have an -auth flag.  Take note of the associated file. On my machine, it was /var/run/lightdm/root/:0.
+
+Exit from the SSH session and reconnect to the pcDuino using the command
+
+#+begin_src sh
+ssh -L 5900:localhost:5900 <user>@<pcDuino_ip_address> ‘sudo x11vnc -auth <path_to_authority_file>’ -display :0
+#+end_src
+
+where <path_to_authority_file> is the file associated with the -auth flag noted above.  This will log you into the pcDuino via SSH and start an instance of the X server.  You can then start the VNC viewer from the local machine command line with the command:
+
+#+begin_src sh
+vncviewer localhost:5900 &
+#+end_src
+
 ** Brief list of useful commands, examples, snippets
 
 - =lsb_release -a= show info about distro
@@ -1601,30 +1695,10 @@ Get all links from a page and extract only the =href= attribute. More info on =q
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 #+end_src
 
-** Install [[https://github.com/asdf-vm/asdf][asdf]] and languages
+** Dev environment
 
 #+begin_src sh
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.0
-#+end_src
-
-#+RESULTS:
-
-Then add =. $HOME/.asdf/asdf.sh= to your =~/.bash_profile=.
-
-Here's a snippet to install a short list of languages I use
-
-#+begin_src elisp
-  asdf plugin add ruby
-  asdf plugin add nodejs
-  asdf plugin add erlang
-  asdf plugin add elixir
-  asdf plugin add python
-
-  asdf install ruby 3.3.0
-  asdf install nodejs 21.6.2
-  asdf install erlang 26.0
-  asdf install elixir 1.16.0-otp-26
-  asdf install python 3.12.0
+  brew install tmux curl wget git asdf cmake libtool
 #+end_src
 
 ** Emacs
@@ -1634,6 +1708,7 @@ There are many options.
 - You can use the [[https://emacsformacosx.com/][Emacs for Mac OS X]] bundle, but it is not always up to date to newer versions.
 - You can install via homebrew
 - You can install the [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs plus]] via homebrew
+
 #+begin_src sh
   brew tap d12frosted/emacs-plus
   brew install emacs-plus
@@ -2144,6 +2219,14 @@ CDN installation:
 Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+
+#+begin_src conf :tangle ~/.config/tmux/tmux.conf :mkdirp yes
+  set -g status-keys emacs
+
+  set -g prefix C-h
+  unbind-key C-b
+  bind-key C-h send-prefix
+#+end_src
 
 * Tor
 ** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]

@@ -71,13 +71,15 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     (custom-file (file-name-concat user-emacs-directory "custom.el"))
     (dired-dwim-target t)
     (dired-listing-switches "-alth")
-    ;; (completion-auto-help nil)
     (enable-recursive-minibuffers t)
     (initial-buffer-choice #'eshell)
     (make-backup-files nil)
     (shr-inhibit-images t)
     (tab-always-indent 'complete)
     (use-short-answers t)
+    (ring-bell-function 'ignore)
+    (visible-bell t)
+    (completion-auto-help nil)
     :config
     (tool-bar-mode -1)
     (menu-bar-mode -1)
@@ -87,7 +89,6 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     (ffap-bindings)
     (repeat-mode 1)
     (server-start 1)
-    ;; (fido-vertical-mode 1)
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
@@ -249,8 +250,8 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 * Load modules and custom configurations
 
 #+begin_src elisp
-  (load custom-file :no-error-if-file-is-missing)
   (if (boundp 'minemacs-shared-custom-file) (load minemacs-shared-custom-file :no-error-if-file-is-missing))
+  (load custom-file :no-error-if-file-is-missing)
   (minemacs-modules-load)
 #+end_src
 

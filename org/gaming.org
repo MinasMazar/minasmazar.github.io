@@ -9,3 +9,7 @@
 - [[https://www.wesnoth.org/][The Battle for Wesnoth]]
 - [[https://www.freeorion.org][FreeOrion]]
 - [[https://xonotic.org/][xonotic]]
+- freeciv
+- scorch3d
+- warzone2100
+- openarena
