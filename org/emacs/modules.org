@@ -83,8 +83,17 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 :END:
 
 #+begin_src elisp
+  (require 'cl-lib)
+  (require 'ucs-normalize)
+
   (defun random-from-list (list)
     (nth (random (length list)) list))
+
+  (defun dashize (str)
+    (cl-remove-if
+     (lambda (char)
+       (> char 127))
+     (ucs-normalize-NFKD-string (s-dashed-words str))))
 #+end_src
 
 * Info and Help
@@ -574,22 +583,14 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 *** Video
 #+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "jarvis-collector.el") :mkdirp yes :comments link
   (use-package s)
-  (require 'cl-lib)
   (require 'dom)
-  (require 'ucs-normalize)
-
-  (defun jarvis-collect-video-dashitize-string (str)
-    (cl-remove-if
-     (lambda (char)
-       (> char 127))
-     (ucs-normalize-NFKD-string (s-dashed-words str))))
 
   (defcustom jarvis-collect-video-collector-directory "~/Dropbox/collector"
     "Base directory where to put the collected Youtube videos."
     :type '(directory))
 
   (defun jarvis-collect-video-collector--build-filename (vid)
-    (jarvis-collect-video-dashitize-string (plist-get vid :title)))
+    (dashize (plist-get vid :title)))
 
   (defun jarvis-collect-video-collector--build-pathname (vid &optional ext)
     (let* ((ext (or ext "org"))
@@ -836,60 +837,83 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
-*** Feeds                                                       :disable:wip:
+*** Feeds
+
 #+begin_src emacs-lisp
-  (defvar jarvis-feeds-default-template
-    "#+TITLE: %s
-  ,#+AUTHOR: %s
-  ,#+DATE: <%s>
-
-  ,* [[%s][%s]]
-
-  Tags :%s
-
-  %s")
+  (defcustom jarvis-feeds-collector-directory "~/Dropbox/feeds/"
+    "Base directory where to put the collected feeds."
+    :type '(directory))
 
   (defun jarvis-feeds--extract-authors-names (entry)
     (if-let* ((meta (elfeed-entry-meta entry))
-	      (authors (plist-get meta :authors)))
-	(mapcar (lambda (author) (plist-get author :name)) authors)))
+  	      (authors (plist-get meta :authors)))
+  	(mapcar (lambda (author) (plist-get author :name)) authors)))
 
-  (defun jarvis-feeds--render (template entry)
-    (let* ((url (elfeed-entry-link entry))
-	   (title (elfeed-entry-title entry))
-	   (content (elfeed-entry-content entry))
-	   (date (format-time-string "%F %R" (elfeed-entry-date entry)))
-	   (tags-str (string-join (mapcar
-				   (lambda (sym) (format "#%s" (symbol-name sym)))
-				   (elfeed-entry-tags entry)) " "))
-	   (authors (jarvis-feeds--extract-authors-names entry))
-	   (authors-str (string-join authors ", ")))
-      (format template
-	      title
-	      authors-str
-	      date
-	      url title
-	      tags-str
-	      content)))
+  (defun jarvis-feeds--insert-buffer-content (entry buffer)
+    (let* ((feed (elfeed-entry-feed entry))
+           (feed-title (elfeed-feed-title feed))
+  	 (url (elfeed-entry-link entry))
+  	 (title (elfeed-entry-title entry))
+  	 (authors (jarvis-feeds--extract-authors-names entry))
+  	 (date (format-time-string "%F %R" (elfeed-entry-date entry)))
+  	 (tags (mapcar (lambda (tag) (symbol-name tag)) (or (elfeed-entry-tags entry) '(untagged))))
+           (base (and feed (elfeed-compute-base (elfeed-feed-url feed))))
+           (type (elfeed-entry-content-type entry))
+  	 (entry-content (elfeed-deref (elfeed-entry-content entry))))
+      (with-current-buffer buffer
+        (insert (format "#+TITLE: %s\n" title))
+        (dolist (author authors)
+  	(insert (format "#+AUTHOR: %s\n" author)))
+        (insert (format "#+DATE: <%s>\n" date))
+        (insert (format "#+FILETAGS: %s\n\n" (org-make-tag-string tags)))
+        (insert (format "* [[%s][%s]]\n\n" url title))
+        (if entry-content
+            (if (eq type 'html)
+                (elfeed-insert-html entry-content base)
+              (insert entry-content))
+  	(insert (propertize "(empty)\n" 'face 'italic))))))
 
-  (defun jarvis-feeds-collect-feed (entry feed)
-    (let* ((template jarvis-feeds-default-template)
-	   (org-content (jarvis-feeds--render template entry)))
-      (with-current-buffer (get-buffer-create "*jarvis-feeds-collect*")
-	(erase-buffer)
-	(insert org-content)
-	(org-mode)
-	(beginning-of-buffer))))
+  (defun jarvis-feeds--build-entry-pathname (entry &optional ext)
+    (let* ((ext (or ext "org"))
+  	 (name (dashize (elfeed-entry-title entry)))
+  	 (date (elfeed-entry-date entry))
+  	 (year (format-time-string "%+4Y" date))
+  	 (month (format-time-string "%m" date))
+  	 (day (format-time-string "%d" date))
+           (date-str (format-time-string "%F-%H%M%S" date))
+  	 (filename (format "%s/%s/%s/%s-%s.%s" year month day date-str name ext)))
+        (expand-file-name filename jarvis-feeds-collector-directory)))
 
-  (defun jarvis-feeds-collect ()
-    (interactive)
+  (defun jarvis-feeds--create-entry-file (entry &optional force)
+    (let* ((pathname (jarvis-feeds--build-entry-pathname entry))
+          (coding-system-for-write 'raw-text)
+  	(base-dir (file-name-directory pathname))
+  	(already-collected (member 'collected (elfeed-entry-tags entry))))
+      (when (or force (and (not already-collected) (not (file-exists-p pathname))))
+        (mkdir base-dir t)
+        (with-temp-file pathname
+  	(set-buffer-file-coding-system 'raw-text)
+  	(jarvis-feeds--insert-buffer-content entry (current-buffer)))
+        (message "Jarvis/Feeds: collected %s" pathname)
+        (elfeed-tag entry 'collected)
+        pathname)))
+
+  (defun jarvis-feeds-collect-feed (entry)
+    (interactive (list
+  		(or (and (boundp 'elfeed-show-entry) elfeed-show-entry)
+  		    (elfeed-search-selected :ignore-region))))
+    (when (elfeed-entry-p entry)
+      (let ((pathname (jarvis-feeds--create-entry-file elfeed-show-entry t)))
+        (find-file pathname))))
+
+  (defun jarvis-feeds-bulk-collect (limit)
+    (interactive "NFeed entries to collect: ")
     (let* ((count 0))
-      (with-elfeed-db-visit (entry feed)
-	(setq count (1+ count))
-	(setq jarvis-feeds--entry entry jarvis-feeds--feed feed)
-	(jarvis-feeds-collect entry feed)
-	(when (= count 3)
-	  (elfeed-db-return (list :ok count))))))
+      (with-elfeed-db-visit (entry _feed)
+  	(setq count (1+ count))
+  	(jarvis-feeds--create-entry-file entry)
+  	(when (= count limit)
+  	  (elfeed-db-return (list :ok count))))))
 #+end_src
 
 ** FFmpeg Scenecutter
