@@ -1785,6 +1785,10 @@ Useful links:
 #+begin_src elisp
   (use-package exwm
     :if (getenv "EXWM")
+    :init
+    ;; (start-process "dex" nil "dex" "-a" "-e" "i3")
+    ;; (start-process "power-manager" nil "xfce4-power-manager")
+    ;; (start-process "xfce-settings" nil "xfsettingsd")
     :bind
     (:map key-translation-map
 	  ("s-m" . nil))

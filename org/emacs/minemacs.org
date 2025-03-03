@@ -93,8 +93,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
   	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-  	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"
-  	      minemacs-shared-custom-file "~/Dropbox/minemacs/custom.el"))
+  	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -175,18 +174,16 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
 	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
-    ("s-n" . #'god-mode)
+    ("s-n" . #'god-local-mode)
     (:map god-local-mode-map
-     ("i" . #'god-mode)
+     ("i" . #'god-local-mode)
      ("I" . #'org-edit-special)
      ("u" . #'undo)
      ("U" . #'undo-redo)
      ("<" . #'beginning-of-buffer)
      (">" . #'end-of-buffer)
      ("[" . #'backward-paragraph)
-     ("]" . #'forward-paragraph))
-    :config
-    (god-mode))
+     ("]" . #'forward-paragraph)))
 #+end_src
 
 * Auto-completion
@@ -250,8 +247,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 * Load modules and custom configurations
 
 #+begin_src elisp
-  (if (boundp 'minemacs-shared-custom-file) (load minemacs-shared-custom-file :no-error-if-file-is-missing))
-  (load custom-file :no-error-if-file-is-missing)
   (minemacs-modules-load)
+  (load custom-file :no-error-if-file-is-missing)
 #+end_src
 

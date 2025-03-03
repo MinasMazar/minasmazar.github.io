@@ -84,7 +84,9 @@ Just press ~C-h o~ to get help on those symbols.
 - =project-switch-commands=
 - =shr-inhibit-images=
 - =string-match=
+
 - ~C-x @~ prefix allow to reach/remap alt/super/Hyper keys
+- ~C-h R~
 
 * [[info:org#Working with Source Code][Org code-blocks]]
 

@@ -4,122 +4,29 @@
 #+DATE: <2024-10-28 Mon>
 #+STARTUP: overview
 
-These are some notes on how I turned my Raspberry Pi into a /Kiosk/.
+These are some notes on how I turned my Raspberry Pi into a /Kiosk/ using Emacs.
 
 The equipment:
 - [[https://www.raspberrypi.com/products/raspberry-pi-4-model-b/][Raspberry Pi 4]] + [[https://www.waveshare.com/4.3inch-dsi-lcd.htm][Waveshare 4.3inch Capacitive Touch Display (DSI Interface, 800×480)]] within [[https://amzn.eu/d/fDUc4BF][ad-hoc case]]
 - an external TV with an HDMI cable (+ mini-HDMI adapter that plugs in the rpi case)
 
-* Kiosk app
-** Darbula (Elixir/Phoenix)
-*** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+Here's more details about [[file:dev.org::*Use Raspberry Pi in "Kiosk" mode][Raspberry PI in kiosk mode]].
 
-#+begin_src sh
-  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "kiosk.el") :mkdirp yes
+  (defun kiosk-picsum-wallpaper-stop-timer ()
+    (interactive)
+    (and (timerp picsum-wallpaper-timer-obj)
+         (cancel-timer picsum-wallpaper-timer-obj)))
+
+  (defun kiosk-picsum-wallpaper-change ()
+    (interactive)
+    (let ((display-buffer-alist (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command "display -window root  https://picsum.photos/1920/1080.jpg" nil nil)))
+
+  (defun kiosk-picsum-wallpaper-start-timer ()
+      (interactive)
+      (setq picsum-wallpaper-timer-obj (run-at-time t (* 60 19) #'kiosk-picsum-wallpaper-change)))
 #+end_src
-
-* Browsers
-*** Chromium
-Use Chromium/Firefox as browser works well only on RPi > 1
-
-Start Chromium in Kiosk mode within Wayland.
-
-#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
-  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
-#+end_src
-
-Start Chromium in Kiosk mode within X11.
-
-#+begin_src sh :tangle ~/kiosk.sh :sheband "#!/bin/bash"
-  DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
-#+end_src
-
-- [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
-
-*** Old RPi models
-
-For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
-
-P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
-
-* System setup
-** Screen setup
-
-*** Wayland vs X11
-
-With Wayland I've encountered many troubles trying to manage the monitors (TV + touchscreen) via command line tools (=wlr-randr=); it handles the virtual monitor in a different way and it lacks handy options like =--same-as=. For this reason I've decided to temporary drop Wayland in favor of the good old X11.
-I've used =raspi-config= in order to use the standard =X11= server.
-
-In order to have the same contents both on TV and the touchscreen I've used =xrandr= to mirror the output in almost the same layout
-
-#+begin_src sh
-  xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480 --scale 2.2 --same-as HDMI-1
-#+end_src
-
-*** Window manager
-
-Even if the main purpose of the /Kiosk/ is to display a browser window in fullscreen mode (or kiosk mode, if the browser supports it), and since I do most of the operations on the Raspberry via SSH, I could leave the default LXDE window manager. But since I've two monitors, I'd like to take advantage and use both of them in different way instad of just replicate the same contents. Since I've no mouse, I want to launch apps and have them to be arranged automatically via *rules*. I don't want to investigate LXDE configuration files, or if it can be achieved via some XDG files: I use i3 every day and it allow to span windows across workspaces (and screens) by defining simple rules. For this reason I'll install i3 and I'll configure the system to auto-login in a i3 session.
-
-*N.B.* At the time of writing I was able to install and setup i3, but I haven't defined any rules yet, even because I've to decide how to use the touchscreen. 
-
-1) =sudo apt install i3=
-2) update LightDM conf (=/etc/lightdm/lightdm.conf=) in order to set the
-   =autologin-session= to =i3=
-3) =sudo update-alternatives --config x-session-manager= and =sudo update-alternatives --config x-window-manager= and set i3
-
-I'm not sure the step *3* is really needed, I'll investigate more later. You also probably have to check if there's a file in =/usr/share/xsessions/= (check [[file:dev.org::*Add a custom window manager entry for \[\[https://wiki.ubuntu.com/LightDM\]\[LightDM\]\]][here]] for more details)
-
-** Setup PulseAudio
-
-Due to the troubles about Wayland, I've decided to switched back to PulseAudio instead of PipeWire. Since the Raspberry case does not have any speaker, I want to reproduce the sounds via the TV (HDMI). In order to do that I had to set the PulseAudio default sink to the HDMI card device:
-
-1) get the device index via
-
-#+begin_src sh
-pacmd list-sinks
-#+end_src
-
-the current default sink has an asterisk near the index.
-
-#+begin_src
-      index: 1
-        name: <alsa_output.platform-fef00700.hdmi.hdmi-stereo>
-        driver: <module-alsa-card.c>
-#+end_src
-
-2) find the index of the HDMI device and use it (assume it's ~1~)
-
-#+begin_src sh
-pacmd set-default-sink 1
-#+end_src
-
-To verify I rerun =pacmd list-sinks= and check for the ~*~.
-
-#+begin_src 
-  * index: 1
-        name: <alsa_output.platform-fef00700.hdmi.hdmi-stereo>
-        driver: <module-alsa-card.c>
-#+end_src
-
-* MPV + Youtube
-
-In order to play Youtube videos directly via =mpv= use the setting =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol.
-
-#+begin_src emacs-lisp
-  (use-package bongo
-    :custom
-    (bongo-enabled-backends '(mpv))
-    (bongo-custom-backend-matchers '((mpv ("https:") . t)))
-    (bongo-mpv-extra-arguments '("--no-audio-display" "--ytdl-raw-options=cookies-from-browser=chromium")))
-#+end_src
-
-* Additional notes
-** Simulate keyboard events
-- Send keys to the graphic server
-  X ([[https://github.com/jordansissel/xdotool][xdotool]]): =xdotool key ctrl+l= or =xdotool type "Hello world"=
-  Wayland: =XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab=
-
-** Emacs + Org + Midori
 
 Install midori.
 
@@ -172,10 +79,5 @@ Or you can just write yout own HTML.
     </body>
   </html>
 #+end_src
-
-* Resources
-
-- http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html
-- https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/
 
 
