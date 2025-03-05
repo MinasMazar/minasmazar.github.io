@@ -2317,6 +2317,13 @@ Create =/lib/systemd/system/blink.service= (or =/lib/systemd/user/blink.service=
 
 Then start with =systemctl [--user] (enable|restart|start|stop) blink=
 
+To start a service after a specific timeout (ex. 30 seconds) add:
+
+#+begin_src toml
+  [Service]
+  ExecStartPre=/bin/sleep 30
+#+end_src
+
 ** Journalctl
 
 Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
