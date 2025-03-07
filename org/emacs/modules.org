@@ -300,6 +300,14 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
   (add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
 #+end_src
 
+** Project
+
+#+begin_src emacs-lisp
+  (use-package project
+    :config
+    (add-to-list 'project-switch-commands '(project-shell "shell")))
+#+end_src
+
 ** Versioning
 
 #+begin_src elisp
@@ -1440,6 +1448,7 @@ Install the =doom-modeline=.
 
 #+begin_src emacs-lisp
   (use-package elpher)
+  (use-package gemini-mode)
 #+end_src
 
 ** HTTP Client
@@ -1831,7 +1840,7 @@ Useful links:
     (exwm-systemtray-mode 1))
 #+end_src
 
-** System configuration (Linux Mint/Ubuntu)
+*** System configuration (Linux Mint/Ubuntu)
 :PROPERTIES:
 :header-args: :tangle no
 :END:
@@ -1874,3 +1883,4 @@ X-LightDM-DesktopName=exwm
 DesktopNames=exwm
 Keywords=tiling;wm;windowmanager;window;manager;emacs;
 #+end_example
+
