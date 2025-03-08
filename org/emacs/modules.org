@@ -1,4 +1,4 @@
-#+TITLE: Minemacs modules
+#+TITLE: Minemacs Modules
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-12-10 Tue>
@@ -101,6 +101,8 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
 :header-args: :tangle (minemacs-tangle-if-not-disabled "info-help.el") :mkdirp yes
 :END:
 
+** Marginalia
+
 #+begin_src elisp
   ;; Enable rich annotations using the Marginalia package
   (use-package marginalia
@@ -118,6 +120,8 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     ;; package.
     (marginalia-mode))
 #+end_src
+
+** Helpful                                                          :disable:
 
 #+begin_src elisp
   (use-package helpful
@@ -240,7 +244,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   feh --bg-fill ~/Pictures/wallpaper
 #+end_src
 
-* imenu
+* Imenu
 
 #+begin_src elisp
   (use-package imenu
@@ -491,28 +495,29 @@ Given a Youtuve channel URL, returns the channel ID. This is  useful in cases li
 Simply open pick or randomly select a Youtube video from a list. Open in browser or using =mpv=.
 
 #+begin_src elisp
-    (defcustom jarvis/youtube-sources '()
-      "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
-      :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
 
-    (defun jarvis/play-youtube (&optional url)
-      "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
-      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
-      (let ((command (format "mpv \"%s\"" url))
-	  (buffer-name (format "mpv: %s" url)))
-	(async-shell-command command buffer-name)))
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (let ((entries (make-hash-table :test 'equal)))
+		   (dolist (entry jarvis/youtube-sources)
+		     (puthash (-first-item entry) (-second-item entry) entries))
+		   (list (gethash (completing-read "URL: " entries) entries))))
+    (empv-play url))
 
-    (defun jarvis/open-random-youtube ()
-      "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
-      (interactive)
-      (let ((entry (minemacs-random jarvis/youtube-sources))
-	    (url (nth 1 entry)))
-	(jarvis/open-youtube url)))
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+    (interactive)
+    (let ((entry (minemacs-random jarvis/youtube-sources))
+	  (url (nth 1 entry)))
+      (jarvis/open-youtube url)))
 
-    (defun jarvis/open-youtube (&optional url)
-      "Open in browser one of the sources in `jarvis/youtube-sources`."
-      (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
-      (browse-url-default-browser url))
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " (mapcar (lambda (entry) (nth 1 entry)) jarvis/youtube-sources))))
+    (browse-url-default-browser url))
 #+end_src
 
 *** Experimenting with the Google APIs ([[https://developers.google.com/apis-explorer?hl=it][here's the doc]]).
@@ -669,9 +674,9 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
     (let ((id (plist-get vid :id))
   	(title (plist-get vid :title)))
       (format "
-  ,#+BEGIN_EXPORT html
-  <iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>
-  ,#+END_EXPORT
+#+BEGIN_EXPORT html
+<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>
+#+END_EXPORT
   " id title)))
 
   (defun jarvis-collect-video-collector--org-content-download (vid)

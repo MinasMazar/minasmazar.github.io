@@ -1159,6 +1159,20 @@ You can also use a remote image, like https://picsum.photos/1920/1080.jpg
 
 * [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
 * Linux desktop
+
+Brief list of useful commands, examples, snippets
+
+- =lsb_release -a= show info about distro
+- =lsblk -f= show partitions informations
+- =pacman -Qq= / =apt list --installed= / =dnf list install= show installed packages (Arch, Debian, Fedora)
+- =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
+- =ls -1 | wc -l= determine how many files there are in a directory
+- =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
+
+** Show preferred applications (alternatives) :debian:
+#+begin_src sh
+update-alternatives --get-selections
+#+end_src
 ** Change the ownership of a input device, like a usb mouse
 Retrive information of device through
 
@@ -1225,15 +1239,6 @@ where <path_to_authority_file> is the file associated with the -auth flag noted 
 #+begin_src sh
 vncviewer localhost:5900 &
 #+end_src
-
-** Brief list of useful commands, examples, snippets
-
-- =lsb_release -a= show info about distro
-- =lsblk -f= show partitions informations
-- =pacman -Qq= / =apt list --installed= / =dnf list install= show installed packages (Arch, Debian, Fedora)
-- =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
-- =ls -1 | wc -l= determine how many files there are in a directory
-- =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
 
 ** How do I get a list of installed files from a package?
 

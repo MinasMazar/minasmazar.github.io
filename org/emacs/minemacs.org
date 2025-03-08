@@ -92,8 +92,8 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
     ;; Shared configuration
     (if (file-exists-p "~/Dropbox/minemacs/")
-  	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
-  	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"))
+	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"))
 
     (global-set-key (kbd "s-0") (kbd "C-x 0"))
     (global-set-key (kbd "s-1") (kbd "C-x 1"))
@@ -106,18 +106,18 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 
     (setq minemacs-map
       (let ((map (make-sparse-keymap)))
-  	(define-key map (kbd "a") #'org-agenda)
-  	(define-key map (kbd "k") #'org-capture)
-  	(define-key map (kbd "e") #'eshell)
-  	(define-key map (kbd "E")
-  		    (lambda (command)
-  		      (interactive "sEmacs eshell command: ")
-  		      (eshell-command command current-prefix-arg)))
-  	(define-key map (kbd "r") #'recentf)
-  	(define-key map (kbd "8") #'emoji-search)
-  	(define-key map (kbd "w j") #'webjump)
-  	(define-key map (kbd "w w") #'eww)
-  	map))
+	(define-key map (kbd "a") #'org-agenda)
+	(define-key map (kbd "k") #'org-capture)
+	(define-key map (kbd "e") #'eshell)
+	(define-key map (kbd "E")
+		    (lambda (command)
+		      (interactive "sEmacs eshell command: ")
+		      (eshell-command command current-prefix-arg)))
+	(define-key map (kbd "r") #'recentf)
+	(define-key map (kbd "8") #'emoji-search)
+	(define-key map (kbd "w j") #'webjump)
+	(define-key map (kbd "w w") #'eww)
+	map))
 
     :bind-keymap
     ("s-o" . minemacs-map)
@@ -136,16 +136,17 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
     ("s-i" . #'imenu)
     ("s-b" . #'ibuffer)
     ("s-j" . #'switch-to-buffer)
+    ("s-f" . #'find-name-dired)
     ("s-t" . #'rgrep)
     ("s--" . #'bookmark-jump)
     ("s-_" . #'bookmark-set)
     (:map isearch-mode-map
-  	  ("C-p" . #'isearch-repeat-backward)
-  	  ("C-n" . #'isearch-repeat-forward)
-  	  ("<tab>" . #'isearch-repeat-forward)
-  	  ("<S-tab>" . #'isearch-repeat-backward))
+	  ("C-p" . #'isearch-repeat-backward)
+	  ("C-n" . #'isearch-repeat-forward)
+	  ("<tab>" . #'isearch-repeat-forward)
+	  ("<S-tab>" . #'isearch-repeat-backward))
     (:map completion-list-mode-map
-  	  ("e" . #'switch-to-minibuffer)))
+	  ("e" . #'switch-to-minibuffer)))
 #+end_src
 
 * Minibuffer
@@ -156,6 +157,9 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 #+end_src
 
 * Modal editing
+** God mode                                                        :disabled:
+
+I've used =god-mode= for years and I found it really useful. In recent weeks I'm experimenting with [[*Devil mode][=devil-mode=]], so I keep this section /disabled/ for now.
 
 #+begin_src elisp
   (use-package god-mode
@@ -184,6 +188,14 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
      (">" . #'end-of-buffer)
      ("[" . #'backward-paragraph)
      ("]" . #'forward-paragraph)))
+#+end_src
+
+** Devil mode
+
+#+begin_src emacs-lisp
+  (use-package devil
+    :config
+    (global-devil-mode))
 #+end_src
 
 * Auto-completion
