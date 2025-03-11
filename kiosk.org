@@ -4,41 +4,29 @@
 #+DATE: <2024-10-28 Mon>
 #+STARTUP: overview
 
-* Using Elixir as Kiosk
-** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+These are some notes on how I turned my Raspberry Pi into a /Kiosk/ using Emacs.
 
-#+begin_src sh
-  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+The equipment:
+- [[https://www.raspberrypi.com/products/raspberry-pi-4-model-b/][Raspberry Pi 4]] + [[https://www.waveshare.com/4.3inch-dsi-lcd.htm][Waveshare 4.3inch Capacitive Touch Display (DSI Interface, 800×480)]] within [[https://amzn.eu/d/fDUc4BF][ad-hoc case]]
+- an external TV with an HDMI cable (+ mini-HDMI adapter that plugs in the rpi case)
+
+Here's more details about [[file:dev.org::*Use Raspberry Pi in "Kiosk" mode][Raspberry PI in kiosk mode]].
+
+#+begin_src emacs-lisp :tangle (minemacs-tangle-if-not-disabled "kiosk.el") :mkdirp yes
+  (defun kiosk-picsum-wallpaper-stop-timer ()
+    (interactive)
+    (and (timerp picsum-wallpaper-timer-obj)
+         (cancel-timer picsum-wallpaper-timer-obj)))
+
+  (defun kiosk-picsum-wallpaper-change ()
+    (interactive)
+    (let ((display-buffer-alist (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+      (async-shell-command "display -window root  https://picsum.photos/1920/1080.jpg" nil nil)))
+
+  (defun kiosk-picsum-wallpaper-start-timer ()
+      (interactive)
+      (setq picsum-wallpaper-timer-obj (run-at-time t (* 60 19) #'kiosk-picsum-wallpaper-change)))
 #+end_src
-
-** Simulate keyboard events
-- Send keys to the graphic server
-  X ([[https://github.com/jordansissel/xdotool][xdotool]]): =xdotool key ctrl+l= or =xdotool type "Hello world"=
-  Wayland: =XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab=
-
-** Use Browser in kiosk mode
-
-Use Chromium/Firefox as browser works well only on RPi > 1
-
-#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
-  sleep 11
-
-  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-featur\
-  es=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
-#+end_src
-
-- [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
-
-For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
-
-P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
-
-** Other resources
-
-- http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html
-- https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/
-
-* Using Emacs and Org as Kiosk (Midori)
 
 Install midori.
 
@@ -77,7 +65,7 @@ This is a sample =index= page written in org. You can export as HTML and show as
   [[https://picsum.photos/1920/1080.jpg]]
 #+end_src
 
-Or you can just write yout ouwn HTML.
+Or you can just write yout own HTML.
 
 #+begin_src html :tangle /tmp/index.html
   <html>
@@ -91,3 +79,5 @@ Or you can just write yout ouwn HTML.
     </body>
   </html>
 #+end_src
+
+

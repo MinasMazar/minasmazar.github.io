@@ -199,91 +199,39 @@
  <a accesskey="H" href="/"> HOME </a>
 </div><div id="content" class="content">
 <h1 class="title">MinasMazar's blog ~ Project Kiosk</h1>
-<div id="table-of-contents" role="doc-toc">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents" role="doc-toc">
-<ul>
-<li><a href="#org3823248">Using Elixir as Kiosk</a>
-<ul>
-<li><a href="#org3a05c65">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
-<li><a href="#orgebf4ce3">Simulate keyboard events</a></li>
-<li><a href="#org61c3608">Use Browser in kiosk mode</a></li>
-<li><a href="#org81ab52c">Other resources</a></li>
-</ul>
-</li>
-<li><a href="#org1a6b80f">Using Emacs and Org as Kiosk (Midori)</a></li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org3823248" class="outline-2">
-<h2 id="org3823248">Using Elixir as Kiosk</h2>
-<div class="outline-text-2" id="text-org3823248">
-</div>
-<div id="outline-container-org3a05c65" class="outline-3">
-<h3 id="org3a05c65">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-org3a05c65">
-<div class="org-src-container">
-<pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgebf4ce3" class="outline-3">
-<h3 id="orgebf4ce3">Simulate keyboard events</h3>
-<div class="outline-text-3" id="text-orgebf4ce3">
-<ul class="org-ul">
-<li>Send keys to the graphic server
-X (<a href="https://github.com/jordansissel/xdotool">xdotool</a>): <code>xdotool key ctrl+l</code> or <code>xdotool type "Hello world"</code>
-Wayland: <code>XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab</code></li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org61c3608" class="outline-3">
-<h3 id="org61c3608">Use Browser in kiosk mode</h3>
-<div class="outline-text-3" id="text-org61c3608">
 <p>
-Use Chromium/Firefox as browser works well only on RPi &gt; 1
+These are some notes on how I turned my Raspberry Pi into a <i>Kiosk</i> using Emacs.
+</p>
+
+<p>
+The equipment:
+</p>
+<ul class="org-ul">
+<li><a href="https://www.raspberrypi.com/products/raspberry-pi-4-model-b/">Raspberry Pi 4</a> + <a href="https://www.waveshare.com/4.3inch-dsi-lcd.htm">Waveshare 4.3inch Capacitive Touch Display (DSI Interface, 800×480)</a> within <a href="https://amzn.eu/d/fDUc4BF">ad-hoc case</a></li>
+<li>an external TV with an HDMI cable (+ mini-HDMI adapter that plugs in the rpi case)</li>
+</ul>
+
+<p>
+Here's more details about <a href="dev.html#orgf77b1d4">Raspberry PI in kiosk mode</a>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">sleep 11
+<pre class="src src-emacs-lisp">(defun kiosk-picsum-wallpaper-stop-timer ()
+  (interactive)
+  (and (timerp picsum-wallpaper-timer-obj)
+       (cancel-timer picsum-wallpaper-timer-obj)))
 
-XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-featur\
-es=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+(defun kiosk-picsum-wallpaper-change ()
+  (interactive)
+  (let ((display-buffer-alist (list (cons shell-command-buffer-name-async (cons #'display-buffer-no-window nil)))))
+    (async-shell-command "display -window root  https://picsum.photos/1920/1080.jpg" nil nil)))
+
+(defun kiosk-picsum-wallpaper-start-timer ()
+    (interactive)
+    (setq picsum-wallpaper-timer-obj (run-at-time t (* 60 19) #'kiosk-picsum-wallpaper-change)))
 </pre>
 </div>
 
-<ul class="org-ul">
-<li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
-</ul>
-
-<p>
-For old devices (RPi 1) Midori browser looks promising. The only problem is the <code>e jump-to</code> command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
-</p>
-
-<p>
-P.S. Epiphany: it has interesting options like <code>automation-mode</code> but didn't have the time to inspect more.
-</p>
-</div>
-</div>
-
-<div id="outline-container-org81ab52c" class="outline-3">
-<h3 id="org81ab52c">Other resources</h3>
-<div class="outline-text-3" id="text-org81ab52c">
-<ul class="org-ul">
-<li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
-<li><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org1a6b80f" class="outline-2">
-<h2 id="org1a6b80f">Using Emacs and Org as Kiosk (Midori)</h2>
-<div class="outline-text-2" id="text-org1a6b80f">
 <p>
 Install midori.
 </p>
@@ -334,7 +282,7 @@ This is a sample <code>index</code> page written in org. You can export as HTML 
 </div>
 
 <p>
-Or you can just write yout ouwn HTML.
+Or you can just write yout own HTML.
 </p>
 
 <div class="org-src-container">
@@ -349,8 +297,6 @@ Or you can just write yout ouwn HTML.
   &lt;/body&gt;
 &lt;/html&gt;
 </pre>
-</div>
-</div>
 </div>
 </div>
 <div id="postamble" class="status">
