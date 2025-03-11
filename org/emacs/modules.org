@@ -1708,9 +1708,20 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
 
 * File server                                                       :disable:
 
+Uses [[https://eschulte.github.io/emacs-web-server/][=emacs-web-server= package]]. Here's an /helloworld/ example, taken from the [[https://eschulte.github.io/emacs-web-server/tutorials/][online tutorial]].
+
+#+begin_src emacs-lisp :tangle no
+  (ws-start
+ (lambda (request)
+   (with-slots (process headers) request
+     (ws-response-header process 200 '("Content-type" . "text/plain"))
+     (process-send-string process "hello world")))
+ 9000)
+#+end_src
+
 In order to make the endpoint available in a local net (i.e =192.168.xxx.xxx=) we have to override the function =ws-start= in =web-server.el= by adding the =:host= parameter when calling =make-network-process=:
 
-#+begin_src diff
+#+begin_src diff :tangle no
   (setf (ws-process server)
         (apply
          #'make-network-process
@@ -1723,6 +1734,8 @@ In order to make the endpoint available in a local net (i.e =192.168.xxx.xxx=) w
   +      :host "0.0.0.0"
          :coding 'no-conversion
 #+end_src
+
+Here's the implementation of a simple web server, serving static assets.
 
 #+begin_src emacs-lisp
   (use-package web-server
