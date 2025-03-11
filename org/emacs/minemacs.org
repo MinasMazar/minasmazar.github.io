@@ -194,8 +194,10 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
 
 #+begin_src emacs-lisp
   (use-package devil
+    :bind
+    ("s-n" . #'global-devil-mode)
     :config
-    (global-devil-mode))
+    (global-devil-mode 1))
 #+end_src
 
 * Auto-completion
