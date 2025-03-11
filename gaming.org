@@ -1,0 +1,10 @@
+#+TITLE: MinasMazar's blog ~ gaming
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-01-31 Wed>
+#+STARTUP: overview
+
+* Linux/MacOS/Windows
+
+- [[https://www.wesnoth.org/][The Battle for Wesnoth]]
+- [[https://xonotic.org/][xonotic]]

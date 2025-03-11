@@ -1,0 +1,414 @@
+#+TITLE: Holymacs ~ Jarvis module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/jarvis.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+STARTUP: show2levels
+#+HTML_LINK_UP: ../holymacs.html
+
+* Helpers
+
+#+begin_src elisp
+  (defun holymacs-random (items)
+    "Pick a random element from a list"
+    (nth (random (length items)) items))
+
+  (defun eval-replace-last-sexp ()
+    (interactive)
+    (let ((value (eval (preceding-sexp))))
+      (kill-sexp -1)
+      (insert (format "%S" value))))
+#+end_src
+
+* Youtube
+
+#+begin_src elisp
+  (defcustom jarvis/youtube-sources '()
+    "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+    :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+
+  (defun jarvis/play-youtube (&optional url)
+    "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (let ((command (format "mpv \"%s\"" url))
+  	(buffer-name (format "mpv: %s" url)))
+      (async-shell-command command buffer-name)))
+
+  (defun jarvis/open-random-youtube ()
+    "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+    (interactive)
+    (let ((url (holymacs-random jarvis/youtube-sources)))
+      (jarvis/open-youtube url)))
+
+  (defun jarvis/open-youtube (&optional url)
+    "Open in browser one of the sources in `jarvis/youtube-sources`."
+    (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+    (browse-url-default-browser url))
+#+end_src
+
+Check [[https://developers.google.com/apis-explorer?hl=it][documentation about Google APIs]].
+
+#+begin_src elisp
+  (use-package password-store) ;;  (password-store-get "youtube-api")
+  (use-package request
+    :after password-store
+    :config
+    (defcustom jarvis/youtube-api-key "" "Youtube API key")
+    (defvar jarvis/youtube-api-key "" "Youtube API key")
+    (defun jarvis/channel-vids (url)
+      "Get a list of videos given a Youtube channel (url)"
+      (request "https://www.googleapis.com/youtube/v3/search"
+        :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 2))
+        :parser 'json-read
+        :success (cl-function
+  		(lambda (&key data &allow-other-keys)
+                    (when data
+                      (with-current-buffer (get-buffer-create "*youtube-vids*")
+                        (erase-buffer)
+                        (insert (prin1-to-string data))
+                        (pop-to-buffer (current-buffer)))))))))
+#+end_src
+
+* COMMENT Pop terminal ⚠️ wip ⚠️
+
+#+begin_src elisp
+  (use-package popper
+    :bind (("s-~"   . popper-toggle)
+	   ("s-`"   . popper-cycle)
+	   ("C-M-`" . popper-toggle-type))
+    :init
+    (setq popper-reference-buffers
+	  '(shell-mode
+	    eshell-mode
+	    "Output\\*$"
+	    "\\*Async Shell Command\\*"
+	    help-mode
+	    compilation-mode))
+    (popper-mode +1)
+    (popper-echo-mode +1))
+#+end_src
+* COMMENT Emacs Async
+
+#+begin_src elisp
+  (use-package emacs-async)
+#+end_src
+
+#+begin_example elisp
+  (async-start (lambda () (sleep-for 3)) (lambda (ff) (message "done")))
+#+end_example
+
+* COMMENT Autoinsert and templates ⚠️ wip ⚠️
+
+Emacs has some built-in functionalities to /auto insert/ text (expand text or via templates)
+- =auto-insert=
+- =abbrev=
+- =skeleton=
+
+Also there are some external packages
+- =yasnippet=
+- =tempo=
+  
+* COMMENT From elfeed to gemlog - ⚠️ wip ⚠️
+
+#+begin_src elisp
+  (defun jarvis-elfeed-entry-to-gmi ()
+    "Export the current elfeed article content to a gemlog entry (a blog, but in Gemini protocol")
+    (interactive)
+    (let* ((content (buffer-string))
+	   (org-capture-templates '(("E" "Gemlog entry" plain (file+regexp "~/minasmazar-capsule/log.gmi" "^# ") "\n\n# %U\n\n%i\n\n" :prepend t))))
+      (set-mark (point-min))
+      (goto-char (point-max))
+      (activate-mark)
+      (org-capture)))
+#+end_src
+
+* Alarm!
+
+#+begin_src elisp
+  (use-package alarm-clock
+    :config
+    (defun holymacs/jarvis/set-alarm-10min-fire! ()
+      (interactive)
+      (alarm-clock-set "10min" "FIRE!"))
+    :bind
+    ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
+#+end_src
+
+* News and Mail
+** RSS Reader (elfeed)
+
+#+begin_src elisp
+  (use-package elfeed
+    :after 'god-mode
+    :bind
+    (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
+    :config
+    (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+#+end_src
+
+Enanche your elfeed experience with [[https://github.com/karthink/elfeed-tube][elfeed-tube]]! ❤️ Thanks a lot to [[https://github.com/karthink][karthink]] 🙏
+
+#+begin_src elisp
+  (use-package elfeed-tube
+    :after elfeed
+    :demand t
+    :config
+    ;; (setq elfeed-tube-auto-save-p nil) ; default value
+    ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+    (elfeed-tube-setup)
+
+    :bind (:map elfeed-show-mode-map
+		("F" . elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)
+		:map elfeed-search-mode-map
+		("F" . elfeed-tube-fetch)
+		([remap save-buffer] . elfeed-tube-save)))
+
+  (use-package elfeed-tube-mpv
+    :after elfeed-tube
+    :bind (:map elfeed-show-mode-map
+		("C-c C-f" . elfeed-tube-mpv-follow-mode)
+		("C-c C-w" . elfeed-tube-mpv-where)))
+#+end_src
+
+** Mu4e
+*** Dependencies
+
+Firstly, install =mu= and a MailBox <-> Imaps syncronizer like =mbsync=. You should also rely on =pass=, the [[https://www.passwordstore.org/][the standard unix password manager]], in order to store and fetch your passwords in a secure way.
+
+Useful links:
+- http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync
+- https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html
+- https://isync.sourceforge.io/mbsync.html
+
+*** Configuration
+
+#+begin_example toml
+  IMAPAccount gmail-imaps
+  Host imap.gmail.com
+  Port 993
+  #UseIMAPS yes
+  #RequireSSl yes
+  SSLType IMAPS
+  SSLVersions TLSv1.2
+  AuthMechs PLAIN
+  User your-email@gmail.com
+  #Pass supercomplicatedpassword
+  PassCmd "pass gmail/imaps"
+
+  IMAPStore gmail-remote
+  Account gmail-imaps
+
+  MaildirStore gmail-local
+  Path ~/MailDir/gmail/
+  Inbox ~/MailDir/gmail/INBOX
+  Subfolders Verbatim
+
+  Channel gmail
+  #Master :gmail-remote:
+  #Slave :gmail-local:
+  Far :gmail-remote:
+  Near :gmail-local:
+  Create Both
+  Expunge Both
+  Patterns *
+  SyncState *
+#+end_example
+
+#+begin_example emacs-lisp
+  (require 'mu4e)
+  (setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+  (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+  (auth-source-pass-enable)
+  (setq smtpmail-debug-info t)
+#+end_example
+
+To set multiple accounts within =mu4e= you have to set the =mu4e-contexts= variable. An interesting screencast/article from System Crafters about that can be found [[https://systemcrafters.net/emacs-mail/managing-multiple-accounts/][here]].
+
+#+begin_example elisp
+  (setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+#+end_example
+
+*** Tweaking
+
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like =Ivy= or use =Embark= to select all attachments from the minibuffer after invoking =mu4e-view-save-attachment=). For more details see [[https://github.com/djcb/mu/issues/1979][this issue on Github]].
+
+** COMMENT Gnus ⚠️ wip ⚠️
+
+To configure gnus in order to read your Gmail, you have to:
+
+- create a password token on the Gmail account
+- enter an authentication line in your =authinfo=
+
+#+begin_export ascii
+  machine imap.gmail.com login your-email@gmai.com password "GENERATED-TOKEN" port imaps
+#+end_export
+
+Then configure the =gnus-select-method=
+
+#+begin_example elisp
+  (setq gnus-select-method
+	'(nnimap "gmail"
+		 (nnimap-address "imap.gmail.com")
+		 (nnimap-server-port "imaps")
+		 (nnimap-stream ssl)))
+#+end_example
+
+* Media
+
+#+begin_src elisp
+  (use-package bongo)
+#+end_src
+
+* [[https://cht.sh/][cht.sh]]
+
+#+begin_src sh :tangle no
+curl https://cht.sh 
+#+end_src
+
+#+begin_src elisp
+  (defun cht.sh-help (helpable)
+    (interactive "sHelp: ")
+    (cht.sh-query "/:help"))
+
+  (defun cht.sh-list ()
+    (interactive)
+    (cht.sh-query "/:list"))
+
+  (defun cht.sh-query (query)
+    (interactive "sQuery: ")
+    (let ((cmd (format "curl https://cht.sh/%s" query))
+  	(buffer-name (format "*cht-sh* <%s>" query)))
+      (async-shell-command cmd buffer-name)))
+#+end_src
+
+* Search on the web: engine-mode
+#+begin_src elisp
+  (use-package engine-mode
+    :init
+    (setq engine/browser-function #'browse-url-firefox)
+    :config
+    (defun engine/execute-search (search-engine-url browser-function search-term)
+      "Display the results of the query."
+      (interactive)
+      (let ((browse-url-handlers nil)
+  	    (browse-url-browser-function browser-function))
+  	(browse-url
+  	 (format-spec search-engine-url
+  		      (format-spec-make ?s (url-hexify-string search-term))))))
+
+    (defengine dropbox
+      "https://www.dropbox.com/search/personal?query=%s"
+      :browser 'browse-url-firefox
+      :keybinding "D")
+
+    (defengine duckduckgo
+      "https://duckduckgo.com/?q=%s"
+      :browser 'eww-browse-url
+      :keybinding "d")
+
+    (defengine github
+      "https://github.com/search?ref=simplesearch&q=%s"
+      :keybinding "h")
+
+    (defengine google
+      "https://www.google.com/search?ie=utf-8&oe=utf-8&q=%s"
+      :browser 'browse-url-firefox
+      :keybinding "g")
+
+    (defengine google-images
+      "https://www.google.com/images?hl=en&source=hp&biw=1440&bih=795&gbv=2&aq=f&aqi=&aql=&oq=&q=%s"
+      :keybinding "i")
+
+    (defengine google-maps
+      "https://maps.google.com/maps?q=%s"
+      :docstring "Google Maps"
+      :keybinding "m")
+
+    (defengine google-maps
+      "https://www.openstreetmap.org/search?query=%s"
+      :docstring "OpenStreetMap"
+      :keybinding "M")
+
+    (defengine google-translate-to-it
+      "https://translate.google.it/?sl=auto&tl=it&text=%s&op=translate"
+      :docstring "Translate to IT"
+      :keybinding "t")
+
+    (defengine google-translate-to-en
+      "https://translate.google.it/?sl=it&tl=en&text=%s&op=translate"
+      :docstring "Translate from IT to English"
+      :browser 'browse-url-firefox
+      :keybinding "T")
+
+    (defengine stack-overflow
+      "https://stackoverflow.com/search?q=%s"
+      :keybinding "s")
+
+    (defengine wikipedia
+      "https://www.wikipedia.org/search-redirect.php?language=it&go=Go&search=%s"
+      :keybinding "w"
+      :docstring "Searchin' the wikis."
+      :browser 'eww-browse-url)
+
+    (defengine youtube
+      "https://www.youtube.com/results?aq=f&oq=&search_query=%s"
+      :keybinding "y")
+
+    (defengine amazon
+      "https://www.amazon.it/s/ref=nb_sb_noss?&field-keywords=%s"
+      :browser 'browse-url-firefox
+      :keybinding "a")
+
+    (defengine cap
+      "https://www.nonsolocap.it/cap?k=%s&c=pescara"
+      :browser 'browse-url-firefox
+      :keybinding "C")
+
+    (engine-mode t))
+#+end_src

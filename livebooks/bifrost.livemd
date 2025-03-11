@@ -1,0 +1,178 @@
+<!-- livebook:{"app_settings":{"access_type":"public","slug":"bifrost"},"autosave_interval_s":null} -->
+
+# Bifrost
+
+```elixir
+Mix.install([
+#  {:livebook_cluster, "0.1.1", git: "git@git.sr.ht:~minasmazar/livebook_cluster"},
+  {:livebook_cluster, "0.1.1", path: Path.expand("~/workspace/livebook_cluster")},
+  {:plug, "~> 1.16"},
+  {:kino, "~> 0.14.1"},
+  {:jason, "~> 1.4"},
+  {:floki, "~> 0.36.2"}
+],
+config: [
+  livebook_cluster: [slug: "bifrost"]
+])
+```
+
+## Purpose
+
+We try to inject a /userscript/ (JS) code in and install a server executing Elixir code, and trying to do some coll stuff.
+
+## Client code (userscript)
+
+```javascript
+// ==UserScript==
+// @name         Bifrost (Livebook)
+// @namespace    http://tampermonkey.net/
+// @version      2024-07-02
+// @description  Bifrost
+// @author       MinasMazar
+// @include      *
+// @match        *
+// @grant        GM_xmlhttpRequest
+// @connect      localhost
+// ==/UserScript==
+
+window.addEventListener('load', function() {
+    'use strict';
+
+    // const BIFROST_BASE_ENDPOINT = "http://localhost/proxy/sessions/yuquf6wqnombih2qnklocwlvg6lmvztwnle65nmuf6lhqjuc";
+    const BIFROST_BASE_ENDPOINT = "http://localhost/proxy/apps/bifrost";
+    const BIFROST_PAGE_VISIT_ENDPOINT = `${BIFROST_BASE_ENDPOINT}/page`;
+    const BIFROST_EVENT_ENDPOINT = `${BIFROST_BASE_ENDPOINT}/event`;
+
+    function main() {
+      console.log("Bifrost entrypoint");
+      document.addEventListener("click", sendEvent);
+      document.addEventListener("change", sendEvent);
+      document.addEventListener("input", sendEvent);
+      document.addEventListener("copy", sendEvent);
+      sendToBifrost(BIFROST_PAGE_VISIT_ENDPOINT, buildSetupPayload());
+    };
+
+    function buildEventPayload(event) {
+        return({
+            "event": {
+                "page": document.URL,
+                "type": event.type,
+                "tag": event.target.tagName,
+                "class": event.target.className,
+                "id": event.target.id,
+                "text": event.target.innerText,
+                "value": event.target.value,
+                "html": event.target.innerHTML,
+                "selection": document.getSelection().toString()
+            }
+        });
+    }
+
+    function buildSetupPayload() {
+        return({
+            "url": document.URL,
+            "body": document.querySelector("body").innerHTML
+        });
+    }
+
+    function sendEvent(event) {
+        sendToBifrost(BIFROST_EVENT_ENDPOINT, buildEventPayload(event));
+    }
+
+    function sendToBifrost(endpoint, payload) {
+        console.log("Sending to Bifrost");
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: endpoint,
+            data: JSON.stringify(payload),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            onload: function(response) {
+                console.log(response);
+            },
+            ontimeout: function() {
+                console.log("No response from Bifrost.");
+            }
+        });
+    }
+
+    setTimeout(main, 200);
+});
+```
+
+## Router
+
+```elixir
+defmodule Bifrost.Router do
+  @articles_css_selector "article, div[id&='content'], dic[class=*='content']"
+  @links_css_selector "article a, div[id*='content'] a, div[class*='content'] a"
+
+  use Plug.Router
+
+  plug :match
+  plug Plug.Parsers,
+       parsers: [:json],
+       pass:  ["application/json"],
+       json_decoder: Jason
+  plug :dispatch
+
+  post "/page" do
+    url = Map.get(conn.body_params, "url")
+    body = Map.get(conn.body_params, "body")
+
+    with true <- !!url, true <- !!body, {:ok, html} <- Floki.parse_fragment(body) do
+      articles = html
+      |> Floki.find(@articles_css_selector)
+      |> Enum.map(& Floki.text(&1))
+
+      links = html
+      |> Floki.find(@links_css_selector)
+      |> Enum.map(fn el ->
+         case Floki.attribute(el, "href") do
+           [""] -> nil
+           [href] -> href
+           _ -> nil
+         end
+      end)
+      |> Enum.filter(& &1)
+
+      page = %{}
+      |> Map.put(:url, url)
+      |> Map.put(:articles, articles)
+      |> Map.put(:links, links)
+      IO.puts("Page visit: #{url}, with #{length(articles)} articles and #{length(links)} links")
+
+      LivebookCluster.broadcast({:page, page})
+    end
+
+    send_resp(conn, 200, "ok")
+  end
+
+  post "/event" do
+    if event = Map.get(conn.body_params, "event", nil) do
+      page = Map.get(event, "page")
+      type = Map.get(event, "type")
+
+      event = %{}
+      |> Map.put(:html, Map.get(event, "html"))
+      |> Map.put(:page, page)
+      |> Map.put(:selection, Map.get(event, "selection"))
+      |> Map.put(:tag, Map.get(event, "tag"))
+      |> Map.put(:text, Map.get(event, "text"))
+      |> Map.put(:type, type)
+      IO.puts("Event #{type}: #{inspect event}")
+
+      LivebookCluster.broadcast({:event, event})
+    end
+
+    send_resp(conn, 200, "ok")
+  end
+end
+
+Kino.Proxy.listen(Bifrost.Router)
+```
+
+```elixir
+LivebookCluster.nodes
+```

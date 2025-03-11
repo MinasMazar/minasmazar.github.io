@@ -1,0 +1,27 @@
+#+TITLE: Holymacs ~ Consult module
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-04-20 Sat>
+#+PROPERTY: header-args :tangle ~/.emacs.d/modules/consult.el :mkdirp yes
+#+SETUPFILE: ../../templates/_header.org
+#+HTML_LINK_UP: ../holymacs.html
+
+Consult is an awesome set of functions. More info on [[https://github.com/minad/consult][github]]. It's a fancy set of features and gives Emacs a more cool and "modern" UX. Also, I found an issue when generating an Embark snapshot from a standard Imenu completion: the results do not point to the location, but an error (/exit-minibuffer: No catch for tag: exit, nil/). I've tried =consult-imenu= and it seems working well with *embark* 🎉 Let's install it! As mentioned in the [[file:~/minasmazar.github.io/org/holymacs.org::*Specs][*Holymacs Specs*]] we're going to also add some super bindings.
+
+#+begin_src elisp
+  (use-package consult
+    :bind
+    (("s-j" . consult-buffer)
+     ("s-i" . consult-imenu-multi)
+     ("s-l" . consult-history)
+     ("s-f" . consult-line-multi)
+     ("s-t" . consult-grep)))
+#+end_src
+
+#+begin_src elisp
+  (use-package marginalia
+    :bind (:map minibuffer-local-map
+           ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
+#+end_src
