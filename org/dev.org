@@ -224,6 +224,30 @@ docker run -it lukechilds/dockerpi
 - [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
 
 * [[https://elixir-lang.org/][Elixir]]
+** Language
+*** [[https://hexdocs.pm/elixir/1.14.5/Module.html#module-compile-callbacks][Module ~ Compile Callbacks]] (=@before_compile=)
+
+#+begin_src elixir
+  defmodule A do
+    defmacro __before_compile__(_env) do
+      quote do
+	def hello, do: "world"
+      end
+    end
+  end
+
+  defmodule B do
+    @before_compile A
+  end
+
+  B.hello()
+  #=> "world"
+#+end_src
+
+*** Macros
+
+- [[https://blog.appsignal.com/2021/10/26/how-to-use-macros-in-elixir.html][How-To-Use Macros]]
+
 ** Resources
 
 - [[https://elixir-toolbox.dev/][Toolbox]]
@@ -941,6 +965,20 @@ To restore the bundle
 
 The =git clone repo.bundle= can be used to restore repositories in the tarball exported account data in Github (https://github.com/settings/admin -> Account -> Export account data)
 
+* Pandoc
+
+Install *all* packages to manage pdf files
+
+#+begin_src emacs-lisp
+  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
+#+end_src
+
+Convert a =txt= file to =pdf=
+
+#+begin_src sh
+  pandoc file.txt -o file.pdf
+#+end_src
+
 * Google Chrome & chromedriver
 
 Download chromedriver version according to the version of Google Chrome installed.
@@ -1494,16 +1532,17 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   # Define names for default workspaces for which we configure key bindings later on.
   # We use variables to avoid repeating the names in multiple places.
-  set $ws1 "1:main"
-  set $ws2 "2:alt"
-  set $ws3 "3:media"
 
-  bindsym $mod+1 workspace number 1
-  bindsym $mod+2 workspace number 2
-  bindsym $mod+3 workspace number 3
-  bindsym $mod+Shift+1 move container to workspace number 1
-  bindsym $mod+Shift+2 move container to workspace number 2
-  bindsym $mod+Shift+3 move container to workspace number 3
+  set $ws1 "1"
+  set $ws2 "2"
+  set $ws3 "3"
+
+  bindsym $mod+1 workspace $ws1
+  bindsym $mod+2 workspace $ws2
+  bindsym $mod+3 workspace $ws3
+  bindsym $mod+Shift+1 move container to workspace $ws1
+  bindsym $mod+Shift+2 move container to workspace $ws2
+  bindsym $mod+Shift+3 move container to workspace $ws3
 
   # Window rules
   # for_window [class="^firefox$"] move container to workspace $ws2
@@ -1512,13 +1551,6 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   mode "i3" {
     # start program launcher
     bindsym d exec --no-startup-id $app_launcher ; mode "default"
-  
-    # bindsym $mod+l focus up
-    # bindsym $mod+semicolon focus right
-    bindsym p focus left ; focus up
-    bindsym n focus right ; focus down
-    bindsym Shift+p workspace prev
-    bindsym Shift+n workspace next
   
     # alternatively, you can use the cursor keys:
     bindsym Left focus left
@@ -1541,7 +1573,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym v split v
   
     # enter fullscreen mode for the focused container
-    bindsym f fullscreen toggle
+    bindsym Shift+f fullscreen toggle
   
     # change container layout (stacked, tabbed, toggle split)
     bindsym s layout stacking
@@ -1561,14 +1593,20 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     #bindsym $mod+d focus child
 
     # switch to workspace
-    bindsym 1 workspace number $ws1
-    bindsym 2 workspace number $ws2
-    bindsym 3 workspace number $ws3
+    bindsym f workspace next
+    bindsym b workspace prev
+    bindsym n focus next
+    bindsym p focus prev
+    bindsym 1 workspace $ws1
+    bindsym 2 workspace $ws2
+    bindsym 3 workspace $ws3
   
     # move focused container to workspace
-    bindsym Shift+1 move container to workspace number $ws1
-    bindsym Shift+2 move container to workspace number $ws2
-    bindsym Shift+3 move container to workspace number $ws3
+    bindsym Shift+f move container to workspace next
+    bindsym Shift+b move container to workspace prev
+    bindsym Shift+1 move container to workspace $ws1
+    bindsym Shift+2 move container to workspace $ws2
+    bindsym Shift+3 move container to workspace $ws3
 
     # Media
     bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status

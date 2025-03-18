@@ -14,7 +14,7 @@
 
   (defun minemacs-tangle-if-not-disabled (module)
     (let ((dest-file (file-name-concat (minemacs-modules-directory) module)))
-      (if (member-ignore-case "disable" (org-get-tags)) "no" dest-file)))
+      (if (member-ignore-case "disabled" (org-get-tags)) "no" dest-file)))
 
   (defun minemacs-subdir (path)
     (file-name-concat user-emacs-directory path))
