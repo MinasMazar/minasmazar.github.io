@@ -1,0 +1,2547 @@
+#+TITLE: MinasMazar's blog ~ dev stuff
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-01-31 Wed>
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
+#+STARTUP: overview
+
+* Web browsing/crawling
+** Get the DOM of a webpage using chrome via command-line.
+
+#+begin_src sh
+  chrome --headless --dump-dom https://developer.chrome.com/
+#+end_src
+
+** Fetch a page via a nodejs app
+
+Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
+
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+
+1. setup a new nodejs project =mkdir html-fetch && node init --yes=
+2. add =node-fetch= dependency into the =package.json= and =npm install=
+3. create the =index.js= source file with the content as follow: 
+
+#+begin_src javascript
+  const fetch = require("node-fetch");
+  const fs = require("fs");
+  // you can update this to any website you want to download
+  const site = "https://www.youtube.com/@BorderNightsOfficial";
+  // you can update this if you want to save
+  const filename = "index.html";
+  // fetch url
+  fetch(site, {
+    headers: {
+      // some sites require a user-agent header to return the webpage
+      "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+  }).then((res) => {
+    // get text from Response stream
+    return res.text();
+  }).then((text) => {
+    // write html from response to index.html
+    fs.writeFile(filename, text, () => {});
+  });
+#+end_src
+
+Run it via =node index.js=. This will fetch the page into the =index.html= file.
+
+* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
+
+If you need to write a crontab entry you can use https://crontab.guru/
+
+* Docker
+** Backup and port Postgres databases across images
+
+Bind to
+#+begin_src sh
+  docker run --rm --name postgres --volume ~/postgres-data:/var/lib/postgresql/data postgres:latest
+#+end_src
+
+Backup volume with
+
+#+begin_src eshell
+  tar cf postgres-data_$(format-time-string "%N").tar postgres-data
+#+end_src
+
+** Disable/enable autostart of a docker container.
+
+#+begin_src sh
+docker update --restart [no|unless-stopped] <docker-container>
+#+end_src
+
+** Playing Sound in Docker Containers ([[https://prateeksrivastav598.medium.com/playing-sound-in-docker-containers-a-step-by-step-guide-f7a06e246a35][here the source article]])
+
+#+begin_src sh
+  docker run --rm -it --privileged=true --device=/dev/snd:/dev/snd audio-container:v1
+#+end_src
+
+** Rename a docker image
+
+#+begin_src sh
+  docker tag OldName:tag NewName:tag
+#+end_src
+
+** Rename a docker container
+
+#+begin_src sh
+  sudo docker rename oldname_app newname_app
+#+end_src
+
+** Remove unused images
+
+#+begin_src sh
+  docker image prune -a
+#+end_src
+
+=docker system prune= will delete all dangling data (containers, networks, and images)
+
+More info in this [[https://stackoverflow.com/a/32723127][StackOverflow thread]].
+
+** Install Docker on Linux (APT)
+
+#+begin_src shell
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  # Add the repository to Apt sources:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#+end_src
+
+Verify that the installation is successful by running the hello-world image:
+
+#+begin_src shell
+  sudo docker run hello-world
+#+end_src
+** Installing Docker on Raspberry PI
+
+Follow [[https://docs.docker.com/engine/install/raspberry-pi-os/#install-using-the-repository][the instructions in the Docker documentation]]. Before you can install Docker Engine, you need to uninstall any conflicting packages. Distro maintainers provide an unofficial distributions of Docker packages in APT. You must uninstall these packages before you can install the official version of Docker Engine.
+
+#+begin_src sh
+  #!/bin/bash
+
+  # Uninstall unofficial distributions of Docker packages in APT
+
+  sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+
+  # Remove images, containers, volumes, or custom configuration files 
+
+  sudo rm -rf /var/lib/docker
+  sudo rm -rf /var/lib/containerd
+
+  # Add Docker's official GPG key:
+  sudo apt-get update
+  sudo apt-get install ca-certificates curl
+  sudo install -m 0755 -d /etc/apt/keyrings
+  sudo curl -fsSL https://download.docker.com/linux/raspbian/gpg -o /etc/apt/keyrings/docker.asc
+  sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  # Set up Docker's APT repository:
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/raspbian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo apt-get update
+
+  # Install Docker packages
+  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # Verify that the installation is successful by running the hello-world image:
+  sudo docker run hello-world
+#+end_src
+
+Remember to keep the Build and App images in sync (see [[https://github.com/teslamate-org/teslamate/issues/3691#issuecomment-1966074893][here]])
+
+When building an image, you can see an error like /cannot find the image for the platform.../. Consider to add =--platform arm64= flag to the =docker build= command. [[https://docs.docker.com/reference/cli/docker/buildx/build/#platform][Here's the official Docker documentation]] for this flag. Also keep an eye [[https://github.com/containerd/containerd/blob/v1.4.3/platforms/platforms.go#L63][to this file]] to get a list of platforms. Remember you can detect the platform of the current machine via =uname -a=.
+
+If you're using Docker to run Elixir, you can face an error like this during the dependencies compilation:
+
+#+begin_src sh
+could not compile dependency :ssl_verify_fun, "mix compile" failed. Errors may have been logged above. You can recompile this dependency with "mix deps.compile ssl_verify_fun", update it with "mix deps.update ssl_verify_fun" or clean it with "mix deps.clean ssl_verify_fun"
+#+end_src
+
+In this case, install the =erlang-public-key= package should solve the issue.
+
+
+The Raspbian issue: another error that can occur while building a docker image on Raspbian that uses =apt-get= commands is
+
+#+begin_src sh
+  ERROR: failed to solve: process "/bin/sh -c apt-get update -y &&   apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates &&   apt-get clean && rm -f /var/lib/apt/lists/*_*" did not complete successfully: exit code: 159
+#+end_src
+
+It seems there's a problem with [[https://github.com/moby/moby/issues/40734][libseccomp]]; according to [[https://askubuntu.com/questions/1263284/apt-update-throws-signature-error-in-ubuntu-20-04-container-on-arm][this SO thread]] the solution is to upgrade libseccomp manually **on the host system**: download [[https://packages.debian.org/sid/libseccomp2][here]] and =sudo dpkg -i libseccomp2_2.4.3-1+b1_armhf.deb=.
+
+** Usefull links for troubleshooting
+
+- https://github.com/teslamate-org/teslamate/issues/3691
+  
+** Play sounds from your containers on MacOS host machine
+
+source: https://stackoverflow.com/questions/40136606/how-to-expose-audio-from-docker-container-to-a-mac
+
+You need to install PulseAudio
+
+#+begin_src sh
+  brew install pulseaudio
+#+end_src
+
+Start the server
+
+#+begin_src sh
+  pulseaudio --load=module-native-protocol-tcp --exit-idle-time=-1 --daemon
+#+end_src
+
+In your Docker container:
+
+- install PulseAudio, e.g., =apt-get install pulseaudio=.
+- set the following environment variable: =ENV PULSE_SERVER\=host.docker.internal=
+
+You can run a test to see if it's working like this:
+
+#+begin_src sh
+  docker run -it -e PULSE_SERVER=host.docker.internal --mount type=bind,source=/Users/YOURUSERNAME/.config/pulse,target=/home/pulseaudio/.config/pulse --entrypoint speaker-test --rm jess/pulseaudio -c 2 -l 1 -t wav
+#+end_src
+
+** [[Dockerize Phoenix webapp (my_app)]]
+** COMMENT [[https://github.com/lukechilds/dockerpi][dockerpi]]: Docker + Raspberry :wip:
+
+#+begin_src sh
+docker run -it lukechilds/dockerpi
+#+end_src
+
+* Digital Ocean
+
+- [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
+
+* [[https://elixir-lang.org/][Elixir]]
+** Language
+*** [[https://hexdocs.pm/elixir/1.14.5/Module.html#module-compile-callbacks][Module ~ Compile Callbacks]] (=@before_compile=)
+
+#+begin_src elixir
+  defmodule A do
+    defmacro __before_compile__(_env) do
+      quote do
+	def hello, do: "world"
+      end
+    end
+  end
+
+  defmodule B do
+    @before_compile A
+  end
+
+  B.hello()
+  #=> "world"
+#+end_src
+
+*** Macros
+
+- [[https://blog.appsignal.com/2021/10/26/how-to-use-macros-in-elixir.html][How-To-Use Macros]]
+
+** Resources
+
+- [[https://elixir-toolbox.dev/][Toolbox]]
+- [[https://dorgan.ar/posts/2021/04/the_elixir_ast/][Metaprogramming: The Elixir AST]]
+- [[https://joyofelixir.com/17-mix-dependencies][Mix dependencies]]
+- [[https://learn-elixir.dev/#hiring][Learn Elixir (learn-elixir.dev/#hiring)]]
+
+** Clustering Elixir applications
+- https://betterprogramming.pub/notes-on-clustering-elixir-applications-49707ed53910
+- https://hexdocs.pm/libcluster/readme.html
+
+** Distributed Elixir nodes
+
+Good readings about this topic:
+- https://medium.com/hackernoon/running-distributed-erlang-elixir-applications-on-docker-b211d95affbe
+- https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/
+
+Here's a talk I still have to watch https://www.youtube.com/watch?v=F_YUyd_Qdjs
+
+** Elixir Ecommerce platforms
+
+Follow this link to [[https://elixirforum.com/t/phoenix-frameworks-is-good-choice-for-e-commerce-web-apps/46772/3][Elixir forum post]].
+
+It will probably faster and for sure will cope a lot more under load, due to the
+BEAM, that is well exemplified [[https://video-hub.exadra37.com/watch/goto-2019-the-soul-of-erlang-and-elixir-sa%C5%A1a-juri%C4%87][here]] by [[https://elixirforum.com/u/sasajuric][@sasajuric]].
+
+We already have several projects in Elixir fore ecommerce:
+
+- [[https://github.com/amacgregor/crimson_commerce][Crimsom]] repo and [[https://dev.to/allanmacgregor/ecommerce-platform-prototype-with-elixir-and-phoenix-2d9g][article]].
+- [[https://github.com/nicolasblanco/shopix][Shopix]] repo and [[https://nicolasblan.co/blog/shopix-e-commerce-engine][aritcle]].
+- [[https://github.com/freshcom][Freshcom]] repos. They have separated it in several repos.
+- Many more [[https://github.com/search?q=elixir+ecommerce][here]].
+
+I don’t really know if any of them is being/continued to be used in production. I
+think Freshcom was being used in prod at some point or was about to launch.
+The author is here in the forum @rbao.
+
+If you search the forum you have more questions like yours:
+
+- Resources for building an e-commerce store in Phoenix?
+- Presenting Aviacommerce, open source e-commerce in Elixir
+
+** GenServer template
+
+#+begin_src elixir
+  defmodule MyApp.Server do
+    use GenServer
+
+    def start_link(args) do
+      GenServer.start_link(__MODULE__, args, name: Map.get(args, :name, __MODULE__))
+    end
+
+    def init(_) do
+      {:ok, %{}}
+    end
+
+    def state(overrides) do
+      GenServer.call(__MODULE__, :state)
+    end
+
+    def alter_state(overrides) do
+      GenServer.call(__MODULE__, {:state, overrides})
+    end
+
+    def handle_call(:state, _, state), do: {:reply, state, state}
+    def handle_cast({:state, overrides}, state), do: {:noreply, Map.merge(state, overrides)}
+  end
+#+end_src
+
+** DynamicSupervsior template
+
+#+begin_src elixir
+  defmodule MySupervisor do
+    use DynamicSupervisor
+    
+    def start_link(init_arg) do
+      DynamicSupervisor.start_link(__MODULE__, init_arg, name: __MODULE__)
+    end
+    
+    def start_child(foo, bar, baz) do
+      # If MyWorker is not using the new child specs, we need to pass a map:
+      # spec = %{id: MyWorker, start: {MyWorker, :start_link, [foo, bar, baz]}}
+      spec = {MyWorker, foo: foo, bar: bar, baz: baz}
+      DynamicSupervisor.start_child(__MODULE__, spec)
+    end
+    
+    @impl true
+    def init(init_arg) do
+      DynamicSupervisor.init(
+        strategy: :one_for_one,
+        extra_arguments: [init_arg]
+      )
+    end
+  end
+#+end_src
+
+** example KV server
+
+#+begin_src elixir
+  defmodule Darbula.KV do
+    use Agent
+
+    def start_link do
+      Agent.start_link(fn -> %{} end, name: __MODULE__)
+    end
+
+    def get(key) do
+      Agent.get(__MODULE__, fn store -> Map.get(store, key) end)
+    end
+
+    def set(key, value) do
+      with :ok <- Agent.update(__MODULE__, fn store -> Map.put(store, key, value) end) do
+        value
+      end
+    end
+
+    def get_or_set(key, fun) when is_function(fun) do
+      get(key) || set(key, fun.())
+    end
+  end
+#+end_src
+
+** Persisting layer: :dets
+
+- https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets
+
+#+begin_src elixir
+  defmodule Mixer.Persist do
+    use GenServer
+
+    @table_name :mixer_persist
+
+    def start_link(table_name) do
+      GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
+    end
+
+    def init(table_name) do
+      {:ok, _} = :dets.open_file(table_name || @table_name, [])
+    end
+
+    def get(table_name \\ @table_name, key) do
+      case :dets.lookup(table_name, key) do
+        [{^key, value}] -> value
+        [] -> nil
+      end
+    end
+
+    def set(table_name \\ @table_name, key, value) do
+      :dets.insert(table_name, {key, value}) && value
+    end
+
+    def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
+      get(table_name, key) || set(table_name, key, fun.())
+    end
+  end
+#+end_src
+
+** Development Tools: Makefile
+
+Example Makefile for a thin elixir app.
+
+#+begin_src makefile
+  app := next
+
+  default: s
+  b:
+  	mix do deps.get, deps.compile, compile
+  s:
+  	iex -S mix
+  t:
+  	mix test
+  tl:
+  	mix test --listen-on-stdin
+  u:
+  	cat Makefile
+  r:
+  	MIX_ENV=prod mix release --path=~/${app}/
+#+end_src
+
+Example Makefile for an Elixir/Phoenix webapp
+
+#+begin_src makefile
+  port := 4030
+  prod-env := DATABASE_URL=ecto://postgres:postgres@localhost:5432/my-app MIX_ENV=prod SECRET_KEY_BASE=8X3vyc0qkLs38OFTa4C+ZTx6Q9h0KXyfh8Ug/Yt4IUnSv8WQSzuDDe7OiR5iGwDK PHX_SERVER=true PHX_HOST=localhost PORT=${port}
+  cmd := $$MAKE_CMD
+
+  default: start-prod
+  cmd:
+	echo ${cmd}
+  # Example usage
+  #
+  # MAKE_CMD="mix ecto.create" make -s prod-exec
+  #
+
+  # Start in production env
+  prod-exec:
+	${prod-env} ${cmd}
+
+  start-prod:
+	${prod-env} iex -S mix phx.server
+
+  # Development
+  build:
+	mix do deps.get, deps.compile, compile
+  start: build
+	iex -S mix phx.server
+  assets:
+	mix assets.setup
+  release:
+	mix deps.get --only prod
+	MIX_ENV=prod mix compile
+	MIX_ENV=prod mix assets.deploy
+	MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+  release-start:
+	${prod-env} ~/my-app/bin/my-app start
+
+#+end_src
+
+** Phoenix
+*** Installer
+
+#+begin_src sh
+  mix archive.install hex phx_new
+#+end_src
+
+*** Example of app release generation and setup
+
+Generate a release.
+
+#+begin_src sh
+  MIX_ENV=prod PHX_SERVER=true mix release --path ~/my-app --overwrite 
+#+end_src
+
+Run for localhsot.
+
+#+begin_src sh
+  SECRET_KEY_BASE='rwgfimMVc8/M6qZww/MCFtIWyP5KeXWrjKGbvMIaWp8BvBjm+st31cgsYy0s9wjL' PHX_SERVER=true PHX_HOST=localhost PORT=4040 ~/my-app/bin/my-app start
+#+end_src
+
+*** [[https://shaolang.github.io/posts/2021-06-04-phoenix-pubsub-comms-across-nodes/][Phoenix Pubsub comms across nodes]]
+*** [[https://felt.com/blog/startup-and-shutdown-for-phoenix-applications][Graceful startup and shutdown for Phoenix applications]]
+
+- if you started your server with =iex -S mix phx.server= (which is what I use 95% of the time) then you can run =System.stop()=
+- use =ps aux | grep 'mix phx.server'= to find the OS PID for the BEAM, then run =kill -s TERM <os_pid>=
+
+In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
+
+*** Dockerize Phoenix webapp (my_app)
+
+** Inspecting data
+
+How to use IO.inspect on a long list without trimming it? See [[https://hexdocs.pm/elixir/Inspect.Opts.html][Inspect.Opts]] for a description of the available options, but in short:
+
+#+begin_src elixir
+  IO.inspect(list, limit: :infinity)
+#+end_src
+
+** Phoenix Livebooks
+
+- [[https://notes.club/][Discover Livebook notebooks (Elixir)]]
+- https://github.com/aslakjohansen/livebook-demos
+- https://github.com/Arp-G/async-elixir
+- https://github.com/whatyouhide/guide_async_processing_in_elixir
+
+*** Livebook Cluster
+
+I've experimented a bit with Livebook in the last two days. I was thinking it would be good to have livebooks sending messages each other; this way each livebook can live standalone and do something, but can eventually say "hey, I've these new information I like to share" and broadcast some message. Each livebook (and deployed apps) lives in his own node and has its own EPMD implementation. Using [[https://github.com/bitwalker/libcluster][libcluster]] should be enough to make nodes to cluster together by using the =LocalEpmd= strategy. But it seems =PubSub= is not able to spot all nodes out (that's because , more info in [[https://elixirforum.com/t/cant-capture-a-livebook-up-in-a-cluster/57193/3][this thread]]).
+
+The issue is that livebooks are hidden nodes, PubSub is using pg2 and [[https://stackoverflow.com/questions/17191243/hidden-nodes-doesnt-see-pg2-groups][pg2 don't see hidden nodes]].
+
+I've created the [[https://git.sr.ht/~minasmazar/livebook_cluster][livebook_cluster]] package that uses [[https://github.com/bitwalker/libcluster][libcluster]] and EPMD strategy on order to make livebooks to be connected. It seems working well, but I don't know if this implementation messes with deployment strategies or raises some sort of issue. Any feedback will be appreciated ;)
+
+Adding =livebook_cluster= as dependency in my livebooks I was able to make three livebooks working together:
+
+- KV is just a key-value store to handle business logic information; it holds data and should act also provide cache and persist features
+- Bifrost expose two HTTP entrypoints (page, event) using =Kino.Proxy=. Using a custom [[https://en.wikipedia.org/wiki/Userscript][userscript]] (the code is present in the livebook) your browser will send sort of "page visits" events (across with the whole HTML =body=) and also keeps track of all events. The HTTP proxy then broadcast the message an all nodes using =Phoenix.PubSub=.
+
+  #+begin_src text
+  livebook -> PubSub (broadcast in current node)
+  #+end_src
+
+ Remember that this open a wide range of **security issues**.. uses it with responsibility!
+- Youtube 
+
+** Dockerize
+*** Example Dockerfile for Elixir app 
+More info on [[Docker][Docker here]].
+
+#+begin_src yml
+# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian
+# instead of Alpine to avoid DNS resolution issues in production.
+#
+# https://hub.docker.com/r/hexpm/elixir/tags?page=1&name=ubuntu
+# https://hub.docker.com/_/ubuntu?tab=tags
+#
+# This file is based on these images:
+#
+#   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
+#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20230227-slim - for the release image
+#   - https://pkgs.org/ - resource for finding needed packages
+#   - Ex: hexpm/elixir:1.15.0-erlang-26.0-debian-bullseye-20230227-slim
+#
+ARG ELIXIR_VERSION=1.16.2
+ARG OTP_VERSION=26.1.2
+ARG DEBIAN_VERSION=bullseye-20240423-slim
+
+ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
+ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
+
+FROM ${BUILDER_IMAGE} as builder
+
+# install build dependencies
+RUN apt-get update -y && apt-get install -y build-essential git \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# prepare build dir
+WORKDIR /app
+
+# install hex + rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# set build ENV
+ENV MIX_ENV="prod"
+
+# install mix dependencies
+COPY mix.exs mix.lock ./
+RUN mix deps.get --only $MIX_ENV
+RUN mkdir config
+
+# copy compile-time config files before we compile dependencies
+# to ensure any relevant config change will trigger the dependencies
+# to be re-compiled.
+COPY config/config.exs config/${MIX_ENV}.exs config/
+RUN mix deps.compile
+
+COPY priv priv
+
+COPY lib lib
+
+COPY assets assets
+
+# compile assets
+RUN mix assets.deploy
+
+# Compile the release
+RUN mix compile
+
+# Changes to config/runtime.exs don't require recompiling the code
+COPY config/runtime.exs config/
+
+COPY rel rel
+RUN mix release
+
+# start a new build stage so that the final image will only contain
+# the compiled release and other runtime necessities
+FROM ${RUNNER_IMAGE}
+
+RUN apt-get update -y && \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+# Set the locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+WORKDIR "/app"
+RUN chown nobody /app
+
+# set runner ENV
+ENV MIX_ENV="prod"
+
+# Only copy the final release from the build stage
+COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/my_app ./
+
+USER nobody
+
+# If using an environment that doesn't automatically reap zombie processes, it is
+# advised to add an init process such as tini via `apt-get install`
+# above and adding an entrypoint. See https://github.com/krallin/tini for details
+# ENTRYPOINT ["/tini", "--"]
+
+CMD ["/app/bin/server"]
+#+end_src
+
+*** Docker compose
+
+#+begin_src yml
+# Version of docker-compose.
+version: '3'
+
+# Containers we're going to run.
+name: my_app
+
+services:
+   # Our Phoenix container.
+   phoenix:
+      # The build parameters for this container.
+      build:
+         # Here we define that it should build from the current directory.
+         context: .
+      environment:
+         # Variables to connect to our Postgres server.
+         DATABASE_URL: ecto://postgres:postgres@db:5432/my_app
+         MIX_ENV: prod
+         PHX_HOST: my_app.minasmazar.org
+         SECRET_KEY_BASE: 50Ek5r7GwQlQCJlFi5y+O5Mmq0z/qHMRirG7IEim7w1B7H0fxnegANr0bRe26bE3
+         # MY_APP_SSL_KEY_PATH: /root/my_app/priv/ssl/my_app.minasmazar.org-key.pem
+         # MY_APP_SSL_CERT_PATH: /root/my_app/priv/ssl/my_app.minasmazar.org.pem
+         PORT: 80
+      ports:
+         # Mapping the port to make the Phoenix app accessible outside of the container.
+         - '80:80'
+         - '443:443'
+      expose:
+        - '80'
+        - '443'
+      depends_on:
+         # The DB container needs to be started before we start this container.
+         - db
+      networks:
+        - outside
+        - default
+   db:
+      # We use the predefined Postgres image.
+      image: postgres:9.6
+      environment:
+         # Set user/password for Postgres.
+         POSTGRES_USER: postgres
+         POSTGRES_PASSWORD: postgres
+         # Set a path where Postgres should store the data.
+         PGDATA: /var/lib/postgresql/data/pgdata
+      ports:
+        - '5432:5432'
+      expose:
+        - '5432'
+      restart: always
+      volumes:
+         - pgdata:/var/lib/postgresql/data
+      networks:
+        - default
+
+# Define the volumes.
+volumes:
+   pgdata:
+
+# Define networks
+networks:
+  outside:
+
+#+end_src
+** Mocking ([[https://blog.plataformatec.com.br/2015/10/mocks-and-explicit-contracts/][a blogpost from José Valim]])
+** Scale serverless with [[https://fly.io/blog/rethinking-serverless-with-flame/][FLAME]]!
+** [[https://nerves-project.org/newsletter/][Nerves]]
+*** Resources
+
+- [[https://nerves-project.org/newsletter/][Nervers newsletter]]
+- [[https://www.peterullrich.com/sending-text-messages-with-nerves][Sending text messages with Nerves]]
+
+*** Nerves + Livebook
+
+- https://github.com/nerves-livebook
+- https://hexdocs.pm/nerves_runtime/Nerves.Runtime.html
+
+#+begin_src elixir
+Nerves.Runtime.halt()
+#+end_src
+* [[https://www.ffmpeg.org][FFmpeg]]
+
+A complete, cross-platform solution to record, convert and stream audio and video.
+
+** Extract audio from video
+#+begin_example shell
+ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
+#+end_example
+
+#+RESULTS:
+
+** Extract frames
+
+Extract a single frame at time 10s (also consider using ~accurate_seek~ argument).
+
+#+begin_example shell
+ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
+#+end_example
+
+Extract a frame each minute.
+
+#+begin_example shell
+ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
+#+end_example
+
+Extract list of specific frames using ffmpeg. More details in this [[https://stackoverflow.com/questions/38253406/extract-list-of-specific-frames-using-ffmpeg][StackOverflow thread]].
+
+#+begin_src shell
+  ffmpeg -i in.mp4 -vf select='eq(n\,100)+eq(n\,184)+eq(n\,213)' -vsync 0 frames%d.jpg
+#+end_src
+
+#+begin_quote
+FFmpeg is primarily a processor of timed video i.e. media with a cycle rate such as framerate or sample rate. It assumes that the output should be at the same rate as the source. If inadequate frames are supplied, it duplicates unless told not to. -vsync 0 is added which, in this case, tells it to suppress duplication.
+#+end_quote
+
+Using FFMPEG's scene detection to generate a [[https://blog.gdeltproject.org/using-ffmpegs-scene-detection-to-generate-a-visual-shot-summary-of-television-news/][visual shot summary of Television News]].
+
+#+begin_src shell
+time ./ffmpeg -i ./VIDEO.mp4 -vf "select=gt(scene\,0.4),scale=160:-1,tile=6x80" -frames:v 1 -qscale:v 3 preview.jpg  
+#+end_src
+
+** Get an image from a webcam using V4L (video for Linux)
+
+#+begin_src sh
+  ffmpeg -f v4l2 -video_size 1280x720 -i /dev/video0 -frames 1 out.jpg
+#+end_src
+
+** Cut audio/videos starting from 10s from the beginning for 20s.
+
+#+BEGIN_EXAMPLE sh
+ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
+#+END_EXAMPLE
+
+Another example using timing
+
+#+begin_example
+ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
+#+end_example
+
+** Adjust volume
+
+If we want our volume to be half of the input volume:
+#+BEGIN_EXAMPLE 
+ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
+#+END_EXAMPLE
+
+150% of current volume:
+#+BEGIN_EXAMPLE 
+ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
+#+END_EXAMPLE
+
+You can also use decibel measures. To increase the volume by 10dB:
+#+BEGIN_EXAMPLE 
+ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
+#+END_EXAMPLE
+
+** Fade in/out
+
+For more details refer this [[https://video.stackexchange.com/questions/28269/how-do-i-fade-in-and-out-in-ffmpeg][StackOverlow thread]].
+
+Fade in from second 0 to 5.
+
+#+begin_example sh
+  ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
+#+end_example
+
+** Speeding up/slowing down video:
+
+The filter works by changing the presentation timestamp (PTS) of each
+video frame. For example, if there are two succesive frames shown at
+timestamps 1 and 2, and you want to speed up the video, those
+timestamps need to become 0.5 and 1, respectively. Thus, we have to
+multiply them by 0.5.
+
+To double the speed of the video, you can use:
+#+BEGIN_EXAMPLE sh
+ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
+#+END_EXAMPLE
+
+To slow down your video, you have to use a multiplier greater than 1:
+#+BEGIN_EXAMPLE sh
+ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
+#+END_EXAMPLE
+
+For audio I found this
+
+#+begin_src sh
+ffmpeg -i input.wav -filter:a "atempo=0.75" output.mp3 
+#+end_src
+** Concat audio/videos starting from a list of files
+
+#+BEGIN_EXAMPLE sh
+ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
+#+END_EXAMPLE
+
+The ~list-of-files.txt~ should be something like this:
+
+#+begin_example
+file './infile.wav'
+file './infile.wav'
+file './infile.wav'
+file './infile.wav'
+file './infile.wav'
+file './infile.wav'
+#+end_example
+
+**N.B.** you could see the error 'Unsafe filename..Operation not permitted'; as reported in [[https://stackoverflow.com/questions/38996925/ffmpeg-concat-unsafe-file-name][this SO thread]] you could solve this issue by using single quotes in the list of filenames, avoiding any ~~~ or other /"strange"/ chars.
+
+** Scene detection
+
+Basic ffmpeg scene detection:
+
+#+begin_src sh
+  ffmpeg -i input.flv -filter:v "select='gt(scene,0.4)',showinfo" -f null -
+  # or
+  ffmpeg -i in.mp4 -vf "select='gte(scene,0.4)',metadata=print:file=scenescores.txt" -an -f null -
+#+end_src
+
+scene (video only) value between 0 and 1 to indicate a new scene; a low value reflects a low probability for the current frame to introduce a new scene, while a higher value means the current frame is more likely to be one (see the example below) https://ffmpeg.org/ffmpeg-filters.html#select_002c-aselect. Set the scene change detection threshold as a percentage of maximum change on the luma plane. Good values are in the [8.0, 14.0] range. Scene change detection is only relevant in case combmatch=sc. The range for scthresh is [0.0, 100.0]. https://ffmpeg.org/ffmpeg-filters.html
+
+- [[https://github.com/slhck/scenecut-extractor][Scenecut Extractor (python)]]
+- [[https://www.scenedetect.com/][PySceneDetect]]
+- [[https://trac.ffmpeg.org/ticket/442][FFMPEG Ticket]]
+- [[https://publik.tuwien.ac.at/files/pub-et_9739.pdf][SCENE CHANGE DETECTION FOR H.264 USING DYNAMIC THRESHOLD TECHNIQUES]]
+
+** Change sample rate
+
+Converts a.wav to MPEG audio at 22050 Hz sample rate.
+
+#+begin_example sh
+  ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
+#+end_example
+** Edit ID3 Tags
+
+You can follow [[https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01][this gist]].
+#+begin_example sh
+  ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
+#+end_example
+** Capture audio
+
+Taken from [[https://trac.ffmpeg.org/wiki/Capture/Desktop][FFMPEG doc]]
+
+**** Linux
+Use the x11grab device:
+
+#+begin_src sh
+ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+100,200 output.mp4
+#+end_src
+This will grab the image from desktop, starting with the upper-left corner at x=100, y=200 with a width and height of 1024⨉768.
+
+If you need audio too, you can use ALSA (see Capture/ALSA for more info):
+
+#+begin_src sh
+ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+100,200 -f alsa -ac 2 -i hw:0 output.mkv
+#+end_src
+
+Or the pulse input device (see Capture/PulseAudio for more info):
+
+#+begin_src sh
+ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+100,200 -f pulse -ac 2 -i default output.mkv
+#+end_src
+
+***** macOS
+Use the avfoundation device:
+
+#+begin_src sh
+ffmpeg -f avfoundation -list_devices true -i ""
+#+end_src
+
+#+RESULTS:
+
+This will enumerate all the available input devices including screens ready to be captured.
+
+Once you've figured out the device index corresponding to the screen to be captured, use:
+
+#+begin_src sh
+ffmpeg -f avfoundation -i "<screen device index>:<audio device index>" output.mkv
+#+end_src
+
+This will capture the screen from <screen device index> and audio from <audio device index> into the output file output.mkv.
+
+To capture only audio, something like this:
+
+#+begin_src sh
+ffmpeg -f avfoundation -i ":default" output.wav
+#+end_src
+
+* Git
+
+How do I change the author and committer name/email for multiple commits?
+
+#+begin_src sh
+  git rebase -r a5bf6c2 --exec 'git commit --amend --no-edit --reset-author'
+#+end_src
+
+Generate a patch
+
+#+begin_src sh
+  git diff > my_custom_patch_file.patch
+#+end_src
+
+Apply the patch
+
+#+begin_src sh
+  git apply patch_file.patch 
+#+end_src
+
+How to add chmod permissions to file in Git ([[https://git-scm.com/docs/git-update-index#Documentation/git-update-index.txt---chmod-x][official doc]])
+
+#+begin_src sh
+  git update-index --chmod=+x path/to/file
+#+end_src
+
+Use =git bundle= to backup a repo with all branches; =repo.bundle= is the file what you need (full back up) in the same directory.
+
+#+begin_src sh
+  git bundle create repo.bundle --all
+#+end_src
+
+To restore the bundle
+
+#+begin_src sh
+  git clone repo.bundle
+#+end_src
+
+The =git clone repo.bundle= can be used to restore repositories in the tarball exported account data in Github (https://github.com/settings/admin -> Account -> Export account data)
+
+* Pandoc
+
+Install *all* packages to manage pdf files
+
+#+begin_src emacs-lisp
+  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
+#+end_src
+
+Convert a =txt= file to =pdf=
+
+#+begin_src sh
+  pandoc file.txt -o file.pdf
+#+end_src
+
+* Google Chrome & chromedriver
+
+Download chromedriver version according to the version of Google Chrome installed.
+- https://googlechromelabs.github.io/chrome-for-testing/
+
+How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium test run?
+
+#+begin_src sh
+chromedriver --disable-search-engine-choice-screen
+#+end_src
+
+* GPG and SSH
+** Generate key
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key
+
+Remember to execute in a terminal capable of reading password via ncurses-like input method.
+
+  #+begin_src sh
+gpg --full-generate-key
+  #+end_src
+
+** List the key
+
+#+begin_src sh
+gpg --list-secret-keys --keyid-format=long
+#+end_src
+
+** Get the armored key text
+
+  #+begin_src sh
+gpg --armor --export KEYID
+  #+end_src
+
+** Upload to Github
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-new-gpg-key-to-your-github-account
+
+From the list of GPG keys, copy the long form of the GPG key ID you'd like to use. In this example, the GPG key ID is =3AA5C34371567BD2=:
+
+#+begin_src sh
+$ gpg --list-secret-keys --keyid-format=long
+#+end_src
+
+This will output something like
+
+#+begin_src
+/Users/hubot/.gnupg/secring.gpg
+------------------------------------
+sec   4096R/3AA5C34371567BD2 2016-03-10 [expires: 2017-03-10]
+uid                          Hubot
+ssb   4096R/42B317FD4BA89E7A 2016-03-10
+#+end_src
+
+Paste the text below, substituting in the GPG key ID you'd like to use. In this example, the GPG key ID is =3AA5C34371567BD2=:
+
+#+begin_src sh
+$ gpg --armor --export 3AA5C34371567BD2
+#+end_src
+
+Copy your GPG key, beginning with -----BEGIN PGP PUBLIC KEY BLOCK----- and ending with -----END PGP PUBLIC KEY BLOCK-----.
+
+** Tell Git to use GPG key
+
+Ref. https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key
+
+Use the =gpg --list-secret-keys --keyid-format=long= command to list the long form of the GPG keys for which you have both a public and private key. A private key is required for signing commits or tags (same ID as for /Upload to Github/). Then:
+
+#+begin_src sh
+git config --global user.signingkey 3AA5C34371567BD2
+#+end_src
+
+** Export key pair
+
+Ref. https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file
+
+*** Export Public Key
+
+This command will export an ascii armored version of the public key:
+
+#+begin_src sh
+gpg --output public.pgp --armor --export username@email
+#+end_src
+
+N.B. when using =--armor= maybe the file extension name should be =.asc=.
+
+*** Export Secret Key
+
+This command will export an ascii armored version of the secret key:
+
+#+begin_src sh
+gpg --output private.pgp --armor --export-secret-key username@email
+#+end_src
+
+N.B. when using =--armor= maybe the file extension name should be =.asc=.
+
+Or [[https://unix.stackexchange.com/questions/481939/how-to-export-a-gpg-private-key-and-public-key-to-a-file][if the purpose is to create a backup key, you should use the backup option]]:
+
+#+begin_src sh
+  gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+#+end_src
+
+*** Security Concerns, Backup, and Storage
+
+A PGP public key contains information about one's email address. This is generally acceptable since the public key is used to encrypt email to your address. However, in some cases, this is undesirable.
+
+For most use cases, the secret key need not be exported and should not be distributed. If the purpose is to create a backup key, you should use the backup option:
+
+#+begin_src shell
+gpg --output backupkeys.pgp --armor --export-secret-keys --export-options export-backup user@email
+#+end_src
+
+** Import a key
+
+#+begin_src shell
+gpg --import my-key.asc
+gpg --import --allow-secret-key-import private.key
+#+end_src
+
+** Troubleshooting
+
+Interesting resources if you encounter problems:
+- https://gist.github.com/paolocarrasco/18ca8fe6e63490ae1be23e84a7039374
+
+If every gpg command goes timeout  with a message like =gpg: Nota: database_open 134217901 waiting for lock (held by 31477)= you could try to solve via:
+
+#+begin_src sh
+  rm -rf ~/.gnupg/*.lock
+  rm -rf ~/.gnupg/public-keys.d/*.lock
+#+end_src
+
+** Generate SSH keys
+
+From [[https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent][GitHub docs]]:
+
+#+begin_src sh
+ssh-keygen -t ed25519 -C "your_email@example.com"
+#+end_src
+
+** GPG Agent: cache and timeouts
+**** Keep GnuPG credentials cached for entire user session
+
+For GnuPG 2.1 and below edit user configuration file at =~/.gnupg/gpg-agent.conf=. In the example below the TTL is set to 3h.
+
+#+begin_src sh :tangle ~/.gnupg/gpg-agent.conf
+default-cache-ttl 18000
+max-cache-ttl 18000
+#+end_src
+
+Then restart the agent
+
+#+begin_src sh
+  gpgconf --kill gpg-agent
+  gpg-agent --daemon --use-standard-socket
+#+end_src
+
+**** Cache SSH keys
+
+If you want to use SSH but tired of insert SSH key on every (for instance) git operation
+
+#+begin_src sh
+eval `ssh-agent -s`
+ssh-add
+#+end_src
+
+#+begin_quote
+SSH needs two things in order to use ssh-agent: an ssh-agent instance
+running in the background, and an environment variable set that tells
+SSH which socket it should use to connect to the agent (SSH_AUTH_SOCK
+IIRC). If you just run ssh-agent then the agent will start, but SSH
+will have no idea where to find it.
+#+end_quote
+
+More info in this [[https://stackoverflow.com/questions/17846529/could-not-open-a-connection-to-your-authentication-agent][SO thread]].
+* How to set environment variables from .env file
+
+#+begin_src sh
+  set -a # automatically export all variables
+  source .env
+  set +a
+#+end_src
+
+* HTML & CSS
+
+- https://remixicon.com/
+- https://yaml.org/css/screen.css
+
+* [[https://imagemagick.org/index.php][Imagemagick]]
+** [[https://imagemagick.org/script/compare.php][Compare two images]]
+
+#+begin_src sh
+  magick compare -metric NCC -subimage-search logo.png hat.png similarity.png
+#+end_src
+
+** Resize image
+
+#+begin_src sh
+  convert dragon_sm.gif -resize 64x64 resize_dragon.gif
+#+end_src
+
+** Annotating image
+Most of info taken from [[https://legacy.imagemagick.org/Usage/annotating/][this page]].
+
+If you want to add a text stripe under the image
+
+#+begin_src sh
+  convert original-image.jpg -background Khaki -font Arial -pointsize 27 label:'Sfilatini Buitoni' -gravity Center -append out-image.jpg 
+#+end_src
+
+** Set an image as wallpaper
+
+You can also use a remote image, like https://picsum.photos/1920/1080.jpg
+#+begin_src sh
+  display -size 1920x1080 -window root /path/to/image.jpg
+#+end_src
+
+* [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
+* Linux desktop
+
+Brief list of useful commands, examples, snippets
+
+- =lsb_release -a= show info about distro
+- =lsblk -f= show partitions informations
+- =pacman -Qq= / =apt list --installed= / =dnf list install= show installed packages (Arch, Debian, Fedora)
+- =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
+- =ls -1 | wc -l= determine how many files there are in a directory
+- =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
+
+** Show preferred applications (alternatives) :debian:
+#+begin_src sh
+update-alternatives --get-selections
+#+end_src
+** Change the ownership of a input device, like a usb mouse
+Retrive information of device through
+
+#+BEGIN_SRC sh
+udevadm info --attribute-walk --name /dev/input/mouse0
+#+END_SRC
+
+Then add a rule in /etc/udev/rules.d/
+
+#+begin_src sh
+SUBSYSTEM=="input", KERNEL=="mouse0", OWNER="myusername"
+#+end_src
+
+** Opena a remote desktop session on a PCDuino
+
+Configuring The VNC Server
+
+As it turns out, the pcDuino comes with the x11vnc server already installed and all that’s necessary is to configure SSH on the pcDuino and local machine to support it.  (Note:  while working on putting together a bootable SD card I found out this is not necessarily the case.  If you find the x11vnc server is not installed, you can do so by executing the command from the pcDuino command line.)
+
+#+begin_src sh
+sudo apt-get install x11vnc
+#+end_src
+
+On the local machine and change to the /etc/ssh directory as root:
+
+#+begin_src sh
+sudo su
+cd /etc/ssh
+#+end_src
+
+Open the file ssh_config file in your editor of choice and find the ForwardX11 option.  Uncomment it if necessary, change its value to YES, and save the file.
+
+Now log into the pcDuino via the SSH link and gain root access in the same manner:
+
+#+begin_src sh
+sudo su
+cd /etc/ssh
+#+end_src
+
+Open the file sshd_config file in your editor of choice, find the X11Forwarding option, change its value to YES, and save the file.
+
+Install and Connect Via a VNC Client
+
+The final step is to install a VNC client on your local computer.  There are a number of them to choose from.  Of these, I chose xtightvncviewer for no other reason than it was there, installing it as:
+
+#+begin_src sh
+sudo apt-get install xtightvncviewer
+#+end_src
+
+Putting It All Together
+
+At this point if you SSH into the pcDuino and try to start the VNC server, you’ll get an error indicating you cannot connect to the display (XOpenDisplay failed) along with hints on how to fix it.  The cause of this error is that the account used for SSH does not have sufficient permissions to connect to the X display.
+
+To fix this, execute the command ps -fe | grep /usr/bin/X | grep -v grep from the pcDuino command line.  The returned process will have have an -auth flag.  Take note of the associated file. On my machine, it was /var/run/lightdm/root/:0.
+
+Exit from the SSH session and reconnect to the pcDuino using the command
+
+#+begin_src sh
+ssh -L 5900:localhost:5900 <user>@<pcDuino_ip_address> ‘sudo x11vnc -auth <path_to_authority_file>’ -display :0
+#+end_src
+
+where <path_to_authority_file> is the file associated with the -auth flag noted above.  This will log you into the pcDuino via SSH and start an instance of the X server.  You can then start the VNC viewer from the local machine command line with the command:
+
+#+begin_src sh
+vncviewer localhost:5900 &
+#+end_src
+
+** How do I get a list of installed files from a package?
+
+To see all the files the package installed onto your system, do this:
+
+#+begin_src sh
+dpkg-query -L <package_name>
+#+end_src
+
+To see the files a .deb file will install
+
+#+begin_src sh
+dpkg-deb -c <package_name.deb>
+#+end_src
+
+** Add a custom window manager entry for [[https://wiki.ubuntu.com/LightDM][LightDM]]
+
+Add a file in =/usr/share/xsessions/= with something like this (example for =i3=)
+
+#+begin_src toml
+[Desktop Entry]
+Name=i3
+Comment=improved dynamic tiling window manager
+Exec=i3
+TryExec=i3
+Type=Application
+X-LightDM-DesktopName=i3
+DesktopNames=i3
+Keywords=tiling;wm;windowmanager;window;manager;
+#+end_src
+
+** Audio management
+*** Alsamixer
+
+Toggle mute
+
+#+begin_src sh
+  amixer set Master toggle
+#+end_src
+
+*** Pulseaudio
+**** pacmd
+You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
+
+#+begin_src sh
+  pacmd help list-sinks
+  pacmd list-sink-inputs
+  pacmd move-sink-input 5 1
+#+end_src
+
+**** pactl
+
+- =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
+- =pactl get-sink-volume <INDEX>= get the volume of the given sink
+
+*** [[https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md][PipeWire]]
+** Create a .desktop File
+
+In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
+
+#+begin_src toml
+  [Desktop Entry]
+  Type=Application
+  Name=Clock
+  Exec=/usr/bin/python3 /home/pi/clock.py
+#+end_src
+
+** [[https://superuser.com/questions/644804/disable-screensaver-screen-blank-via-command-line][Handling screen saver / blank screen]]
+
+=xset s off= (turns off the screen saver)
+=xset s noblank= (turns off blanking)
+=xset -dpms= (disable the power management)
+
+** Read battery status from command-line
+
+Here's a [[https://askubuntu.com/questions/69556/how-do-i-check-the-batterys-status-via-the-terminal][StackOverlow thread]]: from Linux 4.20 =cat /sys/class/power_supply/BAT1/status=; check the link for old methods.
+
+** iptables
+
+Iptables rules used to configure a router on linux
+
+#+begin_src txt
+WAN='wlp7s0'
+LAN='enp7s0'
+
+iptables -F
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD ACCEPT
+
+iptables -A INPUT -m state --state=RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i $LAN -j ACCEPT
+
+# iptables -A FORWARD -m state --state=RELATED,ESTABLISHED -j ACCEPT
+
+iptables -t nat -F
+# iptables -t nat -A POSTROUTING -s 172.16.0.0/20 -o $WAN -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $WAN -j MASQUERADE
+#+end_src
+
+** Screen managing
+
+Here's [[https://pimylifeup.com/raspberry-pi-screen-resolution/][a good blogpost]] specific for Raspberry PI.
+
+If you're using the LightDM and you want to set monitor resolutions and layout at the startup, edit the =display-setup-script= option in =/etc/lightdm/lightdm.conf=.
+
+*** X11 / xrandr
+
+Remember to set =DISPLAY= env in the console before using =xrandr= (usually ~export DISPLAY=:0~)
+
+#+begin_quote
+I use this command to mirror my desktop with my external VGA:
+
+$ xrandr --output LVDS-1 --mode 1366x768 --scale 1x1 --output VGA-1 --same-as LVDS-1 --mode 1920x1080 --scale 0.711x0.711
+
+LVDS-1 is the laptop screen , natively working in 1366x768.
+
+VGA-1 is my external VGA monitor, with native resolution of 1920x1080, scaled to 0.711 which equals close to 1366x768 (laptop resolution).
+
+Results are good for me. You can experiment with those options.
+
+Similarly, I use this one for extended desktop:
+
+$ xrandr --output VGA-1 --mode 1920x1080 --scale 1x1 --output LVDS-1 --mode 1366x768 --scale 1x1 --left-of VGA-1
+
+You can detect the names of your screens by just running xrandr
+#+end_quote
+
+Adjust brightness from command line:
+
+#+begin_src sh
+  xrandr --output monitor-name --brightness level
+#+end_src
+
+**Remember** as mentioned in =man xrandr=
+
+#+begin_quote
+ However, this is a software only  modification,  if  your  hardware  has  support  to  actually change the brightness, you will probably prefer to use xbacklight.
+#+end_quote
+
+*** Wayland / wlr-randr
+
+Remember to set =WAYLAND_DISPLAY= env var before using =wlr-randr= (usually ~export WAYLAND_DISPLAY=wayland-1~)
+
+The commands are almost the same as =xrandr=; keep in mind the way the screens are handled is different and =--same-as= option is not available.
+
+** Set wallpaper
+
+You can use [[https://wiki.archlinux.org/title/Feh][=feh=]]
+
+#+begin_src sh
+  feh --bg-fill ~/path/to/image.png
+#+end_src
+
+Or you can use the =xsetroot= utility (usually packaged into =xdotool=).
+Consider xsetroot accepts a particular format of file called /bitmap/ (=xsetroot -bitmap bitmap-file.xbm=); to convert a file into this format you can use Imagemagick. *N.B.* the bitmap is not the well-known Windows bitmap format (.bmp) but is the /X11 bitmap format/ (.xbm):
+
+#+begin_src sh
+  convert wallpaper.png wallpaper.xbm
+#+end_src
+
+** Set keyboard layout from command-line
+
+#+begin_src sh
+  setxkbmap -layout us,it
+#+end_src
+
+** Get and set name/class to an X application (window)
+
+If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[*\[\[https://en.wikipedia.org/wiki/I3_(window_manager)\]\[i3\]\] (Window Manager)][i3 rules configuration]].
+
+To get the window ID use =xdotool= (ex. =xdotool search -class mpv=)
+
+* [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
+
+A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
+
+#+begin_example conf
+  # This file has been auto-generated by i3-config-wizard(1).
+  # It will not be overwritten, so edit it as you like.
+  #
+  # Should you change your keyboard layout some time, delete
+  # this file and re-run i3-config-wizard(1).
+  #
+
+  # i3 config file (v4)
+  #
+  # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+  set $mod Mod4
+  set $alt Mod1
+  set $wallpaper_file ~/Pictures/wallpaper
+
+  # Font for window titles. Will also be used by the bar unless a different font
+  # is used in the bar {} block below.
+  font pango:monospace 8
+
+  # This font is widely installed, provides lots of unicode glyphs, right-to-left
+  # text rendering and scalability on retina/hidpi displays (thanks to pango).
+  #font pango:DejaVu Sans Mono 8
+
+  # Start XDG autostart .desktop files using dex. See also
+  # https://wiki.archlinux.org/index.php/XDG_Autostart
+  exec --no-startup-id dex --autostart --environment i3
+  exec --no-startup-id xfsettingsd
+  exec --no-startup-id compton
+  exec --no-startup-id feh --bg-max $wallpaper_file
+  # exec --no-startup-id xmodmap ~/.Xmodmaprc
+
+  # The combination of xss-lock, nm-applet and pactl is a popular choice, so
+  # they are included here as an example. Modify as you see fit.
+
+  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+  # screen before suspend. Use loginctl lock-session to lock your screen.
+  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
+
+  # NetworkManager is the most popular way to manage wireless networks on Linux,
+  # and nm-applet is a desktop environment-independent system tray GUI for it.
+  exec --no-startup-id nm-applet
+  exec --no-startup-id emacs --daemon && emacsclient -r
+
+  # Use pactl to adjust volume in PulseAudio.
+  set $volume_step 5%
+  set $refresh_i3status killall -SIGUSR1 i3status
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step && $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step && $refresh_i3status
+  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+  # Use Mouse+$mod to drag floating windows to their wanted position
+  floating_modifier $mod
+
+  # move tiling windows via drag & drop by left-clicking into the title bar,
+  # or left-clicking anywhere into the window while holding the floating modifier.
+  tiling_drag modifier titlebar
+
+  # start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
+  set $app_launcher i3-dmenu-desktop
+  set $terminal_app i3-sensible-terminal
+  set $take_screenshot import -window root ~/Desktop/screenshot.png
+  bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
+  bindsym $mod+Shift+space exec --no-startup-id $terminal_app ; mode "default"
+  # Emacs everywhere
+  bindsym $mod+Shift+e exec --no-startup-id emacsclient --eval "(emacs-everywhere)" && mode "default"
+
+  # kill focused window
+  bindsym $mod+Shift+q kill
+
+  # change focus
+  bindsym $mod+Tab focus left ; focus up
+  bindsym $mod+Shift+Tab focus right ; focus down
+
+  # Define names for default workspaces for which we configure key bindings later on.
+  # We use variables to avoid repeating the names in multiple places.
+
+  set $ws1 "1"
+  set $ws2 "2"
+  set $ws3 "3"
+
+  bindsym $mod+1 workspace $ws1
+  bindsym $mod+2 workspace $ws2
+  bindsym $mod+3 workspace $ws3
+  bindsym $mod+Shift+1 move container to workspace $ws1
+  bindsym $mod+Shift+2 move container to workspace $ws2
+  bindsym $mod+Shift+3 move container to workspace $ws3
+
+  # Window rules
+  # for_window [class="^firefox$"] move container to workspace $ws2
+  for_window [class="^mpv$"] move container to workspace $ws3
+
+  mode "i3" {
+    # start program launcher
+    bindsym d exec --no-startup-id $app_launcher ; mode "default"
+  
+    # alternatively, you can use the cursor keys:
+    bindsym Left focus left
+    bindsym Down focus down
+    bindsym Up focus up
+    bindsym Right focus right
+  
+    bindsym Shift+Left move left
+    bindsym Shift+Down move down
+    bindsym Shift+Up move up
+    bindsym Shift+Right move right
+  
+    # toggle i3bar mode
+    bindsym i bar mode toggle ; mode "default"
+
+    # split in horizontal orientation
+    bindsym h split h
+  
+    # split in vertical orientation
+    bindsym v split v
+  
+    # enter fullscreen mode for the focused container
+    bindsym Shift+f fullscreen toggle
+  
+    # change container layout (stacked, tabbed, toggle split)
+    bindsym s layout stacking
+    bindsym w layout tabbed
+    bindsym e layout toggle split
+  
+    # toggle tiling / floating
+    bindsym space floating toggle
+  
+    # change focus between tiling / floating windows
+    bindsym space focus mode_toggle
+  
+    # focus the parent container
+    bindsym a focus parent
+  
+    # focus the child container
+    #bindsym $mod+d focus child
+
+    # switch to workspace
+    bindsym f workspace next
+    bindsym b workspace prev
+    bindsym n focus next
+    bindsym p focus prev
+    bindsym 1 workspace $ws1
+    bindsym 2 workspace $ws2
+    bindsym 3 workspace $ws3
+  
+    # move focused container to workspace
+    bindsym Shift+f move container to workspace next
+    bindsym Shift+b move container to workspace prev
+    bindsym Shift+1 move container to workspace $ws1
+    bindsym Shift+2 move container to workspace $ws2
+    bindsym Shift+3 move container to workspace $ws3
+
+    # Media
+    bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+    bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+    bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+    bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+    # Kill current window
+    bindsym Shift+q kill
+    # reload the configuration file
+    bindsym Shift+c reload
+    # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+    bindsym Shift+r restart
+    # exit i3 (logs you out of your X session)
+    # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+    bindsym Shift+e exec i3-msg exit
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym r mode "resize"
+    bindsym $mod+Return mode "default"
+  }
+
+  # resize window (you can also use the mouse for that)
+  mode "resize" {
+    # These bindings trigger as soon as you enter the resize mode
+
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
+
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym r mode "resize"
+  }
+
+  bindsym $mod+Return mode "i3"
+
+  # Start i3bar to display a workspace bar (plus the system information i3status
+  # finds out, if available)
+  bar {
+    mode hide
+    hidden_state hide
+    modifier $mod
+  
+    position top # bottom
+    font pango:monospace 14
+    status_command i3status
+
+    bindsym --release button1 exec --no-startup-id $app_launcher
+    bindsym $mod+button3 exec --no-startup-id $take_screenshot
+  }
+
+  workspace_layout tabbed
+#+end_example
+
+Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
+
+- =xfsettingsd=  XSettings daemon for Xfce
+- =gnome-settings-daemon= for GNOME
+...
+
+So remember to start it in the i3 config file (ex. =exec gnome-settings-daemon=).
+
+And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
+
+#+begin_example conf
+  # i3status configuration file.
+  # see "man i3status" for documentation.
+
+  # It is important that this file is edited as UTF-8.
+  # The following line should contain a sharp s:
+  # ß
+  # If the above line is not correctly displayed, fix your editor first!
+
+  general {
+	  colors = true
+	  interval = 5
+  }
+
+  order += "ipv6"
+  order += "wireless _first_"
+  order += "ethernet _first_"
+  order += "battery all"
+  order += "disk /"
+  order += "load"
+  order += "memory"
+  order += "volume master"
+  order += "tztime local"
+
+  wireless _first_ {
+	  format_up = "W: (%quality at %essid) %ip"
+	  format_down = "W: down"
+  }
+
+  ethernet _first_ {
+	  format_up = "E: %ip (%speed)"
+	  format_down = "E: down"
+  }
+
+  battery all {
+	  format = "%status %percentage %remaining"
+  }
+
+  disk "/" {
+	  format = "%avail"
+  }
+
+  load {
+	  format = "%1min"
+  }
+
+  memory {
+	  format = "%used | %available"
+	  threshold_degraded = "1G"
+	  format_degraded = "MEMORY < %available"
+  }
+
+  tztime local {
+	  format = "%Y-%m-%d %H:%M:%S"
+  }
+
+  volume master {
+	  format = "♪: %volume"
+	  format_muted = "♪: muted (%volume)"
+	  device = "default"
+	  mixer = "Master"
+	  mixer_idx = 0
+  }
+
+#+end_example
+
+* Suspend the system via command line
+
+Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
+
+* Front-end technologies
+- tailiwind
+* CI tehcnologies
+- laminar
+* Javascript
+
+Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
+
+#+begin_src javascript
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
+#+end_src
+
+* Android
+** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
+* MacOS
+** Install [[https://brew.sh/][Homebrew]]
+
+#+begin_src sh
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#+end_src
+
+** Dev environment
+
+#+begin_src sh
+  brew install tmux curl wget git asdf cmake libtool
+#+end_src
+
+** Emacs
+
+There are many options.
+
+- You can use the [[https://emacsformacosx.com/][Emacs for Mac OS X]] bundle, but it is not always up to date to newer versions.
+- You can install via homebrew
+- You can install the [[https://github.com/d12frosted/homebrew-emacs-plus][Emacs plus]] via homebrew
+
+#+begin_src sh
+  brew tap d12frosted/emacs-plus
+  brew install emacs-plus
+  # or
+  brew install emacs-plus@29 
+#+end_src
+
+** Reset DNS cache on Macos
+
+Taken from [[https://www.lifewire.com/flush-dns-cache-on-a-mac-5209298][this article]].
+
+#+begin_src shell
+  sudo dscacheutil -flushcache
+  sudo killall -HUP mDNSResponder
+#+end_src
+
+** Let QuickPlayer to autoplay on open
+
+Taken from this [[https://osxdaily.com/2009/09/03/autoplay-quicktime-movies-on-open-and-5-other-useful-quicktime-x-hacks/][Osx Daily post]]. ⚠️ /it seems not working on my Mac/ 🤔 
+
+#+begin_src sh
+defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen 1
+#+end_src
+
+** Get my IP address
+
+For wireless: Use =ipconfig getifaddr en1=.
+For ethernet: Useipconfig =ipconfig getifaddr en0=.
+For public IP address: =dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com=.
+
+** Installing Linux on MacBook Pro
+*** Bluetooh issues
+
+Installed this seems to fix.
+- https://github.com/leifliddy/macbook12-bluetooth-driver
+
+Bluetooth is not still completely relyable and sometimes I have problems to pair and connect. Probably it's better to search for somethig like /mackbook13-bluetooth-driver/ :D
+
+*** Sound issues
+
+After the install I've noticed the laptop speakers weren't usable. I've googled and and found these repo that seems to fix the issue.
+- https://github.com/egorenar/snd-hda-codec-cs8409
+
+*** Remap keys with xmodmap
+
+#+begin_src sh
+cat .Xmodmap
+
+!
+! Swap Caps_Lock and Control_L
+!
+remove Lock = Caps_Lock
+remove Control = Control_L
+remove Lock = Control_L
+remove Control = Caps_Lock
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+#+end_src
+
+*** Set keyboard layout
+
+From https://www.baeldung.com/linux/console-change-keyboard-layout
+
+localectl list-x11-keymap-layouts # get the list
+setxkbmap us # set the keyboard
+xmodmap .Xmodmap # <-- REQUIRED! It seems last command has resetted the custom remaps.
+
+To permanently configure edit the =/etc/default/keyboard= file, if present, or use =localectl=.
+
+*** I3 window manager
+
+I don't want wm keybindings to interfere with Emacs, so I'll wrap all i3 keybindings into ad-hoc "i3" mode at ~s-space~ keybinding.
+
+#+begin_src text :tangle ~/.config/i3/config
+  # This file has been auto-generated by i3-config-wizard(1).
+  # It will not be overwritten, so edit it as you like.
+  #
+  # Should you change your keyboard layout some time, delete
+  # this file and re-run i3-config-wizard(1).
+  #
+
+  # i3 config file (v4)
+  #
+  # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+  set $mod Mod4
+
+  # Font for window titles. Will also be used by the bar unless a different font
+  # is used in the bar {} block below.
+  font pango:monospace 8
+
+  # This font is widely installed, provides lots of unicode glyphs, right-to-left
+  # text rendering and scalability on retina/hidpi displays (thanks to pango).
+  #font pango:DejaVu Sans Mono 8
+
+  # Start XDG autostart .desktop files using dex. See also
+  # https://wiki.archlinux.org/index.php/XDG_Autostart
+  exec --no-startup-id dex --autostart --environment i3
+
+  # The combination of xss-lock, nm-applet and pactl is a popular choice, so
+  # they are included here as an example. Modify as you see fit.
+
+  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+  # screen before suspend. Use loginctl lock-session to lock your screen.
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+  # NetworkManager is the most popular way to manage wireless networks on Linux,
+  # and nm-applet is a desktop environment-independent system tray GUI for it.
+  exec --no-startup-id nm-applet
+  # exec --no-startup-id "/usr/bin/python3 /usr/bin/blueman-applet"
+
+  # Define names for default workspaces for which we configure key bindings later on.
+  # We use variables to avoid repeating the names in multiple places.
+  set $ws1 "1"
+  set $ws2 "2"
+  set $ws3 "3"
+  set $ws4 "4"
+  set $ws5 "5"
+  set $ws6 "6"
+  set $ws7 "7"
+  set $ws8 "8"
+  set $ws9 "9"
+  set $ws10 "10"
+
+  # Use pactl to adjust volume in PulseAudio.
+  set $refresh_i3status killall -SIGUSR1 i3status
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+  # Use Mouse+$mod to drag floating windows to their wanted position
+  # floating_modifier $mod
+
+  # kill focused window
+  bindsym $mod+Shift+q kill
+  bindsym $mod+Tab focus next
+
+  mode "i3" {
+    bindsym r mode "resize"
+    bindsym $mod+space mode "default"
+
+    # start dmenu (a program launcher)
+    bindsym d exec --no-startup-id dmenu_run
+    # A more modern dmenu replacement is rofi:
+    # bindcode 40 exec "rofi -modi drun,run -show drun"
+    # There also is i3-dmenu-desktop which only displays applications shipping a
+    # .desktop file. It is a wrapper around dmenu, so you need that installed.
+    # bindcode 40 exec --no-startup-id i3-dmenu-desktop
+    # enter fullscreen mode for the focused container
+    bindsym f fullscreen toggle
+    # reload the configuration file
+    bindsym Shift+c reload
+    # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+    bindsym Shift+r restart
+    # exit i3 (logs you out of your X session)
+    bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+  
+    # change focus
+    bindsym j focus left
+    bindsym k focus down
+    bindsym l focus up
+    bindsym ograve focus right
+  
+    # alternatively, you can use the cursor keys:
+    bindsym Left focus left
+    bindsym Down focus down
+    bindsym Up focus up
+    bindsym Right focus right
+  
+    # move focused window
+    bindsym Shift+j move left
+    bindsym Shift+k move down
+    bindsym Shift+l move up
+    bindsym Shift+ograve move right
+  
+    # alternatively, you can use the cursor keys:
+    bindsym Shift+Left move left
+    bindsym Shift+Down move down
+    bindsym Shift+Up move up
+    bindsym Shift+Right move right
+  
+    # split in horizontal orientation
+    bindsym h split h
+  
+    # split in vertical orientation
+    bindsym v split v
+  
+    # change container layout (stacked, tabbed, toggle split)
+    bindsym s layout stacking
+    bindsym w layout tabbed
+    bindsym e layout toggle split
+  
+    # toggle tiling / floating
+    bindsym Shift+space floating toggle
+  
+    # change focus between tiling / floating windows
+    bindsym space focus mode_toggle
+  
+    # focus the parent container
+    bindsym a focus parent
+  
+    # focus the child container
+    #bindsym d focus child
+
+    # switch to workspace
+    bindsym 1 workspace number $ws1
+    bindsym 2 workspace number $ws2
+    bindsym 3 workspace number $ws3
+    bindsym 4 workspace number $ws4
+    bindsym 5 workspace number $ws5
+    bindsym 6 workspace number $ws6
+    bindsym 7 workspace number $ws7
+    bindsym 8 workspace number $ws8
+    bindsym 9 workspace number $ws9
+    bindsym 0 workspace number $ws10
+  
+    # move focused container to workspace
+    bindsym Shift+1 move container to workspace number $ws1
+    bindsym Shift+2 move container to workspace number $ws2
+    bindsym Shift+3 move container to workspace number $ws3
+    bindsym Shift+4 move container to workspace number $ws4
+    bindsym Shift+5 move container to workspace number $ws5
+    bindsym Shift+6 move container to workspace number $ws6
+    bindsym Shift+7 move container to workspace number $ws7
+    bindsym Shift+8 move container to workspace number $ws8
+    bindsym Shift+9 move container to workspace number $ws9
+    bindsym Shift+0 move container to workspace number $ws10
+  }
+  
+  # resize window (you can also use the mouse for that)
+  mode "resize" {
+    # These bindings trigger as soon as you enter the resize mode
+  
+    # Pressing left will shrink the window’s width.
+    # Pressing right will grow the window’s width.
+    # Pressing up will shrink the window’s height.
+    # Pressing down will grow the window’s height.
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym ograve resize grow width 10 px or 10 ppt
+  
+    # same bindings, but for the arrow keys
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+  
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
+  }
+
+  bindsym $mod+space mode "i3"
+
+  # Start i3bar to display a workspace bar (plus the system information i3status
+  # finds out, if available)
+  bar {
+    mode hide
+
+    status_command i3status
+  }
+
+  exec --no-startup-id emacs
+#+end_src
+
+* Makefile
+
+- https://makefiletutorial.com/
+
+A sample of makefile usefull for /day-to-day/ development: fetch the remote repo (=sync=) avoiding to digit the ssh passowrd everytime (=sshadd=)
+
+#+begin_src makefile
+  sync:
+          git fetch
+          git pull origin master
+  sshadd:
+	eval `ssh-agent -s`
+	ssh-add
+#+end_src
+
+Here a sample Makefile that uses /double dollar sign/ to assign variables using ENVs. Also notice the use of nested interpolation: you can connect to =nas= using the command =make ssh host=nas=.
+
+#+begin_src makefile
+  username := $$USER # <-- uses shell ENV
+  laptop := 192.168.1.67
+  nas := 192.168.1.226
+
+  default: usage
+
+  nas:
+	  ssh ${username}@${nas}
+
+  ssh:
+	  ssh ${username}@${${host}} # <-- notice the nested interpolation!
+  usage:
+	  cat ~/Makefile
+#+end_src
+
+* Postgres
+
+How to create an user on Postgres (https://www.postgresql.org/docs/current/sql-createuser.html)
+
+#+begin_src sql
+CREATE USER postgres WITH SUPERUSER PASSWORD 'password';
+#+end_src
+
+Rename a database ([[https://www.postgresqltutorial.com/postgresql-administration/postgresql-rename-database/][here]] the full procedure)
+
+#+begin_src sql
+ALTER DATABASE db RENAME TO newdb;
+#+end_src
+
+* Raspberry
+** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
+** Detect Raspberry model
+
+#+begin_src sh
+  cat /proc/device-tree/model
+#+end_src
+
+** Deal with I2C from CLI
+
+- https://pi3g.com/enabling-and-checking-i2c-on-the-raspberry-pi-using-the-command-line-for-your-own-scripts/
+
+** Troubleshoot USB Capacitive Touch Screen Display
+- https://forums.raspberrypi.com/viewtopic.php?t=116174
+- https://github.com/bsteinsbo/rpi_touch_driver
+
+** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+
+#+begin_src sh
+  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+#+end_src
+
+or if you want to automate via =Makefile=
+
+#+begin_src makefile
+  raspi-setup:
+  	sudo apt update
+  	sudo apt install tmux emacs
+  	sudo apt install erlang erlang-dev elixir
+#+end_src
+** Use Raspberry Pi in "Kiosk" mode
+*** [[file:kiosk.org][Use Emacs as Kiosk]]
+*** Darbula (Elixir/Phoenix)
+
+Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+
+#+begin_src sh
+  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+#+end_src
+
+*** Browsers
+***** Chromium
+Use Chromium/Firefox as browser works well only on RPi > 1
+
+Start Chromium in Kiosk mode within Wayland.
+
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
+  XDG_RUNTIME_DIR=/run/user/1000 WAYLAND_DISPLAY=wayland-1 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=wayland --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+end_src
+
+Start Chromium in Kiosk mode within X11.
+
+#+begin_src sh :tangle ~/kiosk.sh :sheband "#!/bin/bash"
+  DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+end_src
+
+- [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
+
+***** Old RPi models
+
+For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
+
+P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
+
+*** System setup
+**** Screen setup
+
+***** Wayland vs X11
+
+With Wayland I've encountered many troubles trying to manage the monitors (TV + touchscreen) via command line tools (=wlr-randr=); it handles the virtual monitor in a different way and it lacks handy options like =--same-as=. For this reason I've decided to temporary drop Wayland in favor of the good old X11.
+I've used =raspi-config= in order to use the standard =X11= server.
+
+In order to have the same contents both on TV and the touchscreen I've used =xrandr= to mirror the output in almost the same layout
+
+#+begin_src sh
+  xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480 --scale 2.2 --same-as HDMI-1
+#+end_src
+
+***** Window manager
+
+Even if the main purpose of the /Kiosk/ is to display a browser window in fullscreen mode (or kiosk mode, if the browser supports it), and since I do most of the operations on the Raspberry via SSH, I could leave the default LXDE window manager. But since I've two monitors, I'd like to take advantage and use both of them in different way instad of just replicate the same contents. Since I've no mouse, I want to launch apps and have them to be arranged automatically via *rules*. I don't want to investigate LXDE configuration files, or if it can be achieved via some XDG files: I use i3 every day and it allow to span windows across workspaces (and screens) by defining simple rules. For this reason I'll install i3 and I'll configure the system to auto-login in a i3 session.
+
+*N.B.* At the time of writing I was able to install and setup i3, but I haven't defined any rules yet, even because I've to decide how to use the touchscreen. 
+
+1) =sudo apt install i3=
+2) update LightDM conf (=/etc/lightdm/lightdm.conf=) in order to set the
+   =autologin-session= to =i3=
+3) =sudo update-alternatives --config x-session-manager= and =sudo update-alternatives --config x-window-manager= and set i3
+
+I'm not sure the step *3* is really needed, I'll investigate more later. You also probably have to check if there's a file in =/usr/share/xsessions/= (check [[file:dev.org::*Add a custom window manager entry for \[\[https://wiki.ubuntu.com/LightDM\]\[LightDM\]\]][here]] for more details)
+
+**** Setup PulseAudio
+
+Due to the troubles about Wayland, I've decided to switched back to PulseAudio instead of PipeWire. Since the Raspberry case does not have any speaker, I want to reproduce the sounds via the TV (HDMI). In order to do that I had to set the PulseAudio default sink to the HDMI card device:
+
+1) get the device index via
+
+#+begin_src sh
+pacmd list-sinks
+#+end_src
+
+the current default sink has an asterisk near the index.
+
+#+begin_src
+      index: 1
+        name: <alsa_output.platform-fef00700.hdmi.hdmi-stereo>
+        driver: <module-alsa-card.c>
+#+end_src
+
+2) find the index of the HDMI device and use it (assume it's ~1~)
+
+#+begin_src sh
+pacmd set-default-sink 1
+#+end_src
+
+To verify I rerun =pacmd list-sinks= and check for the ~*~.
+
+#+begin_src 
+  * index: 1
+        name: <alsa_output.platform-fef00700.hdmi.hdmi-stereo>
+        driver: <module-alsa-card.c>
+#+end_src
+
+*** MPV + Youtube
+
+In order to play Youtube videos directly via =mpv= use the setting =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol.
+
+#+begin_src emacs-lisp
+  (use-package bongo
+    :custom
+    (bongo-enabled-backends '(mpv))
+    (bongo-custom-backend-matchers '((mpv ("https:") . t)))
+    (bongo-mpv-extra-arguments '("--no-audio-display" "--ytdl-raw-options=cookies-from-browser=chromium")))
+#+end_src
+
+*** Simulate keyboard events
+
+- Send keys to the graphic server
+  X ([[https://github.com/jordansissel/xdotool][xdotool]]): =xdotool key ctrl+l= or =xdotool type "Hello world"=
+  Wayland: =XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Tab=
+
+*** Resources
+
+- http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html
+- https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/
+
+** How to attach a cooler fan
+
+- https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/?srsltid=AfmBOorgZc90NP9RgfctZKWpl-V6XJtozQjo7NU8pU_Lr1S_9rTWGVJv
+
+** [[https://www.raspberrypi.com/tutorials/how-to-build-a-super-slim-smart-mirror/][Magic Mirror]]
+** [[https://raspberrypi-guide.github.io/electronics/using-usb-webcams][Working with USB webcams on your Raspberry Pi]]
+** Turn your RPi into a Spy
+
+Use [[https://motion-project.github.io/][motion]] app; [[https://www.instructables.com/How-to-Make-Raspberry-Pi-Webcam-Server-and-Stream-/][Here's a detailed article: How to Make Raspberry Pi Webcam Server and Stream]].
+
+** Turn your RPi into a Spy (audio)
+
+I want to use the mic of the Raspberry to stream on the audio over the network.
+I've achieved by following the instructions in this blogpost: [[https://hobbylad.wordpress.com/2017/04/26/raspberry-pi-system-audio-redirection-over-network/][Stream audio over the network using VLC]].
+To detect the alsa card for recording use =arecord -l=
+
+#+begin_src sh
+card 3: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+#+end_src
+
+then stream using VLC
+
+#+begin_src sh
+ cvlc -vvv alsa://plughw:3 --sout '#transcode{acodec=mp3,ab=64,channels=1}:standard{access=http,dst=0.0.0.0:8888/out.mp3}'
+#+end_src
+
+Connect to the raspberry: if the IP address is, for instance, 192.168.1.44, go to http://192.168.1.44:8888/out.mp3.
+
+If you're not interested in streaming but just record the audio onto a file start recording using =arecord= for 4 seconds in /dat/ format (16bit; see man for more options):
+
+#+begin_src shell
+  arecord -d 4 -f dat spy.wav
+#+end_src
+
+Other resources:
+- https://community.element14.com/challenges-projects/project14/spynerd/b/blog/posts/pi-spy-audio-recorder---part-1
+
+** Turn your RPi into an Access Point
+
+https://raspberrytips.com/access-point-setup-raspberry-pi/
+
+* [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
+* Shell
+
+My =.zprofile= on my Mackbook.
+
+#+begin_src sh
+  eval "$(/usr/local/bin/brew shellenv)"
+  eval "$(fzf --bash)"
+  export ASDF_DIR="$HOME/.asdf"
+  . "$HOME/.asdf/asdf.sh"
+  . "$HOME/.asdf/completions/asdf.bash"
+  export PATH=~/.local/bin:$PATH
+  alias e='emacs -nw --init-directory=~/.emacs.d.minemacs'
+  alias t='tmux attach'
+#+end_src
+
+* Simple Static assets web server ~ Busybox
+
+Taken from [[https://lipanski.com/posts/smallest-docker-image-static-website][this blogpost]].
+
+#+begin_src dockerfile :tangle ~/busybox.dockerfile
+  FROM busybox:1.35
+
+  # Create a non-root user to own the files and run our server
+  RUN adduser -D static
+  USER static
+  WORKDIR /home/static
+  VOLUME /home/static
+  EXPOSE 3000
+
+  # Copy the static website
+  # Use the .dockerignore file to control what ends up inside the image!
+
+  # Run BusyBox httpd
+  CMD ["busybox", "httpd", "-f", "-v", "-p", "3000"]
+#+end_src
+
+Create the image
+
+#+begin_src sh
+  cd
+  docker build -t busybox:1.3.5 -f busybox.dockerfile .
+#+end_src
+
+#+RESULTS:
+
+Start the container (the fullpath is required on MacOS docker installations, if I recall correctly.. 🤔)
+
+#+begin_src sh
+  docker run -d --rm --name file-server --init -p 3000:3000 --volume=/absolute/path/to/your/local/busybox:/home/static busybox:1.3.5
+#+end_src
+
+#+begin_src html :tangle ~/volumes/busybox/index.html
+  <html><head></head><body>Hei there!</body></html>
+#+end_src
+
+* [[https://spritely.institute/][Spritely institute]] - distributed web technology
+* Systemd
+** Services definition
+
+Add a service to systemd (more info [[https://learn.sparkfun.com/tutorials/how-to-run-a-raspberry-pi-program-on-startup/all][here]], while here's an article on how to create and manage [[https://www.baeldung.com/linux/systemd-create-user-services][user’s services With systemd]]).
+
+Create =/lib/systemd/system/blink.service= (or =/lib/systemd/user/blink.service= in case of user-space app) with
+
+#+begin_src toml
+  [Unit]
+  Description=Blink my LED
+  After=multi-user.target
+
+  [Service]
+  Environment="MY_SHELL_ENV_VAR=value"
+  ExecStart=/usr/bin/python3 /home/pi/blink.py
+
+  [Install]
+  WantedBy=multi-user.target
+#+end_src
+
+Then start with =systemctl [--user] (enable|restart|start|stop) blink=
+
+To start a service after a specific timeout (ex. 30 seconds) add:
+
+#+begin_src toml
+  [Service]
+  ExecStartPre=/bin/sleep 30
+#+end_src
+
+** Journalctl
+
+Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
+
+#+begin_src sh
+journalctl --vacuum-time=2d
+#+end_src
+
+or retain only the past 500 MB
+
+#+begin_src sh
+journalctl --vacuum-size=500M
+#+end_src
+
+To print last 40 entries for a particular service (i.e. /unit/) and keeps following the logs:
+
+#+begin_src sh
+  journalctl -n 40 -u my-service -f
+#+end_src
+
+** Troubleshooting
+
+Sometimes you end up by having some services to start and immediately stop (for instance =my-daemon.service Deactivated successfully=). I've found the solution to in this [[https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started][StackOverlow thread]]: you have to specify the =Type=!
+
+* Tailwind
+
+CDN installation:
+
+#+begin_src html
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+#+end_src
+
+* Tmux
+
+Some sources about =tmux= configuration (=~/.tmux.conf=)
+
+- https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+
+#+begin_src conf :tangle ~/.config/tmux/tmux.conf :mkdirp yes
+  set -g status-keys emacs
+
+  set -g prefix C-h
+  unbind-key C-b
+  bind-key C-h send-prefix
+#+end_src
+
+* Tor
+** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]
+
+Use =dockage/tor-privoxy:latest= image or =dperson/torproxy=
+
+#+begin_src sh
+sudo docker run -it -p 8118:8118 -p 9050:9050 -d dperson/torproxy
+#+end_src
+
+then verify you're using the tor proxy connecting to https://check.torproject.org/
+
+#+begin_src sh
+  curl -Lx http://localhost:8118 https://check.torproject.org/ | grep "Congratulations"
+#+end_src
+
+* Userscripts
+** How to store data on a file using Greasemonkey
+
+More details in this [[https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313][StackOverflow thread]] showing different approaches, here I'm reporting just one.
+
+#+begin_example javascript
+  // @grant        GM_download
+
+  function saveData(data, filename) {
+      const blob = new Blob([data], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      GM_download({
+	  url: url,
+	  name: filename,
+	  saveAs: false,
+      });
+  }
+
+  saveData("hello world", "hello.txt");
+#+end_example
+
+* Youtube
+** Get the list of subscriptions (followed channels)
+
+Go the [[https://www.youtube.com/feed/channels]["Manage subscription" page]], open the Web Inspector of the browser and execute the snippet below in the JS console; *N.B.* ensure you've loaded all the entries by scrolling down to the very end of the page.
+
+#+begin_src javascript
+  var channelList = [];
+  [...document.querySelectorAll('a#main-link.channel-link')].forEach(el => {
+    const channelId = el.getAttribute("href");
+    channelList.push((`https://www.youtube.com${channelId}`));
+  });
+  console.log(channelList.join("\n"));
+#+end_src
+
+** Get RSS feed of a channel or playlist
+
+Get the Channel ID of a Youtube channel (manual approach): [[https://www.youtube.com/watch?v=zNABOcxGkt8&t=0s][here]] a video explaining how to do that. You can ease the process using by copy/pasting this snippet into the Dev console (if the browser allows you that)
+
+#+begin_src javascript
+  alert(document.querySelector("link[itemprop='url']").href);
+#+end_src
+
+then construct as follow:
+
+=https://youtube.com/watch?v=CHANNEL-ID= to =https://www.youtube.com/feeds/videos.xml?channel_id=CHANNEL-ID=
+
+I made some experiments to automate this process:
+- a sample NodeJS project (see [[*Fetch a page via a nodejs app][this section]])
+- using [[file:emacs/modules.org::*Helper functions][ad-hoc Emacs function]]
+
+** Youtube downloader (yt-dlp)
+*** Usage examples
+
+Search for videos.
+
+#+begin_src sh
+  yt-dlp ytsearch10:lebron james --get-id --get-title
+#+end_src
+
+Download a list of videos from a file.
+
+#+begin_src sh
+  yt-dlp -a list.txt
+#+end_src
+
+Download a video from services like FB, Instagram or others by using the cookies from our browser in order to access credentials.
+
+#+begin_src sh
+  yt-dlp --cookies-from-browser opera https://www.instagram.com/reel/DBG9t4XCteu/?igsh=d3RpNWZxMnVhenVw
+#+end_src
+
+Download portions of youtube video
+
+#+begin_src shell
+  youtube-dl --postprocessor-args "-ss 00:01:00 -to 00:02:00" "https://www.youtube.com/watch?v=dc7I-i7sPrg"
+#+end_src
+
+Download and convert to best audio format
+
+#+begin_src shell
+  youtube-dl --extract-audio --audio-format mp3 --audio-quality 0 "https://www.youtube.com/watch?v=hAMaCxw9Utw"
+#+end_src
+
+Get the channel ID from a channel URL
+
+#+begin_src shell
+  yt-dlp "https://www.youtube.com/@nicolabizzihistoriae" --print channel_url --playlist-end 1
+#+end_src
+
+*** Troubleshooting
+
+If you have issues with an error like ~WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)~.
+
+#+begin_src sh
+  pip3 install --upgrade certifi
+#+end_src
+* Web Resources
+
+- https://www.instructables.com/

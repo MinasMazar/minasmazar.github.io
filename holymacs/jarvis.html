@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ Jarvis module</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../holymacs.html"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ Jarvis module</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgb30fb76">Helpers</a></li>
+<li><a href="#orgb4e73d7">Youtube</a></li>
+<li><a href="#org33e0c7b">Alarm!</a></li>
+<li><a href="#org8fe6e5e">News and Mail</a>
+<ul>
+<li><a href="#orgd698715">RSS Reader (elfeed)</a></li>
+<li><a href="#orge556f3a">Mu4e</a></li>
+</ul>
+</li>
+<li><a href="#org10f4cf5">Media</a></li>
+<li><a href="#org173e522">cht.sh</a></li>
+<li><a href="#org08992a9">Search on the web: engine-mode</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgb30fb76" class="outline-2">
+<h2 id="orgb30fb76">Helpers</h2>
+<div class="outline-text-2" id="text-orgb30fb76">
+<div class="org-src-container">
+<pre class="src src-elisp">(defun holymacs-random (items)
+  "Pick a random element from a list"
+  (nth (random (length items)) items))
+
+(defun eval-replace-last-sexp ()
+  (interactive)
+  (let ((value (eval (preceding-sexp))))
+    (kill-sexp -1)
+    (insert (format "%S" value))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb4e73d7" class="outline-2">
+<h2 id="orgb4e73d7">Youtube</h2>
+<div class="outline-text-2" id="text-orgb4e73d7">
+<div class="org-src-container">
+<pre class="src src-elisp">(defcustom jarvis/youtube-sources '()
+  "List of some Youtube videos; `jarvis/play-youtube` will pick one of them, randomly, and open it"
+  :type '(repeat (list :tag "sources" (string :tag "title") (string :tag "url"))))
+
+(defun jarvis/play-youtube (&amp;optional url)
+  "Randomly pick one of the videos defined in `jarvis/youtube-sources` and then play it."
+  (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+  (let ((command (format "mpv \"%s\"" url))
+        (buffer-name (format "mpv: %s" url)))
+    (async-shell-command command buffer-name)))
+
+(defun jarvis/open-random-youtube ()
+  "Open in mpv one of the sources in `jarvis/youtube-sources` and then open it."
+  (interactive)
+  (let ((url (holymacs-random jarvis/youtube-sources)))
+    (jarvis/open-youtube url)))
+
+(defun jarvis/open-youtube (&amp;optional url)
+  "Open in browser one of the sources in `jarvis/youtube-sources`."
+  (interactive (list (completing-read "URL: " jarvis/youtube-sources)))
+  (browse-url-default-browser url))
+</pre>
+</div>
+
+<p>
+Check <a href="https://developers.google.com/apis-explorer?hl=it">documentation about Google APIs</a>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package password-store) ;;  (password-store-get "youtube-api")
+(use-package request
+  :after password-store
+  :config
+  (defcustom jarvis/youtube-api-key "" "Youtube API key")
+  (defvar jarvis/youtube-api-key "" "Youtube API key")
+  (defun jarvis/channel-vids (url)
+    "Get a list of videos given a Youtube channel (url)"
+    (request "https://www.googleapis.com/youtube/v3/search"
+      :params `(("key" . ,jarvis/youtube-api-key) ("maxResults" . 2))
+      :parser 'json-read
+      :success (cl-function
+                (lambda (&amp;key data &amp;allow-other-keys)
+                  (when data
+                    (with-current-buffer (get-buffer-create "*youtube-vids*")
+                      (erase-buffer)
+                      (insert (prin1-to-string data))
+                      (pop-to-buffer (current-buffer)))))))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org33e0c7b" class="outline-2">
+<h2 id="org33e0c7b">Alarm!</h2>
+<div class="outline-text-2" id="text-org33e0c7b">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package alarm-clock
+  :config
+  (defun holymacs/jarvis/set-alarm-10min-fire! ()
+    (interactive)
+    (alarm-clock-set "10min" "FIRE!"))
+  :bind
+  ("M-o ! 1" . #'holymacs/jarvis/set-alarm-10min-fire!))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org8fe6e5e" class="outline-2">
+<h2 id="org8fe6e5e">News and Mail</h2>
+<div class="outline-text-2" id="text-org8fe6e5e">
+</div>
+<div id="outline-container-orgd698715" class="outline-3">
+<h3 id="orgd698715">RSS Reader (elfeed)</h3>
+<div class="outline-text-3" id="text-orgd698715">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package elfeed
+  :after 'god-mode
+  :bind
+  (:map elfeed-search-mode-map ("U" . (lambda () (interactive) (run-at-time "10min" t #'elfeed-update))))
+  :config
+  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode-map))
+</pre>
+</div>
+
+<p>
+Enanche your elfeed experience with <a href="https://github.com/karthink/elfeed-tube">elfeed-tube</a>! ❤️ Thanks a lot to <a href="https://github.com/karthink">karthink</a> 🙏
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package elfeed-tube
+  :after elfeed
+  :demand t
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  :bind (:map elfeed-show-mode-map
+                ("F" . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)
+                :map elfeed-search-mode-map
+                ("F" . elfeed-tube-fetch)
+                ([remap save-buffer] . elfeed-tube-save)))
+
+(use-package elfeed-tube-mpv
+  :after elfeed-tube
+  :bind (:map elfeed-show-mode-map
+                ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+                ("C-c C-w" . elfeed-tube-mpv-where)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge556f3a" class="outline-3">
+<h3 id="orge556f3a">Mu4e</h3>
+<div class="outline-text-3" id="text-orge556f3a">
+</div>
+<div id="outline-container-org98ca4db" class="outline-4">
+<h4 id="org98ca4db">Dependencies</h4>
+<div class="outline-text-4" id="text-org98ca4db">
+<p>
+Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like <code>mbsync</code>. You should also rely on <code>pass</code>, the <a href="https://www.passwordstore.org/">the standard unix password manager</a>, in order to store and fetch your passwords in a secure way.
+</p>
+
+<p>
+Useful links:
+</p>
+<ul class="org-ul">
+<li><a href="http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync">http://frostyx.cz/posts/synchronize-your-2fa-gmail-with-mbsync</a></li>
+<li><a href="https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html">https://www.djcbsoftware.nl/code/mu/mu4e/Gmail-configuration.html</a></li>
+<li><a href="https://isync.sourceforge.io/mbsync.html">https://isync.sourceforge.io/mbsync.html</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgf74f9e4" class="outline-4">
+<h4 id="orgf74f9e4">Configuration</h4>
+<div class="outline-text-4" id="text-orgf74f9e4">
+<pre class="example" id="org3e27656">
+IMAPAccount gmail-imaps
+Host imap.gmail.com
+Port 993
+#UseIMAPS yes
+#RequireSSl yes
+SSLType IMAPS
+SSLVersions TLSv1.2
+AuthMechs PLAIN
+User your-email@gmail.com
+#Pass supercomplicatedpassword
+PassCmd "pass gmail/imaps"
+
+IMAPStore gmail-remote
+Account gmail-imaps
+
+MaildirStore gmail-local
+Path ~/MailDir/gmail/
+Inbox ~/MailDir/gmail/INBOX
+Subfolders Verbatim
+
+Channel gmail
+#Master :gmail-remote:
+#Slave :gmail-local:
+Far :gmail-remote:
+Near :gmail-local:
+Create Both
+Expunge Both
+Patterns *
+SyncState *
+</pre>
+
+<pre class="example" id="org046a8cf">
+(require 'mu4e)
+(setq send-mail-function 'smtpmail-send-it
+	message-send-mail-function 'smtpmail-send-it
+	mu4e-get-mail-command "mbsync -a"
+	;;mu4e-maildir "~/Mail"
+	mu4e-update-interval (* 60 10)
+	smtpmail-default-smtp-server "smtp.gmail.com"
+	smtpmail-smtp-server "smtp.gmail.com"
+	;;smtpmail-stream-type 'ssl
+	;;smtpmail-smtp-service 465
+	smtpmail-stream-type 'starttls
+	smtpmail-smtp-service 587
+	;;smtpmail-use-gnutls t
+	mu4e-drafts-folder "/[Gmail].Drafts"
+	mu4e-sent-folder   "/[Gmail].Sent Mail"
+	mu4e-trash-folder  "/[Gmail].Trash"
+	mm-discouraged-alternatives '("text/html")
+	mml-secure-openpgp-signers '("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"))
+(add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+(auth-source-pass-enable)
+(setq smtpmail-debug-info t)
+</pre>
+
+<p>
+To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
+</p>
+
+<pre class="example" id="orgfc7bab7">
+(setq mu4e-contexts
+	(list
+	 ;; Work account
+	 (make-mu4e-context
+	  :name "GMail"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@gmail.com")
+		  (user-full-name    . "My-Email (Gmail)")
+		  (mu4e-drafts-folder  . "/Gmail/[Gmail]/Drafts")
+		  (mu4e-sent-folder  . "/Gmail/[Gmail]/Sent Mail")
+		  (mu4e-refile-folder  . "/Gmail/[Gmail]/All Mail")
+		  (mu4e-trash-folder  . "/Gmail/[Gmail]/Trash")))
+
+	 ;; Personal account
+	 (make-mu4e-context
+	  :name "Yahoo"
+	  :match-func
+	  (lambda (msg)
+	    (when msg
+	      (string-prefix-p "/Yahoo" (mu4e-message-field msg :maildir))))
+	  :vars '((user-mail-address . "my-email@yahoo.com")
+		  (user-full-name    . "My-Email (Yahoo)")
+		  (mu4e-drafts-folder  . "/Yahoo/Drafts")
+		  (mu4e-sent-folder  . "/Yahoo/Sent")
+		  (mu4e-refile-folder  . "/Yahoo/Archive")
+		  (mu4e-trash-folder  . "/Yahoo/Trash")))))
+</pre>
+</div>
+</div>
+<div id="outline-container-org1c13ada" class="outline-4">
+<h4 id="org1c13ada">Tweaking</h4>
+<div class="outline-text-4" id="text-org1c13ada">
+<p>
+Mu4e does not allow to save all attachments in one shot (some workarounds to achieve that involve completion frameworks like <code>Ivy</code> or use <code>Embark</code> to select all attachments from the minibuffer after invoking <code>mu4e-view-save-attachment</code>). For more details see <a href="https://github.com/djcb/mu/issues/1979">this issue on Github</a>.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org10f4cf5" class="outline-2">
+<h2 id="org10f4cf5">Media</h2>
+<div class="outline-text-2" id="text-org10f4cf5">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package bongo)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org173e522" class="outline-2">
+<h2 id="org173e522"><a href="https://cht.sh/">cht.sh</a></h2>
+<div class="outline-text-2" id="text-org173e522">
+<div class="org-src-container">
+<pre class="src src-sh">curl https://cht.sh 
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(defun cht.sh-help (helpable)
+  (interactive "sHelp: ")
+  (cht.sh-query "/:help"))
+
+(defun cht.sh-list ()
+  (interactive)
+  (cht.sh-query "/:list"))
+
+(defun cht.sh-query (query)
+  (interactive "sQuery: ")
+  (let ((cmd (format "curl https://cht.sh/%s" query))
+        (buffer-name (format "*cht-sh* &lt;%s&gt;" query)))
+    (async-shell-command cmd buffer-name)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org08992a9" class="outline-2">
+<h2 id="org08992a9">Search on the web: engine-mode</h2>
+<div class="outline-text-2" id="text-org08992a9">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package engine-mode
+  :init
+  (setq engine/browser-function #'browse-url-firefox)
+  :config
+  (defun engine/execute-search (search-engine-url browser-function search-term)
+    "Display the results of the query."
+    (interactive)
+    (let ((browse-url-handlers nil)
+            (browse-url-browser-function browser-function))
+        (browse-url
+         (format-spec search-engine-url
+                      (format-spec-make ?s (url-hexify-string search-term))))))
+
+  (defengine dropbox
+    "https://www.dropbox.com/search/personal?query=%s"
+    :browser 'browse-url-firefox
+    :keybinding "D")
+
+  (defengine duckduckgo
+    "https://duckduckgo.com/?q=%s"
+    :browser 'eww-browse-url
+    :keybinding "d")
+
+  (defengine github
+    "https://github.com/search?ref=simplesearch&amp;q=%s"
+    :keybinding "h")
+
+  (defengine google
+    "https://www.google.com/search?ie=utf-8&amp;oe=utf-8&amp;q=%s"
+    :browser 'browse-url-firefox
+    :keybinding "g")
+
+  (defengine google-images
+    "https://www.google.com/images?hl=en&amp;source=hp&amp;biw=1440&amp;bih=795&amp;gbv=2&amp;aq=f&amp;aqi=&amp;aql=&amp;oq=&amp;q=%s"
+    :keybinding "i")
+
+  (defengine google-maps
+    "https://maps.google.com/maps?q=%s"
+    :docstring "Google Maps"
+    :keybinding "m")
+
+  (defengine google-maps
+    "https://www.openstreetmap.org/search?query=%s"
+    :docstring "OpenStreetMap"
+    :keybinding "M")
+
+  (defengine google-translate-to-it
+    "https://translate.google.it/?sl=auto&amp;tl=it&amp;text=%s&amp;op=translate"
+    :docstring "Translate to IT"
+    :keybinding "t")
+
+  (defengine google-translate-to-en
+    "https://translate.google.it/?sl=it&amp;tl=en&amp;text=%s&amp;op=translate"
+    :docstring "Translate from IT to English"
+    :browser 'browse-url-firefox
+    :keybinding "T")
+
+  (defengine stack-overflow
+    "https://stackoverflow.com/search?q=%s"
+    :keybinding "s")
+
+  (defengine wikipedia
+    "https://www.wikipedia.org/search-redirect.php?language=it&amp;go=Go&amp;search=%s"
+    :keybinding "w"
+    :docstring "Searchin' the wikis."
+    :browser 'eww-browse-url)
+
+  (defengine youtube
+    "https://www.youtube.com/results?aq=f&amp;oq=&amp;search_query=%s"
+    :keybinding "y")
+
+  (defengine amazon
+    "https://www.amazon.it/s/ref=nb_sb_noss?&amp;field-keywords=%s"
+    :browser 'browse-url-firefox
+    :keybinding "a")
+
+  (defengine cap
+    "https://www.nonsolocap.it/cap?k=%s&amp;c=pescara"
+    :browser 'browse-url-firefox
+    :keybinding "C")
+
+  (engine-mode t))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-04-20 Sat 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

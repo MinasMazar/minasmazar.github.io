@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Holymacs ~ IDE</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<link rel="stylesheet" type="text/css" href="src/readtheorg_theme/css/search.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="../holymacs.html"> UP </a>
+ |
+ <a accesskey="H" href="/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Holymacs ~ IDE</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga5fea00">Versioning</a></li>
+<li><a href="#org65b018b">Docker</a></li>
+<li><a href="#orga699c9b">Workspaces</a></li>
+<li><a href="#orge91dcae">Programming languages</a>
+<ul>
+<li><a href="#org55592b6">Elixir</a></li>
+<li><a href="#orgf06a295">LSP</a></li>
+</ul>
+</li>
+<li><a href="#org05f2e55">Markup languages</a>
+<ul>
+<li><a href="#orgd14f612">Markdown</a></li>
+</ul>
+</li>
+<li><a href="#org3d2a601">Project management</a>
+<ul>
+<li><a href="#org916f721">Run make on list of projects</a></li>
+</ul>
+</li>
+<li><a href="#orga4d2ffa">Focusing</a></li>
+<li><a href="#org3d55cd3">Terminal emulator</a>
+<ul>
+<li><a href="#org689252c">Vterm</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga5fea00" class="outline-2">
+<h2 id="orga5fea00">Versioning</h2>
+<div class="outline-text-2" id="text-orga5fea00">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package magit
+:bind
+(("C-x g" . #'magit-status)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org65b018b" class="outline-2">
+<h2 id="org65b018b">Docker</h2>
+<div class="outline-text-2" id="text-org65b018b">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package docker)
+(use-package dockerfile-mode)
+(use-package docker-compose-mode)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga699c9b" class="outline-2">
+<h2 id="orga699c9b">Workspaces</h2>
+<div class="outline-text-2" id="text-orga699c9b">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package tabspaces
+  :hook (after-init . tabspaces-mode)
+  :commands (tabspaces-switch-or-create-workspace
+               tabspaces-open-or-create-project-and-workspace)
+  :bind
+  (("s-{" . tab-previous)
+   ("s-}" . tab-next))
+  :custom
+  (tabspaces-keymap-prefix "M-o w")
+  (tabspaces-use-filtered-buffers-as-default t)
+  (tabspaces-default-tab "Default")
+  (tabspaces-remove-to-default t)
+  (tabspaces-initialize-project-with-todo t)
+  (tabspaces-todo-file-name "project-todo.org")
+  ;; I don't want tabspaces to manage sessions, so I keep those lines commented out.
+  ;; (tabspaces-session t)
+  ;; (tabspaces-session-auto-restore t))
+  )
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orge91dcae" class="outline-2">
+<h2 id="orge91dcae">Programming languages</h2>
+<div class="outline-text-2" id="text-orge91dcae">
+</div>
+<div id="outline-container-org55592b6" class="outline-3">
+<h3 id="org55592b6">Elixir</h3>
+<div class="outline-text-3" id="text-org55592b6">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package elixir-mode)
+(use-package exunit
+  :hook
+  (elixir-mode . exunit-mode))
+;; Alchemist seems to be outdated and not more maintained
+;; (use-package alchemist
+;;   :config
+;;   (add-to-list 'god-exempt-major-modes 'alchemist-test-report-mode))
+</pre>
+</div>
+
+<p>
+Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's handle them!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(add-to-list 'auto-mode-alist '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\|livemd\\)\\'" . markdown-mode))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgf06a295" class="outline-3">
+<h3 id="orgf06a295">LSP</h3>
+<div class="outline-text-3" id="text-orgf06a295">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package eglot
+  :config
+  (add-to-list 'eglot-server-programs '(elixir-mode "~/.emacs.d/elixir-ls/release/language_server.sh")))
+</pre>
+</div>
+</div>
+<div id="outline-container-org700b1ba" class="outline-4">
+<h4 id="org700b1ba">Elixir</h4>
+<div class="outline-text-4" id="text-org700b1ba">
+<p>
+Code stolen from <a href="https://jeffkreeftmeijer.com/emacs-eglot-elixir-ls/">this blogpost</a> (thanks <a href="https://github.com/jeffkreeftmeijer">Jeff Kreeftmeijer</a>!)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">git clone git@github.com:elixir-lsp/elixir-ls.git ~/.emacs.d/elixir-ls
+cd ~/.emacs.d/elixir-ls
+mix deps.get
+mix elixir_ls.release
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org05f2e55" class="outline-2">
+<h2 id="org05f2e55">Markup languages</h2>
+<div class="outline-text-2" id="text-org05f2e55">
+</div>
+<div id="outline-container-orgd14f612" class="outline-3">
+<h3 id="orgd14f612">Markdown</h3>
+<div class="outline-text-3" id="text-orgd14f612">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package markdown-mode)
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d2a601" class="outline-2">
+<h2 id="org3d2a601">Project management</h2>
+<div class="outline-text-2" id="text-org3d2a601">
+</div>
+<div id="outline-container-org916f721" class="outline-3">
+<h3 id="org916f721">Run make on list of projects</h3>
+<div class="outline-text-3" id="text-org916f721">
+<div class="org-src-container">
+<pre class="src src-elisp">(defcustom minemacs-projects '() "Project list" :type '(repeat :tag "Projects" (string :tag "Path")))
+
+(defun minemacs-projects-make (&amp;optional task)
+  (interactive (list (completing-read "Task: " '("dev" "run" "usage"))))
+  (mapcar
+   (lambda (project)
+     (delete-other-windows)
+     (let ((split-dir :below)
+           (command (format "make %s" task))
+           (buffer-name (format "Project: &lt;%s&gt;" project))
+           (default-directory project))
+       (async-shell-command (format "cd %s &amp;&amp; %s" project command) buffer-name)
+       (pop-to-buffer buffer-name)
+       (if (eq split-dir :below)
+           (progn (split-window-below) (setq split-dir :right))
+         (progn (split-window-right) (setq split-dir :below)))
+       (balance-windows)))
+   minemacs-projects))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orga4d2ffa" class="outline-2">
+<h2 id="orga4d2ffa">Focusing</h2>
+<div class="outline-text-2" id="text-orga4d2ffa">
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package golden-ratio
+  :bind
+  (("M-o W" . #'golden-ratio-mode)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org3d55cd3" class="outline-2">
+<h2 id="org3d55cd3">Terminal emulator</h2>
+<div class="outline-text-2" id="text-org3d55cd3">
+</div>
+<div id="outline-container-org689252c" class="outline-3">
+<h3 id="org689252c">Vterm</h3>
+<div class="outline-text-3" id="text-org689252c">
+<p>
+Here install <code>vterm</code> and some  useful functions to ease interaction with <b>Tmux</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp">(use-package vterm
+  :after god-mode
+  :config
+  (add-to-list 'god-exempt-major-modes 'vterm-mode)
+
+  (defun holymacs-vterm-exec (command)
+    (interactive "sCommand: ")
+    (let ((buffer-name (format "*vterm &lt;%s&gt;*" command)))
+      (with-current-buffer (vterm buffer-name)
+        (vterm-send-string (format "%s &amp;&amp; exit\n" command)))))
+
+  (defun holymacs-tmux/open ()
+    (interactive)
+    (holymacs-vterm-exec "tmux attach || tmux")))
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: 2024-04-20 Sat 00:00</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

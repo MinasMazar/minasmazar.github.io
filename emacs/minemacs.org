@@ -1,0 +1,273 @@
+#+TITLE: Minemacs
+#+AUTHOR: MinasMazar
+#+EMAIL: minasmazar@gmail.com
+#+DATE: <2024-08-08 Thu>
+#+STARTUP: show2levels
+#+PROPERTY: header-args :tangle (file-name-concat user-emacs-directory "init.el")
+#+SETUPFILE: ../../../templates/_header.org
+
+* Minemacs
+
+This doc contains the my main/basic Emacs configuration. It can be extended by /tangling/ via the additional [[file:modules.org][modules.org]] file.
+
+#+begin_src emacs-lisp
+  ;; Minemacs helpers
+  ;;
+
+  (defun minemacs-tangle-if-not-disabled (module)
+    (let ((dest-file (file-name-concat (minemacs-modules-directory) module)))
+      (if (member-ignore-case "disabled" (org-get-tags)) "no" dest-file)))
+
+  (defun minemacs-subdir (path)
+    (file-name-concat user-emacs-directory path))
+
+  (defcustom minemacs-modules-directory "modules"
+    "Namespace directory for minemacs modules."
+    :type '(directory))
+
+  (defun minemacs-modules-directory ()
+    (minemacs-subdir minemacs-modules-directory))
+
+  (defun minemacs-modules-load (&optional matcher)
+    "Load all modules '*.el' files in 'minemacs-modules-directory'"
+    (interactive)
+    (if (file-readable-p (minemacs-modules-directory))
+  	(let ((matcher (format "%s\.el$" (or matcher "."))))
+  	  (mapcar (lambda (file)
+  		    (load file 'noerror))
+  		  (directory-files (minemacs-modules-directory) t matcher)))))
+#+end_src
+
+* Package initialization
+
+More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of this initial setup is inspired by [[https://protesilaos.com/codelog/2024-11-28-basic-emacs-configuration][Protesilaos setup configuration]].
+
+#+begin_src elisp
+  (let* ((vendor (minemacs-subdir "vendor"))
+	 (default-directory vendor))
+    (add-to-list 'load-path vendor)
+    (and (file-readable-p vendor) (normal-top-level-add-subdirs-to-load-path)))
+
+  (require 'package)
+  (package-initialize)
+  (setq use-package-always-ensure t
+	package-archives '(
+			   ("melpa" . "https://melpa.org/packages/")
+			   ("elpa" . "https://elpa.gnu.org/packages/")
+			   ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+			   ))
+
+  (when (< emacs-major-version 29)
+    (unless (package-installed-p 'use-package)
+      (unless package-archive-contents
+	(package-refresh-contents))
+      (package-install 'use-package)))
+#+end_src
+
+* Basic settings
+
+#+begin_src elisp
+  (use-package emacs
+    :ensure nil
+    :defer
+    :hook
+    (after-init . toggle-frame-maximized)
+    (dired-mode . dired-hide-details-mode)
+    :custom
+    (custom-file (file-name-concat user-emacs-directory "custom.el"))
+    (dired-dwim-target t)
+    (dired-listing-switches "-alth")
+    (enable-recursive-minibuffers t)
+    (initial-buffer-choice #'eshell)
+    (make-backup-files nil)
+    (shr-inhibit-images t)
+    (tab-always-indent 'complete)
+    (use-short-answers t)
+    (ring-bell-function 'ignore)
+    (visible-bell t)
+    (completion-auto-help nil)
+    :config
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1)
+    (savehist-mode 1)
+    (recentf-mode 1)
+    (ffap-bindings)
+    (repeat-mode 1)
+    (server-start 1)
+
+    ;; Shared configuration
+    (if (file-exists-p "~/Dropbox/minemacs/")
+	(setq bookmark-file "~/Dropbox/minemacs/bookmarks"
+	      eshell-aliases-file "~/Dropbox/minemacs/eshell-aliases"))
+
+    (global-set-key (kbd "s-0") (kbd "C-x 0"))
+    (global-set-key (kbd "s-1") (kbd "C-x 1"))
+    (global-set-key (kbd "s-2") (kbd "C-x 2"))
+    (global-set-key (kbd "s-3") (kbd "C-x 3"))
+
+    (define-key key-translation-map (kbd "s-k") (kbd "M-x"))
+    (define-key key-translation-map (kbd "s-m") (kbd "C-x"))
+    (define-key key-translation-map (kbd "s-M") (kbd "C-c"))
+
+    (setq minemacs-map
+      (let ((map (make-sparse-keymap)))
+	(define-key map (kbd "a") #'org-agenda)
+	(define-key map (kbd "k") #'org-capture)
+	(define-key map (kbd "e") #'eshell)
+	(define-key map (kbd "E")
+		    (lambda (command)
+		      (interactive "sEmacs eshell command: ")
+		      (eshell-command command current-prefix-arg)))
+	(define-key map (kbd "r") #'recentf)
+	(define-key map (kbd "8") #'emoji-search)
+	(define-key map (kbd "w j") #'webjump)
+	(define-key map (kbd "w w") #'eww)
+	map))
+
+    :bind-keymap
+    ("s-o" . minemacs-map)
+    ("M-o" . minemacs-map)
+    :bind
+    ("s-n" . #'god-local-mode)
+    ("s-w" . #'other-window)
+    ("s-)" . #'kill-current-buffer)
+    ("s-p" . #'project-switch-to-buffer)
+    ("s-P" . #'project-find-file)
+    ("s-[" . #'previous-buffer)
+    ("s-]" . #'next-buffer)
+    ("s-N" . #'dired-jump)
+    ("s-e" . #'dabbrev-expand)
+    ("s-r" . #'repeat)
+    ("s-i" . #'imenu)
+    ("s-b" . #'ibuffer)
+    ("s-j" . #'switch-to-buffer)
+    ("s-f" . #'find-name-dired)
+    ("s-t" . #'rgrep)
+    ("s--" . #'bookmark-jump)
+    ("s-_" . #'bookmark-set)
+    (:map isearch-mode-map
+	  ("C-p" . #'isearch-repeat-backward)
+	  ("C-n" . #'isearch-repeat-forward)
+	  ("<tab>" . #'isearch-repeat-forward)
+	  ("<S-tab>" . #'isearch-repeat-backward))
+    (:map completion-list-mode-map
+	  ("e" . #'switch-to-minibuffer)))
+#+end_src
+
+* Minibuffer
+
+#+begin_src elisp
+  (use-package orderless :custom (completion-styles '(orderless)))
+  (use-package vertico :config (vertico-mode 1))
+#+end_src
+
+* Modal editing
+** God mode                                                        :disabled:
+
+I've used =god-mode= for years and I found it really useful. In recent weeks I'm experimenting with [[*Devil mode][=devil-mode=]], so I keep this section /disabled/ for now.
+
+#+begin_src elisp
+  (use-package god-mode
+    :after emacs
+    :demand
+    :init
+    (defun minemacs-god-mode-line ()
+      (if god-mode "⛪" " "))
+
+    (defun minemacs-god-mode-disabled ()
+      (setq cursor-type 'bar))
+
+    (defun minemacs-god-mode-enabled ()
+      (setq cursor-type 'box))
+
+    :hook ((god-mode-enabled . minemacs-god-mode-enabled)
+	 (god-mode-disabled . minemacs-god-mode-disabled))
+    :bind
+    ("s-n" . #'god-local-mode)
+    (:map god-local-mode-map
+     ("i" . #'god-local-mode)
+     ("I" . #'org-edit-special)
+     ("u" . #'undo)
+     ("U" . #'undo-redo)
+     ("<" . #'beginning-of-buffer)
+     (">" . #'end-of-buffer)
+     ("[" . #'backward-paragraph)
+     ("]" . #'forward-paragraph)))
+#+end_src
+
+** Devil mode
+
+#+begin_src emacs-lisp
+  (use-package devil
+    :bind
+    ("s-n" . #'global-devil-mode)
+    :config
+    (global-devil-mode 1))
+#+end_src
+
+* Auto-completion
+
+#+begin_src elisp
+  (use-package corfu
+    :hook
+    (eshell-mode . (lambda ()
+		     (setq-local corfu-auto nil)
+		     (corfu-mode)))
+    :custom
+    (corfu-cycle t)
+    :config
+    (global-corfu-mode))
+#+end_src
+
+#+begin_src elisp
+  (use-package cape
+    :init
+    (add-hook 'completion-at-point-functions #'cape-file)
+    (add-hook 'completion-at-point-functions #'cape-elisp-block)
+    (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+    (add-hook 'completion-at-point-functions #'cape-history)
+    (add-hook 'completion-at-point-functions #'cape-line)
+    (add-hook 'completion-at-point-functions #'cape-dabbrev))
+    ;;(add-hook 'completion-at-point-functions #'cape-keyword)
+    ;;(add-hook 'completion-at-point-functions #'cape-tex)
+    ;;(add-hook 'completion-at-point-functions #'cape-sgml)
+    ;;(add-hook 'completion-at-point-functions #'cape-rfc1345)
+    ;;(add-hook 'completion-at-point-functions #'cape-abbrev)
+    ;;(add-hook 'completion-at-point-functions #'cape-dict)
+
+#+end_src
+
+* Embark
+
+#+begin_src elisp
+  (use-package embark
+    :after god-mode
+    :demand
+    :config
+    (add-to-list 'god-exempt-major-modes 'embark-mode)
+    :bind*
+    ("C-," . embark-act)
+    (:map embark-general-map
+	  ("C-w" . browse-url))
+    (:map embark-identifier-map
+	  ("R" . query-replace)
+	  ("O" . multi-occur-in-matching-buffers)
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
+    (:map embark-url-map
+	  ("c" . browse-url-chrome)
+	  ("f" . browse-url-firefox))
+    (:map  embark-file-map
+	   ("p" . project-find-file)
+	   ("b" . project-switch-to-buffer)
+	   ("," . append-to-previous-buffer)))
+#+end_src
+
+* Load modules and custom configurations
+
+#+begin_src elisp
+  (load custom-file :no-error-if-file-is-missing)
+  (minemacs-modules-load)
+#+end_src
+
