@@ -101,21 +101,6 @@ The package =ox-rss= is needed if you want to generate a RSS (it exports the ~or
   (use-package ox-rss)
 #+end_src
 
-Every link in =org-mode= has a prefix that define a /type/ (=img:logo.png= =file:about.org=). Every type should provide two functions for /follow/ and /export/ actions. This snippet comes from [[https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html][this SO thread]].
-
-#+begin_src elisp
-  (defun org-custom-link-raw-relative-follow (path)
-    (org-open-file-with-emacs
-     (format "./%s" path)))
-
-  (defun org-custom-link-raw-relative-export (path desc format)
-    (cond
-     ((eq format 'html)
-      (format "<a href=\"/%s\" alt=\"%s\"/>%s</a>" path desc desc))))
-
-  (org-add-link-type "raw-relative" 'org-custom-link-img-follow 'org-custom-link-img-export)
-#+end_src
-
 Now define some handy =org-capture= templates!
 
 #+begin_src elisp
@@ -150,35 +135,4 @@ Here we define the function that uses ~git~ to publish my static site to my pers
       (shell-command command)))
 #+end_src
 
-** COMMENT Navigate weblorgs!                                  :experimental:
-
-Navigate =org-mode= websites!
-
-Automatically open raw urls of =.org= extension in =org-mode=. This is not a very common scenario, is more of an expermient with Emacs advices. Comment out the to test it.
-
-#+begin_src elisp
-  (defun holymacs-eww-raw-advice-after (&rest r)
-    (with-current-buffer "*eww*"
-      (if (and (eww-current-url) (string-match "\.org$" (eww-current-url)))
-  	(progn
-  	  (eww-open-in-new-buffer nil (eww-current-url))
-  	  (with-current-buffer (current-buffer)
-  	    (funcall 'org-mode))))))
-
-  ;; (advice-add #'eww-display-raw :after #'holymacs-eww-raw-advice-after)
-#+end_src
-
-Every link in =org-mode= has a prefix that define a /type/ (=img:logo.png= =file:about.org=). Every type should provide two functions for /follow/ and /export/ actions. This snippet comes from [[https://stackoverflow.com/questions/14684263/how-to-org-mode-image-absolute-path-of-export-html][this SO thread]].
-
-#+begin_src elisp
-  (defun org-custom-link-raw-relative-follow (path)
-    (org-open-file-with-emacs
-     (format "./%s" path)))
-
-  (defun org-custom-link-raw-relative-export (path desc format)
-    (cond
-     ((eq format 'html)
-      (format "<a href=\"/%s\" alt=\"%s\"/>%s</a>" path desc desc))))
-
-  (org-add-link-type "raw-relative" 'org-custom-link-img-follow 'org-custom-link-img-export)
-#+end_src
+Remember to create a git repo with /master/ upstream in the publishing directory, so the /autopublish/ feature could work.

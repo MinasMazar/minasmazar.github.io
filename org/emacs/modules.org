@@ -456,8 +456,7 @@ Given a Youtuve channel URL, returns the channel ID. This is  useful in cases li
 
 #+begin_src elisp
   (defun jarvis-youtube-get-channel-rss (url &optional action)
-    "Given a Youtuve channel URL, returns the channel ID. This is
-  useful in cases like when you want to get the RSS feed of a Youtube channel."
+    "Given a Youtube channel URL, returns the RSS feed of a Youtube channel."
     (interactive "sYoutube channel url: ")
     (let* ((action (or action current-prefix-arg 0))
   	 (url-user-agent "curl/8.7.1")
@@ -475,10 +474,43 @@ Given a Youtuve channel URL, returns the channel ID. This is  useful in cases li
   				  (id (match-string 1 channel-id-url)))
   			     (pop-to-buffer (current-buffer))
   			     (format "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
-      (message feed-url)
+      (message "Youtube URL: %s has RSS feed url %s" url feed-url)
       (cond ((= action 1) (kill-new feed-url))
   	  ((= action 2) (insert feed-url))
   	  (t feed-url))))
+#+end_src
+
+#+begin_src emacs-lisp
+  (defun jarvis-get-rss-urls (url)
+    "Given a URL, tries to fetch the RSS feed URL."
+    (interactive "URL: ")
+    (let* ((url-user-agent "curl/8.7.1")
+  	 (url-request-extra-headers '(("Accept" . "*/*")))
+  	 (buffer (url-retrieve-synchronously url))
+  	 (feeds (with-current-buffer buffer
+  		      (let* ((dom (libxml-parse-html-region))
+  			     (links (dom-search dom
+  					       (lambda (el)
+  						 (and (string= (dom-tag el) "link")
+  						      (string= (dom-attr el 'type) "application/rss+xml"))))))
+  			links)))
+  	 (feeds-count (length feeds)))
+      (if (> feeds-count 0)
+  	(let ((result-buffer (get-buffer-create (format "*get-rss-urls <%s>*" url))))
+  	  (with-current-buffer result-buffer
+  	    (let ((tabulated-list-format [("Title" 18 t)
+  					  ("URL" 12 nil)])
+  		  (tabulated-list-padding 2)
+  		  (tabulated-list-entries (mapcar
+  					   (lambda (feed)
+  					     (let ((feed-title (dom-attr feed 'title))
+  						   (feed-url (dom-attr feed 'href)))
+  					       (list nil (vector feed-title feed-url))))
+  					   feeds)))
+  	      (tabulated-list-mode)
+  	      (tabulated-list-print)))
+  	  (pop-to-buffer result-buffer))
+        (prog2 (message "No RSS found for %s" url) nil))))
 #+end_src
 
 *** Simple helpers: (randomly) pick and open a Youtube page in browser (or mpv)
@@ -788,7 +820,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 		(jarvis-collect-video-collector--set-cache url json)
 		vid)
 	    (json-parse-error (error "%s" (buffer-string)))
-	    (t (error "%s" (buffer-string))))))))
+	    (t (error "failed parsing %s" url)))))))
 
   (defun jarvis-collect-video-collected-vids ()
     "Return all the collected vids in the ~jarvis-collect-video-collector-directory~."
