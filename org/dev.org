@@ -50,6 +50,14 @@ Run it via =node index.js=. This will fetch the page into the =index.html= file.
 
 If you need to write a crontab entry you can use https://crontab.guru/
 
+* [[https://asdf-vm.com][ASDF]]
+
+Choose a release here https://github.com/asdf-vm/asdf/releases; add this into your =.bashrc=
+
+#+begin_src sh
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+#+end_src
+
 * Docker
 ** Backup and port Postgres databases across images
 
@@ -1755,10 +1763,12 @@ And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
 
 Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
 
-* Front-end technologies
-- tailiwind
-* CI tehcnologies
+* OpenSource stacks and technologies
+** Push notifications
+- https://gotify.net/
+** CI
 - laminar
+** [[https://spritely.institute/][Spritely institute]] - distributed web technology
 * Javascript
 
 Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
@@ -2147,6 +2157,32 @@ Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.m
   sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
 #+end_src
 
+*** Useful software
+
+#+begin_src sh
+  sudo apt install xdotool wget git curl emacs tmux
+#+end_src
+
+*** Useful Makefile
+#+begin_src makefile
+  default: usage
+  x-dual-adjacent:
+  	DISPLAY=:0 xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480 --right-of HDMI-1
+  x-dual:
+  	DISPLAY=:0 xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480
+  x-mirror:
+  	DISPLAY=:0 xrandr --output HDMI-1 --primary --mode 1920x1080 --output DSI-1 --mode 800x480 --scale 2.2 --same-as HDMI-1
+  spy-audio-live:
+  	cvlc -vvv alsa://plughw:3 --sout '#transcode{acodec=mp3,ab=64,channels=1}:standard{access=http,dst=0.0.0.0:8888/out.mp3}'
+  spy-audio-rec:
+  	arecord -d 4 -f dat spy.wav
+  usage:
+  	cat Makefile
+  pitft-install:
+  	sudo -E env PATH=$PATH python3 adafruit-pitft.py --display=28r --rotation=90 --install-type=mirror
+  pitft-calibrate:
+  	TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate -c -r 0
+#+end_src
 *** Browsers
 ***** Chromium
 Use Chromium/Firefox as browser works well only on RPi > 1
@@ -2352,7 +2388,6 @@ Start the container (the fullpath is required on MacOS docker installations, if 
   <html><head></head><body>Hei there!</body></html>
 #+end_src
 
-* [[https://spritely.institute/][Spritely institute]] - distributed web technology
 * Systemd
 ** Services definition
 

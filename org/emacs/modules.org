@@ -266,6 +266,52 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (use-package markdown-mode)
 #+end_src
 
+** Consult
+
+#+begin_src emacs-lisp
+  (use-package consult
+    ;; Replace bindings. Lazily loaded by `use-package'.
+    :bind
+    ("C-x M-:" . #'consult-complex-command)
+    ("C-x b" . #'consult-buffer)
+    ("C-x 4 b" . #'consult-buffer-other-window)
+    ("C-x 5 b" . #'consult-buffer-other-frame)
+    ("C-x t b" . #'consult-buffer-other-tab)
+    ("C-x r b" . #'consult-bookmark)
+    ("C-x p b" . #'consult-project-buffer)
+    ("M-#" . #'consult-register-load)
+    ("M-'" . #'consult-register-store)
+    ("C-M-#" . #'consult-register)
+    ("M-y" . #'consult-yank-pop)
+    ("M-g e" . #'consult-compile-error)
+    ("M-g f" . #'consult-flymake)
+    ("M-g g" . #'consult-goto-line)
+    ("M-g M-g" . #'consult-goto-line)
+    ("M-g o" . #'consult-outline)
+    ("M-g m" . #'consult-mark)
+    ("M-g k" . #'consult-global-mark)
+    ("M-g i" . #'consult-imenu)
+    ("M-g I" . #'consult-imenu-multi)
+    ("M-s d" . #'consult-find)
+    ("M-s c" . #'consult-locate)
+    ("M-s g" . #'consult-grep)
+    ("M-s G" . #'consult-git-grep)
+    ("M-s r" . #'consult-ripgrep)
+    ("M-s l" . #'consult-line)
+    ("M-s L" . #'consult-line-multi)
+    ("M-s k" . #'consult-keep-lines)
+    ("M-s u" . #'consult-focus-lines)
+    ("M-s e" . #'consult-isearch-history)
+    (:map isearch-mode-map
+    ("M-e" . #'consult-isearch-history)
+    ("M-s e" . #'consult-isearch-history)
+    ("M-s l" . #'consult-line)
+    ("M-s L" . #'consult-line-multi))
+    (:map minibuffer-local-map
+    ("M-s" . #'consult-history)
+    ("M-r" . #'consult-history)))
+#+end_src
+
 ** Data serialization
 
 #+begin_src elisp
@@ -299,7 +345,14 @@ Elixir Livebooks are Markdown files with =.livemd= extension. Let's handle them!
 #+begin_src emacs-lisp
   (use-package project
     :config
-    (add-to-list 'project-switch-commands '(project-shell "shell")))
+    (defun minemacs-git-remote ()
+      (interactive)
+      (let* ((default-directory (project-root (project-current t)))
+  	   (repository-url (vc-git-repository-url default-directory)))
+        (kill-new repository-url)
+        (message repository-url)))
+    (add-to-list 'project-switch-commands '(project-shell "shell"))
+    (add-to-list 'project-switch-commands '(minemacs-git-remote "Remote (git)" "R")))
 #+end_src
 
 ** Versioning
@@ -849,8 +902,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun jarvis-feeds--extract-authors-names (entry)
     (if-let* ((meta (elfeed-entry-meta entry))
-  	      (authors (plist-get meta :authors)))
-  	(mapcar (lambda (author) (plist-get author :name)) authors)))
+  	    (authors (plist-get meta :authors)))
+        (mapcar (lambda (author) (plist-get author :name)) authors)))
 
   (defun jarvis-feeds--insert-buffer-content (entry buffer)
     (let* ((feed (elfeed-entry-feed entry))
@@ -885,13 +938,13 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   	 (day (format-time-string "%d" date))
            (date-str (format-time-string "%F-%H%M%S" date))
   	 (filename (format "%s/%s/%s/%s-%s.%s" year month day date-str name ext)))
-        (expand-file-name filename jarvis-feeds-collector-directory)))
+      (expand-file-name filename jarvis-feeds-collector-directory)))
 
   (defun jarvis-feeds--create-entry-file (entry &optional force)
     (let* ((pathname (jarvis-feeds--build-entry-pathname entry))
-          (coding-system-for-write 'raw-text)
-  	(base-dir (file-name-directory pathname))
-  	(already-collected (member 'collected (elfeed-entry-tags entry))))
+           (coding-system-for-write 'raw-text)
+  	 (base-dir (file-name-directory pathname))
+  	 (already-collected (member 'collected (elfeed-entry-tags entry))))
       (when (or force (and (not already-collected) (not (file-exists-p pathname))))
         (mkdir base-dir t)
         (with-temp-file pathname
@@ -907,16 +960,23 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   		    (elfeed-search-selected :ignore-region))))
     (when (elfeed-entry-p entry)
       (let ((pathname (jarvis-feeds--create-entry-file elfeed-show-entry t)))
-        (find-file pathname))))
+        (when (called-interactively-p 'any)
+  	(find-file pathname)))))
 
   (defun jarvis-feeds-bulk-collect (limit)
     (interactive "NFeed entries to collect: ")
     (let* ((count 0))
       (with-elfeed-db-visit (entry _feed)
-  	(setq count (1+ count))
-  	(jarvis-feeds--create-entry-file entry)
-  	(when (= count limit)
-  	  (elfeed-db-return (list :ok count))))))
+        (setq count (1+ count))
+        (jarvis-feeds--create-entry-file entry)
+        (when (= count limit)
+  	(elfeed-db-return (list :ok count))))))
+#+end_src
+
+You can call =jarvis-feeds-collect-feed= while you're in an elfeed entry or call the bulk version. Otherwise you can use the custom elfeed hook to automatically add every new entry.
+
+#+begin_src emacs-lisp :tangle no
+  (add-hook 'elfeed-new-entry-hook #'jarvis-feeds-collect-feed)
 #+end_src
 
 ** FFmpeg Scenecutter ⚠️ experimental ⚠️                             :disabled:
@@ -1753,11 +1813,11 @@ Uses [[https://eschulte.github.io/emacs-web-server/][=emacs-web-server= package]
 
 #+begin_src emacs-lisp :tangle no
   (ws-start
- (lambda (request)
-   (with-slots (process headers) request
-     (ws-response-header process 200 '("Content-type" . "text/plain"))
-     (process-send-string process "hello world")))
- 9000)
+   (lambda (request)
+     (with-slots (process headers) request
+       (ws-response-header process 200 '("Content-type" . "text/plain"))
+       (process-send-string process "hello world")))
+   9000)
 #+end_src
 
 In order to make the endpoint available in a local net (i.e =192.168.xxx.xxx=) we have to override the function =ws-start= in =web-server.el= by adding the =:host= parameter when calling =make-network-process=:
