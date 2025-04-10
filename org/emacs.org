@@ -15,7 +15,6 @@ I think the video [[https://www.youtube.com/watch?v=sBc7toJaCxw]["Returning to t
 
 * My configurations
 - [[file:emacs/minemacs.org][minemacs]] (aims to be as minimal as possible, preferring built-in solutions over using external packages)
-- [[file:holymacs.org][Holymacs]] ([[eww:/holymacs.org][raw]] version, usefull if you want to experiment the [[file:~/minasmazar.github.io/README.org::*Navigate weblorgs!][**Visit Navigate weblorgs!**]])
 - [[/init.el][init.el]] (real minimal configuration adding only =god-mode= as /modal editing/ layer)
 
 * Resources and Credits
