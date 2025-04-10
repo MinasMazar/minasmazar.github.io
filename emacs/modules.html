@@ -234,6 +234,7 @@
 <li><a href="#org55bd23d">Markdown</a></li>
 </ul>
 </li>
+<li><a href="#org61499bd">Consult</a></li>
 <li><a href="#org830350b">Data serialization</a></li>
 <li><a href="#org9cc6d3b">Programming languages</a>
 <ul>
@@ -642,6 +643,55 @@ feh --bg-fill ~/Pictures/wallpaper
 </div>
 </div>
 </div>
+<div id="outline-container-org61499bd" class="outline-3">
+<h3 id="org61499bd">Consult</h3>
+<div class="outline-text-3" id="text-org61499bd">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package consult
+  ;; Replace bindings. Lazily loaded by `use-package'.
+  :bind
+  ("C-x M-:" . #'consult-complex-command)
+  ("C-x b" . #'consult-buffer)
+  ("C-x 4 b" . #'consult-buffer-other-window)
+  ("C-x 5 b" . #'consult-buffer-other-frame)
+  ("C-x t b" . #'consult-buffer-other-tab)
+  ("C-x r b" . #'consult-bookmark)
+  ("C-x p b" . #'consult-project-buffer)
+  ("M-#" . #'consult-register-load)
+  ("M-'" . #'consult-register-store)
+  ("C-M-#" . #'consult-register)
+  ("M-y" . #'consult-yank-pop)
+  ("M-g e" . #'consult-compile-error)
+  ("M-g f" . #'consult-flymake)
+  ("M-g g" . #'consult-goto-line)
+  ("M-g M-g" . #'consult-goto-line)
+  ("M-g o" . #'consult-outline)
+  ("M-g m" . #'consult-mark)
+  ("M-g k" . #'consult-global-mark)
+  ("M-g i" . #'consult-imenu)
+  ("M-g I" . #'consult-imenu-multi)
+  ("M-s d" . #'consult-find)
+  ("M-s c" . #'consult-locate)
+  ("M-s g" . #'consult-grep)
+  ("M-s G" . #'consult-git-grep)
+  ("M-s r" . #'consult-ripgrep)
+  ("M-s l" . #'consult-line)
+  ("M-s L" . #'consult-line-multi)
+  ("M-s k" . #'consult-keep-lines)
+  ("M-s u" . #'consult-focus-lines)
+  ("M-s e" . #'consult-isearch-history)
+  (:map isearch-mode-map
+  ("M-e" . #'consult-isearch-history)
+  ("M-s e" . #'consult-isearch-history)
+  ("M-s l" . #'consult-line)
+  ("M-s L" . #'consult-line-multi))
+  (:map minibuffer-local-map
+  ("M-s" . #'consult-history)
+  ("M-r" . #'consult-history)))
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org830350b" class="outline-3">
 <h3 id="org830350b">Data serialization</h3>
 <div class="outline-text-3" id="text-org830350b">
@@ -689,7 +739,14 @@ Elixir Livebooks are Markdown files with <code>.livemd</code> extension. Let's h
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package project
   :config
-  (add-to-list 'project-switch-commands '(project-shell "shell")))
+  (defun minemacs-git-remote ()
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+           (repository-url (vc-git-repository-url default-directory)))
+      (kill-new repository-url)
+      (message repository-url)))
+  (add-to-list 'project-switch-commands '(project-shell "shell"))
+  (add-to-list 'project-switch-commands '(minemacs-git-remote "Remote (git)" "R")))
 </pre>
 </div>
 </div>
@@ -826,7 +883,7 @@ Here install <code>vterm</code> and some  useful functions to ease interaction w
 In order to make the authentication work remember to add your Github username and API token in the <code>~/.authinfo.gpg</code>; also customize <code>minemacs-github-api-username</code> in order to match the auth source entry.
 </p>
 
-<pre class="example" id="orgd64265f">
+<pre class="example" id="orgc36b860">
 machine api.github.com login YOUR@EMAIL.COM password YOUR-GITHUB-API-TOKEN port 80
 </pre>
 
@@ -883,8 +940,7 @@ Given a Youtuve channel URL, returns the channel ID. This is  useful in cases li
 
 <div class="org-src-container">
 <pre class="src src-elisp">(defun jarvis-youtube-get-channel-rss (url &amp;optional action)
-  "Given a Youtuve channel URL, returns the channel ID. This is
-useful in cases like when you want to get the RSS feed of a Youtube channel."
+  "Given a Youtube channel URL, returns the RSS feed of a Youtube channel."
   (interactive "sYoutube channel url: ")
   (let* ((action (or action current-prefix-arg 0))
          (url-user-agent "curl/8.7.1")
@@ -902,10 +958,44 @@ useful in cases like when you want to get the RSS feed of a Youtube channel."
                                   (id (match-string 1 channel-id-url)))
                              (pop-to-buffer (current-buffer))
                              (format "https://www.youtube.com/feeds/videos.xml?channel_id=%s" id)))))))
-    (message feed-url)
+    (message "Youtube URL: %s has RSS feed url %s" url feed-url)
     (cond ((= action 1) (kill-new feed-url))
           ((= action 2) (insert feed-url))
           (t feed-url))))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(defun jarvis-get-rss-urls (url)
+  "Given a URL, tries to fetch the RSS feed URL."
+  (interactive "URL: ")
+  (let* ((url-user-agent "curl/8.7.1")
+         (url-request-extra-headers '(("Accept" . "*/*")))
+         (buffer (url-retrieve-synchronously url))
+         (feeds (with-current-buffer buffer
+                      (let* ((dom (libxml-parse-html-region))
+                             (links (dom-search dom
+                                               (lambda (el)
+                                                 (and (string= (dom-tag el) "link")
+                                                      (string= (dom-attr el 'type) "application/rss+xml"))))))
+                        links)))
+         (feeds-count (length feeds)))
+    (if (&gt; feeds-count 0)
+        (let ((result-buffer (get-buffer-create (format "*get-rss-urls &lt;%s&gt;*" url))))
+          (with-current-buffer result-buffer
+            (let ((tabulated-list-format [("Title" 18 t)
+                                          ("URL" 12 nil)])
+                  (tabulated-list-padding 2)
+                  (tabulated-list-entries (mapcar
+                                           (lambda (feed)
+                                             (let ((feed-title (dom-attr feed 'title))
+                                                   (feed-url (dom-attr feed 'href)))
+                                               (list nil (vector feed-title feed-url))))
+                                           feeds)))
+              (tabulated-list-mode)
+              (tabulated-list-print)))
+          (pop-to-buffer result-buffer))
+      (prog2 (message "No RSS found for %s" url) nil))))
 </pre>
 </div>
 </div>
@@ -1232,7 +1322,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
                 (jarvis-collect-video-collector--set-cache url json)
                 vid)
             (json-parse-error (error "%s" (buffer-string)))
-            (t (error "%s" (buffer-string))))))))
+            (t (error "failed parsing %s" url)))))))
 
 (defun jarvis-collect-video-collected-vids ()
   "Return all the collected vids in the ~jarvis-collect-video-collector-directory~."
@@ -1264,8 +1354,8 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
 (defun jarvis-feeds--extract-authors-names (entry)
   (if-let* ((meta (elfeed-entry-meta entry))
-              (authors (plist-get meta :authors)))
-        (mapcar (lambda (author) (plist-get author :name)) authors)))
+            (authors (plist-get meta :authors)))
+      (mapcar (lambda (author) (plist-get author :name)) authors)))
 
 (defun jarvis-feeds--insert-buffer-content (entry buffer)
   (let* ((feed (elfeed-entry-feed entry))
@@ -1300,13 +1390,13 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
          (day (format-time-string "%d" date))
          (date-str (format-time-string "%F-%H%M%S" date))
          (filename (format "%s/%s/%s/%s-%s.%s" year month day date-str name ext)))
-      (expand-file-name filename jarvis-feeds-collector-directory)))
+    (expand-file-name filename jarvis-feeds-collector-directory)))
 
 (defun jarvis-feeds--create-entry-file (entry &amp;optional force)
   (let* ((pathname (jarvis-feeds--build-entry-pathname entry))
-        (coding-system-for-write 'raw-text)
-        (base-dir (file-name-directory pathname))
-        (already-collected (member 'collected (elfeed-entry-tags entry))))
+         (coding-system-for-write 'raw-text)
+         (base-dir (file-name-directory pathname))
+         (already-collected (member 'collected (elfeed-entry-tags entry))))
     (when (or force (and (not already-collected) (not (file-exists-p pathname))))
       (mkdir base-dir t)
       (with-temp-file pathname
@@ -1322,16 +1412,26 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
                     (elfeed-search-selected :ignore-region))))
   (when (elfeed-entry-p entry)
     (let ((pathname (jarvis-feeds--create-entry-file elfeed-show-entry t)))
-      (find-file pathname))))
+      (when (called-interactively-p 'any)
+        (find-file pathname)))))
 
 (defun jarvis-feeds-bulk-collect (limit)
   (interactive "NFeed entries to collect: ")
   (let* ((count 0))
     (with-elfeed-db-visit (entry _feed)
-        (setq count (1+ count))
-        (jarvis-feeds--create-entry-file entry)
-        (when (= count limit)
-          (elfeed-db-return (list :ok count))))))
+      (setq count (1+ count))
+      (jarvis-feeds--create-entry-file entry)
+      (when (= count limit)
+        (elfeed-db-return (list :ok count))))))
+</pre>
+</div>
+
+<p>
+You can call <code>jarvis-feeds-collect-feed</code> while you're in an elfeed entry or call the bulk version. Otherwise you can use the custom elfeed hook to automatically add every new entry.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'elfeed-new-entry-hook #'jarvis-feeds-collect-feed)
 </pre>
 </div>
 </div>
@@ -1975,7 +2075,7 @@ Same as `browse-url-firefox', but sets `browse-url-firefox-arguments'."
 The <b><b>MPV</b></b> backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with <code>bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......</code>. In order to allow <code>mpv</code> to play "https" URIs change the <code>bongo-custom-backend-matchers</code> variable.
 </p>
 
-<pre class="example" id="org3f8c022">
+<pre class="example" id="org55e713f">
 (setq bongo-custom-backend-matchers
        '((mpv ("https:") . t)))
 </pre>
@@ -2115,7 +2215,7 @@ Firstly, install <code>mu</code> and a MailBox &lt;-&gt; Imaps syncronizer like 
 On <i>deb based linux systems</i> you can install those via
 </p>
 
-<pre class="example" id="orga9f8992">
+<pre class="example" id="orgcaaf18e">
 $ sudo apt install mu isync pass
 </pre>
 
@@ -2135,7 +2235,7 @@ Useful links:
 Create a file <code>~/.authinfo</code> directly in the root of your home directory.
 </p>
 
-<pre class="example" id="orgfe5e7af">
+<pre class="example" id="org6777fc0">
 machine smtp.example.com login myname port 587 password mypassword
 </pre>
 </div>
@@ -2146,7 +2246,7 @@ machine smtp.example.com login myname port 587 password mypassword
 Configure <code>mbsync</code> via <code>~/.mbsyncrc</code> with a content similar to this:
 </p>
 
-<pre class="example" id="org3451a2c">
+<pre class="example" id="orgb6583ec">
 IMAPAccount gmail-imaps
 Host imap.gmail.com
 Port 993
@@ -2181,7 +2281,7 @@ SyncState *
 </li>
 <li><a id="org5ba8aa2"></a>mu4e configuration<br />
 <div class="outline-text-5" id="text-org5ba8aa2">
-<pre class="example" id="org1ac7a49">
+<pre class="example" id="org6e30fef">
 (require 'mu4e)
 (setq send-mail-function 'smtpmail-send-it
 	message-send-mail-function 'smtpmail-send-it
@@ -2209,7 +2309,7 @@ SyncState *
 To set multiple accounts within <code>mu4e</code> you have to set the <code>mu4e-contexts</code> variable. An interesting screencast/article from System Crafters about that can be found <a href="https://systemcrafters.net/emacs-mail/managing-multiple-accounts/">here</a>.
 </p>
 
-<pre class="example" id="org2f45c92">
+<pre class="example" id="org9a312d2">
 (setq mu4e-contexts
 	(list
 	 ;; Work account
@@ -2267,7 +2367,7 @@ To configure gnus in order to read your Gmail, you have to:
 Then configure the <code>gnus-select-method</code>
 </p>
 
-<pre class="example" id="org811c9bb">
+<pre class="example" id="orgc8e5f61">
 (setq gnus-select-method
 	'(nnimap "gmail"
 		 (nnimap-address "imap.gmail.com")
@@ -2313,12 +2413,12 @@ Uses <a href="https://eschulte.github.io/emacs-web-server/"><code>emacs-web-serv
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"> (ws-start
-(lambda (request)
-  (with-slots (process headers) request
-    (ws-response-header process 200 '("Content-type" . "text/plain"))
-    (process-send-string process "hello world")))
-9000)
+<pre class="src src-emacs-lisp">(ws-start
+ (lambda (request)
+   (with-slots (process headers) request
+     (ws-response-header process 200 '("Content-type" . "text/plain"))
+     (process-send-string process "hello world")))
+ 9000)
 </pre>
 </div>
 
@@ -2352,19 +2452,21 @@ Here's the implementation of a simple web server, serving static assets.
   (defcustom minemacs-ws-enabled nil "When non-nil start the file server at Emacs startup." :type '(boolean))
   (defcustom minemacs-ws-docroot "~/Public" "Root directory to be served within the File Server" :type '(directory))
   :config
-  (when minemacs-ws-enabled
+  (defun minemacs-file-server-start ()
+    (interactive)
     (ws-start
      (lambda (request)
-         (with-slots (process headers) request
-           (let ((docroot (expand-file-name minemacs-ws-docroot))
-                 (path (url-unhex-string (substring (cdr (assoc :GET headers)) 1))))
-             (if (ws-in-directory-p docroot path)
-                 (if (file-directory-p (expand-file-name path docroot))
-                     (ws-send-directory-list process
-                                             (expand-file-name path docroot) "^[^\.]")
-                   (ws-send-file process (expand-file-name path docroot)))
-               (ws-send-404 process)))))
-     3000)))
+       (with-slots (process headers) request
+         (let ((docroot (expand-file-name minemacs-ws-docroot))
+               (path (url-unhex-string (substring (cdr (assoc :GET headers)) 1))))
+           (if (ws-in-directory-p docroot path)
+               (if (file-directory-p (expand-file-name path docroot))
+                   (ws-send-directory-list process
+                                           (expand-file-name path docroot) "^[^\.]")
+                 (ws-send-file process (expand-file-name path docroot)))
+             (ws-send-404 process)))))
+     3000))
+  (when minemacs-ws-enabled (minemacs-file-server-start)))
 </pre>
 </div>
 </div>
@@ -2461,7 +2563,7 @@ Useful links:
 Example script that actually launches Emacs (the WM) and some other services that helps Desktop experience. Create the this file at <code>/usr/local/bin/exwm.sh</code>.
 </p>
 
-<pre class="example" id="orgc296a9c">
+<pre class="example" id="org3df83ed">
 #!/bin/sh
 
 ## Set capslock as ctrl
@@ -2488,7 +2590,7 @@ exec dbus-run-session emacs
 In order to have the <code>EXWM</code> desktop environment available in the Login manager menu (i.e. LightDM) add this to <code>/usr/share/xsessions/exwm.desktop</code>
 </p>
 
-<pre class="example" id="orgf4ae41e">
+<pre class="example" id="org1439be3">
 [Desktop Entry]
 Name=Exwm
 Comment=Emacs as Window Manager
@@ -2506,7 +2608,7 @@ Keywords=tiling;wm;windowmanager;window;manager;emacs;
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2024-12-10 Tue 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -247,7 +247,6 @@ I think the video <a href="https://www.youtube.com/watch?v=sBc7toJaCxw">"Returni
 <div class="outline-text-2" id="text-orgead3a61">
 <ul class="org-ul">
 <li><a href="emacs/minemacs.html">minemacs</a> (aims to be as minimal as possible, preferring built-in solutions over using external packages)</li>
-<li><a href="holymacs.html">Holymacs</a> (<a href="eww:/holymacs.org">raw</a> version, usefull if you want to experiment the <a href="file:///Users/invisigoth/minasmazar.github.io/README.html#org926c59d"><b><b>Visit Navigate weblorgs!</b></b></a>)</li>
 <li><a href="file:///init.el">init.el</a> (real minimal configuration adding only <code>god-mode</code> as <i>modal editing</i> layer)</li>
 </ul>
 </div>
@@ -307,6 +306,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>completion-auto-help</code></li>
 <li><code>compilation-scroll-output</code></li>
 <li><code>current-time-string</code></li>
+<li><code>debug-on-entry</code></li>
 <li><code>dired-guess-shell-alist-user</code></li>
 <li><code>display-time-day-and-date</code></li>
 <li><code>display-time-mode</code></li>
@@ -340,7 +340,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <div id="outline-container-orgcab4702" class="outline-2">
 <h2 id="orgcab4702"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h2>
 <div class="outline-text-2" id="text-orgcab4702">
-<pre class="example" id="org5e9562d">
+<pre class="example" id="orgd479268">
 #+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
   wc -w $filename
 #+END_SRC
@@ -376,7 +376,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="orgf9d62b4">
+<pre class="example" id="org8188839">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -403,7 +403,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org66ea7cf">
+<pre class="example" id="org9793dea">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -448,7 +448,7 @@ Possible values for this variable could be
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org3195778">
+<pre class="example" id="org4f58c53">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -465,7 +465,7 @@ Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-
 You can use the wonderful tool <code>regexp-builder</code>. Use <code>string-match</code> to run a regexp and <code>match-string</code> to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
 </p>
 
-<pre class="example" id="org9eb5839">
+<pre class="example" id="orgcb14fa4">
 (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
   (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
 </pre>
@@ -563,7 +563,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="org548a4fa">
+<pre class="example" id="orgaec14cd">
 (run-at-time "11 min" t #'elfeed-update)
 (run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 </pre>
@@ -581,7 +581,7 @@ point.
 <div id="outline-container-org8e83fc5" class="outline-2">
 <h2 id="org8e83fc5">Insert colorize text programmatically</h2>
 <div class="outline-text-2" id="text-org8e83fc5">
-<pre class="example" id="orgd88619d">
+<pre class="example" id="orgdceb04f">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -791,7 +791,7 @@ Drive a graphical Emacs instance via <code>emacsclient</code>.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org66d3d8d">
+<pre class="example" id="org3c35b9c">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))
@@ -802,7 +802,7 @@ Drive a graphical Emacs instance via <code>emacsclient</code>.
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: 2023-07-15 Sat 00:00</p>
-<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 30.1 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
+<p class="creator"><a href="https://www.gnu.org/software/emacs/">Emacs</a> 31.0.50 (<a href="https://orgmode.org">Org</a> mode 9.7.11)</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
