@@ -60,6 +60,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =completion-auto-help=
 - =compilation-scroll-output=
 - =current-time-string=
+- =debug-on-entry=
 - =dired-guess-shell-alist-user=
 - =display-time-day-and-date=
 - =display-time-mode=

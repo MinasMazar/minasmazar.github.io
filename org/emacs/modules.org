@@ -1845,19 +1845,21 @@ Here's the implementation of a simple web server, serving static assets.
     (defcustom minemacs-ws-enabled nil "When non-nil start the file server at Emacs startup." :type '(boolean))
     (defcustom minemacs-ws-docroot "~/Public" "Root directory to be served within the File Server" :type '(directory))
     :config
-    (when minemacs-ws-enabled
+    (defun minemacs-file-server-start ()
+      (interactive)
       (ws-start
        (lambda (request)
-	 (with-slots (process headers) request
-	   (let ((docroot (expand-file-name minemacs-ws-docroot))
-		 (path (url-unhex-string (substring (cdr (assoc :GET headers)) 1))))
-	     (if (ws-in-directory-p docroot path)
-		 (if (file-directory-p (expand-file-name path docroot))
-		     (ws-send-directory-list process
-					     (expand-file-name path docroot) "^[^\.]")
-		   (ws-send-file process (expand-file-name path docroot)))
-	       (ws-send-404 process)))))
-       3000)))
+         (with-slots (process headers) request
+  	 (let ((docroot (expand-file-name minemacs-ws-docroot))
+  	       (path (url-unhex-string (substring (cdr (assoc :GET headers)) 1))))
+  	   (if (ws-in-directory-p docroot path)
+  	       (if (file-directory-p (expand-file-name path docroot))
+  		   (ws-send-directory-list process
+  					   (expand-file-name path docroot) "^[^\.]")
+  		 (ws-send-file process (expand-file-name path docroot)))
+  	     (ws-send-404 process)))))
+       3000))
+    (when minemacs-ws-enabled (minemacs-file-server-start)))
 #+end_src
 
 * Emacs as Window Manager

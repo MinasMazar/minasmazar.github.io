@@ -1161,6 +1161,9 @@ will have no idea where to find it.
 #+end_quote
 
 More info in this [[https://stackoverflow.com/questions/17846529/could-not-open-a-connection-to-your-authentication-agent][SO thread]].
+* Embedded devices
+** [[*Raspberry][Raspberry]]
+** [[https://www.grisp.org/][GRiSP - the Power of Erlang & Elixir Embedded Systems]]
 * How to set environment variables from .env file
 
 #+begin_src sh
@@ -2081,8 +2084,21 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
           git fetch
           git pull origin master
   sshadd:
-	eval `ssh-agent -s`
-	ssh-add
+  	eval `ssh-agent -s`
+  	ssh-add
+  asdf-install:
+  	wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-arm64.tar.gz
+  	mkdir -p ~/.local/usr/bin
+  	tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/usr/bin/
+  elixir-install:
+  	cd ~/
+  	asdf plugin add elixir
+  	asdf plugin add erlang
+  	sudo apt install libncurses-dev libssl-dev
+  	asdf install erlang 27.0
+  	asdf install elixir 1.18-otp-27
+  	asdf set erlang 27.0
+  	asdf set elixir 1.18-otp-27
 #+end_src
 
 Here a sample Makefile that uses /double dollar sign/ to assign variables using ENVs. Also notice the use of nested interpolation: you can connect to =nas= using the command =make ssh host=nas=.
@@ -2132,6 +2148,7 @@ ALTER DATABASE db RENAME TO newdb;
 ** Troubleshoot USB Capacitive Touch Screen Display
 - https://forums.raspberrypi.com/viewtopic.php?t=116174
 - https://github.com/bsteinsbo/rpi_touch_driver
+- [[https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2][Connect Adafruit PiTFT on Raspberry Pi 3 - 320x240 2.8" TFT+Touchscreen on Raspberry Pi3]]
 
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
