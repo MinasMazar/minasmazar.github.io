@@ -291,6 +291,7 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     ("M-g m" . #'consult-mark)
     ("M-g k" . #'consult-global-mark)
     ("M-g i" . #'consult-imenu)
+    ("s-i" . #'consult-imenu)
     ("M-g I" . #'consult-imenu-multi)
     ("M-s d" . #'consult-find)
     ("M-s c" . #'consult-locate)
@@ -310,6 +311,8 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     (:map minibuffer-local-map
     ("M-s" . #'consult-history)
     ("M-r" . #'consult-history)))
+
+  (use-package embark-consult)
 #+end_src
 
 ** Data serialization
@@ -1816,6 +1819,9 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
 #+end_src
 
 * File server                                                      :disabled:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "file-server.el") :mkdirp yes
+:END:
 
 Uses [[https://eschulte.github.io/emacs-web-server/][=emacs-web-server= package]]. Here's an /helloworld/ example, taken from the [[https://eschulte.github.io/emacs-web-server/tutorials/][online tutorial]].
 
@@ -1870,12 +1876,26 @@ Here's the implementation of a simple web server, serving static assets.
     (when minemacs-ws-enabled (minemacs-file-server-start)))
 #+end_src
 
-* Emacs as Window Manager
+* Emacs and Desktop
+** i3
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "emacs-desktop-i3.el") :mkdirp yes
+:END:
+
+#+begin_src elisp
+  (defun minemacs-random-wallpaper (dir)
+    "Given a directory, pick a random PNG file and set it as wallpaper via FEH."
+    (interactive "DWallaper source directory: ")
+    (let* ((images (directory-files dir t "\.png"))
+	   (image (seq-random-elt images)))
+      (shell-command (format "feh --bg-max '%s'" image) nil nil)))
+#+end_src
+
+** Emacs as Window Manager - EXWM
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "exwm.el") :mkdirp yes
 :END:
 
-** exwm
 Useful links:
 
 - [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
@@ -1928,6 +1948,7 @@ Useful links:
 	    ([?\s-M] . exwm-input-release-keyboard)
 	    ([?\s-\]] . next-buffer)
 	    ([?\s-\[] . previous-buffer)
+	    ([?\s-d] . dmenu)
 	    ([?\s-`] . other-frame)))
 
     (setq exwm-input-simulation-keys
