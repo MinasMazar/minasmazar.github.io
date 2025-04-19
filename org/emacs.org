@@ -155,7 +155,7 @@ Download four random images from picsum using an index.
 * EWW ~ experimenting with =eww-retrieve-command=
 
 Possible values for this variable could be
-=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default=
 
 * (interactive) functions
 

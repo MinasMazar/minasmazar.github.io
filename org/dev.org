@@ -220,6 +220,7 @@ You can run a test to see if it's working like this:
   docker run -it -e PULSE_SERVER=host.docker.internal --mount type=bind,source=/Users/YOURUSERNAME/.config/pulse,target=/home/pulseaudio/.config/pulse --entrypoint speaker-test --rm jess/pulseaudio -c 2 -l 1 -t wav
 #+end_src
 
+** [[https://dev.to/hlappa/development-environment-for-elixir-phoenix-with-docker-and-docker-compose-2g17][Evelopment Environment For Elixir Phoenix With Docker And Docker Compose]]
 ** [[Dockerize Phoenix webapp (my_app)]]
 ** COMMENT [[https://github.com/lukechilds/dockerpi][dockerpi]]: Docker + Raspberry :wip:
 

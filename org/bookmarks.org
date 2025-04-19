@@ -2,11 +2,13 @@
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-17 Wed>
-#
+#+FILETAGS: :bookmark:blog:
 
-* [[https://dev.to/hlappa/development-environment-for-elixir-phoenix-with-docker-and-docker-compose-2g17][Development environment for Elixir + Phoenix with Docker and Docker-compose]]
-* [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita's bookmarks]]                                :blog:emacs:bookmarks:
+This is a list of interesting blogs
+
+* [[https://ict4g.net/adolfo/index.html][Adolfo Villafiorita's bookmarks]]                                     :emacs:
 * [[https://saptaks.website/][https://saptaks.website/]]                                     :cool:website:
 * [[https://a11y-webring.club/][https://a11y-webring.club/]]                        :webring:nerd:technology:
 * [[https://stackoverflow.com/questions/34452398/execute-luakit-browser-commands-from-shell-script][I was looking for "drive luakit from command line" and I ended up on this 24th Dec thread 🎅😂]]
-* https://summeremacs.github.io/about/
+* https://summeremacs.github.io/about/                                :emacs:
+* https://venam.net
