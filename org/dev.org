@@ -1900,8 +1900,16 @@ Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.m
   	TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate -c -r 0
 #+end_src
 *** Browsers
+
+Using Chromium and Firefox as browser works well only on RPi > 1, otherwise you end up with an error message.
+
+I've tried some browser in order to achieve the best /kiosk/ like experience. Some of them have the ad-hoc =kiosk= flag to pass at the command line and that's cool. But I also found some issues. Here's a quick recap:
+- [[*Chromium][Chromium]]: it has a very good =--app= flag (which operates almost like =--kiosk= flag, which is deprecated); unfortunately for some reason I haven't investigated in depth, it seems it does not work well with websocket; I've launched an Elixir/Phoenix Liveview webapp and all interactions via the websocket are dramatically delayed (maybe it fallbacks in the =longpoll= mode).
+- Firefox: it does not arise the issue of the websocket I had with Chromium, but on a really small screen (320x240) it does not fit well: it presents an overlfow of the container. I've found [[https://stackoverflow.com/questions/7663005/is-firefox-6-7-handling-max-width320px-media-query-wrong][a thread that confirms that issue]], but I haven't spent time trying to solve it.
+- Epiphany: it does not have any =--kiosk= not event =--fullscreen= flag, so you have to set the fullscreen by scripting around via =xdotool=, =xte= or tools like that. This is really annoying.
+- [[https://luakit.github.io/][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
+  
 ***** Chromium
-Use Chromium/Firefox as browser works well only on RPi > 1
 
 Start Chromium in Kiosk mode within Wayland.
 
@@ -1911,8 +1919,16 @@ Start Chromium in Kiosk mode within Wayland.
 
 Start Chromium in Kiosk mode within X11.
 
-#+begin_src sh :tangle ~/kiosk.sh :sheband "#!/bin/bash"
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
   DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+end_src
+
+or
+
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
+DISPLAY=:0 chromium-browser --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --disable-session-crashed-bubble --simulate-outdated-n\
+o-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-web-security --allow-running-insecure-content --disable-component-update --overscroll-history-navig\
+ation=0 --disable-features=Translate --app=http://localhost:4000 
 #+end_src
 
 - [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
