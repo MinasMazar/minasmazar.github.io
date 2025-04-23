@@ -1347,7 +1347,7 @@ You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-ch
 *** [[https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md][PipeWire]]
 ** Create a .desktop File
 
-In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
+Useful when installing an app via =flatpak=. In userspace at =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 
 #+begin_src toml
   [Desktop Entry]
@@ -1466,6 +1466,21 @@ To get the window ID use =xdotool= (ex. =xdotool search -class mpv=)
 *** [[https://i3wm.org/][i3wm]]
 
 - [[file:emacs/modules.org::*i3wm][i3wm config file fine tuned to work in tandem with Emacs]].
+
+** MPV
+
+If you have troubles to hear the audio output when using =mvp= you shouuld set the =--ao= flag.
+
+#+begin_src sh
+  mpv --ao=help # to get a list of the available outputs
+  mpv --ao=pulse file-to-reproduce.mp4
+#+end_src
+
+or set the flag via the configuration file in =~/.config/mpv/mpv.conf=
+
+#+begin_src conf
+  ao=pulse
+#+end_src
 
 * Suspend the system via command line
 
@@ -1714,8 +1729,8 @@ I've tried some browser in order to achieve the best /kiosk/ like experience. So
 - [[*Chromium][Chromium]]: it has a very good =--app= flag (which operates almost like =--kiosk= flag, which is deprecated); unfortunately for some reason I haven't investigated in depth, it seems it does not work well with websocket; I've launched an Elixir/Phoenix Liveview webapp and all interactions via the websocket are dramatically delayed (maybe it fallbacks in the =longpoll= mode).
 - Firefox: it does not arise the issue of the websocket I had with Chromium, but on a really small screen (320x240) it does not fit well: it presents an overlfow of the container. I've found [[https://stackoverflow.com/questions/7663005/is-firefox-6-7-handling-max-width320px-media-query-wrong][a thread that confirms that issue]], but I haven't spent time trying to solve it.
 - Epiphany: it does not have any =--kiosk= not event =--fullscreen= flag, so you have to set the fullscreen by scripting around via =xdotool=, =xte= or tools like that. This is really annoying.
-- [[https://luakit.github.io/][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
-  
+- [[*Luakit][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
+
 ***** Chromium
 
 Start Chromium in Kiosk mode within Wayland.
@@ -1746,6 +1761,16 @@ For old devices (RPi 1) Midori browser looks promising. The only problem is the 
 
 P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
 
+***** [[https://luakit.github.io/][Luakit]]
+
+To start Luakit in fullscreen mode adds this snippet in the =~/.config/luakit/rc.lua= (if this file is empty you can grab the default configuration file via =cp /etc/xdg/luakit/rc.lua ~/.config/luakit/=)
+
+#+begin_src lua
+  window.add_signal("init", function (w)
+    w.win.fullscreen = true
+  end)
+#+end_src
+  
 *** System setup
 **** Screen setup
 

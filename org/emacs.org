@@ -285,6 +285,10 @@ Code stolen from [[https://stackoverflow.com/questions/4886745/emacs-what-is-the
 (set-frame-parameter nil 'alpha-background 100) ; For current frame
 (add-to-list 'default-frame-alist '(alpha-background . 100)) ; For all new frames henceforth
 #+end_src
+* i3 window manager
+
+If you, like me, use i3 as your window manager and Emacs as your editor, you might want to make them play nicer together. [[file:emacs/modules.org::*i3wm][In this section]] you can find some emacs packages and an i3 configuration file.
+
 * Faces and fonts
 
 If you'd like to have a smaller font on compialtion buffers

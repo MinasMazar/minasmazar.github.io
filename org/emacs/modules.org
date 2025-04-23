@@ -685,62 +685,62 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 
   (defun jarvis-collect-video-collector--build-pathname (vid &optional ext)
     (let* ((ext (or ext "org"))
-  	   (id (plist-get vid :id))
-  	   (name (jarvis-collect-video-collector--build-filename vid))
-  	   (filename (format "%s-%s.%s" id name ext)))
+	   (id (plist-get vid :id))
+	   (name (jarvis-collect-video-collector--build-filename vid))
+	   (filename (format "%s-%s.%s" id name ext)))
       (expand-file-name filename jarvis-collect-video-collector-directory)))
 
   (defun jarvis-collect-video-collector--insert-org-content (vid buffer)
     (let* ((org-content-header (concat (jarvis-collect-video-collector--org-headers vid)
-  				       (jarvis-collect-video-collector--org-content-embed vid)
-  				       (jarvis-collect-video-collector--org-content-details vid)
-  				       (jarvis-collect-video-collector--org-content-description vid)
-  				       (jarvis-collect-video-collector--org-content-download vid)))
-  	   (transcript-dom (plist-get vid :transcript-dom))
-  	   (transcript-text (dom-texts transcript-dom)))
+				       (jarvis-collect-video-collector--org-content-embed vid)
+				       (jarvis-collect-video-collector--org-content-details vid)
+				       (jarvis-collect-video-collector--org-content-description vid)
+				       (jarvis-collect-video-collector--org-content-download vid)))
+	   (transcript-dom (plist-get vid :transcript-dom))
+	   (transcript-text (dom-texts transcript-dom)))
       (with-current-buffer buffer
-  	(erase-buffer)
-  	(insert org-content-header)
-  	(if transcript-dom
-  	    (insert (format "\n** Transcript\n\n#+begin_quote\n%s\n#+end_quote\n"
-  			    transcript-text))))))
+	(erase-buffer)
+	(insert org-content-header)
+	(if transcript-dom
+	    (insert (format "\n** Transcript\n\n#+begin_quote\n%s\n#+end_quote\n"
+			    transcript-text))))))
   (defun jarvis-collect-video-collector--org-headers (vid)
     (let* ((title (plist-get vid :title))
-  	   (link (plist-get vid :webpage-url))
-  	   (author (user-full-name))
-  	   (date (plist-get vid :fetched-at))
-  	   (humanized-date (and date (format-time-string "%F %a" date))))
+	   (link (plist-get vid :webpage-url))
+	   (author (user-full-name))
+	   (date (plist-get vid :fetched-at))
+	   (humanized-date (and date (format-time-string "%F %a" date))))
       (format
        "#+TITLE: %s\n#+AUTHOR: %s\n#+DATE: <%s>\n#+OPTIONS: toc:nil num:nil title:nil\n\n* [[%s][%s]]\n\n"
        title author humanized-date link title)))
 
   (defun jarvis-collect-video-collector--org-content-details (vid)
     (let* ((title (plist-get vid :title))
-  	   (webpage-url (plist-get vid :webpage-url))
-  	   (channel (plist-get vid :channel))
-  	   (channel-url (plist-get vid :channel-url))
-  	   (channel-follower-count (plist-get vid :channel-follower-count))
-  	   (humanized-duration (plist-get vid :duration))
-  	   (fetched-at (plist-get vid :fetched-at))
-  	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
-  	   (like-count (plist-get vid :like-count))
-  	   (view-count (plist-get vid :view-count))
-  	   (thumbnail-url (plist-get vid :thumbnail-url)))
+	   (webpage-url (plist-get vid :webpage-url))
+	   (channel (plist-get vid :channel))
+	   (channel-url (plist-get vid :channel-url))
+	   (channel-follower-count (plist-get vid :channel-follower-count))
+	   (humanized-duration (plist-get vid :duration))
+	   (fetched-at (plist-get vid :fetched-at))
+	   (humanized-fetched-at (and fetched-at (format-time-string "%F %R" fetched-at)))
+	   (like-count (plist-get vid :like-count))
+	   (view-count (plist-get vid :view-count))
+	   (thumbnail-url (plist-get vid :thumbnail-url)))
       (format
        "\n📹 *Published by* [[%s][%s]] (🧑 %s followers)\n🔄 *Last sync at* %s\n🕓 *Duration:* %s\n❤️ *Likes:* %s\n👀 *Views:* %s\n\n"
        channel-url channel channel-follower-count humanized-fetched-at humanized-duration like-count view-count)))
 
   (defun jarvis-collect-video-collector--org-content-embed (vid)
     (let ((id (plist-get vid :id))
-  	  (title (plist-get vid :title)))
+	  (title (plist-get vid :title)))
       (format
        "#+BEGIN_EXPORT html\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/%s?si=Osfs1Y4FONZAmoYq&amp;controls=0\" title=\"%s\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>\n#+END_EXPORT\n"
        id title)))
 
   (defun jarvis-collect-video-collector--org-content-download (vid)
     (let ((url (plist-get vid :webpage-url))
-  	  (video-outfile (jarvis-collect-video-collector--build-pathname vid "mp4"))
-  	  (audio-outfile (jarvis-collect-video-collector--build-pathname vid "mp3")))
+	  (video-outfile (jarvis-collect-video-collector--build-pathname vid "mp4"))
+	  (audio-outfile (jarvis-collect-video-collector--build-pathname vid "mp3")))
       (format
        "\n* Download\n\n#+BEGIN_SRC sh :results output silent\nyt-dlp -o \"%s\" \"%s\"\n#+END_SRC\n#+BEGIN_SRC sh :results output silent\nyt-dlp -o \"%s\" \"%s\"\n#+END_SRC\n"
        video-outfile url audio-outfile url)))
@@ -748,76 +748,76 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   (defun jarvis-collect-video-collector--org-content-description (vid)
     (let ((description (plist-get vid :description)))
       (unless (string-blank-p description)
-  	(format "\n** Description\n\n%s\n" description))))
+	(format "\n** Description\n\n%s\n" description))))
 
   (defun jarvis-collect-video-collector--extract-thumbnail-url (json)
     (let* ((thumbnails (gethash "thumbnails" json))
-  	   (filter-resolution-thumbnails
-  	    (lambda (thumbnail)
-  	      (let ((height (gethash "height" thumbnail))
-  		    (width (gethash "width" thumbnail))
-  		    (preference (gethash "preference" thumbnail)))
-  		(and width preference (> width 300) (> preference -12)))))
-  	   (sort-thumbnails
-  	    (lambda (t1 t2)
-  	      (let ((t1ref (gethash "preference" t1))
-  		    (t2ref (gethash "preference" t2)))
-  		(< t1ref t2ref))))
-  	   (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
-  	   (target-thumbnail (car preferred-thumbnails)))
+	   (filter-resolution-thumbnails
+	    (lambda (thumbnail)
+	      (let ((height (gethash "height" thumbnail))
+		    (width (gethash "width" thumbnail))
+		    (preference (gethash "preference" thumbnail)))
+		(and width preference (> width 300) (> preference -12)))))
+	   (sort-thumbnails
+	    (lambda (t1 t2)
+	      (let ((t1ref (gethash "preference" t1))
+		    (t2ref (gethash "preference" t2)))
+		(< t1ref t2ref))))
+	   (preferred-thumbnails (seq-filter filter-resolution-thumbnails (seq-sort sort-thumbnails thumbnails)))
+	   (target-thumbnail (car preferred-thumbnails)))
       (and target-thumbnail (gethash "url" target-thumbnail))))
 
   (defun jarvis-collect-video-collector--find-transcript-format (json)
     (let* ((auto-captions (gethash "automatic_captions" json))
-  	   (langs (hash-table-keys auto-captions))
-  	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
-  	   (orig-lang (gethash orig-lang-key auto-captions))
-  	   (ttml-format (seq-find
-  			 (lambda (format)
-  			   (let* ((ext (gethash "ext" format))
-  				  (res (string= "ttml" ext)))
-  			     res))
-  			 orig-lang))
-  	   (script-url (and ttml-format (gethash "url" ttml-format))))
+	   (langs (hash-table-keys auto-captions))
+	   (orig-lang-key (seq-find (lambda (lang) (string-match "-orig" lang)) langs))
+	   (orig-lang (gethash orig-lang-key auto-captions))
+	   (ttml-format (seq-find
+			 (lambda (format)
+			   (let* ((ext (gethash "ext" format))
+				  (res (string= "ttml" ext)))
+			     res))
+			 orig-lang))
+	   (script-url (and ttml-format (gethash "url" ttml-format))))
       script-url))
 
   (defun jarvis-collect-video-collector--parse-info (data)
     (let* ((id (gethash "id" data))
-  	   (vid (list
-  		 :id id
-  		 :title (gethash "title" data)
-  		 :description (string-trim (gethash "description" data))
-  		 :channel (gethash "channel" data)
-  		 :channel-url (gethash "channel_url" data)
-  		 :channel-follower-count (gethash "channel_follower_count" data)
-  		 :duration (gethash "duration" data)
-  		 :like-count (gethash "like_count" data)
-  		 :view-count (gethash "view_count" data)
-  		 :average-rating (gethash "average_rating" data)
-  		 :webpage-url (gethash "webpage_url" data)
-  		 :categories (gethash "categories" data)
-  		 :tags (gethash "tags" data)
-  		 :thumbnail-url (jarvis-collect-video-collector--extract-thumbnail-url data)
-  		 :script-url (jarvis-collect-video-collector--find-transcript-format data)
-  		 :transcript-dom (gethash "transcript_dom" data)
-  		 :fetched-at (gethash "fetched_at" data)
-  		 )))
+	   (vid (list
+		 :id id
+		 :title (gethash "title" data)
+		 :description (string-trim (gethash "description" data))
+		 :channel (gethash "channel" data)
+		 :channel-url (gethash "channel_url" data)
+		 :channel-follower-count (gethash "channel_follower_count" data)
+		 :duration (gethash "duration" data)
+		 :like-count (gethash "like_count" data)
+		 :view-count (gethash "view_count" data)
+		 :average-rating (gethash "average_rating" data)
+		 :webpage-url (gethash "webpage_url" data)
+		 :categories (gethash "categories" data)
+		 :tags (gethash "tags" data)
+		 :thumbnail-url (jarvis-collect-video-collector--extract-thumbnail-url data)
+		 :script-url (jarvis-collect-video-collector--find-transcript-format data)
+		 :transcript-dom (gethash "transcript_dom" data)
+		 :fetched-at (gethash "fetched_at" data)
+		 )))
       vid))
 
   (defun jarvis-collect-video-collector--fetch-transcript (url)
     (if url (with-current-buffer (url-retrieve-synchronously url)
-  	      (let* ((dom (xml-parse-region))
-  		     (body (car (dom-by-tag dom 'body)))
-  		     (div (car (dom-by-tag body 'div))))
-  		div))))
+	      (let* ((dom (xml-parse-region))
+		     (body (car (dom-by-tag dom 'body)))
+		     (div (car (dom-by-tag body 'div))))
+		div))))
 
   (defun jarvis-collect-video-collector--create-file (vid)
     (let ((id (plist-get vid :id))
-  	  (pathname (jarvis-collect-video-collector--build-pathname vid))
-  	  (coding-system-for-write 'raw-text))
+	  (pathname (jarvis-collect-video-collector--build-pathname vid))
+	  (coding-system-for-write 'raw-text))
       (with-temp-file pathname
-  	(set-buffer-file-coding-system 'raw-text)
-  	(jarvis-collect-video-collector--insert-org-content vid (current-buffer)))
+	(set-buffer-file-coding-system 'raw-text)
+	(jarvis-collect-video-collector--insert-org-content vid (current-buffer)))
       pathname))
 
   (defun jarvis-collect-video-collector--get-cache-entry-name (url)
@@ -834,14 +834,14 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (and
        (file-readable-p filename)
        (with-temp-buffer
-  	 (insert-file-contents filename)
-  	 ;;(cl-assert (eq (point) (point-min)))
-  	 (read (current-buffer))))))
+	 (insert-file-contents filename)
+	 ;;(cl-assert (eq (point) (point-min)))
+	 (read (current-buffer))))))
 
   (defun jarvis-collect-video-collector--set-cache (url data)
     (let* ((name (md5 url))
-  	   (filename (jarvis-collect-video-collector--get-cache-entry-name url))
-  	   (base-dir (file-name-directory filename)))
+	   (filename (jarvis-collect-video-collector--get-cache-entry-name url))
+	   (base-dir (file-name-directory filename)))
       (mkdir base-dir t)
       (with-temp-file filename (prin1 data (current-buffer)))))
 
@@ -861,47 +861,52 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
   (defun jarvis-collect-video-collector-fetch-info (url &optional force)
     (let ((cache-value (jarvis-collect-video-collector--get-cache url)))
       (if (and cache-value (not force))
-  	  (jarvis-collect-video-collector--parse-info cache-value)
-  	(with-temp-buffer
-  	  (let ((temp-buffer-name (current-buffer)))
-  	    (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
-  	    (goto-char 0)
-  	    ;; Search for the beginning of JSON, skipping eventual warnings output from yt-dlp
-  	    (search-forward "{")
-  	    (backward-char)
-  	    ;;
-  	    (condition-case nil
-  		(let* ((json (json-parse-buffer))
-  		       (vid (jarvis-collect-video-collector--parse-info json))
-  		       (transcript-dom (jarvis-collect-video-collector--fetch-transcript (plist-get vid :script-url)))
-  		       (vid (plist-put vid :transcript-dom transcript-dom)))
-  		  (puthash "fetched_at" (current-time) json)
-  		  (puthash "transcript_dom" transcript-dom json)
-  		  (jarvis-collect-video-collector--set-cache url json)
-  		  vid)
-  	      (json-parse-error
-  	       (progn
-  		 (with-current-buffer (get-buffer-create "*jarvis-collect-video-error*")
-  		   (insert-buffer temp-buffer-name))
-  		    (error "error while parsing json for %s" url)))
-  		   (t (error "failed fetching info for %s" url))))))))
+	  (jarvis-collect-video-collector--parse-info cache-value)
+	(with-temp-buffer
+	  (let ((temp-buffer-name (current-buffer)))
+	    (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	    (goto-char 0)
+	    ;; Search for the beginning of JSON, skipping eventual warnings output from yt-dlp
+	    (search-forward "{")
+	    (backward-char)
+	    ;;
+	    (condition-case nil
+		(let* ((json (json-parse-buffer))
+		       (vid (jarvis-collect-video-collector--parse-info json))
+		       (transcript-dom (jarvis-collect-video-collector--fetch-transcript (plist-get vid :script-url)))
+		       (vid (plist-put vid :transcript-dom transcript-dom)))
+		  (puthash "fetched_at" (current-time) json)
+		  (puthash "transcript_dom" transcript-dom json)
+		  (jarvis-collect-video-collector--set-cache url json)
+		  vid)
+	      (json-parse-error
+	       (progn
+		 (with-current-buffer (get-buffer-create "*jarvis-collect-video-error*")
+		   (insert-buffer temp-buffer-name))
+		    (error "error while parsing json for %s" url)))
+		   (t (error "failed fetching info for %s" url))))))))
 
-  (defun jarvis-collect-video-collected-vids ()
-    "Return all the collected vids in the ~jarvis-collect-video-collector-directory~."
-    (let ((files (directory-files jarvis-collect-video-collector-directory t "\\.org")))
-      (mapcar (lambda (file)
-  		(let* ((id (jarvis-collect-video-collector--extract-id-from-collected-vid file))
-  		       (url (jarvis-collect-video-collector--canonize-url (concat "/" id))))
-  		  (cons url file)))
-  	      files)))
+  (defun jarvis-collect-video-collected-vids (output-file)
+    "Write the list of all the collected vids in the ~jarvis-collect-video-collector-directory~ into a file of choice"
+    (interactive "FOutput file: ")
+    (let ((buffer (get-buffer-create "*jarvis-collected-vids*"))
+	  (files (directory-files jarvis-collect-video-collector-directory t "\\.org")))
+      (with-temp-file output-file
+	(mapcar (lambda (file)
+		  (let* ((id (jarvis-collect-video-collector--extract-id-from-collected-vid file))
+			 (url (jarvis-collect-video-collector--canonize-url (concat "/" id))))
+		    (insert url)
+		    (newline)))
+		  files)))
+	output-file)
 
   (defun jarvis-collect-video-collect (url &optional force-fetch)
     (interactive "sYoutube video URL: ")
     (let ((force-fetch (or current-prefix-arg force-fetch)))
       (if-let* ((url (jarvis-collect-video-collector--canonize-url url))
-  	      (vid (jarvis-collect-video-collector-fetch-info url force-fetch))
-  	      (pathname (jarvis-collect-video-collector--create-file vid)))
-  	(and (called-interactively-p 'any) (find-file pathname) pathname))))
+	      (vid (jarvis-collect-video-collector-fetch-info url force-fetch))
+	      (pathname (jarvis-collect-video-collector--create-file vid)))
+	(and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
 *** Feeds
@@ -1545,19 +1550,16 @@ Same as `browse-url-firefox', but sets `browse-url-firefox-arguments'."
 
 ** Bongo
 
+The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
+
 #+begin_src elisp
   (use-package bongo
+    :custom
+    (bongo-custom-backend-matchers '((mpv ("https:") . t))))
     :bind
     (:map dired-mode-map
 	  (("b a" . #'bongo-dired-append-enqueue-lines))))
 #+end_src
-
-The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
-
-#+begin_example elisp
-(setq bongo-custom-backend-matchers
-       '((mpv ("https:") . t)))
-#+end_example
 
 ** Youtube
 
@@ -1973,6 +1975,10 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   set $ws3 "3:media"
   set $ws4 "4:misc"
 
+  # To get the keycodes use the 'xev' utility
+  bindcode $mod+Shift+34 workspace prev
+  bindcode $mod+Shift+35 workspace next
+
   bindsym $mod+1 workspace $ws1
   bindsym $mod+2 workspace $ws2
   bindsym $mod+3 workspace $ws3
@@ -1991,41 +1997,41 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   mode "i3" {
     # start program launcher
     bindsym d exec --no-startup-id $app_launcher ; mode "default"
-  
+
     # alternatively, you can use the cursor keys:
     bindsym Left focus left
     bindsym Down focus down
     bindsym Up focus up
     bindsym Right focus right
-  
+
     bindsym Shift+Left move left
     bindsym Shift+Down move down
     bindsym Shift+Up move up
     bindsym Shift+Right move right
-  
+
     # toggle i3bar mode
     bindsym i bar mode toggle ; mode "default"
 
     # split in horizontal orientation
     bindsym h split h
-  
+
     # split in vertical orientation
     bindsym v split v
-  
+
     # enter fullscreen mode for the focused container
     bindsym Shift+f fullscreen toggle
-  
+
     # change container layout (stacked, tabbed, toggle split)
     bindsym s layout stacking
     bindsym w layout tabbed
     bindsym e layout toggle split
-  
+
     # toggle tiling / floating
     bindsym space floating toggle
-  
+
     # change focus between tiling / floating windows
     bindsym space focus mode_toggle
-  
+
     # switch to workspace
     bindsym f workspace next
     bindsym b workspace prev
@@ -2035,7 +2041,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     bindsym 2 workspace $ws2
     bindsym 3 workspace $ws3
     bindsym 4 workspace $ws4
-  
+
     # move focused container to workspace
     bindsym Shift+f move container to workspace next
     bindsym Shift+b move container to workspace prev
@@ -2099,7 +2105,7 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     mode hide
     hidden_state hide
     modifier $mod
-  
+
     position top # bottom
     font pango:monospace 14
     status_command i3status
