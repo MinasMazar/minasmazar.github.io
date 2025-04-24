@@ -272,6 +272,9 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (use-package consult
     ;; Replace bindings. Lazily loaded by `use-package'.
     :bind
+    ("s-i" . #'consult-imenu)
+    ("s-l" . #'consult-line)
+    ("s-L" . #'consult-outline)
     ("C-x M-:" . #'consult-complex-command)
     ("C-x b" . #'consult-buffer)
     ("C-x 4 b" . #'consult-buffer-other-window)
@@ -291,7 +294,6 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     ("M-g m" . #'consult-mark)
     ("M-g k" . #'consult-global-mark)
     ("M-g i" . #'consult-imenu)
-    ("s-i" . #'consult-imenu)
     ("M-g I" . #'consult-imenu-multi)
     ("M-s d" . #'consult-find)
     ("M-s c" . #'consult-locate)
@@ -1928,13 +1930,16 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
   # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
   # screen before suspend. Use loginctl lock-session to lock your screen.
-  exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-  # exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
+  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
 
   # NetworkManager is the most popular way to manage wireless networks on Linux,
   # and nm-applet is a desktop environment-independent system tray GUI for it.
   exec --no-startup-id nm-applet
-  exec --no-startup-id emacs --daemon && emacsclient -r
+
+  # Autostart Emacs
+  # exec --no-startup-id emacs --daemon # not needed since it has been started as a service via systemd
+  exec --no-startup-id sleep 10 && emacsclient -r
 
   # Use pactl to adjust volume in PulseAudio.
   set $volume_step 5%
@@ -1973,23 +1978,23 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   set $ws1 "1:emacs"
   set $ws2 "2:www"
   set $ws3 "3:media"
-  set $ws4 "4:misc"
+  set $ws4 "4:apps"
+  set $ws5 "5:term"
 
-  # To get the keycodes use the 'xev' utility
   bindcode $mod+Shift+34 workspace prev
   bindcode $mod+Shift+35 workspace next
-
   bindsym $mod+1 workspace $ws1
   bindsym $mod+2 workspace $ws2
   bindsym $mod+3 workspace $ws3
   bindsym $mod+4 workspace $ws4
-  bindsym $mod+Shift+1 move container to workspace $ws1
+  bindsym $mod+5 workspace $ws5
+  bindsym $mod+Shift+1 move container to workspace 2$ws1
   bindsym $mod+Shift+2 move container to workspace $ws2
   bindsym $mod+Shift+3 move container to workspace $ws3
   bindsym $mod+Shift+4 move container to workspace $ws4
+  bindsym $mod+Shift+5 move container to workspace $ws5
 
   # Window rules
-  for_window [class="."] move container to workspace $ws4
   for_window [class="^mpv$"] move container to workspace $ws3
   for_window [class="^firefox$"] move container to workspace $ws2
   for_window [class="^Emacs$"] move container to workspace $ws1
@@ -2068,54 +2073,61 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
-    bindsym r mode "resize"
+    bindsym r mode "move/resize"
     bindsym $mod+Return mode "default"
   }
 
   # resize window (you can also use the mouse for that)
-  mode "resize" {
-    # These bindings trigger as soon as you enter the resize mode
+  set $move-resize-gap 10px or 10ppt
 
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
+  mode "move/resize" {
+    bindsym Left move left $move-resize-gap
+    bindsym Down move down $move-resize-gap
+    bindsym Up move up $move-resize-gap
+    bindsym Right move right $move-resize-gap
 
-    # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Shift+Left resize shrink width $move-resize-gap
+    bindsym Shift+Down resize grow height $move-resize-gap
+    bindsym Shift+Up resize shrink height $move-resize-gap
+    bindsym Shift+Right resize grow width $move-resize-gap
 
     # back to normal: Enter or Escape or $mod+r
     bindsym Return mode "default"
     bindsym Escape mode "default"
-    bindsym r mode "resize"
+    bindsym "r" mode "i3"
   }
 
   bindsym $mod+Return mode "i3"
 
+  # Colors configration - https://i3wm.org/docs/userguide.html#_colors
+  #
+  # class                 border  backgr. text    indicator child_border
+  client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
+  client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+  client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+  client.urgent           #2f343a #900000 #ffffff #900000   #900000
+  client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+  client.background       #ffffff
+
   # Start i3bar to display a workspace bar (plus the system information i3status
   # finds out, if available)
   bar {
-    mode hide
+    mode dock # hide
     hidden_state hide
     modifier $mod
+    strip_workspace_numbers yes
 
-    position top # bottom
-    font pango:monospace 14
+    position bottom # top
+    font pango:monospace 10
     status_command i3status
   }
 
-  workspace_layout tabbed
-
+  gaps inner 4px
+  smart_gaps off # on 
+  # workspace_layout tabbed
   # enable window icons for all windows
   for_window [all] title_window_icon on
-
   focus_on_window_activation focus
 #+end_src
 

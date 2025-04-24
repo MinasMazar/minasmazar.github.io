@@ -379,37 +379,31 @@ If you search the forum you have more questions like yours:
   end
 #+end_src
 
-** Persisting layer: :dets
+** Persisting layer using *:dets*
 
 - https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets
 
 #+begin_src elixir
-  defmodule Mixer.Persist do
-    use GenServer
+  defmodule MyCache do
+    @table_name :my_table
 
-    @table_name :mixer_persist
+    def start_link(opts \\ []) do
+      Task.start_link(fn ->
+	{:ok, _} = :dets.open_file(opts[:table_name] || @table_name, opts)
 
-    def start_link(table_name) do
-      GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
-    end
-
-    def init(table_name) do
-      {:ok, _} = :dets.open_file(table_name || @table_name, [])
+	Process.hibernate(Function, :identity, [nil])
+      end)
     end
 
     def get(table_name \\ @table_name, key) do
       case :dets.lookup(table_name, key) do
-        [{^key, value}] -> value
-        [] -> nil
+	[{^key, value}] -> {:ok, value}
+	[] -> {:ok, nil}
       end
     end
 
-    def set(table_name \\ @table_name, key, value) do
-      :dets.insert(table_name, {key, value}) && value
-    end
-
-    def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
-      get(table_name, key) || set(table_name, key, fun.())
+    def put(table_name \\ @table_name, key, value) do
+      :dets.insert(table_name, {key, value})
     end
   end
 #+end_src
@@ -1219,6 +1213,35 @@ Brief list of useful commands, examples, snippets
 - =ls -1 | wc -l= determine how many files there are in a directory
 - =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
 
+** Set keyboard layout
+
+From https://www.baeldung.com/linux/console-change-keyboard-layout
+
+#+begin_src sh
+cat .Xmodmap
+
+!
+! Swap Caps_Lock and Control_L
+!
+remove Lock = Caps_Lock
+remove Control = Control_L
+remove Lock = Control_L
+remove Control = Caps_Lock
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+#+end_src
+
+#+begin_src shell
+localectl list-x11-keymap-layouts # get the list of all keyboard layouts..
+localectl list-x11-keymap-layouts-variants # .. and their variants
+setxkbmap layout 'us,it' -option 'grp:alt_shift_toggle'
+xmodmap .Xmodmap
+#+end_src
+
+To permanently configure edit the =/etc/default/keyboard= file, if present, or use =localectl=.
+
 ** Show preferred applications (alternatives) :debian:
 #+begin_src sh
 update-alternatives --get-selections
@@ -1465,7 +1488,13 @@ To get the window ID use =xdotool= (ex. =xdotool search -class mpv=)
 ** Window Manager
 *** [[https://i3wm.org/][i3wm]]
 
-- [[file:emacs/modules.org::*i3wm][i3wm config file fine tuned to work in tandem with Emacs]].
+If you, like me, use i3 as your window manager and Emacs as your editor, you might want to make them play nicer together. [[file:emacs/modules.org::*i3wm][In this section]] you can find some emacs packages and an i3 configuration file.
+
+- [[https://thomashunter.name/i3-configurator/][Thomas Hunter's Online Colorscheme Configurator for i3, i3status, dmenu]]
+
+*** [[https://awesomewm.org/][Awesome WM]]
+
+- http://pavelmakhov.com/awesome-wm-widgets/
 
 ** MPV
 
@@ -1565,34 +1594,6 @@ Bluetooth is not still completely relyable and sometimes I have problems to pair
 
 After the install I've noticed the laptop speakers weren't usable. I've googled and and found these repo that seems to fix the issue.
 - https://github.com/egorenar/snd-hda-codec-cs8409
-
-*** Remap keys with xmodmap
-
-#+begin_src sh
-cat .Xmodmap
-
-!
-! Swap Caps_Lock and Control_L
-!
-remove Lock = Caps_Lock
-remove Control = Control_L
-remove Lock = Control_L
-remove Control = Caps_Lock
-keysym Control_L = Caps_Lock
-keysym Caps_Lock = Control_L
-add Lock = Caps_Lock
-add Control = Control_L
-#+end_src
-
-*** Set keyboard layout
-
-From https://www.baeldung.com/linux/console-change-keyboard-layout
-
-localectl list-x11-keymap-layouts # get the list
-setxkbmap us # set the keyboard
-xmodmap .Xmodmap # <-- REQUIRED! It seems last command has resetted the custom remaps.
-
-To permanently configure edit the =/etc/default/keyboard= file, if present, or use =localectl=.
 
 * Makefile
 
@@ -2000,6 +2001,10 @@ To print last 40 entries for a particular service (i.e. /unit/) and keeps follow
 #+begin_src sh
   journalctl -n 40 -u my-service -f
 #+end_src
+
+** Environment variables
+
+To set an environment variables when launching a service (more details in [[https://serverfault.com/questions/413397/how-to-set-environment-variable-in-systemd-service][this SO thread]]) =systemctl edit myservice=. This will create a conf file at =/etc/systemd/system/myservice.service.d/myenv.conf= or =~/.config/systemd/user/emacs.service.d/override.conf= if you use the =--user= flag.
 
 ** Troubleshooting
 
