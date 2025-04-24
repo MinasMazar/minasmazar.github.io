@@ -1988,16 +1988,16 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
   bindsym $mod+3 workspace $ws3
   bindsym $mod+4 workspace $ws4
   bindsym $mod+5 workspace $ws5
-  bindsym $mod+Shift+1 move container to workspace 2$ws1
+  bindsym $mod+Shift+1 move container to workspace $ws1
   bindsym $mod+Shift+2 move container to workspace $ws2
   bindsym $mod+Shift+3 move container to workspace $ws3
   bindsym $mod+Shift+4 move container to workspace $ws4
   bindsym $mod+Shift+5 move container to workspace $ws5
 
   # Window rules
-  for_window [class="^mpv$"] move container to workspace $ws3
-  for_window [class="^firefox$"] move container to workspace $ws2
-  for_window [class="^Emacs$"] move container to workspace $ws1
+  assign [class="^mpv$"] $ws3
+  assign [class="^firefox$"] $ws2
+  assign [class="^Emacs$"] $ws1
 
   mode "i3" {
     # start program launcher
@@ -2119,11 +2119,23 @@ A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user e
     strip_workspace_numbers yes
 
     position bottom # top
-    font pango:monospace 10
+    font pango:monospace 12
     status_command i3status
+
+    colors {
+      background #000000
+      statusline #ffffff
+      separator #666666
+
+      focused_workspace  #4c7899 #FF8C69 #000000
+      active_workspace   #333333 #FF8C69 #000000
+      inactive_workspace #333333 #222222 #888888
+      urgent_workspace   #2f343a #900000 #ffffff
+      binding_mode       #2f343a #900000 #ffffff
+    }
   }
 
-  gaps inner 4px
+  gaps inner 8px
   smart_gaps off # on 
   # workspace_layout tabbed
   # enable window icons for all windows
