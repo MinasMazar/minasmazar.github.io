@@ -5,51 +5,9 @@
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+STARTUP: overview
 
-* Web browsing/crawling
-** Get the DOM of a webpage using chrome via command-line.
-
-#+begin_src sh
-  chrome --headless --dump-dom https://developer.chrome.com/
-#+end_src
-
-** Fetch a page via a nodejs app
-
-Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
-
-This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
-
-1. setup a new nodejs project =mkdir html-fetch && node init --yes=
-2. add =node-fetch= dependency into the =package.json= and =npm install=
-3. create the =index.js= source file with the content as follow: 
-
-#+begin_src javascript
-  const fetch = require("node-fetch");
-  const fs = require("fs");
-  // you can update this to any website you want to download
-  const site = "https://www.youtube.com/@BorderNightsOfficial";
-  // you can update this if you want to save
-  const filename = "index.html";
-  // fetch url
-  fetch(site, {
-    headers: {
-      // some sites require a user-agent header to return the webpage
-      "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
-  }).then((res) => {
-    // get text from Response stream
-    return res.text();
-  }).then((text) => {
-    // write html from response to index.html
-    fs.writeFile(filename, text, () => {});
-  });
-#+end_src
-
-Run it via =node index.js=. This will fetch the page into the =index.html= file.
-
-* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
-
-If you need to write a crontab entry you can use https://crontab.guru/
-
+* Android
+** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
+** [[https://grapheneos.org/][GrapheneOS]]
 * [[https://asdf-vm.com][ASDF]]
 
 Choose a release here https://github.com/asdf-vm/asdf/releases; add this into your =.bashrc=
@@ -57,6 +15,14 @@ Choose a release here https://github.com/asdf-vm/asdf/releases; add this into yo
 #+begin_src sh
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 #+end_src
+
+* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
+
+If you need to write a crontab entry you can use https://crontab.guru/
+
+* Digital Ocean
+
+- [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
 
 * Docker
 ** Backup and port Postgres databases across images
@@ -227,10 +193,6 @@ You can run a test to see if it's working like this:
 #+begin_src sh
 docker run -it lukechilds/dockerpi
 #+end_src
-
-* Digital Ocean
-
-- [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
 
 * [[https://elixir-lang.org/][Elixir]]
 ** Language
@@ -721,6 +683,9 @@ networks:
 #+begin_src elixir
 Nerves.Runtime.halt()
 #+end_src
+* Embedded devices
+** [[*Raspberry][Raspberry]]
+** [[https://www.grisp.org/][GRiSP - the Power of Erlang & Elixir Embedded Systems]]
 * [[https://www.ffmpeg.org][FFmpeg]]
 
 A complete, cross-platform solution to record, convert and stream audio and video.
@@ -968,20 +933,6 @@ To restore the bundle
 
 The =git clone repo.bundle= can be used to restore repositories in the tarball exported account data in Github (https://github.com/settings/admin -> Account -> Export account data)
 
-* Pandoc
-
-Install *all* packages to manage pdf files
-
-#+begin_src emacs-lisp
-  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
-#+end_src
-
-Convert a =txt= file to =pdf=
-
-#+begin_src sh
-  pandoc file.txt -o file.pdf
-#+end_src
-
 * Google Chrome & chromedriver
 
 Download chromedriver version according to the version of Google Chrome installed.
@@ -1156,9 +1107,6 @@ will have no idea where to find it.
 #+end_quote
 
 More info in this [[https://stackoverflow.com/questions/17846529/could-not-open-a-connection-to-your-authentication-agent][SO thread]].
-* Embedded devices
-** [[*Raspberry][Raspberry]]
-** [[https://www.grisp.org/][GRiSP - the Power of Erlang & Elixir Embedded Systems]]
 * How to set environment variables from .env file
 
 #+begin_src sh
@@ -1201,10 +1149,16 @@ You can also use a remote image, like https://picsum.photos/1920/1080.jpg
   display -size 1920x1080 -window root /path/to/image.jpg
 #+end_src
 
-* [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
-* Linux desktop
+* Javascript
 
-Brief list of useful commands, examples, snippets
+Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
+
+#+begin_src javascript
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
+#+end_src
+
+* Linux
+** Brief list of useful commands, examples, snippets
 
 - =lsb_release -a= show info about distro
 - =lsblk -f= show partitions informations
@@ -1510,26 +1464,6 @@ or set the flag via the configuration file in =~/.config/mpv/mpv.conf=
   ao=pulse
 #+end_src
 
-* Suspend the system via command line
-
-Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
-
-* OpenSource stacks and technologies
-** Push notifications
-- https://gotify.net/
-** CI
-- laminar
-** [[https://spritely.institute/][Spritely institute]] - distributed web technology
-* Javascript
-
-Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
-
-#+begin_src javascript
-    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
-#+end_src
-
-* Android
-** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
 * MacOS
 ** Install [[https://brew.sh/][Homebrew]]
 
@@ -1638,6 +1572,27 @@ Here a sample Makefile that uses /double dollar sign/ to assign variables using 
 	  ssh ${username}@${${host}} # <-- notice the nested interpolation!
   usage:
 	  cat ~/Makefile
+#+end_src
+
+* OpenSource stacks and technologies
+** Push notifications
+- https://gotify.net/
+** CI
+- laminar
+** [[https://spritely.institute/][Spritely institute]] - distributed web technology
+* [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
+* Pandoc
+
+Install *all* packages to manage pdf files
+
+#+begin_src emacs-lisp
+  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
+#+end_src
+
+Convert a =txt= file to =pdf=
+
+#+begin_src sh
+  pandoc file.txt -o file.pdf
 #+end_src
 
 * Postgres
@@ -2015,6 +1970,10 @@ Start the container (the fullpath is required on MacOS docker installations, if 
   <html><head></head><body>Hei there!</body></html>
 #+end_src
 
+* Suspend the system via command line
+
+Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
+
 * Systemd
 ** Services definition
 
@@ -2149,6 +2108,50 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
   saveData("hello world", "hello.txt");
 #+end_example
 
+* Web browsing/crawling
+** Get the DOM of a webpage using chrome via command-line.
+
+#+begin_src sh
+  chrome --headless --dump-dom https://developer.chrome.com/
+#+end_src
+
+** Fetch a page via a nodejs app
+
+Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
+
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+
+1. setup a new nodejs project =mkdir html-fetch && node init --yes=
+2. add =node-fetch= dependency into the =package.json= and =npm install=
+3. create the =index.js= source file with the content as follow: 
+
+#+begin_src javascript
+  const fetch = require("node-fetch");
+  const fs = require("fs");
+  // you can update this to any website you want to download
+  const site = "https://www.youtube.com/@BorderNightsOfficial";
+  // you can update this if you want to save
+  const filename = "index.html";
+  // fetch url
+  fetch(site, {
+    headers: {
+      // some sites require a user-agent header to return the webpage
+      "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+  }).then((res) => {
+    // get text from Response stream
+    return res.text();
+  }).then((text) => {
+    // write html from response to index.html
+    fs.writeFile(filename, text, () => {});
+  });
+#+end_src
+
+Run it via =node index.js=. This will fetch the page into the =index.html= file.
+
+* Web Resources
+
+- https://www.instructables.com/
 * Youtube
 ** Get the list of subscriptions (followed channels)
 
@@ -2225,6 +2228,3 @@ If you have issues with an error like ~WARNING: [youtube] Unable to download web
 #+begin_src sh
   pip3 install --upgrade certifi
 #+end_src
-* Web Resources
-
-- https://www.instructables.com/
