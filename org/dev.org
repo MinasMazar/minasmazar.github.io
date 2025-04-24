@@ -1481,7 +1481,7 @@ Consider xsetroot accepts a particular format of file called /bitmap/ (=xsetroot
 
 ** Get and set name/class to an X application (window)
 
-If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[*\[\[https://en.wikipedia.org/wiki/I3_(window_manager)\]\[i3\]\] (Window Manager)][i3 rules configuration]].
+If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[https://i3wm.org/docs/userguide.html#assign_workspace][i3 rules configuration]].
 
 To get the window ID use =xdotool= (ex. =xdotool search -class mpv=)
 
@@ -1730,7 +1730,7 @@ I've tried some browser in order to achieve the best /kiosk/ like experience. So
 - [[*Chromium][Chromium]]: it has a very good =--app= flag (which operates almost like =--kiosk= flag, which is deprecated); unfortunately for some reason I haven't investigated in depth, it seems it does not work well with websocket; I've launched an Elixir/Phoenix Liveview webapp and all interactions via the websocket are dramatically delayed (maybe it fallbacks in the =longpoll= mode).
 - Firefox: it does not arise the issue of the websocket I had with Chromium, but on a really small screen (320x240) it does not fit well: it presents an overlfow of the container. I've found [[https://stackoverflow.com/questions/7663005/is-firefox-6-7-handling-max-width320px-media-query-wrong][a thread that confirms that issue]], but I haven't spent time trying to solve it.
 - Epiphany: it does not have any =--kiosk= not event =--fullscreen= flag, so you have to set the fullscreen by scripting around via =xdotool=, =xte= or tools like that. This is really annoying.
-- [[*Luakit][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
+- [[*\[\[https://luakit.github.io/\]\[Luakit\]\]][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
 
 ***** Chromium
 
@@ -1897,7 +1897,6 @@ Other resources:
 
 https://raspberrytips.com/access-point-setup-raspberry-pi/
 
-* [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
 * Shell
 
 My =.zprofile= on my Mackbook.
