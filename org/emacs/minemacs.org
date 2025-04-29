@@ -170,6 +170,7 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
 #+begin_src elisp
   (use-package god-mode
     :after emacs
+    :if nil
     :demand
     :init
     (defun minemacs-god-mode-line ()
@@ -182,7 +183,7 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
       (setq cursor-type 'box))
 
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
-	 (god-mode-disabled . minemacs-god-mode-disabled))
+  	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
     ("s-n" . #'god-local-mode)
     (:map god-local-mode-map

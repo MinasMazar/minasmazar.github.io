@@ -1557,10 +1557,10 @@ The **MPV** backend by default is able to play "http" URIs, but when you add a "
 #+begin_src elisp
   (use-package bongo
     :custom
-    (bongo-custom-backend-matchers '((mpv ("https:") . t))))
+    (bongo-custom-backend-matchers '((mpv ("https:") . t)))
     :bind
     (:map dired-mode-map
-	  (("b a" . #'bongo-dired-append-enqueue-lines))))
+  	  ("b a" . #'bongo-dired-append-enqueue-lines)))
 #+end_src
 
 ** Youtube
