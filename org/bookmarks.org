@@ -12,3 +12,4 @@ This is a list of interesting blogs
 * [[https://stackoverflow.com/questions/34452398/execute-luakit-browser-commands-from-shell-script][I was looking for "drive luakit from command line" and I ended up on this 24th Dec thread 🎅😂]]
 * https://summeremacs.github.io/about/                                :emacs:
 * https://venam.net
+* [[https://portal.mozz.us/][smolnet portal]]

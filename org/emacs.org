@@ -70,6 +70,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =find-name-dired=
 - =frame-title-format=
 - =image-crop=
+- =image-dired-thumbnail-storage=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=
 - =make-list= and =number-sequence=
