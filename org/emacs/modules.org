@@ -1173,10 +1173,8 @@ You can call =jarvis-feeds-collect-feed= while you're in an elfeed entry or call
 #+begin_src elisp
   (defun jarvis/espeak (text)
     "Speak text using `espeak`."
-    (interactive (list
-  		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
-    (save-window-excursion
-      (async-shell-command (format "espeak -v it \"%s\"" text) nil)))
+    (interactive "RText: ")
+    (async-shell-command (format "espeak -v it \"%s\"" text) nil))
 #+end_src
 
 * AI - ChatGPT
@@ -1184,6 +1182,10 @@ You can call =jarvis-feeds-collect-feed= while you're in an elfeed entry or call
 #+begin_src emacs-lisp
   (use-package gptel
     :custom
+    (gptel-model 'gemini-1.5-flash)
+    (gptel-backend (gptel-make-gemini "Gemini"
+		     :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+		   :stream t))
     (gptel-default-mode #'org-mode))
 
   (use-package chatgpt-shell)
@@ -1651,8 +1653,15 @@ Here's an experiment on how to iterate over the elfeed feeds
 	(elfeed-db-return (list :ok feeds)))))
 #+end_src
 
-#+RESULTS:
-(:ok (#s(elfeed-feed http://www.ansa.it/web/ansait_web_rss_homepage.xml http://www.ansa.it/web/ansait_web_rss_homepage.xml Primo piano ANSA - ANSA.it nil (:canonical-url http://www.ansa.it/sito/ansait_rss.xml))))
+Here's a snippet on how to export the list of the URLs for all the feeds in =elfeed-feeds=
+
+#+begin_src emacs-lisp :tangle no
+  (dolist (feed elfeed-feeds)
+    (let ((url (cond ((listp feed) (car feed))
+		     ((stringp feed) feed))))
+      (insert url)
+      (newline)))
+#+end_src
 
 ** Mail
 *** Resources
@@ -2168,6 +2177,8 @@ Useful links:
 
   (use-package vertico-posframe
     :if (minemacs-exwm-enabled?)
+    :custom
+    (vertico-posframe-border-width 8)
     :config
     (vertico-posframe-mode 1))
 #+end_src

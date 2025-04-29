@@ -16,6 +16,11 @@ Choose a release here https://github.com/asdf-vm/asdf/releases; add this into yo
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 #+end_src
 
+* Chromium / Google Chrome
+** Troubleshooting
+
+- [[https://github.com/puppeteer/puppeteer/issues/4860]["The profile appears to be in use by another Chromium process on another computer"]]
+
 * [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
 
 If you need to write a crontab entry you can use https://crontab.guru/
@@ -237,6 +242,17 @@ Good readings about this topic:
 - https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/
 
 Here's a talk I still have to watch https://www.youtube.com/watch?v=F_YUyd_Qdjs
+
+** ExUnit
+
+Implement the /before/ and /after/ callbacks:
+
+#+begin_src elixir
+  setup do
+    File.write!("fixture.json", "{}")
+    on_exit(fn -> File.rm!("fixture.json") end)
+  end
+#+end_src
 
 ** Elixir Ecommerce platforms
 
@@ -461,6 +477,10 @@ Run for localhsot.
 In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
 
 *** Dockerize Phoenix webapp (my_app)
+
+** Ecto
+
+- https://hexdocs.pm/ecto/associations.html
 
 ** Inspecting data
 
@@ -944,6 +964,20 @@ How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium
 chromedriver --disable-search-engine-choice-screen
 #+end_src
 
+* [[https://guix.gnu.org/][GNU Guix]]
+
+My =~/.profile= after having installed guix on an Ubuntu distro.
+
+#+begin_src sh
+  # Enable Guix
+  export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+  GUIX_PROFILE="/home/invisigoth/.guix-profile"
+  . "$GUIX_PROFILE/etc/profile"
+
+  # after guix install nss-certs
+  export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+  export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+#+end_src
 * GPG and SSH
 ** Generate key
 
@@ -2056,6 +2090,8 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
 
+Super simple, basic configuration using [[https://github.com/tmux-plugins/tpm/][TPM]] and [[https://github.com/junegunn/fzf][FZF]]. For a list of ANSI 256 color names you can take a look at [[https://hexdocs.pm/color_palette/ansi_color_codes.html][this link]].
+
 #+begin_src conf :tangle ~/.config/tmux/tmux.conf :mkdirp yes
   set -g status-keys emacs
 
@@ -2068,9 +2104,28 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
   set -g default-terminal "screen-256color"
   set -g status-bg "#00d75f"
   set -g status-fg black
+
+  # List of plugins
+  set -g @plugin 'tmux-plugins/tpm'
+  set -g @plugin 'tmux-plugins/tmux-sensible'
+  set -g @plugin 'sainnhe/tmux-fzf'
+
+  # Tmux env configuration
+  TMUX_FZF_LAUNCH_KEY="C-h"
+  TMUX_FZF_MENU=\
+  "files\nls -lh\n"
+
+  # Other examples:
+  # set -g @plugin 'github_username/plugin_name'
+  # set -g @plugin 'github_username/plugin_name#branch'
+  # set -g @plugin 'git@github.com:user/plugin'
+  # set -g @plugin 'git@bitbucket.com:user/plugin'
+
+  # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+  run '~/.config/tmux/plugins/tpm/tpm'
 #+end_src
 
-For a list of ANSI 256 color names you can take a look at [[https://hexdocs.pm/color_palette/ansi_color_codes.html][this link]].
+To install the packages =prefix+I=.
 
 * Tor
 ** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]

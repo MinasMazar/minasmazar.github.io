@@ -1,4 +1,4 @@
-#+TITLE: MinasMazar's blog
+#+TITLE: MinasMazar's blog - Bookmarks
 #+AUTHOR: MinasMazar
 #+EMAIL: minasmazar@gmail.com
 #+DATE: <2024-01-17 Wed>
@@ -13,3 +13,4 @@ This is a list of interesting blogs
 * https://summeremacs.github.io/about/                                :emacs:
 * https://venam.net
 * [[https://portal.mozz.us/][smolnet portal]]
+* https://static.app/                        :technology:hosting:static:site:
