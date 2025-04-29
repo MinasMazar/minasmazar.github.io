@@ -1353,19 +1353,18 @@ Toggle mute
 #+end_src
 
 *** Pulseaudio
-**** pacmd
-You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
 
-#+begin_src sh
-  pacmd help list-sinks
-  pacmd list-sink-inputs
-  pacmd move-sink-input 5 1
-#+end_src
-
-**** pactl
+- https://wiki.archlinux.org/title/PulseAudio/Examples
 
 - =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
 - =pactl get-sink-volume <INDEX>= get the volume of the given sink
+
+#+begin_src sh
+  aplay -l
+  pactl list short sinks
+  pactl list short sink-inputs
+  pactl move-sink-input 2144 0
+#+end_src
 
 *** [[https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md][PipeWire]]
 ** Create a .desktop File
@@ -1610,8 +1609,8 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
   	ssh-add
   asdf-install:
   	wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-arm64.tar.gz
-  	mkdir -p ~/.local/usr/bin
-  	tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/usr/bin/
+  	mkdir -p ~/.local/bin
+  	tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/bin/
   elixir-install:
   	cd ~/
   	asdf plugin add elixir
@@ -1656,12 +1655,21 @@ ALTER DATABASE db RENAME TO newdb;
 #+end_src
 
 * Raspberry
+** Projects and Prototyping
+
+- [[https://wokwi.com/pi-pico][Raspberry Pi Pico Simulator]]
+
 ** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
 ** Detect Raspberry model
 
 #+begin_src sh
   cat /proc/device-tree/model
 #+end_src
+
+** Linux based OS for Raspberry
+
+- https://www.raspberrypi.com/software/
+- https://github.com/guysoft/CustomPiOS
 
 ** Deal with I2C from CLI
 
@@ -1671,6 +1679,31 @@ ALTER DATABASE db RENAME TO newdb;
 - https://forums.raspberrypi.com/viewtopic.php?t=116174
 - https://github.com/bsteinsbo/rpi_touch_driver
 - [[https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2][Connect Adafruit PiTFT on Raspberry Pi 3 - 320x240 2.8" TFT+Touchscreen on Raspberry Pi3]]
+
+#+begin_src sh
+  sudo apt-get update
+  sudo apt install python3-venv
+  python -m venv env --system-site-packages
+
+  cd ~
+  source env/bin/activate
+
+  sudo apt-get install -y git python3-pip
+  pip3 install --upgrade adafruit-python-shell click
+  git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
+  cd Raspberry-Pi-Installer-Scripts
+
+  sudo -E env PATH=$PATH python3 adafruit-pitft.py
+#+end_src
+
+Then check in =/usr/share/X11/xorg.conf.d/= for a /calibration/ init file and tweak the =SwapXY= or =InvertX= / =InvertY= options.
+If there are issues about the touchscreen which does not move the pointer where you click on the screen, consider using the =evdev= driver as proposed in [[https://forums.adafruit.com/viewtopic.php?f=50&t=111045][this forum]]:
+
+#+begin_src sh
+  sudo apt-get install xserver-xorg-input-evdev
+#+end_src
+
+If you do have a 40-libinput.conf in that same directory, you must remove it even if/once evdev is installed, since it will override the 10-evdev.conf otherwise.
 
 ** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
 
@@ -1687,6 +1720,9 @@ or if you want to automate via =Makefile=
   	sudo apt install erlang erlang-dev elixir
 #+end_src
 ** Use Raspberry Pi in "Kiosk" mode
+
+- https://github.com/elalemanyo/raspberry-pi-kiosk-screen
+
 *** [[file:kiosk.org][Use Emacs as Kiosk]]
 *** Darbula (Elixir/Phoenix)
 
@@ -1732,6 +1768,9 @@ I've tried some browser in order to achieve the best /kiosk/ like experience. So
 - Epiphany: it does not have any =--kiosk= not event =--fullscreen= flag, so you have to set the fullscreen by scripting around via =xdotool=, =xte= or tools like that. This is really annoying.
 - [[*\[\[https://luakit.github.io/\]\[Luakit\]\]][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
 
+Related sources:
+- [[https://forums.raspberrypi.com/viewtopic.php?t=336486][Pi0, Single web page Kiosk. Which lightweight browser?]]
+
 ***** Chromium
 
 Start Chromium in Kiosk mode within Wayland.
@@ -1756,6 +1795,30 @@ ation=0 --disable-features=Translate --app=http://localhost:4000
 
 - [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
 
+This script is taken from the [[https://www.otot.tv/fullpageos/][FullPageOS]] and is used to start chromium.
+
+#+begin_src sh
+  #!/bin/bash
+
+  # Standard behavior - runs chrome
+  chromium-browser --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --disable-session-crashed-bubble --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-component-update --overscroll-history-navigation=0 --disable-features=Translate --app=$(/home/pi/scripts/get_url)
+  exit;
+
+  # Remove the two lines above to enable signage mode - refresh the browser whenever errors are seen in log
+
+  chromium-browser --enable-logging --log-level=2 --v=0 --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-session-crashed-bubble --disable-component-update --overscroll-history-navigation=0 --disable-features=Translate --app=$(head -n 1 /boot/fullpageos.txt | sed -e "s/{serial}/${SERIAL}/g") &
+
+  export logfile="/home/pi/.config/chromium/chrome_debug.log"
+
+
+  # Refreshes after a crash by watching logs
+  tail -n 0 -F "$logfile" | while read LOGLINE &> /dev/null; do
+
+     echo "Refreshing after crash"
+     echo "Restarting at `date` after a reported crash. Logline: ${LOGLINE}" >> /tmp/crashlog
+     [[ ("${LOGLINE}" == *"ERROR"*) || ("${LOGLINE}" == *"FATAL"*) ]] && /home/pi/scripts/refresh
+
+  done#+end_src
 ***** Old RPi models
 
 For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
@@ -1981,6 +2044,8 @@ To start a service after a specific timeout (ex. 30 seconds) add:
   ExecStartPre=/bin/sleep 30
 #+end_src
 
+To establish an order or requirements across services there are the =Wants / Requires/ After= options. See [[https://serverfault.com/questions/1053369/systemd-how-to-start-service-after-another-service-started][this thread]] for more details.
+
 ** Journalctl
 
 Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
@@ -2019,6 +2084,13 @@ CDN installation:
   <script src="https://cdn.tailwindcss.com"></script>
 #+end_src
 
+* [[https://termux.dev/en/][Termux]]
+
+Termux is an Android terminal emulator and Linux environment application.
+
+- https://wiki.termux.com/wiki/Termux:API
+- https://github.com/termux/termux-widget
+
 * Tmux
 
 Some sources about =tmux= configuration (=~/.tmux.conf=)
@@ -2031,7 +2103,15 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
   set -g prefix C-h
   unbind-key C-b
   bind-key C-h send-prefix
+
+  bind-key R source ~/.config/tmux/tmux.conf
+
+  set -g default-terminal "screen-256color"
+  set -g status-bg "#00d75f"
+  set -g status-fg black
 #+end_src
+
+For a list of ANSI 256 color names you can take a look at [[https://hexdocs.pm/color_palette/ansi_color_codes.html][this link]].
 
 * Tor
 ** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]
