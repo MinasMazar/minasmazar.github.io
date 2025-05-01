@@ -1183,12 +1183,11 @@ You can call =jarvis-feeds-collect-feed= while you're in an elfeed entry or call
   (use-package gptel
     :custom
     (gptel-model 'gemini-1.5-flash)
-    (gptel-backend (gptel-make-gemini "Gemini"
-		     :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
-		   :stream t))
-    (gptel-default-mode #'org-mode))
-
-  (use-package chatgpt-shell)
+    (gptel-default-mode #'org-mode)
+    :config
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+  		   :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+  		   :stream t)))
 #+end_src
 
 * Bifrost 🌈                                                       :disabled:

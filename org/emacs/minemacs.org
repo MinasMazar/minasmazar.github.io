@@ -243,8 +243,6 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
 
 #+begin_src elisp
   (use-package embark
-    :after god-mode
-    :demand
     :config
     (add-to-list 'god-exempt-major-modes 'embark-mode)
     :bind*

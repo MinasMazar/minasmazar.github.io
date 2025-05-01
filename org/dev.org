@@ -1885,7 +1885,7 @@ To verify I rerun =pacmd list-sinks= and check for the ~*~.
 
 *** MPV + Youtube
 
-In order to play Youtube videos directly via =mpv= use the setting =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol.
+It could be userful to add the flag =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol. Ensure the Emacs process has the =DISPLAY= env correctly set in order to display the video!
 
 #+begin_src emacs-lisp
   (use-package bongo
@@ -2061,7 +2061,13 @@ To print last 40 entries for a particular service (i.e. /unit/) and keeps follow
 
 ** Environment variables
 
-To set an environment variables when launching a service (more details in [[https://serverfault.com/questions/413397/how-to-set-environment-variable-in-systemd-service][this SO thread]]) =systemctl edit myservice=. This will create a conf file at =/etc/systemd/system/myservice.service.d/myenv.conf= or =~/.config/systemd/user/emacs.service.d/override.conf= if you use the =--user= flag.
+To set an environment variables when launching a service (more details in [[https://serverfault.com/questions/413397/how-to-set-environment-variable-in-systemd-service][this SO thread]]) =systemctl edit myservice=. This will create a conf file at =/etc/systemd/system/myservice.service.d/myenv.conf= or =~/.config/systemd/user/emacs.service.d/override.conf= if you use the =--user= flag. Then add envs like this:
+
+#+begin_src conf
+[Service]
+Environment="SECRET=pGNqduRFkB4K9C2vijOmUDa2kPtUhArN"
+Environment="ANOTHER_SECRET=JP8YLOc2bsNlrGuD6LVTq7L36obpjzxd"
+#+end_src
 
 ** Troubleshooting
 
