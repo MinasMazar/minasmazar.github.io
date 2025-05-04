@@ -5,51 +5,9 @@
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 #+STARTUP: overview
 
-* Web browsing/crawling
-** Get the DOM of a webpage using chrome via command-line.
-
-#+begin_src sh
-  chrome --headless --dump-dom https://developer.chrome.com/
-#+end_src
-
-** Fetch a page via a nodejs app
-
-Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
-
-This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
-
-1. setup a new nodejs project =mkdir html-fetch && node init --yes=
-2. add =node-fetch= dependency into the =package.json= and =npm install=
-3. create the =index.js= source file with the content as follow: 
-
-#+begin_src javascript
-  const fetch = require("node-fetch");
-  const fs = require("fs");
-  // you can update this to any website you want to download
-  const site = "https://www.youtube.com/@BorderNightsOfficial";
-  // you can update this if you want to save
-  const filename = "index.html";
-  // fetch url
-  fetch(site, {
-    headers: {
-      // some sites require a user-agent header to return the webpage
-      "User-Agent":
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
-  }).then((res) => {
-    // get text from Response stream
-    return res.text();
-  }).then((text) => {
-    // write html from response to index.html
-    fs.writeFile(filename, text, () => {});
-  });
-#+end_src
-
-Run it via =node index.js=. This will fetch the page into the =index.html= file.
-
-* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
-
-If you need to write a crontab entry you can use https://crontab.guru/
-
+* Android
+** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
+** [[https://grapheneos.org/][GrapheneOS]]
 * [[https://asdf-vm.com][ASDF]]
 
 Choose a release here https://github.com/asdf-vm/asdf/releases; add this into your =.bashrc=
@@ -57,6 +15,30 @@ Choose a release here https://github.com/asdf-vm/asdf/releases; add this into yo
 #+begin_src sh
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 #+end_src
+
+This script should automate most of the procedure.
+
+#+begin_src sh
+  export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+  wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # <-- or the precompiled version you need
+  mkdir -p ~/.local/bin
+  tar -C ~/.local/bin/ -xf ${asdf-tar}
+  echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> ~/.bashrc
+  source ~/.bashrc
+#+end_src
+
+* Chromium / Google Chrome
+** Troubleshooting
+
+- [[https://github.com/puppeteer/puppeteer/issues/4860]["The profile appears to be in use by another Chromium process on another computer"]]
+
+* [[https://it.wikipedia.org/wiki/Crontab][Crontab]]
+
+If you need to write a crontab entry you can use https://crontab.guru/
+
+* Digital Ocean
+
+- [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
 
 * Docker
 ** Backup and port Postgres databases across images
@@ -220,6 +202,7 @@ You can run a test to see if it's working like this:
   docker run -it -e PULSE_SERVER=host.docker.internal --mount type=bind,source=/Users/YOURUSERNAME/.config/pulse,target=/home/pulseaudio/.config/pulse --entrypoint speaker-test --rm jess/pulseaudio -c 2 -l 1 -t wav
 #+end_src
 
+** [[https://dev.to/hlappa/development-environment-for-elixir-phoenix-with-docker-and-docker-compose-2g17][Evelopment Environment For Elixir Phoenix With Docker And Docker Compose]]
 ** [[Dockerize Phoenix webapp (my_app)]]
 ** COMMENT [[https://github.com/lukechilds/dockerpi][dockerpi]]: Docker + Raspberry :wip:
 
@@ -227,11 +210,33 @@ You can run a test to see if it's working like this:
 docker run -it lukechilds/dockerpi
 #+end_src
 
-* Digital Ocean
-
-- [[https://www.youtube.com/watch?v=SSLhGanxmCg][a small tutorial about Droplets]] (and [[https://www.youtube.com/watch?v=JSXsb6czs6M][this one]])
-
 * [[https://elixir-lang.org/][Elixir]]
+** Install Elixir
+
+/A Makefile tells more than a thousand words/ 😁
+
+#+begin_src makefile
+  install-elixir-via-package-manager:
+  	sudo apt update
+  	sudo apt install erlang erlang-dev elixir
+  install-elixir-via-asdf:
+  	sudo apt install lincurses-dev libssl-dev
+  	export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+  	wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # <-- or the precompiled version you need
+  	mkdir -p ~/.local/bin
+  	tar -C ~/.local/bin/ -xf ${asdf-tar}
+  	echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> ~/.bashrc
+  	source ~/.bashrc
+  	sudo apt install libncurses-dev
+  	asdf plugin add erlang
+  	asdf plugin add elixir
+  	asdf install erlang 27.0
+  	asdf install elixir 1.18.0-otp-27
+  	asdf reshim
+#+end_src
+
+More info on ho /install elixir on a Raspberry PI/ in [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][this article]].
+
 ** Language
 *** [[https://hexdocs.pm/elixir/1.14.5/Module.html#module-compile-callbacks][Module ~ Compile Callbacks]] (=@before_compile=)
 
@@ -274,6 +279,17 @@ Good readings about this topic:
 - https://www.erlang-solutions.com/blog/erlang-and-elixir-distribution-without-epmd/
 
 Here's a talk I still have to watch https://www.youtube.com/watch?v=F_YUyd_Qdjs
+
+** ExUnit
+
+Implement the /before/ and /after/ callbacks:
+
+#+begin_src elixir
+  setup do
+    File.write!("fixture.json", "{}")
+    on_exit(fn -> File.rm!("fixture.json") end)
+  end
+#+end_src
 
 ** Elixir Ecommerce platforms
 
@@ -378,37 +394,31 @@ If you search the forum you have more questions like yours:
   end
 #+end_src
 
-** Persisting layer: :dets
+** Persisting layer using *:dets*
 
 - https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets
 
 #+begin_src elixir
-  defmodule Mixer.Persist do
-    use GenServer
+  defmodule MyCache do
+    @table_name :my_table
 
-    @table_name :mixer_persist
+    def start_link(opts \\ []) do
+      Task.start_link(fn ->
+	{:ok, _} = :dets.open_file(opts[:table_name] || @table_name, opts)
 
-    def start_link(table_name) do
-      GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
-    end
-
-    def init(table_name) do
-      {:ok, _} = :dets.open_file(table_name || @table_name, [])
+	Process.hibernate(Function, :identity, [nil])
+      end)
     end
 
     def get(table_name \\ @table_name, key) do
       case :dets.lookup(table_name, key) do
-        [{^key, value}] -> value
-        [] -> nil
+	[{^key, value}] -> {:ok, value}
+	[] -> {:ok, nil}
       end
     end
 
-    def set(table_name \\ @table_name, key, value) do
-      :dets.insert(table_name, {key, value}) && value
-    end
-
-    def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
-      get(table_name, key) || set(table_name, key, fun.())
+    def put(table_name \\ @table_name, key, value) do
+      :dets.insert(table_name, {key, value})
     end
   end
 #+end_src
@@ -504,6 +514,10 @@ Run for localhsot.
 In GenServers add =Process.flag(:trap_exit, true)= along with the =terminate/2= callback.
 
 *** Dockerize Phoenix webapp (my_app)
+
+** Ecto
+
+- https://hexdocs.pm/ecto/associations.html
 
 ** Inspecting data
 
@@ -726,6 +740,9 @@ networks:
 #+begin_src elixir
 Nerves.Runtime.halt()
 #+end_src
+* Embedded devices
+** [[*Raspberry][Raspberry]]
+** [[https://www.grisp.org/][GRiSP - the Power of Erlang & Elixir Embedded Systems]]
 * [[https://www.ffmpeg.org][FFmpeg]]
 
 A complete, cross-platform solution to record, convert and stream audio and video.
@@ -973,20 +990,6 @@ To restore the bundle
 
 The =git clone repo.bundle= can be used to restore repositories in the tarball exported account data in Github (https://github.com/settings/admin -> Account -> Export account data)
 
-* Pandoc
-
-Install *all* packages to manage pdf files
-
-#+begin_src emacs-lisp
-  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
-#+end_src
-
-Convert a =txt= file to =pdf=
-
-#+begin_src sh
-  pandoc file.txt -o file.pdf
-#+end_src
-
 * Google Chrome & chromedriver
 
 Download chromedriver version according to the version of Google Chrome installed.
@@ -998,6 +1001,20 @@ How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium
 chromedriver --disable-search-engine-choice-screen
 #+end_src
 
+* [[https://guix.gnu.org/][GNU Guix]]
+
+My =~/.profile= after having installed guix on an Ubuntu distro.
+
+#+begin_src sh
+  # Enable Guix
+  export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+  GUIX_PROFILE="/home/invisigoth/.guix-profile"
+  . "$GUIX_PROFILE/etc/profile"
+
+  # after guix install nss-certs
+  export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+  export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
+#+end_src
 * GPG and SSH
 ** Generate key
 
@@ -1161,9 +1178,6 @@ will have no idea where to find it.
 #+end_quote
 
 More info in this [[https://stackoverflow.com/questions/17846529/could-not-open-a-connection-to-your-authentication-agent][SO thread]].
-* Embedded devices
-** [[*Raspberry][Raspberry]]
-** [[https://www.grisp.org/][GRiSP - the Power of Erlang & Elixir Embedded Systems]]
 * How to set environment variables from .env file
 
 #+begin_src sh
@@ -1206,10 +1220,16 @@ You can also use a remote image, like https://picsum.photos/1920/1080.jpg
   display -size 1920x1080 -window root /path/to/image.jpg
 #+end_src
 
-* [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
-* Linux desktop
+* Javascript
 
-Brief list of useful commands, examples, snippets
+Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
+
+#+begin_src javascript
+    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
+#+end_src
+
+* Linux
+** Brief list of useful commands, examples, snippets
 
 - =lsb_release -a= show info about distro
 - =lsblk -f= show partitions informations
@@ -1217,6 +1237,35 @@ Brief list of useful commands, examples, snippets
 - =sudo update-alternatives --config x-session-manager= and =stat /etc/alternatives/x-session-manager=
 - =ls -1 | wc -l= determine how many files there are in a directory
 - =echo $XDG_SESSION_TYPE= show if you're using the X session manager is use (X11 or Wayland)
+
+** Set keyboard layout
+
+From https://www.baeldung.com/linux/console-change-keyboard-layout
+
+#+begin_src sh
+cat .Xmodmap
+
+!
+! Swap Caps_Lock and Control_L
+!
+remove Lock = Caps_Lock
+remove Control = Control_L
+remove Lock = Control_L
+remove Control = Caps_Lock
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+#+end_src
+
+#+begin_src shell
+localectl list-x11-keymap-layouts # get the list of all keyboard layouts..
+localectl list-x11-keymap-layouts-variants # .. and their variants
+setxkbmap layout 'us,it' -option 'grp:alt_shift_toggle'
+xmodmap .Xmodmap
+#+end_src
+
+To permanently configure edit the =/etc/default/keyboard= file, if present, or use =localectl=.
 
 ** Show preferred applications (alternatives) :debian:
 #+begin_src sh
@@ -1329,24 +1378,23 @@ Toggle mute
 #+end_src
 
 *** Pulseaudio
-**** pacmd
-You can refer this interesting [[https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback][SO thread]].
 
-#+begin_src sh
-  pacmd help list-sinks
-  pacmd list-sink-inputs
-  pacmd move-sink-input 5 1
-#+end_src
-
-**** pactl
+- https://wiki.archlinux.org/title/PulseAudio/Examples
 
 - =pactl list sinks short= get the sink list with some additional info, the first column is the INDEX
 - =pactl get-sink-volume <INDEX>= get the volume of the given sink
 
+#+begin_src sh
+  aplay -l
+  pactl list short sinks
+  pactl list short sink-inputs
+  pactl move-sink-input 2144 0
+#+end_src
+
 *** [[https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md][PipeWire]]
 ** Create a .desktop File
 
-In =~/.local/share/applications/= or =~/.config/autostart= to start at login.
+Useful when installing an app via =flatpak=. In userspace at =~/.local/share/applications/= or =~/.config/autostart= to start at login.
 
 #+begin_src toml
   [Desktop Entry]
@@ -1457,331 +1505,36 @@ Consider xsetroot accepts a particular format of file called /bitmap/ (=xsetroot
 
 ** Get and set name/class to an X application (window)
 
-If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[*\[\[https://en.wikipedia.org/wiki/I3_(window_manager)\]\[i3\]\] (Window Manager)][i3 rules configuration]].
+If the app as been built as GTK+ app it accepts =--screen=, =--name=, =--class= options. It can be used, for instance, by [[https://i3wm.org/docs/userguide.html#assign_workspace][i3 rules configuration]].
 
 To get the window ID use =xdotool= (ex. =xdotool search -class mpv=)
 
-* [[https://en.wikipedia.org/wiki/I3_(window_manager)][i3]] (Window Manager)
+** Window Manager
+*** [[https://i3wm.org/][i3wm]]
 
-A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
+If you, like me, use i3 as your window manager and Emacs as your editor, you might want to make them play nicer together. [[file:emacs/modules.org::*i3wm][In this section]] you can find some emacs packages and an i3 configuration file.
 
-#+begin_example conf
-  # This file has been auto-generated by i3-config-wizard(1).
-  # It will not be overwritten, so edit it as you like.
-  #
-  # Should you change your keyboard layout some time, delete
-  # this file and re-run i3-config-wizard(1).
-  #
+- [[https://thomashunter.name/i3-configurator/][Thomas Hunter's Online Colorscheme Configurator for i3, i3status, dmenu]]
 
-  # i3 config file (v4)
-  #
-  # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+*** [[https://awesomewm.org/][Awesome WM]]
 
-  set $mod Mod4
-  set $alt Mod1
-  set $wallpaper_file ~/Pictures/wallpaper
+- http://pavelmakhov.com/awesome-wm-widgets/
 
-  # Font for window titles. Will also be used by the bar unless a different font
-  # is used in the bar {} block below.
-  font pango:monospace 8
+** MPV
 
-  # This font is widely installed, provides lots of unicode glyphs, right-to-left
-  # text rendering and scalability on retina/hidpi displays (thanks to pango).
-  #font pango:DejaVu Sans Mono 8
+If you have troubles to hear the audio output when using =mvp= you shouuld set the =--ao= flag.
 
-  # Start XDG autostart .desktop files using dex. See also
-  # https://wiki.archlinux.org/index.php/XDG_Autostart
-  exec --no-startup-id dex --autostart --environment i3
-  exec --no-startup-id xfsettingsd
-  exec --no-startup-id compton
-  exec --no-startup-id feh --bg-max $wallpaper_file
-  # exec --no-startup-id xmodmap ~/.Xmodmaprc
-
-  # The combination of xss-lock, nm-applet and pactl is a popular choice, so
-  # they are included here as an example. Modify as you see fit.
-
-  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-  # screen before suspend. Use loginctl lock-session to lock your screen.
-  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
-
-  # NetworkManager is the most popular way to manage wireless networks on Linux,
-  # and nm-applet is a desktop environment-independent system tray GUI for it.
-  exec --no-startup-id nm-applet
-  exec --no-startup-id emacs --daemon && emacsclient -r
-
-  # Use pactl to adjust volume in PulseAudio.
-  set $volume_step 5%
-  set $refresh_i3status killall -SIGUSR1 i3status
-  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step && $refresh_i3status
-  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step && $refresh_i3status
-  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-  # Use Mouse+$mod to drag floating windows to their wanted position
-  floating_modifier $mod
-
-  # move tiling windows via drag & drop by left-clicking into the title bar,
-  # or left-clicking anywhere into the window while holding the floating modifier.
-  tiling_drag modifier titlebar
-
-  # start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
-  set $app_launcher i3-dmenu-desktop
-  set $terminal_app i3-sensible-terminal
-  set $take_screenshot import -window root ~/Desktop/screenshot.png
-  bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
-  bindsym $mod+Shift+space exec --no-startup-id $terminal_app ; mode "default"
-  # Emacs everywhere
-  bindsym $mod+Shift+e exec --no-startup-id emacsclient --eval "(emacs-everywhere)" && mode "default"
-
-  # kill focused window
-  bindsym $mod+Shift+q kill
-
-  # change focus
-  bindsym $mod+Tab focus left ; focus up
-  bindsym $mod+Shift+Tab focus right ; focus down
-
-  # Define names for default workspaces for which we configure key bindings later on.
-  # We use variables to avoid repeating the names in multiple places.
-
-  set $ws1 "1"
-  set $ws2 "2"
-  set $ws3 "3"
-
-  bindsym $mod+1 workspace $ws1
-  bindsym $mod+2 workspace $ws2
-  bindsym $mod+3 workspace $ws3
-  bindsym $mod+Shift+1 move container to workspace $ws1
-  bindsym $mod+Shift+2 move container to workspace $ws2
-  bindsym $mod+Shift+3 move container to workspace $ws3
-
-  # Window rules
-  # for_window [class="^firefox$"] move container to workspace $ws2
-  for_window [class="^mpv$"] move container to workspace $ws3
-
-  mode "i3" {
-    # start program launcher
-    bindsym d exec --no-startup-id $app_launcher ; mode "default"
-  
-    # alternatively, you can use the cursor keys:
-    bindsym Left focus left
-    bindsym Down focus down
-    bindsym Up focus up
-    bindsym Right focus right
-  
-    bindsym Shift+Left move left
-    bindsym Shift+Down move down
-    bindsym Shift+Up move up
-    bindsym Shift+Right move right
-  
-    # toggle i3bar mode
-    bindsym i bar mode toggle ; mode "default"
-
-    # split in horizontal orientation
-    bindsym h split h
-  
-    # split in vertical orientation
-    bindsym v split v
-  
-    # enter fullscreen mode for the focused container
-    bindsym Shift+f fullscreen toggle
-  
-    # change container layout (stacked, tabbed, toggle split)
-    bindsym s layout stacking
-    bindsym w layout tabbed
-    bindsym e layout toggle split
-  
-    # toggle tiling / floating
-    bindsym space floating toggle
-  
-    # change focus between tiling / floating windows
-    bindsym space focus mode_toggle
-  
-    # focus the parent container
-    bindsym a focus parent
-  
-    # focus the child container
-    #bindsym $mod+d focus child
-
-    # switch to workspace
-    bindsym f workspace next
-    bindsym b workspace prev
-    bindsym n focus next
-    bindsym p focus prev
-    bindsym 1 workspace $ws1
-    bindsym 2 workspace $ws2
-    bindsym 3 workspace $ws3
-  
-    # move focused container to workspace
-    bindsym Shift+f move container to workspace next
-    bindsym Shift+b move container to workspace prev
-    bindsym Shift+1 move container to workspace $ws1
-    bindsym Shift+2 move container to workspace $ws2
-    bindsym Shift+3 move container to workspace $ws3
-
-    # Media
-    bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-    bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-    bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-    bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-    # Kill current window
-    bindsym Shift+q kill
-    # reload the configuration file
-    bindsym Shift+c reload
-    # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-    bindsym Shift+r restart
-    # exit i3 (logs you out of your X session)
-    # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-    bindsym Shift+e exec i3-msg exit
-
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym r mode "resize"
-    bindsym $mod+Return mode "default"
-  }
-
-  # resize window (you can also use the mouse for that)
-  mode "resize" {
-    # These bindings trigger as soon as you enter the resize mode
-
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym semicolon resize grow width 10 px or 10 ppt
-
-    # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
-
-    # back to normal: Enter or Escape or $mod+r
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym r mode "resize"
-  }
-
-  bindsym $mod+Return mode "i3"
-
-  # Start i3bar to display a workspace bar (plus the system information i3status
-  # finds out, if available)
-  bar {
-    mode hide
-    hidden_state hide
-    modifier $mod
-  
-    position top # bottom
-    font pango:monospace 14
-    status_command i3status
-
-    bindsym --release button1 exec --no-startup-id $app_launcher
-    bindsym $mod+button3 exec --no-startup-id $take_screenshot
-  }
-
-  workspace_layout tabbed
-#+end_example
-
-Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
-
-- =xfsettingsd=  XSettings daemon for Xfce
-- =gnome-settings-daemon= for GNOME
-...
-
-So remember to start it in the i3 config file (ex. =exec gnome-settings-daemon=).
-
-And this is a sample configuration of =i3status= at =~/.config/i3status/config=.
-
-#+begin_example conf
-  # i3status configuration file.
-  # see "man i3status" for documentation.
-
-  # It is important that this file is edited as UTF-8.
-  # The following line should contain a sharp s:
-  # ß
-  # If the above line is not correctly displayed, fix your editor first!
-
-  general {
-	  colors = true
-	  interval = 5
-  }
-
-  order += "ipv6"
-  order += "wireless _first_"
-  order += "ethernet _first_"
-  order += "battery all"
-  order += "disk /"
-  order += "load"
-  order += "memory"
-  order += "volume master"
-  order += "tztime local"
-
-  wireless _first_ {
-	  format_up = "W: (%quality at %essid) %ip"
-	  format_down = "W: down"
-  }
-
-  ethernet _first_ {
-	  format_up = "E: %ip (%speed)"
-	  format_down = "E: down"
-  }
-
-  battery all {
-	  format = "%status %percentage %remaining"
-  }
-
-  disk "/" {
-	  format = "%avail"
-  }
-
-  load {
-	  format = "%1min"
-  }
-
-  memory {
-	  format = "%used | %available"
-	  threshold_degraded = "1G"
-	  format_degraded = "MEMORY < %available"
-  }
-
-  tztime local {
-	  format = "%Y-%m-%d %H:%M:%S"
-  }
-
-  volume master {
-	  format = "♪: %volume"
-	  format_muted = "♪: muted (%volume)"
-	  device = "default"
-	  mixer = "Master"
-	  mixer_idx = 0
-  }
-
-#+end_example
-
-* Suspend the system via command line
-
-Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
-
-* OpenSource stacks and technologies
-** Push notifications
-- https://gotify.net/
-** CI
-- laminar
-** [[https://spritely.institute/][Spritely institute]] - distributed web technology
-* Javascript
-
-Get all links from a page and extract only the =href= attribute. More info on =querySelectorAll= and iteration in [[https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/][this article]].
-
-#+begin_src javascript
-    const links = [...document.querySelectorAll("a")].flatMap(el => el.href); 
+#+begin_src sh
+  mpv --ao=help # to get a list of the available outputs
+  mpv --ao=pulse file-to-reproduce.mp4
 #+end_src
 
-* Android
-** [[https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf][Deegoogling di Andorid ~ Linux Day Napoli 2024]]
+or set the flag via the configuration file in =~/.config/mpv/mpv.conf=
+
+#+begin_src conf
+  ao=pulse
+#+end_src
+
 * MacOS
 ** Install [[https://brew.sh/][Homebrew]]
 
@@ -1846,233 +1599,6 @@ Bluetooth is not still completely relyable and sometimes I have problems to pair
 After the install I've noticed the laptop speakers weren't usable. I've googled and and found these repo that seems to fix the issue.
 - https://github.com/egorenar/snd-hda-codec-cs8409
 
-*** Remap keys with xmodmap
-
-#+begin_src sh
-cat .Xmodmap
-
-!
-! Swap Caps_Lock and Control_L
-!
-remove Lock = Caps_Lock
-remove Control = Control_L
-remove Lock = Control_L
-remove Control = Caps_Lock
-keysym Control_L = Caps_Lock
-keysym Caps_Lock = Control_L
-add Lock = Caps_Lock
-add Control = Control_L
-#+end_src
-
-*** Set keyboard layout
-
-From https://www.baeldung.com/linux/console-change-keyboard-layout
-
-localectl list-x11-keymap-layouts # get the list
-setxkbmap us # set the keyboard
-xmodmap .Xmodmap # <-- REQUIRED! It seems last command has resetted the custom remaps.
-
-To permanently configure edit the =/etc/default/keyboard= file, if present, or use =localectl=.
-
-*** I3 window manager
-
-I don't want wm keybindings to interfere with Emacs, so I'll wrap all i3 keybindings into ad-hoc "i3" mode at ~s-space~ keybinding.
-
-#+begin_src text :tangle ~/.config/i3/config
-  # This file has been auto-generated by i3-config-wizard(1).
-  # It will not be overwritten, so edit it as you like.
-  #
-  # Should you change your keyboard layout some time, delete
-  # this file and re-run i3-config-wizard(1).
-  #
-
-  # i3 config file (v4)
-  #
-  # Please see https://i3wm.org/docs/userguide.html for a complete reference!
-
-  set $mod Mod4
-
-  # Font for window titles. Will also be used by the bar unless a different font
-  # is used in the bar {} block below.
-  font pango:monospace 8
-
-  # This font is widely installed, provides lots of unicode glyphs, right-to-left
-  # text rendering and scalability on retina/hidpi displays (thanks to pango).
-  #font pango:DejaVu Sans Mono 8
-
-  # Start XDG autostart .desktop files using dex. See also
-  # https://wiki.archlinux.org/index.php/XDG_Autostart
-  exec --no-startup-id dex --autostart --environment i3
-
-  # The combination of xss-lock, nm-applet and pactl is a popular choice, so
-  # they are included here as an example. Modify as you see fit.
-
-  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-  # screen before suspend. Use loginctl lock-session to lock your screen.
-  exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
-  # NetworkManager is the most popular way to manage wireless networks on Linux,
-  # and nm-applet is a desktop environment-independent system tray GUI for it.
-  exec --no-startup-id nm-applet
-  # exec --no-startup-id "/usr/bin/python3 /usr/bin/blueman-applet"
-
-  # Define names for default workspaces for which we configure key bindings later on.
-  # We use variables to avoid repeating the names in multiple places.
-  set $ws1 "1"
-  set $ws2 "2"
-  set $ws3 "3"
-  set $ws4 "4"
-  set $ws5 "5"
-  set $ws6 "6"
-  set $ws7 "7"
-  set $ws8 "8"
-  set $ws9 "9"
-  set $ws10 "10"
-
-  # Use pactl to adjust volume in PulseAudio.
-  set $refresh_i3status killall -SIGUSR1 i3status
-  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-  # Use Mouse+$mod to drag floating windows to their wanted position
-  # floating_modifier $mod
-
-  # kill focused window
-  bindsym $mod+Shift+q kill
-  bindsym $mod+Tab focus next
-
-  mode "i3" {
-    bindsym r mode "resize"
-    bindsym $mod+space mode "default"
-
-    # start dmenu (a program launcher)
-    bindsym d exec --no-startup-id dmenu_run
-    # A more modern dmenu replacement is rofi:
-    # bindcode 40 exec "rofi -modi drun,run -show drun"
-    # There also is i3-dmenu-desktop which only displays applications shipping a
-    # .desktop file. It is a wrapper around dmenu, so you need that installed.
-    # bindcode 40 exec --no-startup-id i3-dmenu-desktop
-    # enter fullscreen mode for the focused container
-    bindsym f fullscreen toggle
-    # reload the configuration file
-    bindsym Shift+c reload
-    # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-    bindsym Shift+r restart
-    # exit i3 (logs you out of your X session)
-    bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-  
-    # change focus
-    bindsym j focus left
-    bindsym k focus down
-    bindsym l focus up
-    bindsym ograve focus right
-  
-    # alternatively, you can use the cursor keys:
-    bindsym Left focus left
-    bindsym Down focus down
-    bindsym Up focus up
-    bindsym Right focus right
-  
-    # move focused window
-    bindsym Shift+j move left
-    bindsym Shift+k move down
-    bindsym Shift+l move up
-    bindsym Shift+ograve move right
-  
-    # alternatively, you can use the cursor keys:
-    bindsym Shift+Left move left
-    bindsym Shift+Down move down
-    bindsym Shift+Up move up
-    bindsym Shift+Right move right
-  
-    # split in horizontal orientation
-    bindsym h split h
-  
-    # split in vertical orientation
-    bindsym v split v
-  
-    # change container layout (stacked, tabbed, toggle split)
-    bindsym s layout stacking
-    bindsym w layout tabbed
-    bindsym e layout toggle split
-  
-    # toggle tiling / floating
-    bindsym Shift+space floating toggle
-  
-    # change focus between tiling / floating windows
-    bindsym space focus mode_toggle
-  
-    # focus the parent container
-    bindsym a focus parent
-  
-    # focus the child container
-    #bindsym d focus child
-
-    # switch to workspace
-    bindsym 1 workspace number $ws1
-    bindsym 2 workspace number $ws2
-    bindsym 3 workspace number $ws3
-    bindsym 4 workspace number $ws4
-    bindsym 5 workspace number $ws5
-    bindsym 6 workspace number $ws6
-    bindsym 7 workspace number $ws7
-    bindsym 8 workspace number $ws8
-    bindsym 9 workspace number $ws9
-    bindsym 0 workspace number $ws10
-  
-    # move focused container to workspace
-    bindsym Shift+1 move container to workspace number $ws1
-    bindsym Shift+2 move container to workspace number $ws2
-    bindsym Shift+3 move container to workspace number $ws3
-    bindsym Shift+4 move container to workspace number $ws4
-    bindsym Shift+5 move container to workspace number $ws5
-    bindsym Shift+6 move container to workspace number $ws6
-    bindsym Shift+7 move container to workspace number $ws7
-    bindsym Shift+8 move container to workspace number $ws8
-    bindsym Shift+9 move container to workspace number $ws9
-    bindsym Shift+0 move container to workspace number $ws10
-  }
-  
-  # resize window (you can also use the mouse for that)
-  mode "resize" {
-    # These bindings trigger as soon as you enter the resize mode
-  
-    # Pressing left will shrink the window’s width.
-    # Pressing right will grow the window’s width.
-    # Pressing up will shrink the window’s height.
-    # Pressing down will grow the window’s height.
-    bindsym j resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym l resize shrink height 10 px or 10 ppt
-    bindsym ograve resize grow width 10 px or 10 ppt
-  
-    # same bindings, but for the arrow keys
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
-  
-    # back to normal: Enter or Escape or $mod+r
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
-  }
-
-  bindsym $mod+space mode "i3"
-
-  # Start i3bar to display a workspace bar (plus the system information i3status
-  # finds out, if available)
-  bar {
-    mode hide
-
-    status_command i3status
-  }
-
-  exec --no-startup-id emacs
-#+end_src
-
 * Makefile
 
 - https://makefiletutorial.com/
@@ -2088,8 +1614,8 @@ A sample of makefile usefull for /day-to-day/ development: fetch the remote repo
   	ssh-add
   asdf-install:
   	wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-arm64.tar.gz
-  	mkdir -p ~/.local/usr/bin
-  	tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/usr/bin/
+  	mkdir -p ~/.local/bin
+  	tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/bin/
   elixir-install:
   	cd ~/
   	asdf plugin add elixir
@@ -2119,6 +1645,27 @@ Here a sample Makefile that uses /double dollar sign/ to assign variables using 
 	  cat ~/Makefile
 #+end_src
 
+* OpenSource stacks and technologies
+** Push notifications
+- https://gotify.net/
+** CI
+- laminar
+** [[https://spritely.institute/][Spritely institute]] - distributed web technology
+* [[https://www.openvoiceos.org/][OpenVoiceOS]]                                                       :foss:AI:
+* Pandoc
+
+Install *all* packages to manage pdf files
+
+#+begin_src emacs-lisp
+  apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
+#+end_src
+
+Convert a =txt= file to =pdf=
+
+#+begin_src sh
+  pandoc file.txt -o file.pdf
+#+end_src
+
 * Postgres
 
 How to create an user on Postgres (https://www.postgresql.org/docs/current/sql-createuser.html)
@@ -2134,12 +1681,21 @@ ALTER DATABASE db RENAME TO newdb;
 #+end_src
 
 * Raspberry
+** Projects and Prototyping
+
+- [[https://wokwi.com/pi-pico][Raspberry Pi Pico Simulator]]
+
 ** [[https://retropie.org.uk/docs/Overscan/][Overscan]]
 ** Detect Raspberry model
 
 #+begin_src sh
   cat /proc/device-tree/model
 #+end_src
+
+** Linux based OS for Raspberry
+
+- https://www.raspberrypi.com/software/
+- https://github.com/guysoft/CustomPiOS
 
 ** Deal with I2C from CLI
 
@@ -2150,21 +1706,35 @@ ALTER DATABASE db RENAME TO newdb;
 - https://github.com/bsteinsbo/rpi_touch_driver
 - [[https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2][Connect Adafruit PiTFT on Raspberry Pi 3 - 320x240 2.8" TFT+Touchscreen on Raspberry Pi3]]
 
-** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
+#+begin_src sh
+  sudo apt-get update
+  sudo apt install python3-venv
+  python -m venv env --system-site-packages
+
+  cd ~
+  source env/bin/activate
+
+  sudo apt-get install -y git python3-pip
+  pip3 install --upgrade adafruit-python-shell click
+  git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
+  cd Raspberry-Pi-Installer-Scripts
+
+  sudo -E env PATH=$PATH python3 adafruit-pitft.py
+#+end_src
+
+Then check in =/usr/share/X11/xorg.conf.d/= for a /calibration/ init file and tweak the =SwapXY= or =InvertX= / =InvertY= options.
+If there are issues about the touchscreen which does not move the pointer where you click on the screen, consider using the =evdev= driver as proposed in [[https://forums.adafruit.com/viewtopic.php?f=50&t=111045][this forum]]:
 
 #+begin_src sh
-  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
+  sudo apt-get install xserver-xorg-input-evdev
 #+end_src
 
-or if you want to automate via =Makefile=
+If you do have a 40-libinput.conf in that same directory, you must remove it even if/once evdev is installed, since it will override the 10-evdev.conf otherwise.
 
-#+begin_src makefile
-  raspi-setup:
-  	sudo apt update
-  	sudo apt install tmux emacs
-  	sudo apt install erlang erlang-dev elixir
-#+end_src
 ** Use Raspberry Pi in "Kiosk" mode
+
+- https://github.com/elalemanyo/raspberry-pi-kiosk-screen
+
 *** [[file:kiosk.org][Use Emacs as Kiosk]]
 *** Darbula (Elixir/Phoenix)
 
@@ -2201,8 +1771,19 @@ Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.m
   	TSLIB_FBDEVICE=/dev/fb1 TSLIB_TSDEVICE=/dev/input/touchscreen ts_calibrate -c -r 0
 #+end_src
 *** Browsers
+
+Using Chromium and Firefox as browser works well only on RPi > 1, otherwise you end up with an error message.
+
+I've tried some browser in order to achieve the best /kiosk/ like experience. Some of them have the ad-hoc =kiosk= flag to pass at the command line and that's cool. But I also found some issues. Here's a quick recap:
+- [[*Chromium][Chromium]]: it has a very good =--app= flag (which operates almost like =--kiosk= flag, which is deprecated); unfortunately for some reason I haven't investigated in depth, it seems it does not work well with websocket; I've launched an Elixir/Phoenix Liveview webapp and all interactions via the websocket are dramatically delayed (maybe it fallbacks in the =longpoll= mode).
+- Firefox: it does not arise the issue of the websocket I had with Chromium, but on a really small screen (320x240) it does not fit well: it presents an overlfow of the container. I've found [[https://stackoverflow.com/questions/7663005/is-firefox-6-7-handling-max-width320px-media-query-wrong][a thread that confirms that issue]], but I haven't spent time trying to solve it.
+- Epiphany: it does not have any =--kiosk= not event =--fullscreen= flag, so you have to set the fullscreen by scripting around via =xdotool=, =xte= or tools like that. This is really annoying.
+- [[*\[\[https://luakit.github.io/\]\[Luakit\]\]][Luakit]]: it does not have toolbars or annoying stuff by default, so basically it already comes in /kiosk/ mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.
+
+Related sources:
+- [[https://forums.raspberrypi.com/viewtopic.php?t=336486][Pi0, Single web page Kiosk. Which lightweight browser?]]
+
 ***** Chromium
-Use Chromium/Firefox as browser works well only on RPi > 1
 
 Start Chromium in Kiosk mode within Wayland.
 
@@ -2212,18 +1793,60 @@ Start Chromium in Kiosk mode within Wayland.
 
 Start Chromium in Kiosk mode within X11.
 
-#+begin_src sh :tangle ~/kiosk.sh :sheband "#!/bin/bash"
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
   DISPLAY=:0 chromium-browser --kiosk --noerrdialogs --disable-infobars --no-first-run --ozone-platform=x11 --enable-features=OverlayScrollbar --start-maximized --no-touch-pinch --disable-pinch http://localhost:4000/
+#+end_src
+
+or
+
+#+begin_src sh :tangle ~/kiosk.sh :shebang "#!/bin/bash"
+DISPLAY=:0 chromium-browser --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --disable-session-crashed-bubble --simulate-outdated-n\
+o-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-web-security --allow-running-insecure-content --disable-component-update --overscroll-history-navig\
+ation=0 --disable-features=Translate --app=http://localhost:4000 
 #+end_src
 
 - [[https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk][Disable Chrome pinch zoom for use in kiosk]]
 
+This script is taken from the [[https://www.otot.tv/fullpageos/][FullPageOS]] and is used to start chromium.
+
+#+begin_src sh
+  #!/bin/bash
+
+  # Standard behavior - runs chrome
+  chromium-browser --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --disable-session-crashed-bubble --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-component-update --overscroll-history-navigation=0 --disable-features=Translate --app=$(/home/pi/scripts/get_url)
+  exit;
+
+  # Remove the two lines above to enable signage mode - refresh the browser whenever errors are seen in log
+
+  chromium-browser --enable-logging --log-level=2 --v=0 --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-session-crashed-bubble --disable-component-update --overscroll-history-navigation=0 --disable-features=Translate --app=$(head -n 1 /boot/fullpageos.txt | sed -e "s/{serial}/${SERIAL}/g") &
+
+  export logfile="/home/pi/.config/chromium/chrome_debug.log"
+
+
+  # Refreshes after a crash by watching logs
+  tail -n 0 -F "$logfile" | while read LOGLINE &> /dev/null; do
+
+     echo "Refreshing after crash"
+     echo "Restarting at `date` after a reported crash. Logline: ${LOGLINE}" >> /tmp/crashlog
+     [[ ("${LOGLINE}" == *"ERROR"*) || ("${LOGLINE}" == *"FATAL"*) ]] && /home/pi/scripts/refresh
+
+  done#+end_src
 ***** Old RPi models
 
 For old devices (RPi 1) Midori browser looks promising. The only problem is the =e jump-to= command that opens a new browser window insterad of "jump" the existing one. This issue can be solved on application side (just reload the same URL endpoint, displaying different contents).
 
 P.S. Epiphany: it has interesting options like =automation-mode= but didn't have the time to inspect more.
 
+***** [[https://luakit.github.io/][Luakit]]
+
+To start Luakit in fullscreen mode adds this snippet in the =~/.config/luakit/rc.lua= (if this file is empty you can grab the default configuration file via =cp /etc/xdg/luakit/rc.lua ~/.config/luakit/=)
+
+#+begin_src lua
+  window.add_signal("init", function (w)
+    w.win.fullscreen = true
+  end)
+#+end_src
+  
 *** System setup
 **** Screen setup
 
@@ -2285,7 +1908,7 @@ To verify I rerun =pacmd list-sinks= and check for the ~*~.
 
 *** MPV + Youtube
 
-In order to play Youtube videos directly via =mpv= use the setting =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol.
+It could be userful to add the flag =--ytdl-raw-options=cookies-from-browser=chromium=. Also set =bongo-custom-backend-matchers= to include also =https= protocol. Ensure the Emacs process has the =DISPLAY= env correctly set in order to display the video!
 
 #+begin_src emacs-lisp
   (use-package bongo
@@ -2349,7 +1972,6 @@ Other resources:
 
 https://raspberrytips.com/access-point-setup-raspberry-pi/
 
-* [[file:holymacs/ide.org::*Run make on list of projects][Run make on list of projects]]
 * Shell
 
 My =.zprofile= on my Mackbook.
@@ -2405,6 +2027,10 @@ Start the container (the fullpath is required on MacOS docker installations, if 
   <html><head></head><body>Hei there!</body></html>
 #+end_src
 
+* Suspend the system via command line
+
+Here's a [[https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line][StackOverflow thread]]: =systemctl suspend|hibernate= (for newest distros) or =pmi action suspend|hibernate= (old method).
+
 * Systemd
 ** Services definition
 
@@ -2434,6 +2060,8 @@ To start a service after a specific timeout (ex. 30 seconds) add:
   ExecStartPre=/bin/sleep 30
 #+end_src
 
+To establish an order or requirements across services there are the =Wants / Requires/ After= options. See [[https://serverfault.com/questions/1053369/systemd-how-to-start-service-after-another-service-started][this thread]] for more details.
+
 ** Journalctl
 
 Clear journalctl: the self maintenance method is to vacuum the logs by size or time. Retain only the past two days:
@@ -2454,6 +2082,16 @@ To print last 40 entries for a particular service (i.e. /unit/) and keeps follow
   journalctl -n 40 -u my-service -f
 #+end_src
 
+** Environment variables
+
+To set an environment variables when launching a service (more details in [[https://serverfault.com/questions/413397/how-to-set-environment-variable-in-systemd-service][this SO thread]]) =systemctl edit myservice=. This will create a conf file at =/etc/systemd/system/myservice.service.d/myenv.conf= or =~/.config/systemd/user/emacs.service.d/override.conf= if you use the =--user= flag. Then add envs like this:
+
+#+begin_src conf
+[Service]
+Environment="SECRET=pGNqduRFkB4K9C2vijOmUDa2kPtUhArN"
+Environment="ANOTHER_SECRET=JP8YLOc2bsNlrGuD6LVTq7L36obpjzxd"
+#+end_src
+
 ** Troubleshooting
 
 Sometimes you end up by having some services to start and immediately stop (for instance =my-daemon.service Deactivated successfully=). I've found the solution to in this [[https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started][StackOverlow thread]]: you have to specify the =Type=!
@@ -2468,11 +2106,21 @@ CDN installation:
   <script src="https://cdn.tailwindcss.com"></script>
 #+end_src
 
+* [[https://termux.dev/en/][Termux]]
+
+Termux is an Android terminal emulator and Linux environment application.
+
+- https://wiki.termux.com/wiki/Termux:API
+- https://github.com/termux/termux-widget
+
 * Tmux
 
 Some sources about =tmux= configuration (=~/.tmux.conf=)
 
 - https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+- https://gist.github.com/andreyvit/2921703
+
+Super simple, basic configuration using [[https://github.com/tmux-plugins/tpm/][TPM]] and [[https://github.com/junegunn/fzf][FZF]]. For a list of ANSI 256 color names you can take a look at [[https://hexdocs.pm/color_palette/ansi_color_codes.html][this link]].
 
 #+begin_src conf :tangle ~/.config/tmux/tmux.conf :mkdirp yes
   set -g status-keys emacs
@@ -2480,7 +2128,36 @@ Some sources about =tmux= configuration (=~/.tmux.conf=)
   set -g prefix C-h
   unbind-key C-b
   bind-key C-h send-prefix
+
+  bind-key R source ~/.config/tmux/tmux.conf
+  bind-key -n C-[ previous-window
+  bind-key -n C-] next-window
+
+  set -g default-terminal "screen-256color"
+  set -g status-bg "#00d75f"
+  set -g status-fg black
+
+  # List of plugins
+  set -g @plugin 'tmux-plugins/tpm'
+  set -g @plugin 'tmux-plugins/tmux-sensible'
+  set -g @plugin 'sainnhe/tmux-fzf'
+
+  # Tmux env configuration
+  TMUX_FZF_LAUNCH_KEY="C-h"
+  TMUX_FZF_MENU=\
+  "files\nls -lh\n"
+
+  # Other examples:
+  # set -g @plugin 'github_username/plugin_name'
+  # set -g @plugin 'github_username/plugin_name#branch'
+  # set -g @plugin 'git@github.com:user/plugin'
+  # set -g @plugin 'git@bitbucket.com:user/plugin'
+
+  # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+  run '~/.config/tmux/plugins/tpm/tpm'
 #+end_src
+
+To install the packages =prefix+I=.
 
 * Tor
 ** [[https://hub.docker.com/r/dperson/torproxy/][Use Tor proxy via Docker]]
@@ -2518,6 +2195,50 @@ More details in this [[https://stackoverflow.com/questions/6392103/storing-into-
   saveData("hello world", "hello.txt");
 #+end_example
 
+* Web browsing/crawling
+** Get the DOM of a webpage using chrome via command-line.
+
+#+begin_src sh
+  chrome --headless --dump-dom https://developer.chrome.com/
+#+end_src
+
+** Fetch a page via a nodejs app
+
+Inspiration (and code stolen 🤪) from [[https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e][this Medium article]] (errr... [[https://freedium.cfd/][Freedium]] 😎)
+
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+
+1. setup a new nodejs project =mkdir html-fetch && node init --yes=
+2. add =node-fetch= dependency into the =package.json= and =npm install=
+3. create the =index.js= source file with the content as follow: 
+
+#+begin_src javascript
+  const fetch = require("node-fetch");
+  const fs = require("fs");
+  // you can update this to any website you want to download
+  const site = "https://www.youtube.com/@BorderNightsOfficial";
+  // you can update this if you want to save
+  const filename = "index.html";
+  // fetch url
+  fetch(site, {
+    headers: {
+      // some sites require a user-agent header to return the webpage
+      "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+  }).then((res) => {
+    // get text from Response stream
+    return res.text();
+  }).then((text) => {
+    // write html from response to index.html
+    fs.writeFile(filename, text, () => {});
+  });
+#+end_src
+
+Run it via =node index.js=. This will fetch the page into the =index.html= file.
+
+* Web Resources
+
+- https://www.instructables.com/
 * Youtube
 ** Get the list of subscriptions (followed channels)
 
@@ -2594,6 +2315,3 @@ If you have issues with an error like ~WARNING: [youtube] Unable to download web
 #+begin_src sh
   pip3 install --upgrade certifi
 #+end_src
-* Web Resources
-
-- https://www.instructables.com/

@@ -317,6 +317,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <li><code>find-name-dired</code></li>
 <li><code>frame-title-format</code></li>
 <li><code>image-crop</code></li>
+<li><code>image-dired-thumbnail-storage</code></li>
 <li><code>imenu-generic-expression</code></li>
 <li><code>json-pretty-print-buffer</code></li>
 <li><code>make-list</code> and <code>number-sequence</code></li>
@@ -340,7 +341,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 <div id="outline-container-orgcab4702" class="outline-2">
 <h2 id="orgcab4702"><a href="https://www.gnu.org/software/emacs/manual/html_mono/org.html#Working-with-Source-Code">Org code-blocks</a></h2>
 <div class="outline-text-2" id="text-orgcab4702">
-<pre class="example" id="orgd479268">
+<pre class="example" id="org1edf02a">
 #+BEGIN_SRC sh :var filename=(buffer-file-name) :exports both
   wc -w $filename
 #+END_SRC
@@ -376,7 +377,7 @@ Just press <code>C-h o</code> to get help on those symbols.
 Get an element from a vector
 </p>
 
-<pre class="example" id="org8188839">
+<pre class="example" id="orgfb5a2c3">
 ;; get a element from vector
 (aref ["a" "b" "c"] 0) ; ⇒ "a"
 ;; get a element from vector
@@ -403,7 +404,7 @@ To find an element
 <li><code>seq-find</code></li>
 </ul>
 
-<pre class="example" id="org9793dea">
+<pre class="example" id="org4853e63">
 (seq-find (lambda (val) (= 3 val)) '(1 2 3))
 </pre>
 </div>
@@ -427,9 +428,13 @@ Download four random images from picsum using an index.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
+<pre class="src src-eshell">for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
 </pre>
 </div>
+
+<p>
+You can create an Eshell script by saving the elisp source in a file, for instance <code>~/.emacs.d/escripts/my-script.eshell</code>), and then invoke it in the eshell via <code>source ~/.emacs.d/escripts/my-script.eshell</code>. Outside of emacs you can invoke the script via <code>emacsclient -e '(eshell-command "source ~/.emacs.d/escripts/my-script.eshell")'</code>
+</p>
 </div>
 </div>
 <div id="outline-container-org0ba53b4" class="outline-2">
@@ -437,7 +442,7 @@ Download four random images from picsum using an index.
 <div class="outline-text-2" id="text-org0ba53b4">
 <p>
 Possible values for this variable could be
-<code>chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/</code>
+<code>chrome --headless --disable-gpu --dump-dom --profile-directory=Default</code>
 </p>
 </div>
 </div>
@@ -448,7 +453,7 @@ Possible values for this variable could be
 Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-function-with-an-interactive-choice-of-the-value-of-the-argument">this SO post</a> try <a href="elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))">elisp:(completing-read%20%22Prompt:%20%22%20'(i1%20i2%20i3))</a> and <a href="https://emacsdocs.org/docs/elisp/Text-from-Minibuffer">this post</a>; try <a href="elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)">elisp:(read-from-minibuffer%20%22Prompt:%20%22%20%22initial%22)</a>. Take a look at <code>minemacs/demo-function</code>, it can help if you want to write functions with bit more complex interactive prompts.
 </p>
 
-<pre class="example" id="org4f58c53">
+<pre class="example" id="org31d9893">
 (defun minemacs/demo-function (url &amp;optional handler)
   "Example function."
   (interactive (list
@@ -465,7 +470,7 @@ Refs to <a href="https://emacs.stackexchange.com/questions/32248/how-to-write-a-
 You can use the wonderful tool <code>regexp-builder</code>. Use <code>string-match</code> to run a regexp and <code>match-string</code> to extract the captures (remember to specify the 2nd arugment as the matched string itself). Example:
 </p>
 
-<pre class="example" id="orgcb14fa4">
+<pre class="example" id="org1dcfa71">
 (let ((match-data (string-match "\\(\\ca\\{11\\}\\)\$" "https://www.youtube.com/watch?v=JvBfP62HTAM")))
   (match-string 1 "https://www.youtube.com/watch?v=JvBfP62HTAM"))
 </pre>
@@ -563,7 +568,7 @@ Syntax classes:
 You can run specified function at specified time and with a specific timeout. Check out <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Timers.html">the doc</a> for more information.
 </p>
 
-<pre class="example" id="orgaec14cd">
+<pre class="example" id="org21279ac">
 (run-at-time "11 min" t #'elfeed-update)
 (run-at-time "5 hours" t (lambda () (load-theme (seq-random-elt custom-known-themes))))
 </pre>
@@ -578,10 +583,39 @@ point.
 </blockquote>
 </div>
 </div>
+<div id="outline-container-orgd8f93ca" class="outline-2">
+<h2 id="orgd8f93ca">url-retrieve</h2>
+<div class="outline-text-2" id="text-orgd8f93ca">
+<p>
+An example on how to use <code>url-retrieve</code>: get the URL of the official NASA <i>Image Of The Day</i>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(url-retrieve "https://www.nasa.gov/image-of-the-day/"
+                (lambda (status)
+                  ;; (pop-to-buffer (current-buffer))
+                  (beginning-of-buffer)
+                  (search-forward "hds-gallery-item-link")
+                  (search-forward "img src=\"")
+                  (let* ((m1 (point))
+                         (m2 (progn (search-forward " alt") (search-backward "\"") (point)))
+                         (image-url (buffer-substring m1 m2))
+                         (image-outfile (file-name-concat "~" "Pictures" "wallpapers" "nasa-iotd")))
+                    (and (file-exists-p image-outfile) (delete-file image-outfile))
+                    (url-copy-file image-url image-outfile)
+                    (shell-command (format "feh --bg-scale %s" image-outfile)))))
+</pre>
+</div>
+
+<p>
+You can use this snippet into an interactive function or into an <a href="#org7ff7cbd">Eshell script</a>.
+</p>
+</div>
+</div>
 <div id="outline-container-org8e83fc5" class="outline-2">
 <h2 id="org8e83fc5">Insert colorize text programmatically</h2>
 <div class="outline-text-2" id="text-org8e83fc5">
-<pre class="example" id="orgdceb04f">
+<pre class="example" id="orge5d0904">
 (insert (propertize "Red Text" 'font-lock-face '(:foreground "red")))
 </pre>
 </div>
@@ -648,6 +682,20 @@ Get the list of font families <code>(font-family-list)</code>; here's the code t
 
 <div class="org-src-container">
 <pre class="src src-elisp">(set-face-font 'default (seq-random-elt (font-family-list)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org917878e" class="outline-2">
+<h2 id="org917878e">MPV troubleshooting</h2>
+<div class="outline-text-2" id="text-org917878e">
+<p>
+If you find that all packages dealing with <code>mpv</code> (such as <code>mpv</code>, <code>empv</code>, <code>elfeed-tube</code> and so on) are having issues launching it while instead launching <code>mpv</code> on a terminal outside of Emacs works fine, maybe you have to set <code>DISPLAY</code> env variable when launching Emacs (this could happens when you launch Emacs via the <code>systemd</code>). Use <code>systemctl --user edit emacs.service</code> and add
+</p>
+
+<div class="org-src-container">
+<pre class="src src-conf">[Service]
+Environment="DISPLAY=:0"
 </pre>
 </div>
 </div>
@@ -791,7 +839,7 @@ Drive a graphical Emacs instance via <code>emacsclient</code>.
 <a href="https://dev.to/rajasegar/5-ways-to-get-text-from-an-emacs-buffer-4c3l">5 ways to get text from an Emacs buffer</a>
 </p>
 
-<pre class="example" id="org3c35b9c">
+<pre class="example" id="org9d67038">
 (let ((start (point-min))
 	  (end (point-max)))
   (buffer-substring start end))

@@ -70,6 +70,7 @@ Just press ~C-h o~ to get help on those symbols.
 - =find-name-dired=
 - =frame-title-format=
 - =image-crop=
+- =image-dired-thumbnail-storage=
 - =imenu-generic-expression=
 - =json-pretty-print-buffer=
 - =make-list= and =number-sequence=
@@ -148,14 +149,16 @@ To occur among marked buffers in =ibuffer= press ~O~.
 
 Download four random images from picsum using an index.
 
-#+begin_src elisp
+#+begin_src eshell
   for i in $(number-sequence 1 4) { wget -O wallpaper_$1.jpg https://picsum.photos/1920/1080.jpg }
 #+end_src
+
+You can create an Eshell script by saving the elisp source in a file, for instance =~/.emacs.d/escripts/my-script.eshell=), and then invoke it in the eshell via =source ~/.emacs.d/escripts/my-script.eshell=. Outside of emacs you can invoke the script via =emacsclient -e '(eshell-command "source ~/.emacs.d/escripts/my-script.eshell")'=
 
 * EWW ~ experimenting with =eww-retrieve-command=
 
 Possible values for this variable could be
-=chrome --headless --disable-gpu --dump-dom --profile-directory=Default https://stackoverflow.com/=
+=chrome --headless --disable-gpu --dump-dom --profile-directory=Default=
 
 * (interactive) functions
 
@@ -258,6 +261,28 @@ only one command available in the buffer displayed: c
 point.
 #+END_QUOTE
 
+* url-retrieve
+
+An example on how to use =url-retrieve=: get the URL of the official NASA /Image Of The Day/
+
+#+begin_src emacs-lisp
+  (url-retrieve "https://www.nasa.gov/image-of-the-day/"
+		(lambda (status)
+		  ;; (pop-to-buffer (current-buffer))
+		  (beginning-of-buffer)
+		  (search-forward "hds-gallery-item-link")
+		  (search-forward "img src=\"")
+		  (let* ((m1 (point))
+			 (m2 (progn (search-forward " alt") (search-backward "\"") (point)))
+			 (image-url (buffer-substring m1 m2))
+			 (image-outfile (file-name-concat "~" "Pictures" "wallpapers" "nasa-iotd")))
+		    (and (file-exists-p image-outfile) (delete-file image-outfile))
+		    (url-copy-file image-url image-outfile)
+		    (shell-command (format "feh --bg-scale %s" image-outfile)))))
+#+end_src
+
+You can use this snippet into an interactive function or into an [[*Eshell][Eshell script]].
+
 * Insert colorize text programmatically
 
 #+begin_example elisp
@@ -308,6 +333,15 @@ Get the list of font families =(font-family-list)=; here's the code to set a ran
 #+begin_src elisp
   (set-face-font 'default (seq-random-elt (font-family-list)))
 #+end_src
+* MPV troubleshooting
+
+If you find that all packages dealing with =mpv= (such as =mpv=, =empv=, =elfeed-tube= and so on) are having issues launching it while instead launching =mpv= on a terminal outside of Emacs works fine, maybe you have to set =DISPLAY= env variable when launching Emacs (this could happens when you launch Emacs via the =systemd=). Use =systemctl --user edit emacs.service= and add
+
+#+begin_src conf
+  [Service]
+  Environment="DISPLAY=:0"
+#+end_src
+
 * Libaries
 
 - [[https://tkf.github.io/emacs-request/][request.el]]

@@ -15,6 +15,38 @@
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/search.js"></script>
 <script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -27,14 +59,20 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org6168650">Web browsing/crawling</a>
+<li><a href="#org20528bb">Android</a>
 <ul>
-<li><a href="#org7e7e5de">Get the DOM of a webpage using chrome via command-line.</a></li>
-<li><a href="#org539bf5e">Fetch a page via a nodejs app</a></li>
+<li><a href="#org802d2d0">Deegoogling di Andorid ~ Linux Day Napoli 2024</a></li>
+<li><a href="#org5a2f860">GrapheneOS</a></li>
+</ul>
+</li>
+<li><a href="#orgd2f3611">ASDF</a></li>
+<li><a href="#orgd1d94db">Chromium / Google Chrome</a>
+<ul>
+<li><a href="#org9ccd785">Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#org1ef517b">Crontab</a></li>
-<li><a href="#orgd2f3611">ASDF</a></li>
+<li><a href="#orga8f0908">Digital Ocean</a></li>
 <li><a href="#orgec65ab8">Docker</a>
 <ul>
 <li><a href="#org4353b24">Backup and port Postgres databases across images</a></li>
@@ -47,26 +85,28 @@
 <li><a href="#org3f6a309">Installing Docker on Raspberry PI</a></li>
 <li><a href="#orgcd9f5ec">Usefull links for troubleshooting</a></li>
 <li><a href="#org4a5b634">Play sounds from your containers on MacOS host machine</a></li>
+<li><a href="#org8cc65c7">Evelopment Environment For Elixir Phoenix With Docker And Docker Compose</a></li>
 <li><a href="#orgf63b667">Dockerize Phoenix webapp (my_app)</a></li>
 </ul>
 </li>
-<li><a href="#orga8f0908">Digital Ocean</a></li>
 <li><a href="#orgd381994">Elixir</a>
 <ul>
+<li><a href="#org8ad3466">Install Elixir</a></li>
 <li><a href="#org5c70912">Language</a>
 <ul>
 <li><a href="#orgea6c056">Module ~ Compile Callbacks (<code>@before_compile</code>)</a></li>
 <li><a href="#orge39509f">Macros</a></li>
 </ul>
 </li>
-<li><a href="#org0037409">Resources</a></li>
+<li><a href="#orgd49f5ab">Resources</a></li>
 <li><a href="#org466fbd2">Clustering Elixir applications</a></li>
 <li><a href="#org96c9867">Distributed Elixir nodes</a></li>
+<li><a href="#org5611313">ExUnit</a></li>
 <li><a href="#orgdd6f2bb">Elixir Ecommerce platforms</a></li>
 <li><a href="#orgeac26ab">GenServer template</a></li>
 <li><a href="#org11d466f">DynamicSupervsior template</a></li>
 <li><a href="#orgfc94dfe">example KV server</a></li>
-<li><a href="#orgfc247ac">Persisting layer: :dets</a></li>
+<li><a href="#orgdb7c0b3">Persisting layer using <b>:dets</b></a></li>
 <li><a href="#orge614165">Development Tools: Makefile</a></li>
 <li><a href="#org4f84362">Phoenix</a>
 <ul>
@@ -77,6 +117,7 @@
 <li><a href="#org2fdf02a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></li>
 </ul>
 </li>
+<li><a href="#org2384c54">Ecto</a></li>
 <li><a href="#org2da3573">Inspecting data</a></li>
 <li><a href="#org6c9902d">Phoenix Livebooks</a>
 <ul>
@@ -93,10 +134,16 @@
 <li><a href="#orge8c848a">Scale serverless with FLAME!</a></li>
 <li><a href="#orgdab52c4">Nerves</a>
 <ul>
-<li><a href="#org4f8837f">Resources</a></li>
+<li><a href="#org0fb0f99">Resources</a></li>
 <li><a href="#org4d97a3e">Nerves + Livebook</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#orgd4db2dc">Embedded devices</a>
+<ul>
+<li><a href="#orgd3087f6">Raspberry</a></li>
+<li><a href="#orgf27a040">GRiSP - the Power of Erlang &amp; Elixir Embedded Systems</a></li>
 </ul>
 </li>
 <li><a href="#org7fefed4">FFmpeg</a>
@@ -116,8 +163,8 @@
 </ul>
 </li>
 <li><a href="#org6d72bf5">Git</a></li>
-<li><a href="#org46447e6">Pandoc</a></li>
 <li><a href="#org7e84fa6">Google Chrome &amp; chromedriver</a></li>
+<li><a href="#orgbcbfb9e">GNU Guix</a></li>
 <li><a href="#org9702aa2">GPG and SSH</a>
 <ul>
 <li><a href="#org289e022">Generate key</a></li>
@@ -133,15 +180,9 @@
 </ul>
 </li>
 <li><a href="#orgc01f9fa">Import a key</a></li>
-<li><a href="#org3395f28">Troubleshooting</a></li>
+<li><a href="#org2dba61d">Troubleshooting</a></li>
 <li><a href="#org53ebfc1">Generate SSH keys</a></li>
 <li><a href="#org1837105">GPG Agent: cache and timeouts</a></li>
-</ul>
-</li>
-<li><a href="#orgd4db2dc">Embedded devices</a>
-<ul>
-<li><a href="#orgd3087f6">Raspberry</a></li>
-<li><a href="#orgf27a040">GRiSP - the Power of Erlang &amp; Elixir Embedded Systems</a></li>
 </ul>
 </li>
 <li><a href="#org61808a4">How to set environment variables from .env file</a></li>
@@ -154,9 +195,11 @@
 <li><a href="#orgd04c735">Set an image as wallpaper</a></li>
 </ul>
 </li>
-<li><a href="#orgc08bb59">OpenVoiceOS&#xa0;&#xa0;&#xa0;<span class="tag"><span class="foss">foss</span>&#xa0;<span class="AI">AI</span></span></a></li>
-<li><a href="#orga8cf03c">Linux desktop</a>
+<li><a href="#org028a244">Javascript</a></li>
+<li><a href="#orgd6e842c">Linux</a>
 <ul>
+<li><a href="#org1eac6b7">Brief list of useful commands, examples, snippets</a></li>
+<li><a href="#orga225570">Set keyboard layout</a></li>
 <li><a href="#org5b078c7">Show preferred applications (alternatives)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="debian">debian</span></span></a></li>
 <li><a href="#org4f92d32">Change the ownership of a input device, like a usb mouse</a></li>
 <li><a href="#orga72b31b">Opena a remote desktop session on a PCDuino</a></li>
@@ -182,24 +225,16 @@
 <li><a href="#org98e8517">Set wallpaper</a></li>
 <li><a href="#org297e74c">Set keyboard layout from command-line</a></li>
 <li><a href="#org46c8b71">Get and set name/class to an X application (window)</a></li>
-</ul>
-</li>
-<li><a href="#orgf796c83">i3 (Window Manager)</a></li>
-<li><a href="#org806982b">Suspend the system via command line</a></li>
-<li><a href="#org5836833">OpenSource stacks and technologies</a>
+<li><a href="#org857e043">Window Manager</a>
 <ul>
-<li><a href="#orgc733375">Push notifications</a></li>
-<li><a href="#orga3bed0c">CI</a></li>
-<li><a href="#orgdb43e76">Spritely institute - distributed web technology</a></li>
+<li><a href="#org17bf5da">i3wm</a></li>
+<li><a href="#orga13497c">Awesome WM</a></li>
 </ul>
 </li>
-<li><a href="#org028a244">Javascript</a></li>
-<li><a href="#org20528bb">Android</a>
-<ul>
-<li><a href="#org802d2d0">Deegoogling di Andorid ~ Linux Day Napoli 2024</a></li>
+<li><a href="#org1ab6dca">MPV</a></li>
 </ul>
 </li>
-<li><a href="#orgeebafa3">MacOS</a>
+<li><a href="#orgdbc0fbb">MacOS</a>
 <ul>
 <li><a href="#orgd7f84f3">Install Homebrew</a></li>
 <li><a href="#org3d69e04">Dev environment</a></li>
@@ -211,22 +246,29 @@
 <ul>
 <li><a href="#org4dd3ebc">Bluetooh issues</a></li>
 <li><a href="#org30d050c">Sound issues</a></li>
-<li><a href="#orgd4984f7">Remap keys with xmodmap</a></li>
-<li><a href="#orga225570">Set keyboard layout</a></li>
-<li><a href="#orga9069b0">I3 window manager</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#org200b983">Makefile</a></li>
+<li><a href="#org5836833">OpenSource stacks and technologies</a>
+<ul>
+<li><a href="#orgc733375">Push notifications</a></li>
+<li><a href="#orga3bed0c">CI</a></li>
+<li><a href="#orgdb43e76">Spritely institute - distributed web technology</a></li>
+</ul>
+</li>
+<li><a href="#orgc08bb59">OpenVoiceOS&#xa0;&#xa0;&#xa0;<span class="tag"><span class="foss">foss</span>&#xa0;<span class="AI">AI</span></span></a></li>
+<li><a href="#org46447e6">Pandoc</a></li>
 <li><a href="#org6c996fe">Postgres</a></li>
 <li><a href="#org3c3788b">Raspberry</a>
 <ul>
+<li><a href="#orgcd45638">Projects and Prototyping</a></li>
 <li><a href="#org21f2532">Overscan</a></li>
 <li><a href="#org257c01f">Detect Raspberry model</a></li>
+<li><a href="#orgf57aa80">Linux based OS for Raspberry</a></li>
 <li><a href="#org9200be7">Deal with I2C from CLI</a></li>
 <li><a href="#org978a15d">Troubleshoot USB Capacitive Touch Screen Display</a></li>
-<li><a href="#orgde6ec65">Install Elixir on Raspberry/Raspbian (source article here).</a></li>
 <li><a href="#orgcb6d62c">Use Raspberry Pi in "Kiosk" mode</a>
 <ul>
 <li><a href="#org9f5cba5">Use Emacs as Kiosk</a></li>
@@ -237,7 +279,7 @@
 <li><a href="#orga5457ff">System setup</a></li>
 <li><a href="#orgd4ffe9b">MPV + Youtube</a></li>
 <li><a href="#org9255521">Simulate keyboard events</a></li>
-<li><a href="#orgd49f5ab">Resources</a></li>
+<li><a href="#orge051aa8">Resources</a></li>
 </ul>
 </li>
 <li><a href="#org6e6c47f">How to attach a cooler fan</a></li>
@@ -248,17 +290,19 @@
 <li><a href="#org31d14f5">Turn your RPi into an Access Point</a></li>
 </ul>
 </li>
-<li><a href="#org6763482">Run make on list of projects</a></li>
 <li><a href="#orgce99817">Shell</a></li>
 <li><a href="#org6299deb">Simple Static assets web server ~ Busybox</a></li>
+<li><a href="#org806982b">Suspend the system via command line</a></li>
 <li><a href="#org9684e06">Systemd</a>
 <ul>
 <li><a href="#org09004c1">Services definition</a></li>
 <li><a href="#org5329864">Journalctl</a></li>
-<li><a href="#orgd58efe7">Troubleshooting</a></li>
+<li><a href="#org180faa6">Environment variables</a></li>
+<li><a href="#org2de807f">Troubleshooting</a></li>
 </ul>
 </li>
 <li><a href="#orgc0b011e">Tailwind</a></li>
+<li><a href="#org6117f71">Termux</a></li>
 <li><a href="#org0ed77be">Tmux</a></li>
 <li><a href="#orge2dd4e3">Tor</a>
 <ul>
@@ -270,6 +314,13 @@
 <li><a href="#orge0989e8">How to store data on a file using Greasemonkey</a></li>
 </ul>
 </li>
+<li><a href="#org6168650">Web browsing/crawling</a>
+<ul>
+<li><a href="#org7e7e5de">Get the DOM of a webpage using chrome via command-line.</a></li>
+<li><a href="#org539bf5e">Fetch a page via a nodejs app</a></li>
+</ul>
+</li>
+<li><a href="#org267ff4b">Web Resources</a></li>
 <li><a href="#org1d4101f">Youtube</a>
 <ul>
 <li><a href="#orgc0d9659">Get the list of subscriptions (followed channels)</a></li>
@@ -277,80 +328,23 @@
 <li><a href="#org3fdb993">Youtube downloader (yt-dlp)</a>
 <ul>
 <li><a href="#orgc68367d">Usage examples</a></li>
-<li><a href="#org9ccd785">Troubleshooting</a></li>
+<li><a href="#org04eb185">Troubleshooting</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org267ff4b">Web Resources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org6168650" class="outline-2">
-<h2 id="org6168650">Web browsing/crawling</h2>
-<div class="outline-text-2" id="text-org6168650">
+<div id="outline-container-org20528bb" class="outline-2">
+<h2 id="org20528bb">Android</h2>
+<div class="outline-text-2" id="text-org20528bb">
 </div>
-<div id="outline-container-org7e7e5de" class="outline-3">
-<h3 id="org7e7e5de">Get the DOM of a webpage using chrome via command-line.</h3>
-<div class="outline-text-3" id="text-org7e7e5de">
-<div class="org-src-container">
-<pre class="src src-sh">chrome --headless --dump-dom https://developer.chrome.com/
-</pre>
+<div id="outline-container-org802d2d0" class="outline-3">
+<h3 id="org802d2d0"><a href="https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf">Deegoogling di Andorid ~ Linux Day Napoli 2024</a></h3>
 </div>
-</div>
-</div>
-<div id="outline-container-org539bf5e" class="outline-3">
-<h3 id="org539bf5e">Fetch a page via a nodejs app</h3>
-<div class="outline-text-3" id="text-org539bf5e">
-<p>
-Inspiration (and code stolen 🤪) from <a href="https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e">this Medium article</a> (errr&#x2026; <a href="https://freedium.cfd/">Freedium</a> 😎)
-</p>
-
-<p>
-This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
-</p>
-
-<ol class="org-ol">
-<li>setup a new nodejs project <code>mkdir html-fetch &amp;&amp; node init --yes</code></li>
-<li>add <code>node-fetch</code> dependency into the <code>package.json</code> and <code>npm install</code></li>
-<li>create the <code>index.js</code> source file with the content as follow:</li>
-</ol>
-
-<div class="org-src-container">
-<pre class="src src-javascript">const fetch = require("node-fetch");
-const fs = require("fs");
-// you can update this to any website you want to download
-const site = "https://www.youtube.com/@BorderNightsOfficial";
-// you can update this if you want to save
-const filename = "index.html";
-// fetch url
-fetch(site, {
-  headers: {
-    // some sites require a user-agent header to return the webpage
-    "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
-}).then((res) =&gt; {
-  // get text from Response stream
-  return res.text();
-}).then((text) =&gt; {
-  // write html from response to index.html
-  fs.writeFile(filename, text, () =&gt; {});
-});
-</pre>
-</div>
-
-<p>
-Run it via <code>node index.js</code>. This will fetch the page into the <code>index.html</code> file.
-</p>
-</div>
-</div>
-</div>
-<div id="outline-container-org1ef517b" class="outline-2">
-<h2 id="org1ef517b"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
-<div class="outline-text-2" id="text-org1ef517b">
-<p>
-If you need to write a crontab entry you can use <a href="https://crontab.guru/">https://crontab.guru/</a>
-</p>
+<div id="outline-container-org5a2f860" class="outline-3">
+<h3 id="org5a2f860"><a href="https://grapheneos.org/">GrapheneOS</a></h3>
 </div>
 </div>
 <div id="outline-container-orgd2f3611" class="outline-2">
@@ -364,6 +358,49 @@ Choose a release here <a href="https://github.com/asdf-vm/asdf/releases">https:/
 <pre class="src src-sh">export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 </pre>
 </div>
+
+<p>
+This script should automate most of the procedure.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # &lt;-- or the precompiled version you need
+mkdir -p ~/.local/bin
+tar -C ~/.local/bin/ -xf ${asdf-tar}
+echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd1d94db" class="outline-2">
+<h2 id="orgd1d94db">Chromium / Google Chrome</h2>
+<div class="outline-text-2" id="text-orgd1d94db">
+</div>
+<div id="outline-container-org9ccd785" class="outline-3">
+<h3 id="org9ccd785">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org9ccd785">
+<ul class="org-ul">
+<li><a href="https://github.com/puppeteer/puppeteer/issues/4860">"The profile appears to be in use by another Chromium process on another computer"</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-org1ef517b" class="outline-2">
+<h2 id="org1ef517b"><a href="https://it.wikipedia.org/wiki/Crontab">Crontab</a></h2>
+<div class="outline-text-2" id="text-org1ef517b">
+<p>
+If you need to write a crontab entry you can use <a href="https://crontab.guru/">https://crontab.guru/</a>
+</p>
+</div>
+</div>
+<div id="outline-container-orga8f0908" class="outline-2">
+<h2 id="orga8f0908">Digital Ocean</h2>
+<div class="outline-text-2" id="text-orga8f0908">
+<ul class="org-ul">
+<li><a href="https://www.youtube.com/watch?v=SSLhGanxmCg">a small tutorial about Droplets</a> (and <a href="https://www.youtube.com/watch?v=JSXsb6czs6M">this one</a>)</li>
+</ul>
 </div>
 </div>
 <div id="outline-container-orgec65ab8" class="outline-2">
@@ -605,21 +642,49 @@ You can run a test to see if it's working like this:
 </div>
 </div>
 </div>
+<div id="outline-container-org8cc65c7" class="outline-3">
+<h3 id="org8cc65c7"><a href="https://dev.to/hlappa/development-environment-for-elixir-phoenix-with-docker-and-docker-compose-2g17">Evelopment Environment For Elixir Phoenix With Docker And Docker Compose</a></h3>
+</div>
 <div id="outline-container-orgf63b667" class="outline-3">
 <h3 id="orgf63b667"><a href="#org2fdf02a">Dockerize Phoenix webapp (my<sub>app</sub>)</a></h3>
-</div>
-</div>
-<div id="outline-container-orga8f0908" class="outline-2">
-<h2 id="orga8f0908">Digital Ocean</h2>
-<div class="outline-text-2" id="text-orga8f0908">
-<ul class="org-ul">
-<li><a href="https://www.youtube.com/watch?v=SSLhGanxmCg">a small tutorial about Droplets</a> (and <a href="https://www.youtube.com/watch?v=JSXsb6czs6M">this one</a>)</li>
-</ul>
 </div>
 </div>
 <div id="outline-container-orgd381994" class="outline-2">
 <h2 id="orgd381994"><a href="https://elixir-lang.org/">Elixir</a></h2>
 <div class="outline-text-2" id="text-orgd381994">
+</div>
+<div id="outline-container-org8ad3466" class="outline-3">
+<h3 id="org8ad3466">Install Elixir</h3>
+<div class="outline-text-3" id="text-org8ad3466">
+<p>
+<i>A Makefile tells more than a thousand words</i> 😁
+</p>
+
+<div class="org-src-container">
+<pre class="src src-makefile">install-elixir-via-package-manager:
+        sudo apt update
+        sudo apt install erlang erlang-dev elixir
+install-elixir-via-asdf:
+        sudo apt install lincurses-dev libssl-dev
+        export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+        wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # &lt;-- or the precompiled version you need
+        mkdir -p ~/.local/bin
+        tar -C ~/.local/bin/ -xf ${asdf-tar}
+        echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' &gt;&gt; ~/.bashrc
+        source ~/.bashrc
+        sudo apt install libncurses-dev
+        asdf plugin add erlang
+        asdf plugin add elixir
+        asdf install erlang 27.0
+        asdf install elixir 1.18.0-otp-27
+        asdf reshim
+</pre>
+</div>
+
+<p>
+More info on ho <i>install elixir on a Raspberry PI</i> in <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">this article</a>.
+</p>
+</div>
 </div>
 <div id="outline-container-org5c70912" class="outline-3">
 <h3 id="org5c70912">Language</h3>
@@ -656,9 +721,9 @@ B.hello()
 </div>
 </div>
 </div>
-<div id="outline-container-org0037409" class="outline-3">
-<h3 id="org0037409">Resources</h3>
-<div class="outline-text-3" id="text-org0037409">
+<div id="outline-container-orgd49f5ab" class="outline-3">
+<h3 id="orgd49f5ab">Resources</h3>
+<div class="outline-text-3" id="text-orgd49f5ab">
 <ul class="org-ul">
 <li><a href="https://elixir-toolbox.dev/">Toolbox</a></li>
 <li><a href="https://dorgan.ar/posts/2021/04/the_elixir_ast/">Metaprogramming: The Elixir AST</a></li>
@@ -690,6 +755,22 @@ Good readings about this topic:
 <p>
 Here's a talk I still have to watch <a href="https://www.youtube.com/watch?v=F_YUyd_Qdjs">https://www.youtube.com/watch?v=F_YUyd_Qdjs</a>
 </p>
+</div>
+</div>
+<div id="outline-container-org5611313" class="outline-3">
+<h3 id="org5611313">ExUnit</h3>
+<div class="outline-text-3" id="text-org5611313">
+<p>
+Implement the <i>before</i> and <i>after</i> callbacks:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elixir">setup do
+  File.write!("fixture.json", "{}")
+  on_exit(fn -&gt; File.rm!("fixture.json") end)
+end
+</pre>
+</div>
 </div>
 </div>
 <div id="outline-container-orgdd6f2bb" class="outline-3">
@@ -820,40 +901,34 @@ end
 </div>
 </div>
 </div>
-<div id="outline-container-orgfc247ac" class="outline-3">
-<h3 id="orgfc247ac">Persisting layer: :dets</h3>
-<div class="outline-text-3" id="text-orgfc247ac">
+<div id="outline-container-orgdb7c0b3" class="outline-3">
+<h3 id="orgdb7c0b3">Persisting layer using <b>:dets</b></h3>
+<div class="outline-text-3" id="text-orgdb7c0b3">
 <ul class="org-ul">
 <li><a href="https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets">https://learn-elixir.dev/blogs/avoiding-data-loss-with-elixir-dets</a></li>
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-elixir">defmodule Mixer.Persist do
-  use GenServer
+<pre class="src src-elixir">defmodule MyCache do
+  @table_name :my_table
 
-  @table_name :mixer_persist
+  def start_link(opts \\ []) do
+    Task.start_link(fn -&gt;
+        {:ok, _} = :dets.open_file(opts[:table_name] || @table_name, opts)
 
-  def start_link(table_name) do
-    GenServer.start_link(__MODULE__, table_name, name: __MODULE__)
-  end
-
-  def init(table_name) do
-    {:ok, _} = :dets.open_file(table_name || @table_name, [])
+        Process.hibernate(Function, :identity, [nil])
+    end)
   end
 
   def get(table_name \\ @table_name, key) do
     case :dets.lookup(table_name, key) do
-      [{^key, value}] -&gt; value
-      [] -&gt; nil
+        [{^key, value}] -&gt; {:ok, value}
+        [] -&gt; {:ok, nil}
     end
   end
 
-  def set(table_name \\ @table_name, key, value) do
-    :dets.insert(table_name, {key, value}) &amp;&amp; value
-  end
-
-  def get_or_set(table_name \\ @table_name, key, fun) when is_function(fun) do
-    get(table_name, key) || set(table_name, key, fun.())
+  def put(table_name \\ @table_name, key, value) do
+    :dets.insert(table_name, {key, value})
   end
 end
 </pre>
@@ -982,6 +1057,14 @@ In GenServers add <code>Process.flag(:trap_exit, true)</code> along with the <co
 </div>
 <div id="outline-container-org2fdf02a" class="outline-4">
 <h4 id="org2fdf02a">Dockerize Phoenix webapp (my<sub>app</sub>)</h4>
+</div>
+</div>
+<div id="outline-container-org2384c54" class="outline-3">
+<h3 id="org2384c54">Ecto</h3>
+<div class="outline-text-3" id="text-org2384c54">
+<ul class="org-ul">
+<li><a href="https://hexdocs.pm/ecto/associations.html">https://hexdocs.pm/ecto/associations.html</a></li>
+</ul>
 </div>
 </div>
 <div id="outline-container-org2da3573" class="outline-3">
@@ -1239,9 +1322,9 @@ networks:
 <h3 id="orgdab52c4"><a href="https://nerves-project.org/newsletter/">Nerves</a></h3>
 <div class="outline-text-3" id="text-orgdab52c4">
 </div>
-<div id="outline-container-org4f8837f" class="outline-4">
-<h4 id="org4f8837f">Resources</h4>
-<div class="outline-text-4" id="text-org4f8837f">
+<div id="outline-container-org0fb0f99" class="outline-4">
+<h4 id="org0fb0f99">Resources</h4>
+<div class="outline-text-4" id="text-org0fb0f99">
 <ul class="org-ul">
 <li><a href="https://nerves-project.org/newsletter/">Nervers newsletter</a></li>
 <li><a href="https://www.peterullrich.com/sending-text-messages-with-nerves">Sending text messages with Nerves</a></li>
@@ -1264,6 +1347,17 @@ networks:
 </div>
 </div>
 </div>
+<div id="outline-container-orgd4db2dc" class="outline-2">
+<h2 id="orgd4db2dc">Embedded devices</h2>
+<div class="outline-text-2" id="text-orgd4db2dc">
+</div>
+<div id="outline-container-orgd3087f6" class="outline-3">
+<h3 id="orgd3087f6"><a href="#org3c3788b">Raspberry</a></h3>
+</div>
+<div id="outline-container-orgf27a040" class="outline-3">
+<h3 id="orgf27a040"><a href="https://www.grisp.org/">GRiSP - the Power of Erlang &amp; Elixir Embedded Systems</a></h3>
+</div>
+</div>
 <div id="outline-container-org7fefed4" class="outline-2">
 <h2 id="org7fefed4"><a href="https://www.ffmpeg.org">FFmpeg</a></h2>
 <div class="outline-text-2" id="text-org7fefed4">
@@ -1274,7 +1368,7 @@ A complete, cross-platform solution to record, convert and stream audio and vide
 <div id="outline-container-org012c017" class="outline-3">
 <h3 id="org012c017">Extract audio from video</h3>
 <div class="outline-text-3" id="text-org012c017">
-<pre class="example" id="orgd8b5d27">
+<pre class="example" id="org4b410a0">
 ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 </pre>
 </div>
@@ -1286,7 +1380,7 @@ ffmpeg -i infile.mp4 -vn -acodec copy outfile.ogg
 Extract a single frame at time 10s (also consider using <code>accurate_seek</code> argument).
 </p>
 
-<pre class="example" id="orge16f572">
+<pre class="example" id="orgb4e82b6">
 ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 </pre>
 
@@ -1294,7 +1388,7 @@ ffmpeg -i vid.mp4 -ss 10 -frames:v 1 thumb.png
 Extract a frame each minute.
 </p>
 
-<pre class="example" id="org71097d6">
+<pre class="example" id="orgb05ddeb">
 ffmpeg -i vid.mp4 -vf fps=1/60 thumb%03d.png
 </pre>
 
@@ -1335,7 +1429,7 @@ Using FFMPEG's scene detection to generate a <a href="https://blog.gdeltproject.
 <div id="outline-container-org9860ecd" class="outline-3">
 <h3 id="org9860ecd">Cut audio/videos starting from 10s from the beginning for 20s.</h3>
 <div class="outline-text-3" id="text-org9860ecd">
-<pre class="example" id="orgddbabf9">
+<pre class="example" id="org7c3d924">
 ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 </pre>
 
@@ -1343,7 +1437,7 @@ ffmpeg -ss 10 -t 20 -i infile.wav outfule.wav
 Another example using timing
 </p>
 
-<pre class="example" id="org904c2c2">
+<pre class="example" id="org1f6cd72">
 ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 </pre>
 </div>
@@ -1354,21 +1448,21 @@ ffmpeg -ss 00:00:15.00 -i in.mp4 -t 00:00:10.00 -c copy out.mp4
 <p>
 If we want our volume to be half of the input volume:
 </p>
-<pre class="example" id="org214afb8">
+<pre class="example" id="orgee7a2ca">
 ffmpeg -i input.wav -filter:a "volume=0.5" output.wav
 </pre>
 
 <p>
 150% of current volume:
 </p>
-<pre class="example" id="orgf1e8f14">
+<pre class="example" id="org130c6d2">
 ffmpeg -i input.wav -filter:a "volume=1.5" output.wav
 </pre>
 
 <p>
 You can also use decibel measures. To increase the volume by 10dB:
 </p>
-<pre class="example" id="orgfb53d86">
+<pre class="example" id="orgf1a3836">
 ffmpeg -i input.wav -filter:a "volume=10dB" output.wav
 </pre>
 </div>
@@ -1384,7 +1478,7 @@ For more details refer this <a href="https://video.stackexchange.com/questions/2
 Fade in from second 0 to 5.
 </p>
 
-<pre class="example" id="orga8cff7d">
+<pre class="example" id="orgd7ad938">
 ffmpeg -i input.mp4 -af afade=in:0:d=5 output.mp4
 </pre>
 </div>
@@ -1403,14 +1497,14 @@ multiply them by 0.5.
 <p>
 To double the speed of the video, you can use:
 </p>
-<pre class="example" id="org9c10bbd">
+<pre class="example" id="org40cca0a">
 ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv
 </pre>
 
 <p>
 To slow down your video, you have to use a multiplier greater than 1:
 </p>
-<pre class="example" id="orgd88e29d">
+<pre class="example" id="org0066849">
 ffmpeg -i input.mkv -filter:v "setpts=2.0*PTS" output.mkv
 </pre>
 
@@ -1427,7 +1521,7 @@ For audio I found this
 <div id="outline-container-org33c0cdc" class="outline-3">
 <h3 id="org33c0cdc">Concat audio/videos starting from a list of files</h3>
 <div class="outline-text-3" id="text-org33c0cdc">
-<pre class="example" id="org8ad87d0">
+<pre class="example" id="org62261b4">
 ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 </pre>
 
@@ -1435,7 +1529,7 @@ ffmpeg -f concat -i list-of-files.txt -c copy outfile.wav
 The <code>list-of-files.txt</code> should be something like this:
 </p>
 
-<pre class="example" id="org8d5fa76">
+<pre class="example" id="orga30e461">
 file './infile.wav'
 file './infile.wav'
 file './infile.wav'
@@ -1482,7 +1576,7 @@ scene (video only) value between 0 and 1 to indicate a new scene; a low value re
 Converts a.wav to MPEG audio at 22050 Hz sample rate.
 </p>
 
-<pre class="example" id="org64b4170">
+<pre class="example" id="org53b0e0f">
 ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 </pre>
 </div>
@@ -1493,7 +1587,7 @@ ffmpeg -i /tmp/a.wav -ar 22050 /tmp/a.mp2
 <p>
 You can follow <a href="https://gist.github.com/eyecatchup/0757b3d8b989fe433979db2ea7d95a01">this gist</a>.
 </p>
-<pre class="example" id="orgcf508df">
+<pre class="example" id="orge44248d">
 ffmpeg -i file.mp3 -metadata title="Track Title" -metadata artist="The artist" -metadata album="Album name" out.mp3
 </pre>
 </div>
@@ -1539,8 +1633,8 @@ Or the pulse input device (see Capture/PulseAudio for more info):
 </div>
 </div>
 <ul class="org-ul">
-<li><a id="orgede599b"></a>macOS<br />
-<div class="outline-text-6" id="text-orgede599b">
+<li><a id="orgeebafa3"></a>macOS<br />
+<div class="outline-text-6" id="text-orgeebafa3">
 <p>
 Use the avfoundation device:
 </p>
@@ -1644,28 +1738,6 @@ The <code>git clone repo.bundle</code> can be used to restore repositories in th
 </p>
 </div>
 </div>
-<div id="outline-container-org46447e6" class="outline-2">
-<h2 id="org46447e6">Pandoc</h2>
-<div class="outline-text-2" id="text-org46447e6">
-<p>
-Install <b>all</b> packages to manage pdf files
-</p>
-
-<div class="org-src-container">
-<pre class="src src-emacs-lisp">apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
-</pre>
-</div>
-
-<p>
-Convert a <code>txt</code> file to <code>pdf</code>
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">pandoc file.txt -o file.pdf
-</pre>
-</div>
-</div>
-</div>
 <div id="outline-container-org7e84fa6" class="outline-2">
 <h2 id="org7e84fa6">Google Chrome &amp; chromedriver</h2>
 <div class="outline-text-2" id="text-org7e84fa6">
@@ -1682,6 +1754,26 @@ How to get rid of "Choose your search engine" dialog in Chrome v.127 on Selenium
 
 <div class="org-src-container">
 <pre class="src src-sh">chromedriver --disable-search-engine-choice-screen
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgbcbfb9e" class="outline-2">
+<h2 id="orgbcbfb9e"><a href="https://guix.gnu.org/">GNU Guix</a></h2>
+<div class="outline-text-2" id="text-orgbcbfb9e">
+<p>
+My <code>~/.profile</code> after having installed guix on an Ubuntu distro.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"># Enable Guix
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+GUIX_PROFILE="/home/invisigoth/.guix-profile"
+. "$GUIX_PROFILE/etc/profile"
+
+# after guix install nss-certs
+export SSL_CERT_DIR="$HOME/.guix-profile/etc/ssl/certs"
+export SSL_CERT_FILE="$HOME/.guix-profile/etc/ssl/certs/ca-certificates.crt"
 </pre>
 </div>
 </div>
@@ -1863,9 +1955,9 @@ gpg --import --allow-secret-key-import private.key
 </div>
 </div>
 </div>
-<div id="outline-container-org3395f28" class="outline-3">
-<h3 id="org3395f28">Troubleshooting</h3>
-<div class="outline-text-3" id="text-org3395f28">
+<div id="outline-container-org2dba61d" class="outline-3">
+<h3 id="org2dba61d">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org2dba61d">
 <p>
 Interesting resources if you encounter problems:
 </p>
@@ -1955,17 +2047,6 @@ More info in this <a href="https://stackoverflow.com/questions/17846529/could-no
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd4db2dc" class="outline-2">
-<h2 id="orgd4db2dc">Embedded devices</h2>
-<div class="outline-text-2" id="text-orgd4db2dc">
-</div>
-<div id="outline-container-orgd3087f6" class="outline-3">
-<h3 id="orgd3087f6"><a href="#org3c3788b">Raspberry</a></h3>
-</div>
-<div id="outline-container-orgf27a040" class="outline-3">
-<h3 id="orgf27a040"><a href="https://www.grisp.org/">GRiSP - the Power of Erlang &amp; Elixir Embedded Systems</a></h3>
-</div>
-</div>
 <div id="outline-container-org61808a4" class="outline-2">
 <h2 id="org61808a4">How to set environment variables from .env file</h2>
 <div class="outline-text-2" id="text-org61808a4">
@@ -2038,16 +2119,26 @@ You can also use a remote image, like <img src="https://picsum.photos/1920/1080.
 </div>
 </div>
 </div>
-<div id="outline-container-orgc08bb59" class="outline-2">
-<h2 id="orgc08bb59"><a href="https://www.openvoiceos.org/">OpenVoiceOS</a>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="foss">foss</span>&#xa0;<span class="AI">AI</span></span></h2>
-</div>
-<div id="outline-container-orga8cf03c" class="outline-2">
-<h2 id="orga8cf03c">Linux desktop</h2>
-<div class="outline-text-2" id="text-orga8cf03c">
+<div id="outline-container-org028a244" class="outline-2">
+<h2 id="org028a244">Javascript</h2>
+<div class="outline-text-2" id="text-org028a244">
 <p>
-Brief list of useful commands, examples, snippets
+Get all links from a page and extract only the <code>href</code> attribute. More info on <code>querySelectorAll</code> and iteration in <a href="https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/">this article</a>.
 </p>
 
+<div class="org-src-container">
+<pre class="src src-javascript">const links = [...document.querySelectorAll("a")].flatMap(el =&gt; el.href); 
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd6e842c" class="outline-2">
+<h2 id="orgd6e842c">Linux</h2>
+<div class="outline-text-2" id="text-orgd6e842c">
+</div>
+<div id="outline-container-org1eac6b7" class="outline-3">
+<h3 id="org1eac6b7">Brief list of useful commands, examples, snippets</h3>
+<div class="outline-text-3" id="text-org1eac6b7">
 <ul class="org-ul">
 <li><code>lsb_release -a</code> show info about distro</li>
 <li><code>lsblk -f</code> show partitions informations</li>
@@ -2056,6 +2147,44 @@ Brief list of useful commands, examples, snippets
 <li><code>ls -1 | wc -l</code> determine how many files there are in a directory</li>
 <li><code>echo $XDG_SESSION_TYPE</code> show if you're using the X session manager is use (X11 or Wayland)</li>
 </ul>
+</div>
+</div>
+<div id="outline-container-orga225570" class="outline-3">
+<h3 id="orga225570">Set keyboard layout</h3>
+<div class="outline-text-3" id="text-orga225570">
+<p>
+From <a href="https://www.baeldung.com/linux/console-change-keyboard-layout">https://www.baeldung.com/linux/console-change-keyboard-layout</a>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cat .Xmodmap
+
+!
+! Swap Caps_Lock and Control_L
+!
+remove Lock = Caps_Lock
+remove Control = Control_L
+remove Lock = Control_L
+remove Control = Caps_Lock
+keysym Control_L = Caps_Lock
+keysym Caps_Lock = Control_L
+add Lock = Caps_Lock
+add Control = Control_L
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-shell">localectl list-x11-keymap-layouts # get the list of all keyboard layouts..
+localectl list-x11-keymap-layouts-variants # .. and their variants
+setxkbmap layout 'us,it' -option 'grp:alt_shift_toggle'
+xmodmap .Xmodmap
+</pre>
+</div>
+
+<p>
+To permanently configure edit the <code>/etc/default/keyboard</code> file, if present, or use <code>localectl</code>.
+</p>
+</div>
 </div>
 <div id="outline-container-org5b078c7" class="outline-3">
 <h3 id="org5b078c7">Show preferred applications (alternatives)&#xa0;&#xa0;&#xa0;<span class="tag"><span class="debian">debian</span></span></h3>
@@ -2239,31 +2368,21 @@ Toggle mute
 <div id="outline-container-org42ab8aa" class="outline-4">
 <h4 id="org42ab8aa">Pulseaudio</h4>
 <div class="outline-text-4" id="text-org42ab8aa">
-</div>
 <ul class="org-ul">
-<li><a id="orgcea87ca"></a>pacmd<br />
-<div class="outline-text-5" id="text-orgcea87ca">
-<p>
-You can refer this interesting <a href="https://askubuntu.com/questions/71863/how-to-change-pulseaudio-sink-with-pacmd-set-default-sink-during-playback">SO thread</a>.
-</p>
+<li><a href="https://wiki.archlinux.org/title/PulseAudio/Examples">https://wiki.archlinux.org/title/PulseAudio/Examples</a></li>
 
-<div class="org-src-container">
-<pre class="src src-sh">pacmd help list-sinks
-pacmd list-sink-inputs
-pacmd move-sink-input 5 1
-</pre>
-</div>
-</div>
-</li>
-<li><a id="orgb6da422"></a>pactl<br />
-<div class="outline-text-5" id="text-orgb6da422">
-<ul class="org-ul">
 <li><code>pactl list sinks short</code> get the sink list with some additional info, the first column is the INDEX</li>
 <li><code>pactl get-sink-volume &lt;INDEX&gt;</code> get the volume of the given sink</li>
 </ul>
+
+<div class="org-src-container">
+<pre class="src src-sh">aplay -l
+pactl list short sinks
+pactl list short sink-inputs
+pactl move-sink-input 2144 0
+</pre>
 </div>
-</li>
-</ul>
+</div>
 </div>
 <div id="outline-container-org41e6289" class="outline-4">
 <h4 id="org41e6289"><a href="https://github.com/mikeroyal/PipeWire-Guide/blob/main/README.md">PipeWire</a></h4>
@@ -2273,7 +2392,7 @@ pacmd move-sink-input 5 1
 <h3 id="orgf7e2999">Create a .desktop File</h3>
 <div class="outline-text-3" id="text-orgf7e2999">
 <p>
-In <code>~/.local/share/applications/</code> or <code>~/.config/autostart</code> to start at login.
+Useful when installing an app via <code>flatpak</code>. In userspace at <code>~/.local/share/applications/</code> or <code>~/.config/autostart</code> to start at login.
 </p>
 
 <div class="org-src-container">
@@ -2452,7 +2571,7 @@ Consider xsetroot accepts a particular format of file called <i>bitmap</i> (<cod
 <h3 id="org46c8b71">Get and set name/class to an X application (window)</h3>
 <div class="outline-text-3" id="text-org46c8b71">
 <p>
-If the app as been built as GTK+ app it accepts <code>--screen</code>, <code>--name</code>, <code>--class</code> options. It can be used, for instance, by <a href="#orgf796c83">i3 rules configuration</a>.
+If the app as been built as GTK+ app it accepts <code>--screen</code>, <code>--name</code>, <code>--class</code> options. It can be used, for instance, by <a href="https://i3wm.org/docs/userguide.html#assign_workspace">i3 rules configuration</a>.
 </p>
 
 <p>
@@ -2460,378 +2579,58 @@ To get the window ID use <code>xdotool</code> (ex. <code>xdotool search -class m
 </p>
 </div>
 </div>
+<div id="outline-container-org857e043" class="outline-3">
+<h3 id="org857e043">Window Manager</h3>
+<div class="outline-text-3" id="text-org857e043">
 </div>
-<div id="outline-container-orgf796c83" class="outline-2">
-<h2 id="orgf796c83"><a href="https://en.wikipedia.org/wiki/I3_(window_manager)">i3</a> (Window Manager)</h2>
-<div class="outline-text-2" id="text-orgf796c83">
+<div id="outline-container-org17bf5da" class="outline-4">
+<h4 id="org17bf5da"><a href="https://i3wm.org/">i3wm</a></h4>
+<div class="outline-text-4" id="text-org17bf5da">
 <p>
-A fine tuned i3 configuration file that fits well with an <i>Emacs-centric</i> user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit <code>$mod+Return</code> to access the <b><b>i3</b></b> mode, and <code>alt+Tab</code> to cycle across windows; all other keybidings will go straight to Emacs.
-</p>
-
-<pre class="example" id="org9b885c3">
-# This file has been auto-generated by i3-config-wizard(1).
-# It will not be overwritten, so edit it as you like.
-#
-# Should you change your keyboard layout some time, delete
-# this file and re-run i3-config-wizard(1).
-#
-
-# i3 config file (v4)
-#
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
-
-set $mod Mod4
-set $alt Mod1
-set $wallpaper_file ~/Pictures/wallpaper
-
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-font pango:monospace 8
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Start XDG autostart .desktop files using dex. See also
-# https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
-exec --no-startup-id xfsettingsd
-exec --no-startup-id compton
-exec --no-startup-id feh --bg-max $wallpaper_file
-# exec --no-startup-id xmodmap ~/.Xmodmaprc
-
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
-exec --no-startup-id emacs --daemon &amp;&amp; emacsclient -r
-
-# Use pactl to adjust volume in PulseAudio.
-set $volume_step 5%
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step &amp;&amp; $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step &amp;&amp; $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
-
-# Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
-
-# move tiling windows via drag &amp; drop by left-clicking into the title bar,
-# or left-clicking anywhere into the window while holding the floating modifier.
-tiling_drag modifier titlebar
-
-# start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
-set $app_launcher i3-dmenu-desktop
-set $terminal_app i3-sensible-terminal
-set $take_screenshot import -window root ~/Desktop/screenshot.png
-bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
-bindsym $mod+Shift+space exec --no-startup-id $terminal_app ; mode "default"
-# Emacs everywhere
-bindsym $mod+Shift+e exec --no-startup-id emacsclient --eval "(emacs-everywhere)" &amp;&amp; mode "default"
-
-# kill focused window
-bindsym $mod+Shift+q kill
-
-# change focus
-bindsym $mod+Tab focus left ; focus up
-bindsym $mod+Shift+Tab focus right ; focus down
-
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-
-# Window rules
-# for_window [class="^firefox$"] move container to workspace $ws2
-for_window [class="^mpv$"] move container to workspace $ws3
-
-mode "i3" {
-  # start program launcher
-  bindsym d exec --no-startup-id $app_launcher ; mode "default"
-
-  # alternatively, you can use the cursor keys:
-  bindsym Left focus left
-  bindsym Down focus down
-  bindsym Up focus up
-  bindsym Right focus right
-
-  bindsym Shift+Left move left
-  bindsym Shift+Down move down
-  bindsym Shift+Up move up
-  bindsym Shift+Right move right
-
-  # toggle i3bar mode
-  bindsym i bar mode toggle ; mode "default"
-
-  # split in horizontal orientation
-  bindsym h split h
-
-  # split in vertical orientation
-  bindsym v split v
-
-  # enter fullscreen mode for the focused container
-  bindsym Shift+f fullscreen toggle
-
-  # change container layout (stacked, tabbed, toggle split)
-  bindsym s layout stacking
-  bindsym w layout tabbed
-  bindsym e layout toggle split
-
-  # toggle tiling / floating
-  bindsym space floating toggle
-
-  # change focus between tiling / floating windows
-  bindsym space focus mode_toggle
-
-  # focus the parent container
-  bindsym a focus parent
-
-  # focus the child container
-  #bindsym $mod+d focus child
-
-  # switch to workspace
-  bindsym f workspace next
-  bindsym b workspace prev
-  bindsym n focus next
-  bindsym p focus prev
-  bindsym 1 workspace $ws1
-  bindsym 2 workspace $ws2
-  bindsym 3 workspace $ws3
-
-  # move focused container to workspace
-  bindsym Shift+f move container to workspace next
-  bindsym Shift+b move container to workspace prev
-  bindsym Shift+1 move container to workspace $ws1
-  bindsym Shift+2 move container to workspace $ws2
-  bindsym Shift+3 move container to workspace $ws3
-
-  # Media
-  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
-  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
-  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
-  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
-
-  # Kill current window
-  bindsym Shift+q kill
-  # reload the configuration file
-  bindsym Shift+c reload
-  # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-  bindsym Shift+r restart
-  # exit i3 (logs you out of your X session)
-  # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-  bindsym Shift+e exec i3-msg exit
-
-  bindsym Return mode "default"
-  bindsym Escape mode "default"
-  bindsym r mode "resize"
-  bindsym $mod+Return mode "default"
-}
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-  # These bindings trigger as soon as you enter the resize mode
-
-  # Pressing left will shrink the window’s width.
-  # Pressing right will grow the window’s width.
-  # Pressing up will shrink the window’s height.
-  # Pressing down will grow the window’s height.
-  bindsym j resize shrink width 10 px or 10 ppt
-  bindsym k resize grow height 10 px or 10 ppt
-  bindsym l resize shrink height 10 px or 10 ppt
-  bindsym semicolon resize grow width 10 px or 10 ppt
-
-  # same bindings, but for the arrow keys
-  bindsym Left resize shrink width 10 px or 10 ppt
-  bindsym Down resize grow height 10 px or 10 ppt
-  bindsym Up resize shrink height 10 px or 10 ppt
-  bindsym Right resize grow width 10 px or 10 ppt
-
-  # back to normal: Enter or Escape or $mod+r
-  bindsym Return mode "default"
-  bindsym Escape mode "default"
-  bindsym r mode "resize"
-}
-
-bindsym $mod+Return mode "i3"
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-  mode hide
-  hidden_state hide
-  modifier $mod
-
-  position top # bottom
-  font pango:monospace 14
-  status_command i3status
-
-  bindsym --release button1 exec --no-startup-id $app_launcher
-  bindsym $mod+button3 exec --no-startup-id $take_screenshot
-}
-
-workspace_layout tabbed
-</pre>
-
-<p>
-Notice that most of GTK apps won't have the settings you've configured, so you have to start a daemon that sets them:
+If you, like me, use i3 as your window manager and Emacs as your editor, you might want to make them play nicer together. <a href="emacs/modules.html#orgef5faa0">In this section</a> you can find some emacs packages and an i3 configuration file.
 </p>
 
 <ul class="org-ul">
-<li><code>xfsettingsd</code>  XSettings daemon for Xfce</li>
-<li><code>gnome-settings-daemon</code> for GNOME</li>
+<li><a href="https://thomashunter.name/i3-configurator/">Thomas Hunter's Online Colorscheme Configurator for i3, i3status, dmenu</a></li>
 </ul>
-<p>
-&#x2026;
-</p>
-
-<p>
-So remember to start it in the i3 config file (ex. <code>exec gnome-settings-daemon</code>).
-</p>
-
-<p>
-And this is a sample configuration of <code>i3status</code> at <code>~/.config/i3status/config</code>.
-</p>
-
-<pre class="example" id="org0f31296">
-# i3status configuration file.
-# see "man i3status" for documentation.
-
-# It is important that this file is edited as UTF-8.
-# The following line should contain a sharp s:
-# ß
-# If the above line is not correctly displayed, fix your editor first!
-
-general {
-	  colors = true
-	  interval = 5
-}
-
-order += "ipv6"
-order += "wireless _first_"
-order += "ethernet _first_"
-order += "battery all"
-order += "disk /"
-order += "load"
-order += "memory"
-order += "volume master"
-order += "tztime local"
-
-wireless _first_ {
-	  format_up = "W: (%quality at %essid) %ip"
-	  format_down = "W: down"
-}
-
-ethernet _first_ {
-	  format_up = "E: %ip (%speed)"
-	  format_down = "E: down"
-}
-
-battery all {
-	  format = "%status %percentage %remaining"
-}
-
-disk "/" {
-	  format = "%avail"
-}
-
-load {
-	  format = "%1min"
-}
-
-memory {
-	  format = "%used | %available"
-	  threshold_degraded = "1G"
-	  format_degraded = "MEMORY &lt; %available"
-}
-
-tztime local {
-	  format = "%Y-%m-%d %H:%M:%S"
-}
-
-volume master {
-	  format = "♪: %volume"
-	  format_muted = "♪: muted (%volume)"
-	  device = "default"
-	  mixer = "Master"
-	  mixer_idx = 0
-}
-
-</pre>
 </div>
 </div>
-<div id="outline-container-org806982b" class="outline-2">
-<h2 id="org806982b">Suspend the system via command line</h2>
-<div class="outline-text-2" id="text-org806982b">
-<p>
-Here's a <a href="https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line">StackOverflow thread</a>: <code>systemctl suspend|hibernate</code> (for newest distros) or <code>pmi action suspend|hibernate</code> (old method).
-</p>
-</div>
-</div>
-<div id="outline-container-org5836833" class="outline-2">
-<h2 id="org5836833">OpenSource stacks and technologies</h2>
-<div class="outline-text-2" id="text-org5836833">
-</div>
-<div id="outline-container-orgc733375" class="outline-3">
-<h3 id="orgc733375">Push notifications</h3>
-<div class="outline-text-3" id="text-orgc733375">
+<div id="outline-container-orga13497c" class="outline-4">
+<h4 id="orga13497c"><a href="https://awesomewm.org/">Awesome WM</a></h4>
+<div class="outline-text-4" id="text-orga13497c">
 <ul class="org-ul">
-<li><a href="https://gotify.net/">https://gotify.net/</a></li>
+<li><a href="http://pavelmakhov.com/awesome-wm-widgets/">http://pavelmakhov.com/awesome-wm-widgets/</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orga3bed0c" class="outline-3">
-<h3 id="orga3bed0c">CI</h3>
-<div class="outline-text-3" id="text-orga3bed0c">
-<ul class="org-ul">
-<li>laminar</li>
-</ul>
 </div>
-</div>
-<div id="outline-container-orgdb43e76" class="outline-3">
-<h3 id="orgdb43e76"><a href="https://spritely.institute/">Spritely institute</a> - distributed web technology</h3>
-</div>
-</div>
-<div id="outline-container-org028a244" class="outline-2">
-<h2 id="org028a244">Javascript</h2>
-<div class="outline-text-2" id="text-org028a244">
+<div id="outline-container-org1ab6dca" class="outline-3">
+<h3 id="org1ab6dca">MPV</h3>
+<div class="outline-text-3" id="text-org1ab6dca">
 <p>
-Get all links from a page and extract only the <code>href</code> attribute. More info on <code>querySelectorAll</code> and iteration in <a href="https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/">this article</a>.
+If you have troubles to hear the audio output when using <code>mvp</code> you shouuld set the <code>--ao</code> flag.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-javascript">const links = [...document.querySelectorAll("a")].flatMap(el =&gt; el.href); 
+<pre class="src src-sh">mpv --ao=help # to get a list of the available outputs
+mpv --ao=pulse file-to-reproduce.mp4
+</pre>
+</div>
+
+<p>
+or set the flag via the configuration file in <code>~/.config/mpv/mpv.conf</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-conf">ao=pulse
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org20528bb" class="outline-2">
-<h2 id="org20528bb">Android</h2>
-<div class="outline-text-2" id="text-org20528bb">
 </div>
-<div id="outline-container-org802d2d0" class="outline-3">
-<h3 id="org802d2d0"><a href="https://dl.gianmarco.gg/presentations/linuxday24-degoogling.pdf">Deegoogling di Andorid ~ Linux Day Napoli 2024</a></h3>
-</div>
-</div>
-<div id="outline-container-orgeebafa3" class="outline-2">
-<h2 id="orgeebafa3">MacOS</h2>
-<div class="outline-text-2" id="text-orgeebafa3">
+<div id="outline-container-orgdbc0fbb" class="outline-2">
+<h2 id="orgdbc0fbb">MacOS</h2>
+<div class="outline-text-2" id="text-orgdbc0fbb">
 </div>
 <div id="outline-container-orgd7f84f3" class="outline-3">
 <h3 id="orgd7f84f3">Install <a href="https://brew.sh/">Homebrew</a></h3>
@@ -2940,249 +2739,6 @@ After the install I've noticed the laptop speakers weren't usable. I've googled 
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd4984f7" class="outline-4">
-<h4 id="orgd4984f7">Remap keys with xmodmap</h4>
-<div class="outline-text-4" id="text-orgd4984f7">
-<div class="org-src-container">
-<pre class="src src-sh">cat .Xmodmap
-
-!
-! Swap Caps_Lock and Control_L
-!
-remove Lock = Caps_Lock
-remove Control = Control_L
-remove Lock = Control_L
-remove Control = Caps_Lock
-keysym Control_L = Caps_Lock
-keysym Caps_Lock = Control_L
-add Lock = Caps_Lock
-add Control = Control_L
-</pre>
-</div>
-</div>
-</div>
-<div id="outline-container-orga225570" class="outline-4">
-<h4 id="orga225570">Set keyboard layout</h4>
-<div class="outline-text-4" id="text-orga225570">
-<p>
-From <a href="https://www.baeldung.com/linux/console-change-keyboard-layout">https://www.baeldung.com/linux/console-change-keyboard-layout</a>
-</p>
-
-<p>
-localectl list-x11-keymap-layouts # get the list
-setxkbmap us # set the keyboard
-xmodmap .Xmodmap # &lt;&#x2013; REQUIRED! It seems last command has resetted the custom remaps.
-</p>
-
-<p>
-To permanently configure edit the <code>/etc/default/keyboard</code> file, if present, or use <code>localectl</code>.
-</p>
-</div>
-</div>
-<div id="outline-container-orga9069b0" class="outline-4">
-<h4 id="orga9069b0">I3 window manager</h4>
-<div class="outline-text-4" id="text-orga9069b0">
-<p>
-I don't want wm keybindings to interfere with Emacs, so I'll wrap all i3 keybindings into ad-hoc "i3" mode at <code>s-space</code> keybinding.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-text"># This file has been auto-generated by i3-config-wizard(1).
-# It will not be overwritten, so edit it as you like.
-#
-# Should you change your keyboard layout some time, delete
-# this file and re-run i3-config-wizard(1).
-#
-
-# i3 config file (v4)
-#
-# Please see https://i3wm.org/docs/userguide.html for a complete reference!
-
-set $mod Mod4
-
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-font pango:monospace 8
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Start XDG autostart .desktop files using dex. See also
-# https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
-
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
-# exec --no-startup-id "/usr/bin/python3 /usr/bin/blueman-applet"
-
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
-
-# Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% &amp;&amp; $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% &amp;&amp; $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &amp;&amp; $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle &amp;&amp; $refresh_i3status
-
-# Use Mouse+$mod to drag floating windows to their wanted position
-# floating_modifier $mod
-
-# kill focused window
-bindsym $mod+Shift+q kill
-bindsym $mod+Tab focus next
-
-mode "i3" {
-  bindsym r mode "resize"
-  bindsym $mod+space mode "default"
-
-  # start dmenu (a program launcher)
-  bindsym d exec --no-startup-id dmenu_run
-  # A more modern dmenu replacement is rofi:
-  # bindcode 40 exec "rofi -modi drun,run -show drun"
-  # There also is i3-dmenu-desktop which only displays applications shipping a
-  # .desktop file. It is a wrapper around dmenu, so you need that installed.
-  # bindcode 40 exec --no-startup-id i3-dmenu-desktop
-  # enter fullscreen mode for the focused container
-  bindsym f fullscreen toggle
-  # reload the configuration file
-  bindsym Shift+c reload
-  # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-  bindsym Shift+r restart
-  # exit i3 (logs you out of your X session)
-  bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-
-  # change focus
-  bindsym j focus left
-  bindsym k focus down
-  bindsym l focus up
-  bindsym ograve focus right
-
-  # alternatively, you can use the cursor keys:
-  bindsym Left focus left
-  bindsym Down focus down
-  bindsym Up focus up
-  bindsym Right focus right
-
-  # move focused window
-  bindsym Shift+j move left
-  bindsym Shift+k move down
-  bindsym Shift+l move up
-  bindsym Shift+ograve move right
-
-  # alternatively, you can use the cursor keys:
-  bindsym Shift+Left move left
-  bindsym Shift+Down move down
-  bindsym Shift+Up move up
-  bindsym Shift+Right move right
-
-  # split in horizontal orientation
-  bindsym h split h
-
-  # split in vertical orientation
-  bindsym v split v
-
-  # change container layout (stacked, tabbed, toggle split)
-  bindsym s layout stacking
-  bindsym w layout tabbed
-  bindsym e layout toggle split
-
-  # toggle tiling / floating
-  bindsym Shift+space floating toggle
-
-  # change focus between tiling / floating windows
-  bindsym space focus mode_toggle
-
-  # focus the parent container
-  bindsym a focus parent
-
-  # focus the child container
-  #bindsym d focus child
-
-  # switch to workspace
-  bindsym 1 workspace number $ws1
-  bindsym 2 workspace number $ws2
-  bindsym 3 workspace number $ws3
-  bindsym 4 workspace number $ws4
-  bindsym 5 workspace number $ws5
-  bindsym 6 workspace number $ws6
-  bindsym 7 workspace number $ws7
-  bindsym 8 workspace number $ws8
-  bindsym 9 workspace number $ws9
-  bindsym 0 workspace number $ws10
-
-  # move focused container to workspace
-  bindsym Shift+1 move container to workspace number $ws1
-  bindsym Shift+2 move container to workspace number $ws2
-  bindsym Shift+3 move container to workspace number $ws3
-  bindsym Shift+4 move container to workspace number $ws4
-  bindsym Shift+5 move container to workspace number $ws5
-  bindsym Shift+6 move container to workspace number $ws6
-  bindsym Shift+7 move container to workspace number $ws7
-  bindsym Shift+8 move container to workspace number $ws8
-  bindsym Shift+9 move container to workspace number $ws9
-  bindsym Shift+0 move container to workspace number $ws10
-}
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-  # These bindings trigger as soon as you enter the resize mode
-
-  # Pressing left will shrink the window’s width.
-  # Pressing right will grow the window’s width.
-  # Pressing up will shrink the window’s height.
-  # Pressing down will grow the window’s height.
-  bindsym j resize shrink width 10 px or 10 ppt
-  bindsym k resize grow height 10 px or 10 ppt
-  bindsym l resize shrink height 10 px or 10 ppt
-  bindsym ograve resize grow width 10 px or 10 ppt
-
-  # same bindings, but for the arrow keys
-  bindsym Left resize shrink width 10 px or 10 ppt
-  bindsym Down resize grow height 10 px or 10 ppt
-  bindsym Up resize shrink height 10 px or 10 ppt
-  bindsym Right resize grow width 10 px or 10 ppt
-
-  # back to normal: Enter or Escape or $mod+r
-  bindsym Return mode "default"
-  bindsym Escape mode "default"
-  bindsym $mod+r mode "default"
-}
-
-bindsym $mod+space mode "i3"
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-  mode hide
-
-  status_command i3status
-}
-
-exec --no-startup-id emacs
-</pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 <div id="outline-container-org200b983" class="outline-2">
@@ -3205,8 +2761,8 @@ sshadd:
         ssh-add
 asdf-install:
         wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/asdf-v0.16.7-linux-arm64.tar.gz
-        mkdir -p ~/.local/usr/bin
-        tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/usr/bin/
+        mkdir -p ~/.local/bin
+        tar -xf asdf-v0.16.7.linux-arm64.tar.gz -C ~/.local/bin/
 elixir-install:
         cd ~/
         asdf plugin add elixir
@@ -3241,6 +2797,55 @@ usage:
 </div>
 </div>
 </div>
+<div id="outline-container-org5836833" class="outline-2">
+<h2 id="org5836833">OpenSource stacks and technologies</h2>
+<div class="outline-text-2" id="text-org5836833">
+</div>
+<div id="outline-container-orgc733375" class="outline-3">
+<h3 id="orgc733375">Push notifications</h3>
+<div class="outline-text-3" id="text-orgc733375">
+<ul class="org-ul">
+<li><a href="https://gotify.net/">https://gotify.net/</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orga3bed0c" class="outline-3">
+<h3 id="orga3bed0c">CI</h3>
+<div class="outline-text-3" id="text-orga3bed0c">
+<ul class="org-ul">
+<li>laminar</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdb43e76" class="outline-3">
+<h3 id="orgdb43e76"><a href="https://spritely.institute/">Spritely institute</a> - distributed web technology</h3>
+</div>
+</div>
+<div id="outline-container-orgc08bb59" class="outline-2">
+<h2 id="orgc08bb59"><a href="https://www.openvoiceos.org/">OpenVoiceOS</a>&#xa0;&#xa0;&#xa0;<span class="tag"><span class="foss">foss</span>&#xa0;<span class="AI">AI</span></span></h2>
+</div>
+<div id="outline-container-org46447e6" class="outline-2">
+<h2 id="org46447e6">Pandoc</h2>
+<div class="outline-text-2" id="text-org46447e6">
+<p>
+Install <b>all</b> packages to manage pdf files
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">apt install pandoc texlive-latex-base texlive-latex-recommended texlive-latex-extra
+</pre>
+</div>
+
+<p>
+Convert a <code>txt</code> file to <code>pdf</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">pandoc file.txt -o file.pdf
+</pre>
+</div>
+</div>
+</div>
 <div id="outline-container-org6c996fe" class="outline-2">
 <h2 id="org6c996fe">Postgres</h2>
 <div class="outline-text-2" id="text-org6c996fe">
@@ -3267,6 +2872,14 @@ Rename a database (<a href="https://www.postgresqltutorial.com/postgresql-admini
 <h2 id="org3c3788b">Raspberry</h2>
 <div class="outline-text-2" id="text-org3c3788b">
 </div>
+<div id="outline-container-orgcd45638" class="outline-3">
+<h3 id="orgcd45638">Projects and Prototyping</h3>
+<div class="outline-text-3" id="text-orgcd45638">
+<ul class="org-ul">
+<li><a href="https://wokwi.com/pi-pico">Raspberry Pi Pico Simulator</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org21f2532" class="outline-3">
 <h3 id="org21f2532"><a href="https://retropie.org.uk/docs/Overscan/">Overscan</a></h3>
 </div>
@@ -3277,6 +2890,15 @@ Rename a database (<a href="https://www.postgresqltutorial.com/postgresql-admini
 <pre class="src src-sh">cat /proc/device-tree/model
 </pre>
 </div>
+</div>
+</div>
+<div id="outline-container-orgf57aa80" class="outline-3">
+<h3 id="orgf57aa80">Linux based OS for Raspberry</h3>
+<div class="outline-text-3" id="text-orgf57aa80">
+<ul class="org-ul">
+<li><a href="https://www.raspberrypi.com/software/">https://www.raspberrypi.com/software/</a></li>
+<li><a href="https://github.com/guysoft/CustomPiOS">https://github.com/guysoft/CustomPiOS</a></li>
+</ul>
 </div>
 </div>
 <div id="outline-container-org9200be7" class="outline-3">
@@ -3295,32 +2917,45 @@ Rename a database (<a href="https://www.postgresqltutorial.com/postgresql-admini
 <li><a href="https://github.com/bsteinsbo/rpi_touch_driver">https://github.com/bsteinsbo/rpi_touch_driver</a></li>
 <li><a href="https://learn.adafruit.com/adafruit-pitft-28-inch-resistive-touchscreen-display-raspberry-pi/easy-install-2">Connect Adafruit PiTFT on Raspberry Pi 3 - 320x240 2.8" TFT+Touchscreen on Raspberry Pi3</a></li>
 </ul>
-</div>
-</div>
-<div id="outline-container-orgde6ec65" class="outline-3">
-<h3 id="orgde6ec65">Install Elixir on Raspberry/Raspbian (source article <a href="https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c">here</a>).</h3>
-<div class="outline-text-3" id="text-orgde6ec65">
+
 <div class="org-src-container">
-<pre class="src src-sh">sudo apt-get update &amp;&amp; sudo apt-get install erlang erlang-dev elixir
+<pre class="src src-sh">sudo apt-get update
+sudo apt install python3-venv
+python -m venv env --system-site-packages
+
+cd ~
+source env/bin/activate
+
+sudo apt-get install -y git python3-pip
+pip3 install --upgrade adafruit-python-shell click
+git clone https://github.com/adafruit/Raspberry-Pi-Installer-Scripts.git
+cd Raspberry-Pi-Installer-Scripts
+
+sudo -E env PATH=$PATH python3 adafruit-pitft.py
 </pre>
 </div>
 
 <p>
-or if you want to automate via <code>Makefile</code>
+Then check in <code>/usr/share/X11/xorg.conf.d/</code> for a <i>calibration</i> init file and tweak the <code>SwapXY</code> or <code>InvertX</code> / <code>InvertY</code> options.
+If there are issues about the touchscreen which does not move the pointer where you click on the screen, consider using the <code>evdev</code> driver as proposed in <a href="https://forums.adafruit.com/viewtopic.php?f=50&amp;t=111045">this forum</a>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-makefile">raspi-setup:
-        sudo apt update
-        sudo apt install tmux emacs
-        sudo apt install erlang erlang-dev elixir
+<pre class="src src-sh">sudo apt-get install xserver-xorg-input-evdev
 </pre>
 </div>
+
+<p>
+If you do have a 40-libinput.conf in that same directory, you must remove it even if/once evdev is installed, since it will override the 10-evdev.conf otherwise.
+</p>
 </div>
 </div>
 <div id="outline-container-orgcb6d62c" class="outline-3">
 <h3 id="orgcb6d62c">Use Raspberry Pi in "Kiosk" mode</h3>
 <div class="outline-text-3" id="text-orgcb6d62c">
+<ul class="org-ul">
+<li><a href="https://github.com/elalemanyo/raspberry-pi-kiosk-screen">https://github.com/elalemanyo/raspberry-pi-kiosk-screen</a></li>
+</ul>
 </div>
 <div id="outline-container-org9f5cba5" class="outline-4">
 <h4 id="org9f5cba5"><a href="kiosk.html">Use Emacs as Kiosk</a></h4>
@@ -3375,14 +3010,30 @@ pitft-calibrate:
 <div id="outline-container-org7177016" class="outline-4">
 <h4 id="org7177016">Browsers</h4>
 <div class="outline-text-4" id="text-org7177016">
+<p>
+Using Chromium and Firefox as browser works well only on RPi &gt; 1, otherwise you end up with an error message.
+</p>
+
+<p>
+I've tried some browser in order to achieve the best <i>kiosk</i> like experience. Some of them have the ad-hoc <code>kiosk</code> flag to pass at the command line and that's cool. But I also found some issues. Here's a quick recap:
+</p>
+<ul class="org-ul">
+<li><a href="#org5e09f0c">Chromium</a>: it has a very good <code>--app</code> flag (which operates almost like <code>--kiosk</code> flag, which is deprecated); unfortunately for some reason I haven't investigated in depth, it seems it does not work well with websocket; I've launched an Elixir/Phoenix Liveview webapp and all interactions via the websocket are dramatically delayed (maybe it fallbacks in the <code>longpoll</code> mode).</li>
+<li>Firefox: it does not arise the issue of the websocket I had with Chromium, but on a really small screen (320x240) it does not fit well: it presents an overlfow of the container. I've found <a href="https://stackoverflow.com/questions/7663005/is-firefox-6-7-handling-max-width320px-media-query-wrong">a thread that confirms that issue</a>, but I haven't spent time trying to solve it.</li>
+<li>Epiphany: it does not have any <code>--kiosk</code> not event <code>--fullscreen</code> flag, so you have to set the fullscreen by scripting around via <code>xdotool</code>, <code>xte</code> or tools like that. This is really annoying.</li>
+<li><a href="#orgc2a8d31">Luakit</a>: it does not have toolbars or annoying stuff by default, so basically it already comes in <i>kiosk</i> mode. It handles websocket connections with no issues. I've ended up with this fantastic piece of software.</li>
+</ul>
+
+<p>
+Related sources:
+</p>
+<ul class="org-ul">
+<li><a href="https://forums.raspberrypi.com/viewtopic.php?t=336486">Pi0, Single web page Kiosk. Which lightweight browser?</a></li>
+</ul>
 </div>
 <ul class="org-ul">
 <li><a id="org5e09f0c"></a>Chromium<br />
 <div class="outline-text-6" id="text-org5e09f0c">
-<p>
-Use Chromium/Firefox as browser works well only on RPi &gt; 1
-</p>
-
 <p>
 Start Chromium in Kiosk mode within Wayland.
 </p>
@@ -3401,9 +3052,57 @@ Start Chromium in Kiosk mode within X11.
 </pre>
 </div>
 
+<p>
+or
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">DISPLAY=:0 chromium-browser --kiosk --touch-events=enabled --disable-pinch --noerrdialogs --disable-session-crashed-bubble --simulate-outdated-n\
+o-au='Tue, 31 Dec 2099 23:59:59 GMT' --disable-web-security --allow-running-insecure-content --disable-component-update --overscroll-history-navig\
+ation=0 --disable-features=Translate --app=http://localhost:4000 
+</pre>
+</div>
+
 <ul class="org-ul">
 <li><a href="https://stackoverflow.com/questions/22999829/disable-chrome-pinch-zoom-for-use-in-kiosk">Disable Chrome pinch zoom for use in kiosk</a></li>
 </ul>
+
+<p>
+This script is taken from the <a href="https://www.otot.tv/fullpageos/">FullPageOS</a> and is used to start chromium.
+</p>
+
+<p>
+#+begin<sub>src</sub> sh
+  #!/bin/bash
+</p>
+
+<p>
+chromium-browser &#x2013;kiosk &#x2013;touch-events=enabled &#x2013;disable-pinch &#x2013;noerrdialogs &#x2013;disable-session-crashed-bubble &#x2013;simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' &#x2013;disable-component-update &#x2013;overscroll-history-navigation=0 &#x2013;disable-features=Translate &#x2013;app=$(/home/pi/scripts/get<sub>url</sub>)
+exit;
+</p>
+
+<p>
+chromium-browser &#x2013;enable-logging &#x2013;log-level=2 &#x2013;v=0 &#x2013;kiosk &#x2013;touch-events=enabled &#x2013;disable-pinch &#x2013;noerrdialogs &#x2013;simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT' &#x2013;disable-session-crashed-bubble &#x2013;disable-component-update &#x2013;overscroll-history-navigation=0 &#x2013;disable-features=Translate &#x2013;app=\((head -n 1 /boot/fullpageos.txt | sed -e "s/{serial}/\){SERIAL}/g") &amp;
+</p>
+
+<p>
+export logfile="<i>home/pi</i>.config/chromium/chrome<sub>debug.log</sub>"
+</p>
+
+
+<p>
+tail -n 0 -F "$logfile" | while read LOGLINE &amp;&gt; /dev/null; do
+</p>
+
+<p>
+echo "Refreshing after crash"
+echo "Restarting at `date` after a reported crash. Logline: \({LOGLINE}" >> /tmp/crashlog
+     [[ ("\){LOGLINE}" <code>= *"ERROR"*) || ("${LOGLINE}" =</code> <b>"FATAL"</b>) ]] &amp;&amp; /home/pi/scripts/refresh
+</p>
+
+<p>
+done#+end<sub>src</sub>
+</p>
 </div>
 </li>
 <li><a id="org11f0b80"></a>Old RPi models<br />
@@ -3415,6 +3114,20 @@ For old devices (RPi 1) Midori browser looks promising. The only problem is the 
 <p>
 P.S. Epiphany: it has interesting options like <code>automation-mode</code> but didn't have the time to inspect more.
 </p>
+</div>
+</li>
+<li><a id="orgc2a8d31"></a><a href="https://luakit.github.io/">Luakit</a><br />
+<div class="outline-text-6" id="text-orgc2a8d31">
+<p>
+To start Luakit in fullscreen mode adds this snippet in the <code>~/.config/luakit/rc.lua</code> (if this file is empty you can grab the default configuration file via <code>cp /etc/xdg/luakit/rc.lua ~/.config/luakit/</code>)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lua">window.add_signal("init", function (w)
+  w.win.fullscreen = true
+end)
+</pre>
+</div>
 </div>
 </li>
 </ul>
@@ -3443,8 +3156,8 @@ In order to have the same contents both on TV and the touchscreen I've used <cod
 </div>
 </div>
 </li>
-<li><a id="org857e043"></a>Window manager<br />
-<div class="outline-text-6" id="text-org857e043">
+<li><a id="org91996ff"></a>Window manager<br />
+<div class="outline-text-6" id="text-org91996ff">
 <p>
 Even if the main purpose of the <i>Kiosk</i> is to display a browser window in fullscreen mode (or kiosk mode, if the browser supports it), and since I do most of the operations on the Raspberry via SSH, I could leave the default LXDE window manager. But since I've two monitors, I'd like to take advantage and use both of them in different way instad of just replicate the same contents. Since I've no mouse, I want to launch apps and have them to be arranged automatically via <b>rules</b>. I don't want to investigate LXDE configuration files, or if it can be achieved via some XDG files: I use i3 every day and it allow to span windows across workspaces (and screens) by defining simple rules. For this reason I'll install i3 and I'll configure the system to auto-login in a i3 session.
 </p>
@@ -3520,7 +3233,7 @@ To verify I rerun <code>pacmd list-sinks</code> and check for the <code>*</code>
 <h4 id="orgd4ffe9b">MPV + Youtube</h4>
 <div class="outline-text-4" id="text-orgd4ffe9b">
 <p>
-In order to play Youtube videos directly via <code>mpv</code> use the setting <code>--ytdl-raw-options=cookies-from-browser=chromium</code>. Also set <code>bongo-custom-backend-matchers</code> to include also <code>https</code> protocol.
+It could be userful to add the flag <code>--ytdl-raw-options=cookies-from-browser=chromium</code>. Also set <code>bongo-custom-backend-matchers</code> to include also <code>https</code> protocol. Ensure the Emacs process has the <code>DISPLAY</code> env correctly set in order to display the video!
 </p>
 
 <div class="org-src-container">
@@ -3543,9 +3256,9 @@ Wayland: <code>XDG_RUNTIME_DIR=/run/user/1000 wtype -M ctrl -P Tab -m ctrl -p Ta
 </ul>
 </div>
 </div>
-<div id="outline-container-orgd49f5ab" class="outline-4">
-<h4 id="orgd49f5ab">Resources</h4>
-<div class="outline-text-4" id="text-orgd49f5ab">
+<div id="outline-container-orge051aa8" class="outline-4">
+<h4 id="orge051aa8">Resources</h4>
+<div class="outline-text-4" id="text-orge051aa8">
 <ul class="org-ul">
 <li><a href="http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html">http://simplyautomationized.blogspot.com/2015/04/rpicframe-html5-kiosk-style-picture.html</a></li>
 <li><a href="https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/">https://www.raspberrypi.com/tutorials/how-to-use-a-raspberry-pi-in-kiosk-mode/</a></li>
@@ -3630,9 +3343,6 @@ Other resources:
 </div>
 </div>
 </div>
-<div id="outline-container-org6763482" class="outline-2">
-<h2 id="org6763482"><a href="holymacs/ide.html#org916f721">Run make on list of projects</a></h2>
-</div>
 <div id="outline-container-orgce99817" class="outline-2">
 <h2 id="orgce99817">Shell</h2>
 <div class="outline-text-2" id="text-orgce99817">
@@ -3703,6 +3413,14 @@ Start the container (the fullpath is required on MacOS docker installations, if 
 </div>
 </div>
 </div>
+<div id="outline-container-org806982b" class="outline-2">
+<h2 id="org806982b">Suspend the system via command line</h2>
+<div class="outline-text-2" id="text-org806982b">
+<p>
+Here's a <a href="https://askubuntu.com/questions/1792/how-can-i-suspend-hibernate-from-command-line">StackOverflow thread</a>: <code>systemctl suspend|hibernate</code> (for newest distros) or <code>pmi action suspend|hibernate</code> (old method).
+</p>
+</div>
+</div>
 <div id="outline-container-org9684e06" class="outline-2">
 <h2 id="org9684e06">Systemd</h2>
 <div class="outline-text-2" id="text-org9684e06">
@@ -3745,6 +3463,10 @@ To start a service after a specific timeout (ex. 30 seconds) add:
 ExecStartPre=/bin/sleep 30
 </pre>
 </div>
+
+<p>
+To establish an order or requirements across services there are the <code>Wants / Requires/ After</code> options. See <a href="https://serverfault.com/questions/1053369/systemd-how-to-start-service-after-another-service-started">this thread</a> for more details.
+</p>
 </div>
 </div>
 <div id="outline-container-org5329864" class="outline-3">
@@ -3778,9 +3500,24 @@ To print last 40 entries for a particular service (i.e. <i>unit</i>) and keeps f
 </div>
 </div>
 </div>
-<div id="outline-container-orgd58efe7" class="outline-3">
-<h3 id="orgd58efe7">Troubleshooting</h3>
-<div class="outline-text-3" id="text-orgd58efe7">
+<div id="outline-container-org180faa6" class="outline-3">
+<h3 id="org180faa6">Environment variables</h3>
+<div class="outline-text-3" id="text-org180faa6">
+<p>
+To set an environment variables when launching a service (more details in <a href="https://serverfault.com/questions/413397/how-to-set-environment-variable-in-systemd-service">this SO thread</a>) <code>systemctl edit myservice</code>. This will create a conf file at <code>/etc/systemd/system/myservice.service.d/myenv.conf</code> or <code>~/.config/systemd/user/emacs.service.d/override.conf</code> if you use the <code>--user</code> flag. Then add envs like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-conf">[Service]
+Environment="SECRET=pGNqduRFkB4K9C2vijOmUDa2kPtUhArN"
+Environment="ANOTHER_SECRET=JP8YLOc2bsNlrGuD6LVTq7L36obpjzxd"
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2de807f" class="outline-3">
+<h3 id="org2de807f">Troubleshooting</h3>
+<div class="outline-text-3" id="text-org2de807f">
 <p>
 Sometimes you end up by having some services to start and immediately stop (for instance <code>my-daemon.service Deactivated successfully</code>). I've found the solution to in this <a href="https://superuser.com/questions/1022142/why-is-systemd-stopping-service-immediately-after-it-is-started">StackOverlow thread</a>: you have to specify the <code>Type</code>!
 </p>
@@ -3802,6 +3539,19 @@ CDN installation:
 </div>
 </div>
 </div>
+<div id="outline-container-org6117f71" class="outline-2">
+<h2 id="org6117f71"><a href="https://termux.dev/en/">Termux</a></h2>
+<div class="outline-text-2" id="text-org6117f71">
+<p>
+Termux is an Android terminal emulator and Linux environment application.
+</p>
+
+<ul class="org-ul">
+<li><a href="https://wiki.termux.com/wiki/Termux:API">https://wiki.termux.com/wiki/Termux:API</a></li>
+<li><a href="https://github.com/termux/termux-widget">https://github.com/termux/termux-widget</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-org0ed77be" class="outline-2">
 <h2 id="org0ed77be">Tmux</h2>
 <div class="outline-text-2" id="text-org0ed77be">
@@ -3811,7 +3561,12 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 
 <ul class="org-ul">
 <li><a href="https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/">https://hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/</a></li>
+<li><a href="https://gist.github.com/andreyvit/2921703">https://gist.github.com/andreyvit/2921703</a></li>
 </ul>
+
+<p>
+Super simple, basic configuration using <a href="https://github.com/tmux-plugins/tpm/">TPM</a> and <a href="https://github.com/junegunn/fzf">FZF</a>. For a list of ANSI 256 color names you can take a look at <a href="https://hexdocs.pm/color_palette/ansi_color_codes.html">this link</a>.
+</p>
 
 <div class="org-src-container">
 <pre class="src src-conf">set -g status-keys emacs
@@ -3819,8 +3574,39 @@ Some sources about <code>tmux</code> configuration (<code>~/.tmux.conf</code>)
 set -g prefix C-h
 unbind-key C-b
 bind-key C-h send-prefix
+
+bind-key R source ~/.config/tmux/tmux.conf
+bind-key -n C-[ previous-window
+bind-key -n C-] next-window
+
+set -g default-terminal "screen-256color"
+set -g status-bg "#00d75f"
+set -g status-fg black
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'sainnhe/tmux-fzf'
+
+# Tmux env configuration
+TMUX_FZF_LAUNCH_KEY="C-h"
+TMUX_FZF_MENU=\
+"files\nls -lh\n"
+
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'github_username/plugin_name#branch'
+# set -g @plugin 'git@github.com:user/plugin'
+# set -g @plugin 'git@bitbucket.com:user/plugin'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.config/tmux/plugins/tpm/tpm'
 </pre>
 </div>
+
+<p>
+To install the packages <code>prefix+I</code>.
+</p>
 </div>
 </div>
 <div id="outline-container-orge2dd4e3" class="outline-2">
@@ -3861,7 +3647,7 @@ then verify you're using the tor proxy connecting to <a href="https://check.torp
 More details in this <a href="https://stackoverflow.com/questions/6392103/storing-into-file-using-javascript-greasemonkey/64500313#64500313">StackOverflow thread</a> showing different approaches, here I'm reporting just one.
 </p>
 
-<pre class="example" id="orgd89ac07">
+<pre class="example" id="org6d7c5d2">
 // @grant        GM_download
 
 function saveData(data, filename) {
@@ -3877,6 +3663,73 @@ function saveData(data, filename) {
 saveData("hello world", "hello.txt");
 </pre>
 </div>
+</div>
+</div>
+<div id="outline-container-org6168650" class="outline-2">
+<h2 id="org6168650">Web browsing/crawling</h2>
+<div class="outline-text-2" id="text-org6168650">
+</div>
+<div id="outline-container-org7e7e5de" class="outline-3">
+<h3 id="org7e7e5de">Get the DOM of a webpage using chrome via command-line.</h3>
+<div class="outline-text-3" id="text-org7e7e5de">
+<div class="org-src-container">
+<pre class="src src-sh">chrome --headless --dump-dom https://developer.chrome.com/
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org539bf5e" class="outline-3">
+<h3 id="org539bf5e">Fetch a page via a nodejs app</h3>
+<div class="outline-text-3" id="text-org539bf5e">
+<p>
+Inspiration (and code stolen 🤪) from <a href="https://medium.com/@spencer.canner/downloading-a-webpage-using-node-js-8ba71ff58d6e">this Medium article</a> (errr&#x2026; <a href="https://freedium.cfd/">Freedium</a> 😎)
+</p>
+
+<p>
+This is useful when you try to download a web page that does not display some contents if the browser agent you're using does not exec any js code (i.e EWW).
+</p>
+
+<ol class="org-ol">
+<li>setup a new nodejs project <code>mkdir html-fetch &amp;&amp; node init --yes</code></li>
+<li>add <code>node-fetch</code> dependency into the <code>package.json</code> and <code>npm install</code></li>
+<li>create the <code>index.js</code> source file with the content as follow:</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-javascript">const fetch = require("node-fetch");
+const fs = require("fs");
+// you can update this to any website you want to download
+const site = "https://www.youtube.com/@BorderNightsOfficial";
+// you can update this if you want to save
+const filename = "index.html";
+// fetch url
+fetch(site, {
+  headers: {
+    // some sites require a user-agent header to return the webpage
+    "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100"},
+}).then((res) =&gt; {
+  // get text from Response stream
+  return res.text();
+}).then((text) =&gt; {
+  // write html from response to index.html
+  fs.writeFile(filename, text, () =&gt; {});
+});
+</pre>
+</div>
+
+<p>
+Run it via <code>node index.js</code>. This will fetch the page into the <code>index.html</code> file.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org267ff4b" class="outline-2">
+<h2 id="org267ff4b">Web Resources</h2>
+<div class="outline-text-2" id="text-org267ff4b">
+<ul class="org-ul">
+<li><a href="https://www.instructables.com/">https://www.instructables.com/</a></li>
+</ul>
 </div>
 </div>
 <div id="outline-container-org1d4101f" class="outline-2">
@@ -3992,9 +3845,9 @@ Get the channel ID from a channel URL
 </div>
 </div>
 </div>
-<div id="outline-container-org9ccd785" class="outline-4">
-<h4 id="org9ccd785">Troubleshooting</h4>
-<div class="outline-text-4" id="text-org9ccd785">
+<div id="outline-container-org04eb185" class="outline-4">
+<h4 id="org04eb185">Troubleshooting</h4>
+<div class="outline-text-4" id="text-org04eb185">
 <p>
 If you have issues with an error like <code>WARNING: [youtube] Unable to download webpage: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)</code>.
 </p>
@@ -4005,14 +3858,6 @@ If you have issues with an error like <code>WARNING: [youtube] Unable to downloa
 </div>
 </div>
 </div>
-</div>
-</div>
-<div id="outline-container-org267ff4b" class="outline-2">
-<h2 id="org267ff4b">Web Resources</h2>
-<div class="outline-text-2" id="text-org267ff4b">
-<ul class="org-ul">
-<li><a href="https://www.instructables.com/">https://www.instructables.com/</a></li>
-</ul>
 </div>
 </div>
 </div>

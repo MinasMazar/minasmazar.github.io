@@ -272,6 +272,9 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
   (use-package consult
     ;; Replace bindings. Lazily loaded by `use-package'.
     :bind
+    ("s-i" . #'consult-imenu)
+    ("s-l" . #'consult-line)
+    ("s-L" . #'consult-outline)
     ("C-x M-:" . #'consult-complex-command)
     ("C-x b" . #'consult-buffer)
     ("C-x 4 b" . #'consult-buffer-other-window)
@@ -310,6 +313,8 @@ Here add a custom bookmark handler relying on =browse-url= and =browse-url-handl
     (:map minibuffer-local-map
     ("M-s" . #'consult-history)
     ("M-r" . #'consult-history)))
+
+  (use-package embark-consult)
 #+end_src
 
 ** Data serialization
@@ -493,6 +498,22 @@ In order to make the authentication work remember to add your Github username an
   (defun minemacs-github-repos ()
     (interactive)
     (minemacs-github--fetch-repos))
+#+end_src
+
+* Knowledge base and second brain
+
+#+begin_src emacs-lisp
+  (use-package org-roam)
+#+end_src
+
+Here's a snippet that sould migrate all your plain =org= files into the =org-roam= system.
+
+#+begin_src emacs-lisp :tangle no
+  (dolist (file (directory-files org-roam-directory t "\\.org"))
+    (with-current-buffer (find-file-noselect file)
+      (org-id-get-create)
+      (save-buffer)
+      (kill-buffer)))
 #+end_src
 
 * Jarvis 🤖
@@ -708,7 +729,7 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
 	   (date (plist-get vid :fetched-at))
 	   (humanized-date (and date (format-time-string "%F %a" date))))
       (format
-       "#+TITLE: %s\n#+AUTHOR: %s\n#+DATE: <%s>\n#+OPTIONS: toc:nil num:nil title:nil\n\n* [[%s][%s]]\n"
+       "#+TITLE: %s\n#+AUTHOR: %s\n#+DATE: <%s>\n#+OPTIONS: toc:nil num:nil title:nil\n\n* [[%s][%s]]\n\n"
        title author humanized-date link title)))
 
   (defun jarvis-collect-video-collector--org-content-details (vid)
@@ -860,37 +881,50 @@ Simply open pick or randomly select a Youtube video from a list. Open in browser
       (if (and cache-value (not force))
 	  (jarvis-collect-video-collector--parse-info cache-value)
 	(with-temp-buffer
-	  (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
-	  ;;(insert-file "~/Desktop/vid.json") ; debug line
-	  (goto-char 0)
-	  (condition-case nil
-	      (let* ((json (json-parse-buffer))
-		     (vid (jarvis-collect-video-collector--parse-info json))
-		     (transcript-dom (jarvis-collect-video-collector--fetch-transcript (plist-get vid :script-url)))
-		     (vid (plist-put vid :transcript-dom transcript-dom)))
-		(puthash "fetched_at" (current-time) json)
-		(puthash "transcript_dom" transcript-dom json)
-		(jarvis-collect-video-collector--set-cache url json)
-		vid)
-	    (json-parse-error (error "%s" (buffer-string)))
-	    (t (error "failed parsing %s" url)))))))
+	  (let ((temp-buffer-name (current-buffer)))
+	    (insert (shell-command-to-string (format "yt-dlp -j \"%s\"" url)))
+	    (goto-char 0)
+	    ;; Search for the beginning of JSON, skipping eventual warnings output from yt-dlp
+	    (search-forward "{")
+	    (backward-char)
+	    ;;
+	    (condition-case nil
+		(let* ((json (json-parse-buffer))
+		       (vid (jarvis-collect-video-collector--parse-info json))
+		       (transcript-dom (jarvis-collect-video-collector--fetch-transcript (plist-get vid :script-url)))
+		       (vid (plist-put vid :transcript-dom transcript-dom)))
+		  (puthash "fetched_at" (current-time) json)
+		  (puthash "transcript_dom" transcript-dom json)
+		  (jarvis-collect-video-collector--set-cache url json)
+		  vid)
+	      (json-parse-error
+	       (progn
+		 (with-current-buffer (get-buffer-create "*jarvis-collect-video-error*")
+		   (insert-buffer temp-buffer-name))
+		    (error "error while parsing json for %s" url)))
+		   (t (error "failed fetching info for %s" url))))))))
 
-  (defun jarvis-collect-video-collected-vids ()
-    "Return all the collected vids in the ~jarvis-collect-video-collector-directory~."
-    (let ((files (directory-files jarvis-collect-video-collector-directory t "\\.org")))
-      (mapcar (lambda (file)
-		(let* ((id (jarvis-collect-video-collector--extract-id-from-collected-vid file))
-		       (url (jarvis-collect-video-collector--canonize-url (concat "/" id))))
-		  (cons url file)))
-	      files)))
+  (defun jarvis-collect-video-collected-vids (output-file)
+    "Write the list of all the collected vids in the ~jarvis-collect-video-collector-directory~ into a file of choice"
+    (interactive "FOutput file: ")
+    (let ((buffer (get-buffer-create "*jarvis-collected-vids*"))
+	  (files (directory-files jarvis-collect-video-collector-directory t "\\.org")))
+      (with-temp-file output-file
+	(mapcar (lambda (file)
+		  (let* ((id (jarvis-collect-video-collector--extract-id-from-collected-vid file))
+			 (url (jarvis-collect-video-collector--canonize-url (concat "/" id))))
+		    (insert url)
+		    (newline)))
+		  files)))
+	output-file)
 
   (defun jarvis-collect-video-collect (url &optional force-fetch)
     (interactive "sYoutube video URL: ")
     (let ((force-fetch (or current-prefix-arg force-fetch)))
       (if-let* ((url (jarvis-collect-video-collector--canonize-url url))
-		(vid (jarvis-collect-video-collector-fetch-info url force-fetch))
-		(pathname (jarvis-collect-video-collector--create-file vid)))
-	  (and (called-interactively-p 'any) (find-file pathname) pathname))))
+	      (vid (jarvis-collect-video-collector-fetch-info url force-fetch))
+	      (pathname (jarvis-collect-video-collector--create-file vid)))
+	(and (called-interactively-p 'any) (find-file pathname) pathname))))
 #+end_src
 
 *** Feeds
@@ -1155,20 +1189,24 @@ You can call =jarvis-feeds-collect-feed= while you're in an elfeed entry or call
 #+begin_src elisp
   (defun jarvis/espeak (text)
     "Speak text using `espeak`."
-    (interactive (list
-  		(completing-read "Text: " nil nil nil (buffer-substring-no-properties (mark) (point)))))
-    (save-window-excursion
-      (async-shell-command (format "espeak -v it \"%s\"" text) nil)))
+    (interactive "RText: ")
+    (async-shell-command (format "espeak -v it \"%s\"" text) nil))
 #+end_src
 
 * AI - ChatGPT
 
-#+begin_src emacs-lisp
-  (use-package gptel
-    :custom
-    (gptel-default-mode #'org-mode))
+Example of ChatGPT configuration using Gemini.
 
-  (use-package chatgpt-shell)
+#+begin_src emacs-lisp :tangle no
+  (use-package gptel
+    :commands '(gptel gptel-send)
+    :custom
+    (gptel-model 'gemini-1.5-flash)
+    (gptel-default-mode #'org-mode)
+    :config
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+  		   :key (gptel-api-key-from-auth-source "generativelanguage.googleapis.com")
+  		   :stream t)))
 #+end_src
 
 * Bifrost 🌈                                                       :disabled:
@@ -1534,19 +1572,16 @@ Same as `browse-url-firefox', but sets `browse-url-firefox-arguments'."
 
 ** Bongo
 
-#+begin_src elisp
-  (use-package bongo
-    :bind
-    (:map dired-mode-map
-	  (("b a" . #'bongo-dired-append-enqueue-lines))))
-#+end_src
-
 The **MPV** backend by default is able to play "http" URIs, but when you add a "https:" one (i.e. copy paste a youtube video URL), bongo replys with =bongo-play-file: Don’t know how to play https://www.youtube.com/watch?......=. In order to allow =mpv= to play "https" URIs change the =bongo-custom-backend-matchers= variable.
 
-#+begin_example elisp
-(setq bongo-custom-backend-matchers
-       '((mpv ("https:") . t)))
-#+end_example
+#+begin_src elisp
+  (use-package bongo
+    :custom
+    (bongo-custom-backend-matchers '((mpv ("https:") . t)))
+    :bind
+    (:map dired-mode-map
+  	  ("b a" . #'bongo-dired-append-enqueue-lines)))
+#+end_src
 
 ** Youtube
 
@@ -1636,8 +1671,15 @@ Here's an experiment on how to iterate over the elfeed feeds
 	(elfeed-db-return (list :ok feeds)))))
 #+end_src
 
-#+RESULTS:
-(:ok (#s(elfeed-feed http://www.ansa.it/web/ansait_web_rss_homepage.xml http://www.ansa.it/web/ansait_web_rss_homepage.xml Primo piano ANSA - ANSA.it nil (:canonical-url http://www.ansa.it/sito/ansait_rss.xml))))
+Here's a snippet on how to export the list of the URLs for all the feeds in =elfeed-feeds=
+
+#+begin_src emacs-lisp :tangle no
+  (dolist (feed elfeed-feeds)
+    (let ((url (cond ((listp feed) (car feed))
+		     ((stringp feed) feed))))
+      (insert url)
+      (newline)))
+#+end_src
 
 ** Mail
 *** Resources
@@ -1808,6 +1850,9 @@ To retrieve passwords use =(password-store-get "youtube-api")=.
 #+end_src
 
 * File server                                                      :disabled:
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "file-server.el") :mkdirp yes
+:END:
 
 Uses [[https://eschulte.github.io/emacs-web-server/][=emacs-web-server= package]]. Here's an /helloworld/ example, taken from the [[https://eschulte.github.io/emacs-web-server/tutorials/][online tutorial]].
 
@@ -1862,12 +1907,283 @@ Here's the implementation of a simple web server, serving static assets.
     (when minemacs-ws-enabled (minemacs-file-server-start)))
 #+end_src
 
-* Emacs as Window Manager
+* Emacs and Desktop
+** i3wm
+:PROPERTIES:
+:header-args: :tangle (minemacs-tangle-if-not-disabled "emacs-desktop-i3.el") :mkdirp yes
+:END:
+
+#+begin_src emacs-lisp
+  (use-package i3wm-config-mode)
+  (use-package i3wm)
+#+end_src
+
+A fine tuned i3 configuration file that fits well with an /Emacs-centric/ user experience: in order to access WM specific commands (split directions, window tiling mode, etc) hit ~$mod+Return~ to access the **i3** mode, and ~alt+Tab~ to cycle across windows; all other keybidings will go straight to Emacs.
+
+#+begin_src i3wm-config :tangle ~/.config/i3/config
+  # This file has been auto-generated by i3-config-wizard(1).
+  # It will not be overwritten, so edit it as you like.
+  #
+  # Should you change your keyboard layout some time, delete
+  # this file and re-run i3-config-wizard(1).
+  #
+
+  # i3 config file (v4)
+  #
+  # Please see https://i3wm.org/docs/userguide.html for a complete reference!
+
+  set $mod Mod4
+  set $alt Mod1
+  set $wallpaper_file ~/Pictures/wallpaper
+
+  # Font for window titles. Will also be used by the bar unless a different font
+  # is used in the bar {} block below.
+  font pango:monospace 8
+
+  # This font is widely installed, provides lots of unicode glyphs, right-to-left
+  # text rendering and scalability on retina/hidpi displays (thanks to pango).
+  #font pango:DejaVu Sans Mono 8
+
+  # Start XDG autostart .desktop files using dex. See also
+  # https://wiki.archlinux.org/index.php/XDG_Autostart
+  exec --no-startup-id dex --autostart --environment i3
+  exec --no-startup-id xfsettingsd
+  exec --no-startup-id compton
+  exec --no-startup-id nitrogen --restore
+  # exec --no-startup-id xmodmap ~/.Xmodmaprc
+
+  # The combination of xss-lock, nm-applet and pactl is a popular choice, so
+  # they are included here as an example. Modify as you see fit.
+
+  # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+  # screen before suspend. Use loginctl lock-session to lock your screen.
+  # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+  exec --no-startup-id xss-lock --transfer-sleep-lock -- light-locker --nofork
+
+  # NetworkManager is the most popular way to manage wireless networks on Linux,
+  # and nm-applet is a desktop environment-independent system tray GUI for it.
+  exec --no-startup-id nm-applet
+
+  # Autostart Emacs
+  # exec --no-startup-id emacs --daemon # not needed since it has been started as a service via systemd
+  exec --no-startup-id sleep 10 && emacsclient -r
+
+  # Use pactl to adjust volume in PulseAudio.
+  set $volume_step 5%
+  set $refresh_i3status killall -SIGUSR1 i3status
+  bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +$volume_step && $refresh_i3status
+  bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -$volume_step && $refresh_i3status
+  bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+  bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+  # Use Mouse+$mod to drag floating windows to their wanted position
+  floating_modifier $mod
+
+  # move tiling windows via drag & drop by left-clicking into the title bar,
+  # or left-clicking anywhere into the window while holding the floating modifier.
+  tiling_drag modifier titlebar
+
+  # start applications via dmenu_run or i3-dmenu-desktop or xfce4-appfinder
+  set $app_launcher i3-dmenu-desktop
+  set $terminal_app i3-sensible-terminal
+  set $take_screenshot import -window root ~/Desktop/screenshot.png
+  bindsym $mod+space exec --no-startup-id $app_launcher ; mode "default"
+  bindsym $mod+Shift+space exec --no-startup-id $terminal_app
+  # Emacs everywhere
+  bindsym $mod+Shift+e exec --no-startup-id emacsclient --eval "(emacs-everywhere)"
+
+  # kill focused window
+  bindsym $mod+Shift+q kill
+
+  # change focus
+  bindsym $mod+Tab focus left ; focus up
+  bindsym $mod+Shift+Tab focus right ; focus down
+
+  # Define names for default workspaces for which we configure key bindings later on.
+  # We use variables to avoid repeating the names in multiple places.
+
+  set $ws1 "1:emacs"
+  set $ws2 "2:www"
+  set $ws3 "3:media"
+  set $ws4 "4:apps"
+  set $ws5 "5:term"
+
+  bindcode $mod+Shift+34 workspace prev
+  bindcode $mod+Shift+35 workspace next
+  bindsym $mod+1 workspace $ws1
+  bindsym $mod+2 workspace $ws2
+  bindsym $mod+3 workspace $ws3
+  bindsym $mod+4 workspace $ws4
+  bindsym $mod+5 workspace $ws5
+  bindsym $mod+Shift+1 move container to workspace $ws1
+  bindsym $mod+Shift+2 move container to workspace $ws2
+  bindsym $mod+Shift+3 move container to workspace $ws3
+  bindsym $mod+Shift+4 move container to workspace $ws4
+  bindsym $mod+Shift+5 move container to workspace $ws5
+
+  # Window rules
+  assign [class="^mpv$"] $ws3
+  assign [class="^firefox$"] $ws2
+  assign [class="^Emacs$"] $ws1
+
+  mode "i3" {
+    # start program launcher
+    bindsym d exec --no-startup-id $app_launcher ; mode "default"
+
+    # alternatively, you can use the cursor keys:
+    bindsym Left focus left
+    bindsym Down focus down
+    bindsym Up focus up
+    bindsym Right focus right
+
+    bindsym Shift+Left move left
+    bindsym Shift+Down move down
+    bindsym Shift+Up move up
+    bindsym Shift+Right move right
+
+    # toggle i3bar mode
+    bindsym i bar mode toggle ; mode "default"
+
+    # split in horizontal orientation
+    bindsym h split h
+
+    # split in vertical orientation
+    bindsym v split v
+
+    # enter fullscreen mode for the focused container
+    bindsym Shift+f fullscreen toggle
+
+    # change container layout (stacked, tabbed, toggle split)
+    bindsym s layout stacking
+    bindsym w layout tabbed
+    bindsym e layout toggle split
+
+    # toggle tiling / floating
+    bindsym space floating toggle
+
+    # change focus between tiling / floating windows
+    bindsym space focus mode_toggle
+
+    # switch to workspace
+    bindsym f workspace next
+    bindsym b workspace prev
+    bindsym n focus next
+    bindsym p focus prev
+    bindsym 1 workspace $ws1
+    bindsym 2 workspace $ws2
+    bindsym 3 workspace $ws3
+    bindsym 4 workspace $ws4
+
+    # move focused container to workspace
+    bindsym Shift+f move container to workspace next
+    bindsym Shift+b move container to workspace prev
+    bindsym Shift+1 move container to workspace $ws1
+    bindsym Shift+2 move container to workspace $ws2
+    bindsym Shift+3 move container to workspace $ws3
+    bindsym Shift+4 move container to workspace $ws4
+
+    # Media
+    bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
+    bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
+    bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
+    bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
+
+    # Kill current window
+    bindsym Shift+q kill
+    # reload the configuration file
+    bindsym Shift+c reload
+    # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+    bindsym Shift+r restart
+    # exit i3 (logs you out of your X session)
+    # bindsym Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+    bindsym Shift+e exec i3-msg exit
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym r mode "move/resize"
+    bindsym $mod+Return mode "default"
+  }
+
+  # resize window (you can also use the mouse for that)
+  set $move-resize-gap 10px or 10ppt
+
+  mode "move/resize" {
+    bindsym Left move left $move-resize-gap
+    bindsym Down move down $move-resize-gap
+    bindsym Up move up $move-resize-gap
+    bindsym Right move right $move-resize-gap
+
+    bindsym Shift+Left resize shrink width $move-resize-gap
+    bindsym Shift+Down resize grow height $move-resize-gap
+    bindsym Shift+Up resize shrink height $move-resize-gap
+    bindsym Shift+Right resize grow width $move-resize-gap
+
+    # back to normal: Enter or Escape or $mod+r
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym "r" mode "i3"
+  }
+
+  bindsym $mod+Return mode "i3"
+
+  # Colors configration - https://i3wm.org/docs/userguide.html#_colors
+  #
+  # class                 border  backgr. text    indicator child_border
+  client.focused          #4c7899 #285577 #ffffff #2e9ef4   #285577
+  client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+  client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+  client.urgent           #2f343a #900000 #ffffff #900000   #900000
+  client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+  client.background       #ffffff
+
+  # Start i3bar to display a workspace bar (plus the system information i3status
+  # finds out, if available)
+  bar {
+    mode dock # hide
+    hidden_state hide
+    modifier $mod
+    strip_workspace_numbers yes
+
+    position bottom # top
+    font pango:monospace 12
+    status_command i3status
+
+    colors {
+      background #000000
+      statusline #ffffff
+      separator #666666
+
+      focused_workspace  #4c7899 #FF8C69 #000000
+      active_workspace   #333333 #FF8C69 #000000
+      inactive_workspace #333333 #222222 #888888
+      urgent_workspace   #2f343a #900000 #ffffff
+      binding_mode       #2f343a #900000 #ffffff
+    }
+  }
+
+  gaps inner 8px
+  smart_gaps off # on 
+  # workspace_layout tabbed
+  # enable window icons for all windows
+  for_window [all] title_window_icon on
+  focus_on_window_activation focus
+#+end_src
+
+#+begin_src elisp
+  (defun minemacs-random-wallpaper (dir)
+    "Given a directory, pick a random PNG file and set it as wallpaper via FEH."
+    (interactive "DWallaper source directory: ")
+    (let* ((images (directory-files dir t "\.png"))
+	   (image (seq-random-elt images)))
+      (shell-command (format "feh --bg-max '%s'" image) nil nil)))
+#+end_src
+
+** Emacs as Window Manager - EXWM
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "exwm.el") :mkdirp yes
 :END:
 
-** exwm
 Useful links:
 
 - [[https://github.com/emacs-exwm/exwm/wiki][User Guide]]
@@ -1879,6 +2195,8 @@ Useful links:
 
   (use-package vertico-posframe
     :if (minemacs-exwm-enabled?)
+    :custom
+    (vertico-posframe-border-width 8)
     :config
     (vertico-posframe-mode 1))
 #+end_src
@@ -1920,6 +2238,7 @@ Useful links:
 	    ([?\s-M] . exwm-input-release-keyboard)
 	    ([?\s-\]] . next-buffer)
 	    ([?\s-\[] . previous-buffer)
+	    ([?\s-d] . dmenu)
 	    ([?\s-`] . other-frame)))
 
     (setq exwm-input-simulation-keys

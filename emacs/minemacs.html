@@ -209,7 +209,7 @@
 <li><a href="#org37a6f1b">Minibuffer</a></li>
 <li><a href="#orga3629e5">Modal editing</a>
 <ul>
-<li><a href="#org5aae677">God mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disabled">disabled</span></span></a></li>
+<li><a href="#org5aae677">God mode</a></li>
 <li><a href="#orga9adefc">Devil mode</a></li>
 </ul>
 </li>
@@ -396,7 +396,7 @@ More info about <code>load-path</code> at <a href="https://www.emacswiki.org/ema
 <div class="outline-text-2" id="text-orga3629e5">
 </div>
 <div id="outline-container-org5aae677" class="outline-3">
-<h3 id="org5aae677">God mode&#xa0;&#xa0;&#xa0;<span class="tag"><span class="disabled">disabled</span></span></h3>
+<h3 id="org5aae677">God mode</h3>
 <div class="outline-text-3" id="text-org5aae677">
 <p>
 I've used <code>god-mode</code> for years and I found it really useful. In recent weeks I'm experimenting with <a href="#orga9adefc"><code>devil-mode</code></a>, so I keep this section <i>disabled</i> for now.
@@ -405,6 +405,7 @@ I've used <code>god-mode</code> for years and I found it really useful. In recen
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package god-mode
   :after emacs
+  :if nil
   :demand
   :init
   (defun minemacs-god-mode-line ()
@@ -436,8 +437,13 @@ I've used <code>god-mode</code> for years and I found it really useful. In recen
 <div id="outline-container-orga9adefc" class="outline-3">
 <h3 id="orga9adefc">Devil mode</h3>
 <div class="outline-text-3" id="text-orga9adefc">
+<p>
+Currently disabled in favor or <code>god-mode</code>.
+</p>
+
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(use-package devil
+  :disabled
   :bind
   ("s-n" . #'global-devil-mode)
   :config
@@ -488,8 +494,6 @@ I've used <code>god-mode</code> for years and I found it really useful. In recen
 <div class="outline-text-2" id="text-org78f7c6c">
 <div class="org-src-container">
 <pre class="src src-elisp">(use-package embark
-  :after god-mode
-  :demand
   :config
   (add-to-list 'god-exempt-major-modes 'embark-mode)
   :bind*

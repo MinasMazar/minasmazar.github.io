@@ -163,13 +163,14 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 #+end_src
 
 * Modal editing
-** God mode                                                        :disabled:
+** God mode
 
 I've used =god-mode= for years and I found it really useful. In recent weeks I'm experimenting with [[*Devil mode][=devil-mode=]], so I keep this section /disabled/ for now.
 
 #+begin_src elisp
   (use-package god-mode
     :after emacs
+    :if nil
     :demand
     :init
     (defun minemacs-god-mode-line ()
@@ -182,7 +183,7 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
       (setq cursor-type 'box))
 
     :hook ((god-mode-enabled . minemacs-god-mode-enabled)
-	 (god-mode-disabled . minemacs-god-mode-disabled))
+  	 (god-mode-disabled . minemacs-god-mode-disabled))
     :bind
     ("s-n" . #'god-local-mode)
     (:map god-local-mode-map
@@ -198,8 +199,11 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
 
 ** Devil mode
 
+Currently disabled in favor or =god-mode=.
+
 #+begin_src emacs-lisp
   (use-package devil
+    :disabled
     :bind
     ("s-n" . #'global-devil-mode)
     :config
@@ -242,8 +246,6 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
 
 #+begin_src elisp
   (use-package embark
-    :after god-mode
-    :demand
     :config
     (add-to-list 'god-exempt-major-modes 'embark-mode)
     :bind*
