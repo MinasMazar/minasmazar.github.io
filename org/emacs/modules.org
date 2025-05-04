@@ -500,6 +500,22 @@ In order to make the authentication work remember to add your Github username an
     (minemacs-github--fetch-repos))
 #+end_src
 
+* Knowledge base and second brain
+
+#+begin_src emacs-lisp
+  (use-package org-roam)
+#+end_src
+
+Here's a snippet that sould migrate all your plain =org= files into the =org-roam= system.
+
+#+begin_src emacs-lisp :tangle no
+  (dolist (file (directory-files org-roam-directory t "\\.org"))
+    (with-current-buffer (find-file-noselect file)
+      (org-id-get-create)
+      (save-buffer)
+      (kill-buffer)))
+#+end_src
+
 * Jarvis 🤖
 :PROPERTIES:
 :header-args: :tangle (minemacs-tangle-if-not-disabled "jarvis.el") :mkdirp yes

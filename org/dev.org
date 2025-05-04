@@ -16,6 +16,17 @@ Choose a release here https://github.com/asdf-vm/asdf/releases; add this into yo
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 #+end_src
 
+This script should automate most of the procedure.
+
+#+begin_src sh
+  export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+  wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # <-- or the precompiled version you need
+  mkdir -p ~/.local/bin
+  tar -C ~/.local/bin/ -xf ${asdf-tar}
+  echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> ~/.bashrc
+  source ~/.bashrc
+#+end_src
+
 * Chromium / Google Chrome
 ** Troubleshooting
 
@@ -200,6 +211,32 @@ docker run -it lukechilds/dockerpi
 #+end_src
 
 * [[https://elixir-lang.org/][Elixir]]
+** Install Elixir
+
+/A Makefile tells more than a thousand words/ 😁
+
+#+begin_src makefile
+  install-elixir-via-package-manager:
+  	sudo apt update
+  	sudo apt install erlang erlang-dev elixir
+  install-elixir-via-asdf:
+  	sudo apt install lincurses-dev libssl-dev
+  	export asdf-tar=asdf-v0.16.7-linux-arm64.tar.gz
+  	wget https://github.com/asdf-vm/asdf/releases/download/v0.16.7/${asdf-tar} # <-- or the precompiled version you need
+  	mkdir -p ~/.local/bin
+  	tar -C ~/.local/bin/ -xf ${asdf-tar}
+  	echo 'export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"' >> ~/.bashrc
+  	source ~/.bashrc
+  	sudo apt install libncurses-dev
+  	asdf plugin add erlang
+  	asdf plugin add elixir
+  	asdf install erlang 27.0
+  	asdf install elixir 1.18.0-otp-27
+  	asdf reshim
+#+end_src
+
+More info on ho /install elixir on a Raspberry PI/ in [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][this article]].
+
 ** Language
 *** [[https://hexdocs.pm/elixir/1.14.5/Module.html#module-compile-callbacks][Module ~ Compile Callbacks]] (=@before_compile=)
 
@@ -1694,20 +1731,6 @@ If there are issues about the touchscreen which does not move the pointer where 
 
 If you do have a 40-libinput.conf in that same directory, you must remove it even if/once evdev is installed, since it will override the 10-evdev.conf otherwise.
 
-** Install Elixir on Raspberry/Raspbian (source article [[https://erlangsolutions.medium.com/installing-elixir-on-a-raspberry-pi-the-easy-way-22f347a77e2c][here]]).
-
-#+begin_src sh
-  sudo apt-get update && sudo apt-get install erlang erlang-dev elixir
-#+end_src
-
-or if you want to automate via =Makefile=
-
-#+begin_src makefile
-  raspi-setup:
-  	sudo apt update
-  	sudo apt install tmux emacs
-  	sudo apt install erlang erlang-dev elixir
-#+end_src
 ** Use Raspberry Pi in "Kiosk" mode
 
 - https://github.com/elalemanyo/raspberry-pi-kiosk-screen
@@ -2106,6 +2129,8 @@ Super simple, basic configuration using [[https://github.com/tmux-plugins/tpm/][
   bind-key C-h send-prefix
 
   bind-key R source ~/.config/tmux/tmux.conf
+  bind-key -n C-[ previous-window
+  bind-key -n C-] next-window
 
   set -g default-terminal "screen-256color"
   set -g status-bg "#00d75f"

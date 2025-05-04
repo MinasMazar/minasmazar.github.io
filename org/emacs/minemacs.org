@@ -163,7 +163,7 @@ More info about =load-path= at https://www.emacswiki.org/emacs/LoadPath. Most of
 #+end_src
 
 * Modal editing
-** God mode                                                        :disabled:
+** God mode
 
 I've used =god-mode= for years and I found it really useful. In recent weeks I'm experimenting with [[*Devil mode][=devil-mode=]], so I keep this section /disabled/ for now.
 
@@ -197,7 +197,7 @@ I've used =god-mode= for years and I found it really useful. In recent weeks I'm
      ("]" . #'forward-paragraph)))
 #+end_src
 
-** Devil mode
+** Devil mode                                                       :disabled:
 
 #+begin_src emacs-lisp
   (use-package devil
